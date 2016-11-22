@@ -2,71 +2,76 @@
 
 namespace AppBundle\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * A review of a book.
+ * A review of an item - for example, of a restaurant, movie, or store.
  *
- * @ApiResource
+ * @see http://schema.org/Review Documentation on Schema.org
+ *
  * @ORM\Entity
+ * @ApiResource(iri="http://schema.org/Review")
  */
 class Review
 {
     /**
-     * @var int The id of this review.
+     * @var int
      *
-     * @ORM\Id
-     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @var int The rating of this review (between 0 and 5).
+     * @var string The actual body of the review
      *
-     * @ORM\Column(type="smallint")
-     * @Assert\Range(min=0, max=5)
+     * @Assert\Type(type="string")
+     * @ORM\Column(nullable=true)
+     * @ApiProperty(iri="http://schema.org/reviewBody")
+     */
+    private $reviewBody;
+
+    /**
+     * @var int
+     *
+     * @Assert\Type(type="integer")
+     * @Assert\NotNull
+     * @ORM\Column(type="integer")
      */
     private $rating;
 
     /**
-     * @var string the body of the review.
+     * @var Book The item that is being reviewed/rated
      *
-     * @ORM\Column(type="text")
-     * @Assert\NotBlank
-     */
-    private $body;
-
-    /**
-     * @var string The author of the review.
-     *
-     * @ORM\Column
-     * @Assert\NotBlank
-     */
-    private $author;
-
-    /**
-     * @var \DateTimeInterface The date of publication of this review.
-     *
-     * @ORM\Column(type="datetime")
-     * @Assert\NotBlank
-     */
-    private $publicationDate;
-
-    /**
-     * @var Book The book this review is about.
-     *
-     * @ORM\ManyToOne(targetEntity="Book", inversedBy="reviews")
      * @Assert\NotNull
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Book")
+     * @ORM\JoinColumn(nullable=false)
+     * @ApiProperty(iri="http://schema.org/itemReviewed")
      */
-    private $book;
+    private $itemReviewed;
 
     /**
-     * Get id
+     * Sets id.
      *
-     * @return guid
+     * @param int $id
+     *
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Gets id.
+     *
+     * @return int
      */
     public function getId()
     {
@@ -74,11 +79,35 @@ class Review
     }
 
     /**
-     * Set rating
+     * Sets reviewBody.
      *
-     * @param integer $rating
+     * @param string $reviewBody
      *
-     * @return Review
+     * @return $this
+     */
+    public function setReviewBody($reviewBody)
+    {
+        $this->reviewBody = $reviewBody;
+
+        return $this;
+    }
+
+    /**
+     * Gets reviewBody.
+     *
+     * @return string
+     */
+    public function getReviewBody()
+    {
+        return $this->reviewBody;
+    }
+
+    /**
+     * Sets rating.
+     *
+     * @param int $rating
+     *
+     * @return $this
      */
     public function setRating($rating)
     {
@@ -88,9 +117,9 @@ class Review
     }
 
     /**
-     * Get rating
+     * Gets rating.
      *
-     * @return integer
+     * @return int
      */
     public function getRating()
     {
@@ -98,98 +127,26 @@ class Review
     }
 
     /**
-     * Set body
+     * Sets itemReviewed.
      *
-     * @param string $body
+     * @param Book $itemReviewed
      *
-     * @return Review
+     * @return $this
      */
-    public function setBody($body)
+    public function setItemReviewed(Book $itemReviewed)
     {
-        $this->body = $body;
+        $this->itemReviewed = $itemReviewed;
 
         return $this;
     }
 
     /**
-     * Get body
+     * Gets itemReviewed.
      *
-     * @return string
+     * @return Book
      */
-    public function getBody()
+    public function getItemReviewed()
     {
-        return $this->body;
-    }
-
-    /**
-     * Set author
-     *
-     * @param string $author
-     *
-     * @return Review
-     */
-    public function setAuthor($author)
-    {
-        $this->author = $author;
-
-        return $this;
-    }
-
-    /**
-     * Get author
-     *
-     * @return string
-     */
-    public function getAuthor()
-    {
-        return $this->author;
-    }
-
-    /**
-     * Set publicationDate
-     *
-     * @param \DateTime $publicationDate
-     *
-     * @return Review
-     */
-    public function setPublicationDate($publicationDate)
-    {
-        $this->publicationDate = $publicationDate;
-
-        return $this;
-    }
-
-    /**
-     * Get publicationDate
-     *
-     * @return \DateTime
-     */
-    public function getPublicationDate()
-    {
-        return $this->publicationDate;
-    }
-
-    /**
-     * Set book
-     *
-     * @param \AppBundle\Entity\Book $book
-     *
-     * @return Review
-     */
-    public function setBook(\AppBundle\Entity\Book $book = null)
-    {
-        $this->book = $book;
-
-        return $this;
-    }
-
-    /**
-     * Get book
-     *
-     * @return \AppBundle\Entity\Book
-     */
-    public function getBook()
-    {
-        return $this->book;
+        return $this->itemReviewed;
     }
 }
