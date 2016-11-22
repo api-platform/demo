@@ -35,7 +35,7 @@
         "phpdocumentor/reflection-docblock": "^3.0"
     },
     "require-dev": {
-        "api-platform/schema-generator": "^1.1",
+        "api-platform/schema-generator": "^1.2",
         "sensio/generator-bundle": "^3.0",
         "symfony/phpunit-bridge": "^3.0",
         "behat/behat": "^3.1",

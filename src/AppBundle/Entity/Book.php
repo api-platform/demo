@@ -29,6 +29,7 @@ class Book
     /**
      * @var string The ISBN of the book
      *
+     * @Assert\Isbn
      * @Assert\Type(type="string")
      * @ORM\Column(nullable=true)
      * @ApiProperty(iri="http://schema.org/isbn")
@@ -39,7 +40,7 @@ class Book
      * @var string The name of the item
      *
      * @Assert\Type(type="string")
-     * @Assert\NotNull
+     * @Assert\NotBlank
      * @ORM\Column
      * @ApiProperty(iri="http://schema.org/name")
      */
@@ -49,7 +50,7 @@ class Book
      * @var string A description of the item
      *
      * @Assert\Type(type="string")
-     * @Assert\NotNull
+     * @Assert\NotBlank
      * @ORM\Column
      * @ApiProperty(iri="http://schema.org/description")
      */
@@ -59,7 +60,7 @@ class Book
      * @var string The author of this content or rating. Please note that author is special in that HTML 5 provides a special mechanism for indicating authorship via the rel tag. That is equivalent to this and may be used interchangeably
      *
      * @Assert\Type(type="string")
-     * @Assert\NotNull
+     * @Assert\NotBlank
      * @ORM\Column
      * @ApiProperty(iri="http://schema.org/author")
      */

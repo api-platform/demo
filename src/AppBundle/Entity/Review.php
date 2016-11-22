@@ -39,8 +39,8 @@ class Review
      * @var int
      *
      * @Assert\Type(type="integer")
-     * @Assert\NotNull
-     * @ORM\Column(type="integer")
+     * @Assert\Range(min=0, max=5)
+     * @ORM\Column(type="smallint")
      */
     private $rating;
 
