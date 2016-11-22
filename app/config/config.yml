@@ -77,3 +77,15 @@ nelmio_cors:
         max_age:        3600
     paths:
         '^/': ~
+
+api_platform:
+    title:       API Platform's demo
+    description: A demo application
+    formats:
+        jsonld:  ['application/ld+json']
+        jsonhal: ['application/hal+json']
+        xml:     ['application/xml', 'text/xml']
+        json:    ['application/json']
+        yaml:    ['application/x-yaml']
+        csv:     ['text/csv']
+        html:    ['text/html']
