@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -9,79 +10,90 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * A book.
  *
- * @ApiResource
+ * @see http://schema.org/Book Documentation on Schema.org
+ *
  * @ORM\Entity
+ * @ApiResource(iri="http://schema.org/Book")
  */
 class Book
 {
     /**
-     * @var int The id of this book.
+     * @var int
      *
-     * @ORM\Id
-     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @var string|null The ISBN number if this book (or null if doesn't have one).
+     * @var string The ISBN of the book
      *
-     * @ORM\Column(nullable=true)
      * @Assert\Isbn
+     * @Assert\Type(type="string")
+     * @ORM\Column(nullable=true)
+     * @ApiProperty(iri="http://schema.org/isbn")
      */
     private $isbn;
 
     /**
-     * @var string The title of this book.
+     * @var string The name of the item
      *
-     * @ORM\Column
+     * @Assert\Type(type="string")
      * @Assert\NotBlank
+     * @ORM\Column
+     * @ApiProperty(iri="http://schema.org/name")
      */
-    private $title;
+    private $name;
 
     /**
-     * @var string The description of this book.
+     * @var string A description of the item
      *
-     * @ORM\Column(type="text")
+     * @Assert\Type(type="string")
      * @Assert\NotBlank
+     * @ORM\Column
+     * @ApiProperty(iri="http://schema.org/description")
      */
     private $description;
 
     /**
-     * @var string The author of this book.
+     * @var string The author of this content or rating. Please note that author is special in that HTML 5 provides a special mechanism for indicating authorship via the rel tag. That is equivalent to this and may be used interchangeably
      *
-     * @ORM\Column
+     * @Assert\Type(type="string")
      * @Assert\NotBlank
+     * @ORM\Column
+     * @ApiProperty(iri="http://schema.org/author")
      */
     private $author;
 
     /**
-     * @var \DateTimeInterface The publication date of this book.
+     * @var \DateTime The date on which the CreativeWork was created or the item was added to a DataFeed
      *
-     * @ORM\Column(type="datetime")
+     * @Assert\Date
      * @Assert\NotNull
+     * @ORM\Column(type="date")
+     * @ApiProperty(iri="http://schema.org/dateCreated")
      */
-    private $publicationDate;
+    private $dateCreated;
 
     /**
-     * @var Review[] Available reviews for this book.
+     * Sets id.
      *
-     * @ORM\OneToMany(targetEntity="Review", mappedBy="book")
+     * @param int $id
+     *
+     * @return $this
      */
-    private $reviews;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
+    public function setId($id)
     {
-        $this->reviews = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->id = $id;
+
+        return $this;
     }
 
     /**
-     * Get id
+     * Gets id.
      *
-     * @return guid
+     * @return int
      */
     public function getId()
     {
@@ -89,11 +101,11 @@ class Book
     }
 
     /**
-     * Set isbn
+     * Sets isbn.
      *
      * @param string $isbn
      *
-     * @return Book
+     * @return $this
      */
     public function setIsbn($isbn)
     {
@@ -103,7 +115,7 @@ class Book
     }
 
     /**
-     * Get isbn
+     * Gets isbn.
      *
      * @return string
      */
@@ -113,35 +125,35 @@ class Book
     }
 
     /**
-     * Set title
+     * Sets name.
      *
-     * @param string $title
+     * @param string $name
      *
-     * @return Book
+     * @return $this
      */
-    public function setTitle($title)
+    public function setName($name)
     {
-        $this->title = $title;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get title
+     * Gets name.
      *
      * @return string
      */
-    public function getTitle()
+    public function getName()
     {
-        return $this->title;
+        return $this->name;
     }
 
     /**
-     * Set description
+     * Sets description.
      *
      * @param string $description
      *
-     * @return Book
+     * @return $this
      */
     public function setDescription($description)
     {
@@ -151,7 +163,7 @@ class Book
     }
 
     /**
-     * Get description
+     * Gets description.
      *
      * @return string
      */
@@ -161,11 +173,11 @@ class Book
     }
 
     /**
-     * Set author
+     * Sets author.
      *
      * @param string $author
      *
-     * @return Book
+     * @return $this
      */
     public function setAuthor($author)
     {
@@ -175,7 +187,7 @@ class Book
     }
 
     /**
-     * Get author
+     * Gets author.
      *
      * @return string
      */
@@ -185,60 +197,26 @@ class Book
     }
 
     /**
-     * Set publicationDate
+     * Sets dateCreated.
      *
-     * @param \DateTime $publicationDate
+     * @param \DateTime $dateCreated
      *
-     * @return Book
+     * @return $this
      */
-    public function setPublicationDate($publicationDate)
+    public function setDateCreated(\DateTime $dateCreated)
     {
-        $this->publicationDate = $publicationDate;
+        $this->dateCreated = $dateCreated;
 
         return $this;
     }
 
     /**
-     * Get publicationDate
+     * Gets dateCreated.
      *
      * @return \DateTime
      */
-    public function getPublicationDate()
+    public function getDateCreated()
     {
-        return $this->publicationDate;
-    }
-
-    /**
-     * Add review
-     *
-     * @param \AppBundle\Entity\Review $review
-     *
-     * @return Book
-     */
-    public function addReview(\AppBundle\Entity\Review $review)
-    {
-        $this->reviews[] = $review;
-
-        return $this;
-    }
-
-    /**
-     * Remove review
-     *
-     * @param \AppBundle\Entity\Review $review
-     */
-    public function removeReview(\AppBundle\Entity\Review $review)
-    {
-        $this->reviews->removeElement($review);
-    }
-
-    /**
-     * Get reviews
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getReviews()
-    {
-        return $this->reviews;
+        return $this->dateCreated;
     }
 }
