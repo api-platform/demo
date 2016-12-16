@@ -51,7 +51,7 @@ class Book
      *
      * @Assert\Type(type="string")
      * @Assert\NotBlank
-     * @ORM\Column
+     * @ORM\Column(type="text")
      * @ApiProperty(iri="http://schema.org/description")
      */
     private $description;
