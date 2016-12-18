@@ -3150,20 +3150,20 @@
         },
         {
             "name": "hautelook/alice-bundle",
-            "version": "v2.0.0-beta.2",
+            "version": "v2.0.0-beta.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hautelook/AliceBundle.git",
-                "reference": "de03f49cfda18a8d6dd38797fa816f52d4bf6e2e"
+                "reference": "8c08ca1518103ed474048b571fdfe3b4b106e99a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hautelook/AliceBundle/zipball/de03f49cfda18a8d6dd38797fa816f52d4bf6e2e",
-                "reference": "de03f49cfda18a8d6dd38797fa816f52d4bf6e2e",
+                "url": "https://api.github.com/repos/hautelook/AliceBundle/zipball/8c08ca1518103ed474048b571fdfe3b4b106e99a",
+                "reference": "8c08ca1518103ed474048b571fdfe3b4b106e99a",
                 "shasum": ""
             },
             "require": {
-                "nelmio/alice": "^3.0@dev",
+                "nelmio/alice": "^3.0-beta3@beta",
                 "php": "^7.0",
                 "symfony/finder": "^2.7||^3.0"
             },
@@ -3174,7 +3174,7 @@
                 "phpunit/phpunit": "^5.6",
                 "symfony/phpunit-bridge": "^3.1",
                 "symfony/symfony": "^2.3||~3.0",
-                "theofidry/alice-data-fixtures": "^1.0@dev"
+                "theofidry/alice-data-fixtures": "^1.0-beta4@beta"
             },
             "suggest": {
                 "theofidry/alice-bundle-extension": "Behat extension for HautelookAliceBundle"
@@ -3215,7 +3215,7 @@
                 "orm",
                 "symfony"
             ],
-            "time": "2016-12-13 11:46:16"
+            "time": "2016-12-17 15:16:24"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -3391,16 +3391,16 @@
         },
         {
             "name": "nelmio/alice",
-            "version": "v3.0.0-beta.1",
+            "version": "v3.0.0-beta.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nelmio/alice.git",
-                "reference": "cfa21ed203fbc70108769ee1b23c9c7e4e3d9a49"
+                "reference": "3e53619db2590bfa72552e724cad1613a6c5c9c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nelmio/alice/zipball/cfa21ed203fbc70108769ee1b23c9c7e4e3d9a49",
-                "reference": "cfa21ed203fbc70108769ee1b23c9c7e4e3d9a49",
+                "url": "https://api.github.com/repos/nelmio/alice/zipball/3e53619db2590bfa72552e724cad1613a6c5c9c0",
+                "reference": "3e53619db2590bfa72552e724cad1613a6c5c9c0",
                 "shasum": ""
             },
             "require": {
@@ -3457,7 +3457,7 @@
                 "faker",
                 "test"
             ],
-            "time": "2016-11-12 17:22:45"
+            "time": "2016-12-16 22:40:38"
         },
         {
             "name": "sebastian/diff",
@@ -3623,20 +3623,20 @@
         },
         {
             "name": "theofidry/alice-data-fixtures",
-            "version": "v1.0.0-beta.3",
+            "version": "v1.0.0-beta.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/theofidry/AliceDataFixtures.git",
-                "reference": "edd468dffcd82e06d1eb4f79f2d40ef1fc7b0a64"
+                "reference": "3cc2ea7acfa869b0c9e2c746fe7a72973533bf19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/theofidry/AliceDataFixtures/zipball/edd468dffcd82e06d1eb4f79f2d40ef1fc7b0a64",
-                "reference": "edd468dffcd82e06d1eb4f79f2d40ef1fc7b0a64",
+                "url": "https://api.github.com/repos/theofidry/AliceDataFixtures/zipball/3cc2ea7acfa869b0c9e2c746fe7a72973533bf19",
+                "reference": "3cc2ea7acfa869b0c9e2c746fe7a72973533bf19",
                 "shasum": ""
             },
             "require": {
-                "nelmio/alice": "^3.0@dev",
+                "nelmio/alice": "^3.0@beta",
                 "php": "~7.0.0 || ~7.1.0"
             },
             "require-dev": {
@@ -3683,7 +3683,7 @@
                 "orm",
                 "tests"
             ],
-            "time": "2016-11-06 18:26:05"
+            "time": "2016-12-16 23:35:38"
         }
     ],
     "aliases": [],

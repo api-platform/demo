@@ -30,8 +30,5 @@ monolog:
         #    type:   chromephp
         #    level:  info
 
-hautelook_alice:
-    fixtures_path: 'Resources/fixtures/orm'
-
 #swiftmailer:
 #    delivery_address: me@example.com

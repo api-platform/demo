@@ -1,0 +1,13 @@
+'AppBundle\Entity\Book':
+    book_{1..100}:
+        isbn: <isbn13()>
+        name: <sentence()>
+        description: <paragraph()>
+        author: <name()>
+        dateCreated: <dateTime()>
+
+'AppBundle\Entity\Review':
+    review_{1..500}:
+        reviewBody: <paragraph()>
+        rating: <numberBetween(0, 5)>
+        itemReviewed: '@book_*'

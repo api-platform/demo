@@ -30,7 +30,7 @@ class Review
      * @var string The actual body of the review
      *
      * @Assert\Type(type="string")
-     * @ORM\Column(nullable=true)
+     * @ORM\Column(nullable=true, type="text")
      * @ApiProperty(iri="http://schema.org/reviewBody")
      */
     private $reviewBody;
