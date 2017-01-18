@@ -171,7 +171,7 @@ class RequirementCollection implements IteratorAggregate
     /**
      * @var Requirement[]
      */
-    private $requirements = [];
+    private $requirements = array();
 
     /**
      * Gets the current RequirementCollection as an Iterator.
@@ -282,7 +282,7 @@ class RequirementCollection implements IteratorAggregate
      */
     public function getRequirements()
     {
-        $array = [];
+        $array = array();
         foreach ($this->requirements as $req) {
             if (!$req->isOptional()) {
                 $array[] = $req;
@@ -299,7 +299,7 @@ class RequirementCollection implements IteratorAggregate
      */
     public function getFailedRequirements()
     {
-        $array = [];
+        $array = array();
         foreach ($this->requirements as $req) {
             if (!$req->isFulfilled() && !$req->isOptional()) {
                 $array[] = $req;
@@ -316,7 +316,7 @@ class RequirementCollection implements IteratorAggregate
      */
     public function getRecommendations()
     {
-        $array = [];
+        $array = array();
         foreach ($this->requirements as $req) {
             if ($req->isOptional()) {
                 $array[] = $req;
@@ -333,7 +333,7 @@ class RequirementCollection implements IteratorAggregate
      */
     public function getFailedRecommendations()
     {
-        $array = [];
+        $array = array();
         foreach ($this->requirements as $req) {
             if (!$req->isFulfilled() && $req->isOptional()) {
                 $array[] = $req;
@@ -448,7 +448,7 @@ class SymfonyRequirements extends RequirementCollection
         }
 
         if (false !== $requiredPhpVersion && version_compare($installedPhpVersion, $requiredPhpVersion, '>=')) {
-            $timezones = [];
+            $timezones = array();
             foreach (DateTimeZone::listAbbreviations() as $abbreviations) {
                 foreach ($abbreviations as $abbreviation) {
                     $timezones[$abbreviation['timezone_id']] = true;
@@ -728,7 +728,8 @@ class SymfonyRequirements extends RequirementCollection
             ||
             (extension_loaded('xcache') && ini_get('xcache.cacher'))
             ||
-            (extension_loaded('wincache') && ini_get('wincache.ocenabled'));
+            (extension_loaded('wincache') && ini_get('wincache.ocenabled'))
+        ;
 
         $this->addRecommendation(
             $accelerator,
@@ -779,7 +780,11 @@ class SymfonyRequirements extends RequirementCollection
     {
         $size = ini_get('realpath_cache_size');
         $size = trim($size);
-        $unit = strtolower(substr($size, -1, 1));
+        $unit = '';
+        if (!ctype_digit($size)) {
+            $unit = strtolower(substr($size, -1, 1));
+            $size = (int) substr($size, 0, -1);
+        }
         switch ($unit) {
             case 'g':
                 return $size * 1024 * 1024 * 1024;
