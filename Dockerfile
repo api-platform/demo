@@ -1,7 +1,7 @@
-FROM php:7.0-apache
+FROM php:7.1-apache
 
 # PHP extensions
-ENV APCU_VERSION 5.1.5
+ENV APCU_VERSION 5.1.7
 RUN buildDeps=" \
         libicu-dev \
         zlib1g-dev \
@@ -38,23 +38,26 @@ RUN apt-get update \
         git \
     && rm -rf /var/lib/apt/lists/*
 
-# Install composer
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-    && php -r "if (hash_file('SHA384', 'composer-setup.php') === 'e115a8dc7871f15d853148a7fbac7da27d6c0030b848d9b3dc09e2a0388afed865e6a3d6b3c0fad45c48e2b5fc1196ae') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
-    && php composer-setup.php \
-    && php -r "unlink('composer-setup.php');" \
-    && mv composer.phar /usr/bin/composer \
-    && composer global require "hirak/prestissimo:^0.3"
-
 # Add the application
 ADD . /app
 WORKDIR /app
 
-# Remove cache and logs if some and fixes permissions
-RUN ((rm -rf var/cache/* && rm -rf var/logs/* && rm -rf var/sessions/*) || true) \
+# Fix permissions (useful if the host is Windows)
+RUN chmod +x docker/composer.sh docker/start.sh docker/apache/start_safe_perms
+
+# Install composer
+RUN ./docker/composer.sh \
+    && mv composer.phar /usr/bin/composer \
+    && composer global require "hirak/prestissimo:^0.3"
+
+RUN \
+    # Remove var directory if it's accidentally included
+    (rm -rf var || true) \
+    # Create the var sub-directories
+    && mkdir -p var/cache var/logs var/sessions \
     # Install dependencies
-    && composer install --optimize-autoloader --no-scripts \
+    && composer install --prefer-dist --no-scripts --no-dev --no-progress --no-suggest --optimize-autoloader --classmap-authoritative \
     # Fixes permissions issues in non-dev mode
     && chown -R www-data . var/cache var/logs var/sessions
 
-CMD ["/app/docker/apache/run.sh"]
+CMD ["/app/docker/start.sh"]

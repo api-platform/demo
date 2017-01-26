@@ -13,7 +13,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @see http://schema.org/Book Documentation on Schema.org
  *
  * @ORM\Entity
- * @ApiResource(iri="http://schema.org/Book")
+ * @ApiResource(
+ *     iri="http://schema.org/Book"
+ * )
  */
 class Book
 {
