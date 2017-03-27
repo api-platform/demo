@@ -33,7 +33,7 @@ class Review
      * @ORM\Column(nullable=true, type="text")
      * @ApiProperty(iri="http://schema.org/reviewBody")
      */
-    private $reviewBody;
+    private $body;
 
     /**
      * @var int
@@ -52,7 +52,22 @@ class Review
      * @ORM\JoinColumn(nullable=false)
      * @ApiProperty(iri="http://schema.org/itemReviewed")
      */
-    private $itemReviewed;
+    private $book;
+
+    /**
+     * @var string Author the author of the review
+     *
+     * @ORM\Column(nullable=true, type="text")
+     * @ApiProperty(iri="http://schema.org/author")
+     */
+    private $author;
+
+    /**
+     * @var \DateTime Author the author of the review
+     *
+     * @ORM\Column(nullable=true, type="datetime")
+     */
+    private $publicationDate;
 
     /**
      * Sets id.
@@ -76,30 +91,6 @@ class Review
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Sets reviewBody.
-     *
-     * @param string $reviewBody
-     *
-     * @return $this
-     */
-    public function setReviewBody($reviewBody)
-    {
-        $this->reviewBody = $reviewBody;
-
-        return $this;
-    }
-
-    /**
-     * Gets reviewBody.
-     *
-     * @return string
-     */
-    public function getReviewBody()
-    {
-        return $this->reviewBody;
     }
 
     /**
@@ -127,26 +118,82 @@ class Review
     }
 
     /**
-     * Sets itemReviewed.
+     * Get body.
      *
-     * @param Book $itemReviewed
-     *
-     * @return $this
+     * @return body
      */
-    public function setItemReviewed(Book $itemReviewed)
+    public function getBody()
     {
-        $this->itemReviewed = $itemReviewed;
-
-        return $this;
+        return $this->body;
     }
 
     /**
-     * Gets itemReviewed.
+     * Set body.
      *
-     * @return Book
+     * @param body the value to set
      */
-    public function getItemReviewed()
+    public function setBody($body)
     {
-        return $this->itemReviewed;
+        $this->body = $body;
+    }
+
+    /**
+     * Get book.
+     *
+     * @return book
+     */
+    public function getBook()
+    {
+        return $this->book;
+    }
+
+    /**
+     * Set book.
+     *
+     * @param book the value to set
+     */
+    public function setBook(Book $book)
+    {
+        $this->book = $book;
+    }
+
+    /**
+     * Get author.
+     *
+     * @return author
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * Set author.
+     *
+     * @param author the value to set
+     */
+    public function setAuthor($author)
+    {
+        $this->author = $author;
+    }
+
+    /**
+     * Get publicationDate.
+     *
+     * @return publicationDate
+     */
+    public function getPublicationDate()
+    {
+        return $this->publicationDate;
+    }
+
+    /**
+     * Set publicationDate.
+     *
+     * @param publicationDate the value to set
+     */
+    public function setPublicationDate(\DateTime $publicationDate)
+    {
+        $this->publicationDate = $publicationDate;
     }
 }
