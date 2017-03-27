@@ -39,14 +39,14 @@ class Book
     private $isbn;
 
     /**
-     * @var string The name of the item
+     * @var string The title of the book
      *
      * @Assert\Type(type="string")
      * @Assert\NotBlank
      * @ORM\Column
      * @ApiProperty(iri="http://schema.org/name")
      */
-    private $name;
+    private $title;
 
     /**
      * @var string A description of the item
@@ -76,7 +76,7 @@ class Book
      * @ORM\Column(type="date")
      * @ApiProperty(iri="http://schema.org/dateCreated")
      */
-    private $dateCreated;
+    private $publicationDate;
 
     /**
      * Sets id.
@@ -124,30 +124,6 @@ class Book
     public function getIsbn()
     {
         return $this->isbn;
-    }
-
-    /**
-     * Sets name.
-     *
-     * @param string $name
-     *
-     * @return $this
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Gets name.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**
@@ -199,26 +175,42 @@ class Book
     }
 
     /**
-     * Sets dateCreated.
+     * Get title.
      *
-     * @param \DateTime $dateCreated
-     *
-     * @return $this
+     * @return title
      */
-    public function setDateCreated(\DateTime $dateCreated)
+    public function getTitle()
     {
-        $this->dateCreated = $dateCreated;
-
-        return $this;
+        return $this->title;
     }
 
     /**
-     * Gets dateCreated.
+     * Set title.
      *
-     * @return \DateTime
+     * @param title the value to set
      */
-    public function getDateCreated()
+    public function setTitle($title)
     {
-        return $this->dateCreated;
+        $this->title = $title;
+    }
+
+    /**
+     * Get publicationDate.
+     *
+     * @return publicationDate
+     */
+    public function getPublicationDate()
+    {
+        return $this->publicationDate;
+    }
+
+    /**
+     * Set publicationDate.
+     *
+     * @param publicationDate the value to set
+     */
+    public function setPublicationDate($publicationDate)
+    {
+        $this->publicationDate = $publicationDate;
     }
 }
