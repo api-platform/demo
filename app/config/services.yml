@@ -4,6 +4,10 @@ parameters:
 #    parameter_name: value
 
 services:
+    review.search_filter:
+        parent: 'api_platform.doctrine.orm.search_filter'
+        arguments: [ { itemReviewed: 'exact' } ]
+        tags: [ { name: 'api_platform.filter' } ]
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]

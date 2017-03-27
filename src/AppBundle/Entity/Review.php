@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @see http://schema.org/Review Documentation on Schema.org
  *
  * @ORM\Entity
- * @ApiResource(iri="http://schema.org/Review")
+ * @ApiResource(iri="http://schema.org/Review", attributes={"filters"={"review.search_filter"}})
  */
 class Review
 {
