@@ -7,3 +7,6 @@ script:
     - docker-compose build
     - docker-compose run web composer install -o -n
     - docker-compose run web bin/console security:check
+    - docker-compose run web bin/console doctrine:schema:validate --skip-sync
+    - docker-compose run web bin/console doctrine:schema:create
+    - docker-compose run web bin/console hautelook:fixtures:load -n
