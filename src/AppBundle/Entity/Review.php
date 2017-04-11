@@ -120,7 +120,7 @@ class Review
     /**
      * Get body.
      *
-     * @return body
+     * @return string
      */
     public function getBody()
     {
@@ -130,7 +130,7 @@ class Review
     /**
      * Set body.
      *
-     * @param body the value to set
+     * @param string $body the value to set
      */
     public function setBody($body)
     {
@@ -150,7 +150,7 @@ class Review
     /**
      * Set book.
      *
-     * @param book the value to set
+     * @param Book $book the value to set
      */
     public function setBook(Book $book)
     {
@@ -160,7 +160,7 @@ class Review
     /**
      * Get author.
      *
-     * @return author
+     * @return string
      */
     public function getAuthor()
     {
@@ -170,7 +170,7 @@ class Review
     /**
      * Set author.
      *
-     * @param author the value to set
+     * @param string $author the value to set
      */
     public function setAuthor($author)
     {
@@ -180,7 +180,7 @@ class Review
     /**
      * Get publicationDate.
      *
-     * @return publicationDate
+     * @return \DateTime
      */
     public function getPublicationDate()
     {
@@ -190,7 +190,7 @@ class Review
     /**
      * Set publicationDate.
      *
-     * @param publicationDate the value to set
+     * @param \DateTime $publicationDate the value to set
      */
     public function setPublicationDate(\DateTime $publicationDate)
     {
