@@ -177,7 +177,7 @@ class Book
     /**
      * Get title.
      *
-     * @return title
+     * @return string
      */
     public function getTitle()
     {
@@ -187,7 +187,7 @@ class Book
     /**
      * Set title.
      *
-     * @param title the value to set
+     * @param string $title the value to set
      */
     public function setTitle($title)
     {
@@ -197,7 +197,7 @@ class Book
     /**
      * Get publicationDate.
      *
-     * @return publicationDate
+     * @return \DateTime
      */
     public function getPublicationDate()
     {
@@ -207,7 +207,7 @@ class Book
     /**
      * Set publicationDate.
      *
-     * @param publicationDate the value to set
+     * @param \DateTime the value to set
      */
     public function setPublicationDate($publicationDate)
     {
