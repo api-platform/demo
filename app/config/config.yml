@@ -95,8 +95,3 @@ api_platform:
         csv:     ['text/csv']
         html:    ['text/html']
 
-services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
-        public: false
