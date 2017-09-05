@@ -14,7 +14,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Entity
  * @ApiResource(
- *     iri="http://schema.org/Book"
+ *     iri="http://schema.org/Book",
+ *     itemOperations={
+ *      "get"={"method"="GET"},
+ *      "special"={"route_name"="book_special"}
+ *     }
  * )
  */
 class Book
