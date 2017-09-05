@@ -13,6 +13,10 @@ class TestAction {
      */
     private $entityManager;
 
+    /**
+     * TestAction constructor.
+     * @param EntityManager $entityManager
+     */
     public function __construct (EntityManager $entityManager) {
         $this->entityManager = $entityManager;
     }

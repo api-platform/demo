@@ -94,3 +94,9 @@ api_platform:
         yaml:    ['application/x-yaml']
         csv:     ['text/csv']
         html:    ['text/html']
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
