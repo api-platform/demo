@@ -1,3 +1,4 @@
+.env
 /app/config/parameters.yml
 /build/
 /phpunit.xml
@@ -13,4 +14,8 @@
 !var/sessions/.gitkeep
 !var/SymfonyRequirements.php
 /vendor/
-/web/bundles/
+/public/bundles/
+
+###> behat/symfony2-extension ###
+behat.yml
+###< behat/symfony2-extension ###
