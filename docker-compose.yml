@@ -7,7 +7,7 @@ web:
     volumes:
         - .:/app
     ports:
-        - 81:80
+        - 80:80
 
 database:
     image: mysql

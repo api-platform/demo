@@ -116,6 +116,9 @@
     "nelmio/alice": {
         "version": "v3.1.2"
     },
+    "nelmio/cors-bundle": {
+        "version": "1.5.4"
+    },
     "phpdocumentor/reflection-common": {
         "version": "1.0.1"
     },
