@@ -41,6 +41,9 @@
     "behatch/contexts": {
         "version": "3.0.1"
     },
+    "composer/ca-bundle": {
+        "version": "1.1.0"
+    },
     "container-interop/container-interop": {
         "version": "1.2.0"
     },
@@ -139,6 +142,15 @@
     },
     "psr/simple-cache": {
         "version": "1.0.0"
+    },
+    "sensiolabs/security-checker": {
+        "version": "4.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.0",
+            "ref": "576d653444dade07f272c889d52fe4594caa4fc3"
+        }
     },
     "symfony/asset": {
         "version": "v4.0.1"

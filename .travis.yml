@@ -11,3 +11,6 @@ script:
     - docker-compose up -d
     - docker-compose run web bin/console doctrine:schema:create
     - docker-compose run web bin/console hautelook:fixtures:load -n
+    - docker-compose run web bin/console doctrine:schema:drop --env=test --force
+    - docker-compose run web bin/console cache:warmup --env=test
+    - docker-compose run web bin/behat
