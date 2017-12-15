@@ -1,0 +1,30 @@
+api_platform:
+    title:       API Platform's demo
+    version: 1.0.0
+    description: |
+      This is a demo application of the [API Platform](https://api-platform.com) framework.
+      [Its source code](https://github.com/api-platform/demo) includes various examples, check it out!
+    formats:
+        jsonld:  ['application/ld+json']
+        jsonhal: ['application/hal+json']
+        xml:     ['application/xml', 'text/xml']
+        json:    ['application/json']
+        yaml:    ['application/x-yaml']
+        csv:     ['text/csv']
+        html:    ['text/html']
+    mapping:
+        paths: ['%kernel.project_dir%/src/Entity']
+    http_cache:
+        invalidation:
+            enabled: true
+            varnish_urls: ['%env(VARNISH_URL)%']
+        max_age: 0
+        shared_max_age: 3600
+        vary: ['Content-Type', 'Authorization']
+        public: true
+
+services:
+    review.search_filter:
+        parent: 'api_platform.doctrine.orm.search_filter'
+        arguments: [ { itemReviewed: 'exact' } ]
+        tags: [ { name: 'api_platform.filter' } ]

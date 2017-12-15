@@ -1,9 +1,0 @@
-nelmio_cors:
-    defaults:
-        allow_origin:   ["%env(resolve:APP_CORS_ALLOW_ORIGIN)%"]
-        allow_methods:  ["POST", "PUT", "GET", "DELETE", "OPTIONS"]
-        allow_headers:  ["content-type", "authorization"]
-        expose_headers: ["link"]
-        max_age:        3600
-    paths:
-        '^/': ~

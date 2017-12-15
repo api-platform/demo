@@ -11,8 +11,6 @@ Installation (recommended)
 
 $ git clone https://github.com/api-platform/demo.git
 
-# Copy .env.dist to .env and custom the envrionment vars
-
 $ docker-compose up
 ```
 
@@ -23,9 +21,7 @@ Installation (manual)
 
 $ git clone https://github.com/api-platform/demo.git
 
-# Create a user and a database in MySQL and enter the credentials during composer install
-
-# Copy .env.dist to .env and custom the envrionment vars
+# Create a user and a database in MySQL and enter the credentials into .env
 
 $ composer install
 
