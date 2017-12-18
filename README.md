@@ -21,7 +21,7 @@ Installation (manual)
 
 $ git clone https://github.com/api-platform/demo.git
 
-# Create a user and a database in MySQL and enter the credentials into .env
+# Create a user and a database in PostgreSQL and enter the credentials into .env
 
 $ composer install
 
