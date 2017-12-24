@@ -32,3 +32,26 @@ script:
   - curl -k https://localhost:444 # Admin (HTTP/2)
   - curl -k https://localhost:8443 # API (HTTP/2)
   - curl -k https://localhost:8444 # Varnish (HTTP/2)
+
+deploy:
+  - provider: gcs
+    access_key_id: "GCS Interoperable Access Key ID"
+    secret_access_key: "GCS Interoperable Access Secret"
+    bucket: "GCS Bucket"
+    acl: public-read
+    local-dir: admin
+      on:
+        branch: master
+  - provider: gcs
+      access_key_id: "GCS Interoperable Access Key ID"
+      secret_access_key: "GCS Interoperable Access Secret"
+      bucket: "GCS Bucket"
+      acl: public-read
+      local-dir: client
+        on:
+          branch: master
+  # deploy master to production
+  - provider: script
+    script: api/bin/deploy.sh
+    on:
+      branch: master

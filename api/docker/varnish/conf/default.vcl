@@ -34,6 +34,18 @@ sub vcl_deliver {
   unset resp.http.url;
   # Uncomment the following line to NOT send the "Cache-Tags" header to the client (prevent using CloudFlare cache tags)
   #unset resp.http.Cache-Tags;
+
+  # Add a debug to see the number of HITS (0 means MISS)
+  # Disable it in production
+  if (obj.hits > 0) {
+    set resp.http.ApiPlatform-Cache = "HIT";
+  } else {
+    set resp.http.ApiPlatform-Cache = "MISS";
+  }
+
+  set resp.http.ApiPlatform-Cache-Hits = obj.hits;
+
+  return (deliver);
 }
 
 sub vcl_recv {
@@ -53,6 +65,32 @@ sub vcl_recv {
     }
 
     return(synth(400, "ApiPlatform-Ban-Regex HTTP header must be set."));
+  }
+
+  if (req.method != "GET" && req.method != "HEAD") {
+    # Only cache GET or HEAD requests. This makes sure the POST/PUT/DELETE requests are always passed.
+    return (pass);
+  }
+
+  return(hash);
+}
+
+# From https://github.com/mattiasgeniar/varnish-4.0-configuration-templates/blob/master/default.vcl
+sub vcl_hash {
+  # Called after vcl_recv to create a hash value for the request. This is used as a key
+  # to look up the object in Varnish.
+
+  hash_data(req.url);
+
+  if (req.http.host) {
+    hash_data(req.http.host);
+  } else {
+    hash_data(server.ip);
+  }
+
+  # hash cookies for requests that have them
+  if (req.http.Cookie) {
+    hash_data(req.http.Cookie);
   }
 }
 
