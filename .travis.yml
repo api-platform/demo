@@ -1,10 +1,9 @@
 sudo: required
 
 services:
-    - docker
+  - docker
 
 before_script:
-  # Disable services enabled by default
   - sudo service mysql stop
   - sudo service postgresql stop
   - wget https://kubernetes-helm.storage.googleapis.com/helm-v2.6.1-linux-amd64.tar.gz
@@ -24,34 +23,35 @@ script:
   - docker-compose exec php bin/console doctrine:schema:drop --env=test --force
   - docker-compose exec php bin/console cache:warmup --env=test
   - docker-compose exec php bin/behat
-  - curl http://localhost # Client
-  - curl http://localhost:81 # Admin
-  - curl http://localhost:8080 # API
-  - curl http://localhost:8081 # Varnish
-  - curl -k https://localhost # Client (HTTP/2)
-  - curl -k https://localhost:444 # Admin (HTTP/2)
-  - curl -k https://localhost:8443 # API (HTTP/2)
-  - curl -k https://localhost:8444 # Varnish (HTTP/2)
+  - curl http://localhost
+  - curl http://localhost:81
+  - curl http://localhost:8080
+  - curl http://localhost:8081
+  - curl -k https://localhost
+  - curl -k https://localhost:444
+  - curl -k https://localhost:8443
+  - curl -k https://localhost:8444
 
 deploy:
   - provider: gcs
-    access_key_id: "GCS Interoperable Access Key ID"
-    secret_access_key: "GCS Interoperable Access Secret"
-    bucket: "GCS Bucket"
+    bucket: api-demo-admin-test
     acl: public-read
     local-dir: admin
-      on:
-        branch: master
+#    on:
+#      branch: master
   - provider: gcs
-      access_key_id: "GCS Interoperable Access Key ID"
-      secret_access_key: "GCS Interoperable Access Secret"
-      bucket: "GCS Bucket"
-      acl: public-read
-      local-dir: client
-        on:
-          branch: master
-  # deploy master to production
+    bucket: api-demo-client-test
+    acl: public-read
+    local-dir: client
+#    on:
+#      branch: master
   - provider: script
     script: api/bin/deploy.sh
     on:
       branch: master
+dd:
+  - secure: TEheje8PLK1QK4tEmQgB278BE42vBFEQHPpWobQUB7DQjCBUsvTL/51yqtVZ7t7sIb8PWL5rQ6uQCVb0qbui5mv0WXJKJg8ARzhXgvfOSyg7JSUzCz+hcTbJ+GypKCUAx3uei7qwGc4k4l2v1gjsQFoEJaOarqmZ5ma4sGsUqY89Cq7GnYbhhg8l5TZ9mEoVgfcttgmrB2RgAlO2x4lIY3uIc9vu7ES1BnJzNV+4HeRnbWln7osK9l7O6UVeJw5Maa6/pvYIJ4aAi/yTxINhVbQ7zItCe+3lyWiEQLiv6FIg1fMLtGAysf7bRAIJr6CWUWmtmf9xJCGHmdazkpU3de2c24Nl8NksQSHVWxZX5tiUpUzwd5CxBWb3Ny4pFj0DyUcozBJZ/UeHC5ACWJqXZlgFiuQDj8J8wApbuyRlu9sSZYPJPGADtgSFGXOBekZbPitkPbfrYX4RdSBwEOOMTBehl4RyUd7mVd86dFnHFZZaZgCJtD+OS7Q7l5Xyk+SVbBfC/iT1tFQNrZaSVviQwYFaTWCNBx1J6sqVKAhU20Xz+JiAOcVI4b8B71+ZEXZ9YCsw8GUXhFIGz4XdkhGgGJEZeTCJPzKbxx+mtir8aE/cFBTcQovdYkj/bJ1XXmkCYR+miLmbaQLSr/jZqfeWHQc1lOxDPJXY4dfkK/7a8Xo=
+  - secure: g+10ga9QnDlFMV/cUtucR/pznsTJWhKnB2hRbxTgJ15ceq8pUgVy7QspvpxdN766CtM5QY2p7aYSaMpG0hPfXVLkCUM/VW3sqiRsDsP3PrJxtdWSP9yIsEThvT0BWNTUYoycYO7Kq74ktsEJXj18+/jFgPQulOxxzwOjT4EpkHgNAOH/E4sd+OFl7pooDi/0XbIr3KwyBTz3tgIirkHtIH/bXfX0kx3Gi90m/MyxZa0XbB/8qIu+ExVDBRCO6c8rOksGU13O70qrzTuLZRYqNh9f/V8hnH4rhdhsIDjbL2uSpAwOSLwSeGv2CWZJu40Mr2wFHHkBfCySpGjGQhX3xBt5kWlFxTTY2Kezr/OP5UyjtygdV86N/lsUMYJbWxfba1fN210qnzgDr7A2v72A+x8oKn0w5HrR9CWIU/wyv0nKn6064DoIYJ7DUUxl2HPqYzIYT+lQ6fWNNXEQpbeDTbxh4zye5NfUR12a1iZZ4e1N+wtPuYWfvBrek2gGVwFE92llrR7QlURlb0tYyvIM/r0vqaHr+rsk4AzGOi2EkvY4f3vzRM69EF6/hfhhoyPHktR8D9a3XcJidtq6BpT3bJUgcAJon3GheesIKONryRL1jou4bSKETj/8edFpnOpbgvVwxa0Ly7jPJ2hVvuVphtBYvqgikELSxFPdhAtvPHg=
+  - secure: eyuB4sFJtS9fFZzwwy6y/ZpmhtidLEtlQa+9ujNeSypVwZbNSE8d7kK1yo7s5F2kfGhBOK9X/6zD9e78QtI9jzViNYnteRi2fpxtZzJ9vdknax1/ZKXqfkfpytVq13aBelCjGIAGJfbe6/0VeyZXl38oEkgMGM6BJFmOTLfnq3eszl60q5odPssS7F4yfz1sYKjtX13W0heKAAVjNSQk+opAUApHmBmzTunSHCpnmeHaEOUQK4UloxgzVLQqErcNTAkeAddqpW3k7FVyFHLZUpDJVJAVihNVdNYXyhWQSj5kMF8eCrnc40+eQNyGfTFupn2dU1H6742nwBU6tl2mJRiQoAX9X9taiG9FPCuTF45wfbWR/MEZzIjHLSo1i+99oHPqWw1TtSVQxt+SK5OvvzGI/jnOnZBro5iUCtPTLnFAxe28Qq6fzBiumVIiAqw3binZ85pDCiMwcBwD4U4kmkW3ocfOOxDbX2/p309XXzG4pqJX3M5G6dZxx7aWsDACyH/335gspcvWE9YIa/vY1gjtHfxlV36g8pih9KwqIymQZ87bQzIZH97wLGTG1IwvfPTwmcPriNb9nxD/J9Jf2/YCXkfgBwwdhf+Of+r3OTJtSEFnRrCj8aDwtXEyp93um4frhEpeSy8LEYoMHOoBhulD28bDrANF3Lc4iQz5J/w=
+  - secure: fRadbSv8wkHmoaaBB0ikVwyxpg1hgNQyWwRP2PC6kNFHZvWz/g6laQGj76Y5iiuNzwQhQZtlux8tKtE4A0AM2E2L+ij2UEx/6EM+nZiewHp3nl1BkJsFiaZOIfsnIfdbnnTUh8gw3BFkxK/mP6uW6bb1PUPs0zbX+JTIHEMz/s77FVoJ9fV68YZfm8RUXdOw/NmWkFYP3JQiAHuM10jLPAj7A2cFhSvihcuFAH5Thyg9NpWLw2Z9qYbnVBNeDhmaiI/UuyziifYR82EvbQJR3c5UsdvcnvvOutsuG+12WV5CVf2TvWvlDx2KuMx0L9jSCX6tE+JTLCvOK2zb8Z166nHURqg/Xmyx9c5V9ScqG1299lDxJ3rzqWWhyyv+G5VOL1h4GU05PyHm7TWtfXuwREAH7kcLhBmjf+O5IUAlmsQuKFeFDkQvIBfwHwXpYGy6YdPi1aTC6OzDI/h0BwKBLT6FML6w23egVsT1TYi3BxafjUwWqUGlqWLApwRDTymcBO630fmBiR0JwoNHh3pzCOr5pQp1Wdm+NHNhIou9/EqhXzSgVVGwst6gNWxhT591oGHKsosTFgZ2NOjYPgdHsT03IhK3lz4+VqqLsLEawS9qN/FULRMbc+OYKk5L1NJXYv+pCJjf1m9LYRbf/wB8GFG50nu13TT23rLaPrkJUzg=
+  - secure: SCz9yLSjGqXXXbPazN2Q2j2WiYED6nVg1UHbh1nMK/Sk3sti0mbRnke6AoLgIx7ILPcbvFVHL2mw3KJ+vqVmHBBy/dl5kiWwrpmUpcPyKlktDUmy2LrvMRjT55/0vqCvJWpx32Bc8VLX81biPLaHwVb9FF4kdTV7QpmhL4jAgPmxdvM2c283sXJptfvz1xU75ZIdblTnUKbWjjyPjYDJ3y7IbFxeWWsp8HAxba80knFOabXT+hw2MZJswfRcxde6RoVt3dzqnxvHRXsZNv+vkoWDBspu6O9wQenMdnb7E8dJzuh6ZwVERhPAeiz7bf2qtG+n3V7cZZSnqDoPRcYtHguFQ5CGathvYti80kDsQnmUywUSy7i7wmCiKuJbFMXAHqC4ozo+Lu9gJHzaE6UqUWNJk6jAQ9bx9sFqz2hKSElxUda4GmOc+1zYLYuErRskdMRq7uGPds8wL5XUGiwcKqlV26DqJZ4dqgCayOJ7f+nVu8WWzjfJnTcMUciL6gH0RZN4q48s1+E/yhquJeoedbZ8MJmhSr5sfcT5uLmnt2yXEjE41VfCS2+sqZcD8TYAMtStzP3LUYK+JL1diX1xJf7Nr3edC8Q47IP3oGGS5x4dJyb0v2efjnPSmvW3GRYO/EYkxKnsnuFD142a8JCAkHI4RC8RPbCvGHB+JZopDCc=
