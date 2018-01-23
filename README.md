@@ -14,6 +14,8 @@ $ git clone https://github.com/api-platform/demo.git
 $ docker-compose up
 ```
 
+And go to https://localhost
+
 Installation (manual)
 =====================
 
