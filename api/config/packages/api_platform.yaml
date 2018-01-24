@@ -4,6 +4,7 @@ api_platform:
     description: |
       This is a demo application of the [API Platform](https://api-platform.com) framework.
       [Its source code](https://github.com/api-platform/demo) includes various examples, check it out!
+      The GraphQL entrypoint is available [here](/graphql)
     formats:
         jsonld:  ['application/ld+json']
         jsonhal: ['application/hal+json']
