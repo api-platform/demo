@@ -1,6 +1,15 @@
 import React from 'react';
 import './welcome.css';
 
+const {
+    REACT_APP_ADMIN_HOST_HTTP: ADMIN_HOST_HTTP,
+    REACT_APP_ADMIN_HOST_HTTPS: ADMIN_HOST_HTTPS,
+    REACT_APP_API_HOST_HTTP: API_HOST_HTTP,
+    REACT_APP_API_HOST_HTTPS: API_HOST_HTTPS,
+    REACT_APP_API_CACHED_HOST_HTTP: API_CACHED_HOST_HTTP,
+    REACT_APP_API_CACHED_HOST_HTTPS: API_CACHED_HOST_HTTPS
+} = process.env;
+
 const Welcome = () => (
     <div className="welcome">
         <header className="welcome__top">
@@ -52,13 +61,13 @@ const Welcome = () => (
                         <div className="other__content">
                             <h3>API</h3>
                             <ButtonsGroup
-                                httpLink={"http://"+document.location.host+":8080"}
-                                httpsLink={"https://"+document.location.host+":8443"}
+                                httpLink={API_HOST_HTTP}
+                                httpsLink={API_HOST_HTTPS}
                             />
                             <h3>Cached API</h3>
                             <ButtonsGroup
-                                httpLink={"http://"+document.location.host+":8081"}
-                                httpsLink={"https://"+document.location.host+":8444"}
+                                httpLink={API_CACHED_HOST_HTTP}
+                                httpsLink={API_CACHED_HOST_HTTPS}
                             />
                         </div>
                     </div>
@@ -69,8 +78,8 @@ const Welcome = () => (
                         <div className="other__content">
                             <h3>Admin</h3>
                             <ButtonsGroup
-                                httpLink={"http://"+document.location.host+":81"}
-                                httpsLink={"https://"+document.location.host+":444"}
+                                httpLink={ADMIN_HOST_HTTP}
+                                httpsLink={ADMIN_HOST_HTTPS}
                             />
                         </div>
                     </div>
