@@ -11,9 +11,10 @@ Installation (recommended)
 
 $ git clone https://github.com/api-platform/demo.git
 
-
 $ docker-compose up
 ```
+
+And go to https://localhost
 
 Installation (manual)
 =====================
@@ -22,9 +23,9 @@ Installation (manual)
 
 $ git clone https://github.com/api-platform/demo.git
 
-$ composer install
+# Create a user and a database in PostgreSQL and enter the credentials into .env
 
-# Create a user and a database in MySQL and enter the credentials during composer install
+$ composer install
 
 $ php bin/console doctrine:schema:update --force
 ```
