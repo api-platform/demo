@@ -16,11 +16,6 @@ class FeatureContext implements Context, SnippetAcceptingContext
     private $doctrine;
 
     /**
-     * @var \Doctrine\Common\Persistence\ObjectManager
-     */
-    private $manager;
-
-    /**
      * @var SchemaTool
      */
     private $schemaTool;
@@ -40,9 +35,9 @@ class FeatureContext implements Context, SnippetAcceptingContext
     public function __construct(ManagerRegistry $doctrine)
     {
         $this->doctrine = $doctrine;
-        $this->manager = $doctrine->getManager();
-        $this->schemaTool = new SchemaTool($this->manager);
-        $this->classes = $this->manager->getMetadataFactory()->getAllMetadata();
+        $manager = $doctrine->getManager();
+        $this->schemaTool = new SchemaTool($manager);
+        $this->classes = $manager->getMetadataFactory()->getAllMetadata();
     }
 
     /**
@@ -50,14 +45,8 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function createDatabase()
     {
-        $this->schemaTool->createSchema($this->classes);
-    }
-
-    /**
-     * @AfterScenario @dropSchema
-     */
-    public function dropDatabase()
-    {
         $this->schemaTool->dropSchema($this->classes);
+        $this->doctrine->getManager()->clear();
+        $this->schemaTool->createSchema($this->classes);
     }
 }

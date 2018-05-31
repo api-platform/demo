@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @see http://schema.org/Review Documentation on Schema.org
  *
  * @ORM\Entity
- * @ApiResource(iri="http://schema.org/Review", attributes={"filters"={"review.search_filter"}})
+ * @ApiResource(iri="http://schema.org/Review")
  * @ApiFilter(SearchFilter::class, properties={"book": "exact"})
  */
 class Review
@@ -44,6 +44,15 @@ class Review
      * @ORM\Column(type="smallint")
      */
     public $rating;
+
+    /**
+     * @var string DEPRECATED (use rating now): A letter to rate the book
+     *
+     * @Assert\Choice({"a", "b", "c", "d"})
+     * @ORM\Column(type="string", nullable=true)
+     * @ApiProperty(deprecationReason="Use the rating property instead")
+     */
+    public $letter;
 
     /**
      * @var Book The item that is being reviewed/rated

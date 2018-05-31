@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "c2b0adbefae01a988e2b3d6b63996d6d",
+    "content-hash": "59c9c1de12bef8b8666141c8f90bd608",
     "packages": [
         {
             "name": "api-platform/api-pack",
@@ -44,28 +44,28 @@
         },
         {
             "name": "api-platform/core",
-            "version": "dev-serializer-41",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/dunglas/core.git",
-                "reference": "dba9d4b156b29d5f8ddf1f847798d7324820bfaf"
+                "url": "https://github.com/api-platform/core.git",
+                "reference": "6a8f94250e75c9426f4bcdc7c0a600940342b4e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dunglas/core/zipball/dba9d4b156b29d5f8ddf1f847798d7324820bfaf",
-                "reference": "dba9d4b156b29d5f8ddf1f847798d7324820bfaf",
+                "url": "https://api.github.com/repos/api-platform/core/zipball/6a8f94250e75c9426f4bcdc7c0a600940342b4e5",
+                "reference": "6a8f94250e75c9426f4bcdc7c0a600940342b4e5",
                 "shasum": ""
             },
             "require": {
                 "doctrine/inflector": "^1.0",
-                "php": ">=7.1",
+                "php": ">=7.0",
                 "psr/cache": "^1.0",
                 "psr/container": "^1.0",
                 "symfony/http-foundation": "^3.1 || ^4.0",
                 "symfony/http-kernel": "^2.7 || ^3.0 || ^4.0",
                 "symfony/property-access": "^2.7 || ^3.0 || ^4.0",
                 "symfony/property-info": "^3.3.11 || ^4.0",
-                "symfony/serializer": "^4.1",
+                "symfony/serializer": "^3.1 || ^4.0",
                 "willdurand/negotiation": "^2.0.3"
             },
             "conflict": {
@@ -140,11 +140,7 @@
                     "ApiPlatform\\Core\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "ApiPlatform\\Core\\Tests\\": "tests/"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -158,18 +154,15 @@
             "description": "The ultimate solution to create web APIs.",
             "homepage": "https://api-platform.com",
             "keywords": [
-                "API",
-                "HAL",
                 "Hydra",
-                "JSON",
                 "JSON-LD",
-                "REST",
-                "Swagger"
+                "api",
+                "hal",
+                "json",
+                "rest",
+                "swagger"
             ],
-            "support": {
-                "source": "https://github.com/dunglas/core/tree/serializer-41"
-            },
-            "time": "2018-05-31T09:43:32+00:00"
+            "time": "2018-05-31T09:38:29+00:00"
         },
         {
             "name": "composer/ca-bundle",
@@ -5403,14 +5396,7 @@
             "time": "2017-12-21T21:36:53+00:00"
         }
     ],
-    "aliases": [
-        {
-            "alias": "2.3",
-            "alias_normalized": "2.3.0.0",
-            "version": "dev-serializer-41",
-            "package": "api-platform/core"
-        }
-    ],
+    "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
         "api-platform/core": 20,
