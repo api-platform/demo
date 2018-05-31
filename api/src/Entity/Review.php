@@ -2,8 +2,10 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -14,6 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Entity
  * @ApiResource(iri="http://schema.org/Review", attributes={"filters"={"review.search_filter"}})
+ * @ApiFilter(SearchFilter::class, properties={"book": "exact"})
  */
 class Review
 {
@@ -29,171 +32,46 @@ class Review
     /**
      * @var string The actual body of the review
      *
-     * @Assert\Type(type="string")
-     * @ORM\Column(nullable=true, type="text")
+     * @ORM\Column(type="text", nullable=true)
      * @ApiProperty(iri="http://schema.org/reviewBody")
      */
-    private $body;
+    public $body;
 
     /**
      * @var int
      *
-     * @Assert\Type(type="integer")
      * @Assert\Range(min=0, max=5)
      * @ORM\Column(type="smallint")
      */
-    private $rating;
+    public $rating;
 
     /**
      * @var Book The item that is being reviewed/rated
      *
      * @Assert\NotNull
-     * @ORM\ManyToOne(targetEntity="App\Entity\Book")
+     * @ORM\ManyToOne(targetEntity=Book::class, inversedBy="reviews")
      * @ORM\JoinColumn(nullable=false)
      * @ApiProperty(iri="http://schema.org/itemReviewed")
      */
-    private $book;
+    public $book;
 
     /**
      * @var string Author the author of the review
      *
-     * @ORM\Column(nullable=true, type="text")
+     * @ORM\Column(type="text", nullable=true)
      * @ApiProperty(iri="http://schema.org/author")
      */
-    private $author;
+    public $author;
 
     /**
-     * @var \DateTime Author the author of the review
+     * @var \DateTimeInterface Author the author of the review
      *
      * @ORM\Column(nullable=true, type="datetime")
      */
-    private $publicationDate;
+    public $publicationDate;
 
-    /**
-     * Sets id.
-     *
-     * @param int $id
-     *
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Gets id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
-    }
-
-    /**
-     * Sets rating.
-     *
-     * @param int $rating
-     *
-     * @return $this
-     */
-    public function setRating($rating)
-    {
-        $this->rating = $rating;
-
-        return $this;
-    }
-
-    /**
-     * Gets rating.
-     *
-     * @return int
-     */
-    public function getRating()
-    {
-        return $this->rating;
-    }
-
-    /**
-     * Get body.
-     *
-     * @return string
-     */
-    public function getBody()
-    {
-        return $this->body;
-    }
-
-    /**
-     * Set body.
-     *
-     * @param string $body the value to set
-     */
-    public function setBody($body)
-    {
-        $this->body = $body;
-    }
-
-    /**
-     * Get book.
-     *
-     * @return book
-     */
-    public function getBook()
-    {
-        return $this->book;
-    }
-
-    /**
-     * Set book.
-     *
-     * @param Book $book the value to set
-     */
-    public function setBook(Book $book)
-    {
-        $this->book = $book;
-    }
-
-    /**
-     * Get author.
-     *
-     * @return string
-     */
-    public function getAuthor()
-    {
-        return $this->author;
-    }
-
-    /**
-     * Set author.
-     *
-     * @param string $author the value to set
-     */
-    public function setAuthor($author)
-    {
-        $this->author = $author;
-    }
-
-    /**
-     * Get publicationDate.
-     *
-     * @return \DateTime
-     */
-    public function getPublicationDate()
-    {
-        return $this->publicationDate;
-    }
-
-    /**
-     * Set publicationDate.
-     *
-     * @param \DateTime $publicationDate the value to set
-     */
-    public function setPublicationDate(\DateTime $publicationDate)
-    {
-        $this->publicationDate = $publicationDate;
     }
 }
