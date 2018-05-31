@@ -108,5 +108,12 @@ services:
       - "8443:8443"
       - "8444:8444"
 
+  blackfire:
+    image: blackfire/blackfire
+    environment:
+        # Exposes the host BLACKFIRE_SERVER_ID and TOKEN environment variables.
+        - BLACKFIRE_SERVER_ID
+        - BLACKFIRE_SERVER_TOKEN
+
 volumes:
   db-data: {}

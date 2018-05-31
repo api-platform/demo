@@ -1,11 +1,17 @@
 {
     "type": "project",
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/dunglas/core"
+        }
+    ],
     "require": {
         "php": "^7.1.3",
         "ext-iconv": "*",
         "api-platform/api-pack": "^1.0",
-        "api-platform/core": "^2.2",
+        "api-platform/core": "dev-serializer-41 as 2.3",
         "guzzlehttp/guzzle": "^6.3",
         "nelmio/cors-bundle": "^1.5",
         "sensiolabs/security-checker": "^4.1",
