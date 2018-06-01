@@ -35,25 +35,20 @@ const Welcome = () => (
             </div>
             <div className="main__content">
                 <h1>
-                    Welcome to <strong>API Platform</strong>!
+                    Welcome to the <strong>API Platform demo</strong>!
                 </h1>
                 <div className="main__before-starting">
                     <p>
-                        This container will host your <b>Progressive Web App</b>{' '}
-                        ({'http:' === document.location.protocol ? <a href="https://localhost">HTTPS</a> : <a href="http://localhost">HTTP</a>}).
-                        Learn how to create your first API and generate a PWA:
+                        This container host a generated <b>Progressive Web App</b> ({'http:' === document.location.protocol ? <a href="https://localhost">HTTPS</a> : <a href="http://localhost">HTTP</a>})
+                        using <a href="https://reactjs.org">React</a> and <a href="https://redux.js.org">Redux</a>{' '}.<br />
+                        <ul>
+                            <li>Books</li>
+                            <li>Reviews</li>
+                        </ul>
                     </p>
-                    <a
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        href="https://api-platform.com/docs/"
-                        className="main__button"
-                    >
-                        Get started<Arrow />
-                    </a>
                 </div>
                 <div className="main__other">
-                    <h2>Available services:</h2>
+                    <h2>Related demo containers:</h2>
                     <div className="other__bloc">
                         <div className="other__circle">
                             <Api />
@@ -84,6 +79,15 @@ const Welcome = () => (
                         </div>
                     </div>
                 </div>
+                <div>Learn how to create your own project:</div>
+                <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://api-platform.com/docs/"
+                    className="main__button"
+                >
+                    Get started<Arrow />
+                </a>
             </div>
         </section>
         <div className="welcome__help">
