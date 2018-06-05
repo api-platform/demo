@@ -9,6 +9,7 @@ use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -17,7 +18,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @see http://schema.org/Book Documentation on Schema.org
  *
  * @ORM\Entity
- * @ApiResource(iri="http://schema.org/Book")
+ * @ApiResource(
+ *     iri="http://schema.org/Book",
+ *     normalizationContext={"groups": {"book:read"}}
+ * )
  * @ApiFilter(PropertyFilter::class)
  */
 class Book
@@ -36,6 +40,7 @@ class Book
      *
      * @Assert\Isbn
      * @ORM\Column(nullable=true)
+     * @Groups("book:read")
      * @ApiProperty(iri="http://schema.org/isbn")
      */
     public $isbn;
@@ -45,6 +50,7 @@ class Book
      *
      * @Assert\NotBlank
      * @ORM\Column
+     * @Groups({"book:read", "review:read"})
      * @ApiProperty(iri="http://schema.org/name")
      */
     public $title;
@@ -54,6 +60,7 @@ class Book
      *
      * @Assert\NotBlank
      * @ORM\Column(type="text")
+     * @Groups("book:read")
      * @ApiProperty(iri="http://schema.org/description")
      */
     public $description;
@@ -63,6 +70,7 @@ class Book
      *
      * @Assert\NotBlank
      * @ORM\Column
+     * @Groups("book:read")
      * @ApiProperty(iri="http://schema.org/author")
      */
     public $author;
@@ -73,6 +81,7 @@ class Book
      * @Assert\Date
      * @Assert\NotNull
      * @ORM\Column(type="date")
+     * @Groups("book:read")
      * @ApiProperty(iri="http://schema.org/dateCreated")
      */
     public $publicationDate;
@@ -80,7 +89,8 @@ class Book
     /**
      * @var Review[] The book's reviews
      *
-     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="book", orphanRemoval=true, cascade={"all"})
+     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="book", orphanRemoval=true, cascade={"persist", "remove"})
+     * @Groups("book:read")
      * @ApiProperty(iri="http://schema.org/reviews")
      */
     private $reviews;
@@ -95,27 +105,31 @@ class Book
         return $this->id;
     }
 
+    public function addReview(Review $review, bool $updateRelation = true): void
+    {
+        if ($this->reviews->contains($review)) {
+            return;
+        }
+
+        $this->reviews->add($review);
+        if ($updateRelation) {
+            $review->setBook($this, false);
+        }
+    }
+
+    public function removeReview(Review $review, bool $updateRelation = true): void
+    {
+        $this->reviews->removeElement($review);
+        if ($updateRelation) {
+            $review->setBook(null, false);
+        }
+    }
+
     /**
      * @return Collection|Review[]
      */
     public function getReviews(): iterable
     {
         return $this->reviews;
-    }
-
-    public function addReview(Review $review): void
-    {
-        if (!$this->reviews->contains($review)) {
-            $this->reviews->add($review);
-            $review->book = $this;
-        }
-    }
-
-    public function removeReview(Review $review): void
-    {
-        if ($this->reviews->contains($review)) {
-            $review->book = $this;
-            $this->reviews->removeElement($review);
-        }
     }
 }
