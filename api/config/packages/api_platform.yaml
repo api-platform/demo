@@ -1,31 +1,22 @@
-parameters:
-    # Adds a fallback VARNISH_URL if the env var is not set.
-    # This allows you to run cache:warmup even if your
-    # You should not need to change this value.
-    env(VARNISH_URL): ''
-
 api_platform:
-    title:       API Platform's demo
+    title: API Platform's demo
     version: 1.0.0
     description: |
       This is a demo application of the [API Platform](https://api-platform.com) framework.
       [Its source code](https://github.com/api-platform/demo) includes various examples, check it out!
       You may also be insterested by [the GraphQL entrypoint](/graphql).
     formats:
-        jsonld:  ['application/ld+json']
+        jsonld: ['application/ld+json']
         jsonhal: ['application/hal+json']
         jsonapi: ['application/vnd.api+json']
-        json:    ['application/json']
-        xml:     ['application/xml', 'text/xml']
-        yaml:    ['application/x-yaml']
-        csv:     ['text/csv']
-        html:    ['text/html']
+        json: ['application/json']
+        xml: ['application/xml', 'text/xml']
+        yaml: ['application/x-yaml']
+        csv: ['text/csv']
+        html: ['text/html']
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
     http_cache:
-        invalidation:
-            enabled: true
-            varnish_urls: ['%env(VARNISH_URL)%']
         max_age: 0
         shared_max_age: 3600
         vary: ['Content-Type', 'Authorization']

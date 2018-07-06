@@ -1,0 +1,11 @@
+parameters:
+    # Adds a fallback VARNISH_URL if the env var is not set.
+    # This allows you to run cache:warmup even if your
+    # You should not need to change this value.
+    env(VARNISH_URL): ''
+
+api_platform:
+    http_cache:
+        invalidation:
+            enabled: true
+            varnish_urls: ['%env(VARNISH_URL)%']

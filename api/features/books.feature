@@ -31,7 +31,6 @@ Feature: Manage books and their reviews
       "description": "This book is designed for PHP developers and architects who want to modernize their skills through better understanding of Persistence and ORM.",
       "author": "K\u00e9vin Dunglas",
       "publicationDate": "2013-12-01T00:00:00+00:00",
-      "id": 1,
       "reviews": []
     }
     """
@@ -57,14 +56,13 @@ Feature: Manage books and their reviews
           "description": "This book is designed for PHP developers and architects who want to modernize their skills through better understanding of Persistence and ORM.",
           "author": "K\u00e9vin Dunglas",
           "publicationDate": "2013-12-01T00:00:00+00:00",
-          "id": 1,
           "reviews": []
         }
       ],
       "hydra:totalItems": 1,
       "hydra:search": {
         "@type": "hydra:IriTemplate",
-        "hydra:template": "\/books{?properties[]}",
+        "hydra:template": "/books{?properties[]}",
         "hydra:variableRepresentation": "BasicRepresentation",
         "hydra:mapping": [
             {
@@ -139,10 +137,13 @@ Feature: Manage books and their reviews
       "body": "Must have!",
       "rating": 5,
       "letter": null,
-      "book": "/books/1",
+      "book": {
+        "@id": "/books/1",
+        "@type": "http://schema.org/Book",
+        "title": "Persistence in PHP with the Doctrine ORM"
+      },
       "author": "Foo Bar",
-      "publicationDate": "2016-01-01T00:00:00+00:00",
-      "id": 1
+      "publicationDate": "2016-01-01T00:00:00+00:00"
     }
     """
 
@@ -155,49 +156,48 @@ Feature: Manage books and their reviews
     And the JSON should be equal to:
     """
     {
-        "@context": "/contexts/Review",
-        "@id": "/reviews",
-        "@type": "hydra:Collection",
-        "hydra:member": [
-            {
-                "@id": "/reviews/1",
-                "@type": "http://schema.org/Review",
-                "body": "Must have!",
-                "rating": 5,
-                "letter": null,
-                "book": "/books/1",
-                "author": "Foo Bar",
-                "publicationDate": "2016-01-01T00:00:00+00:00",
-                "id": 1
-            }
-        ],
-        "hydra:totalItems": 1,
-        "hydra:view": {
-            "@id": "/reviews?book=%2Fbooks%2F1",
-            "@type": "hydra:PartialCollectionView"
-        },
-        "hydra:view": {
-            "@id": "\/reviews?book=%2Fbooks%2F1",
-            "@type": "hydra:PartialCollectionView"
-        },
-        "hydra:search": {
-            "@type": "hydra:IriTemplate",
-            "hydra:template": "\/reviews{?book,book[]}",
-            "hydra:variableRepresentation": "BasicRepresentation",
-            "hydra:mapping": [
-                {
-                    "@type": "IriTemplateMapping",
-                    "variable": "book",
-                    "property": "book",
-                    "required": false
-                },
-                {
-                    "@type": "IriTemplateMapping",
-                    "variable": "book[]",
-                    "property": "book",
-                    "required": false
-                }
-            ]
+      "@context": "/contexts/Review",
+      "@id": "/reviews",
+      "@type": "hydra:Collection",
+      "hydra:member": [
+        {
+          "@id": "/reviews/1",
+          "@type": "http://schema.org/Review",
+          "body": "Must have!",
+          "rating": 5,
+          "letter": null,
+          "book": {
+            "@id": "/books/1",
+            "@type": "http://schema.org/Book",
+            "title": "Persistence in PHP with the Doctrine ORM"
+          },
+          "author": "Foo Bar",
+          "publicationDate": "2016-01-01T00:00:00+00:00"
         }
+      ],
+      "hydra:totalItems": 1,
+      "hydra:view": {
+        "@id": "/reviews?book=%2Fbooks%2F1",
+        "@type": "hydra:PartialCollectionView"
+      },
+      "hydra:search": {
+        "@type": "hydra:IriTemplate",
+        "hydra:template": "/reviews{?book,book[]}",
+        "hydra:variableRepresentation": "BasicRepresentation",
+        "hydra:mapping": [
+          {
+            "@type": "IriTemplateMapping",
+            "variable": "book",
+            "property": "book",
+            "required": false
+          },
+          {
+            "@type": "IriTemplateMapping",
+            "variable": "book[]",
+            "property": "book",
+            "required": false
+          }
+        ]
+      }
     }
     """
