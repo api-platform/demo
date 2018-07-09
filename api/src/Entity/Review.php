@@ -2,9 +2,12 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -13,7 +16,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @see http://schema.org/Review Documentation on Schema.org
  *
  * @ORM\Entity
- * @ApiResource(iri="http://schema.org/Review", attributes={"filters"={"review.search_filter"}})
+ * @ApiResource(
+ *     iri="http://schema.org/Review",
+ *     normalizationContext={"groups": {"review:read"}}
+ * )
+ * @ApiFilter(SearchFilter::class, properties={"book": "exact"})
  */
 class Review
 {
@@ -29,27 +36,37 @@ class Review
     /**
      * @var string The actual body of the review
      *
-     * @Assert\Type(type="string")
-     * @ORM\Column(nullable=true, type="text")
+     * @ORM\Column(type="text", nullable=true)
+     * @Groups({"book:read", "review:read"})
      * @ApiProperty(iri="http://schema.org/reviewBody")
      */
-    private $body;
+    public $body;
 
     /**
      * @var int
      *
-     * @Assert\Type(type="integer")
      * @Assert\Range(min=0, max=5)
      * @ORM\Column(type="smallint")
+     * @Groups("review:read")
      */
-    private $rating;
+    public $rating;
+
+    /**
+     * @var string DEPRECATED (use rating now): A letter to rate the book
+     *
+     * @Assert\Choice({"a", "b", "c", "d"})
+     * @ORM\Column(type="string", nullable=true)
+     * @Groups("review:read")
+     * @ApiProperty(deprecationReason="Use the rating property instead")
+     */
+    public $letter;
 
     /**
      * @var Book The item that is being reviewed/rated
      *
      * @Assert\NotNull
-     * @ORM\ManyToOne(targetEntity="App\Entity\Book")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity=Book::class, inversedBy="reviews")
+     * @Groups("review:read")
      * @ApiProperty(iri="http://schema.org/itemReviewed")
      */
     private $book;
@@ -57,143 +74,35 @@ class Review
     /**
      * @var string Author the author of the review
      *
-     * @ORM\Column(nullable=true, type="text")
+     * @ORM\Column(type="text", nullable=true)
+     * @Groups("review:read")
      * @ApiProperty(iri="http://schema.org/author")
      */
-    private $author;
+    public $author;
 
     /**
-     * @var \DateTime Author the author of the review
+     * @var \DateTimeInterface Author the author of the review
      *
+     * @Groups("review:read")
      * @ORM\Column(nullable=true, type="datetime")
      */
-    private $publicationDate;
+    public $publicationDate;
 
-    /**
-     * Sets id.
-     *
-     * @param int $id
-     *
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Gets id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * Sets rating.
-     *
-     * @param int $rating
-     *
-     * @return $this
-     */
-    public function setRating($rating)
-    {
-        $this->rating = $rating;
-
-        return $this;
-    }
-
-    /**
-     * Gets rating.
-     *
-     * @return int
-     */
-    public function getRating()
-    {
-        return $this->rating;
-    }
-
-    /**
-     * Get body.
-     *
-     * @return string
-     */
-    public function getBody()
-    {
-        return $this->body;
-    }
-
-    /**
-     * Set body.
-     *
-     * @param string $body the value to set
-     */
-    public function setBody($body)
-    {
-        $this->body = $body;
-    }
-
-    /**
-     * Get book.
-     *
-     * @return book
-     */
-    public function getBook()
-    {
-        return $this->book;
-    }
-
-    /**
-     * Set book.
-     *
-     * @param Book $book the value to set
-     */
-    public function setBook(Book $book)
+    public function setBook(?Book $book, bool $updateRelation = true): void
     {
         $this->book = $book;
+        if ($updateRelation) {
+            $book->addReview($this, false);
+        }
     }
 
-    /**
-     * Get author.
-     *
-     * @return string
-     */
-    public function getAuthor()
+    public function getBook(): ?Book
     {
-        return $this->author;
-    }
-
-    /**
-     * Set author.
-     *
-     * @param string $author the value to set
-     */
-    public function setAuthor($author)
-    {
-        $this->author = $author;
-    }
-
-    /**
-     * Get publicationDate.
-     *
-     * @return \DateTime
-     */
-    public function getPublicationDate()
-    {
-        return $this->publicationDate;
-    }
-
-    /**
-     * Set publicationDate.
-     *
-     * @param \DateTime $publicationDate the value to set
-     */
-    public function setPublicationDate(\DateTime $publicationDate)
-    {
-        $this->publicationDate = $publicationDate;
+        return $this->book;
     }
 }

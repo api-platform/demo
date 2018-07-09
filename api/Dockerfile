@@ -1,49 +1,106 @@
-FROM composer:1.6
-FROM php:7.2-fpm-alpine3.7
+# the different stages of this Dockerfile are meant to be built into separate images
+# https://docs.docker.com/compose/compose-file/#target
 
-RUN apk add --no-cache --virtual .persistent-deps \
+ARG PHP_VERSION=7.2
+ARG NGINX_VERSION=1.15
+ARG VARNISH_VERSION=6.0
+
+FROM php:${PHP_VERSION}-fpm-alpine AS api_platform_php
+
+# persistent / runtime deps
+RUN apk add --no-cache \
+		acl \
+		file \
+		gettext \
 		git \
-		icu-libs \
-		libpq \
-		zlib
+		postgresql-client \
+	;
 
-ENV APCU_VERSION 5.1.9
-RUN set -xe \
-	&& apk add --no-cache --virtual .build-deps \
+ARG APCU_VERSION=5.1.11
+RUN set -eux; \
+	apk add --no-cache --virtual .build-deps \
 		$PHPIZE_DEPS \
 		icu-dev \
+		libzip-dev \
 		postgresql-dev \
 		zlib-dev \
-	&& docker-php-ext-install \
+	; \
+	\
+	docker-php-ext-configure zip --with-libzip; \
+	docker-php-ext-install -j$(nproc) \
 		intl \
 		pdo_pgsql \
 		zip \
-	&& pecl install \
+	; \
+	pecl install \
 		apcu-${APCU_VERSION} \
-	&& docker-php-ext-enable --ini-name 20-apcu.ini apcu \
-	&& docker-php-ext-enable --ini-name 05-opcache.ini opcache \
-	&& apk del .build-deps
+	; \
+	pecl clear-cache; \
+	docker-php-ext-enable \
+		apcu \
+		opcache \
+	; \
+	\
+	runDeps="$( \
+		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local/lib/php/extensions \
+			| tr ',' '\n' \
+			| sort -u \
+			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
+	)"; \
+	apk add --no-cache --virtual .api-phpexts-rundeps $runDeps; \
+	\
+	apk del .build-deps
 
-COPY --from=0 /usr/bin/composer /usr/bin/composer
+#RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
+#    && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/alpine/amd64/$version \
+#    && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp \
+#    && mv /tmp/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
+#    && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8707\n" > $PHP_INI_DIR/conf.d/blackfire.ini
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY docker/php/php.ini /usr/local/etc/php/php.ini
-COPY docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
-RUN chmod +x /usr/local/bin/docker-entrypoint
-
-WORKDIR /srv/api
-ENTRYPOINT ["docker-entrypoint"]
-CMD ["php-fpm"]
 
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
-ENV COMPOSER_ALLOW_SUPERUSER 1
-RUN composer global require "hirak/prestissimo:^0.3" --prefer-dist --no-progress --no-suggest --classmap-authoritative
+ENV COMPOSER_ALLOW_SUPERUSER=1
+RUN set -eux; \
+	composer global require "hirak/prestissimo:^0.3" --prefer-dist --no-progress --no-suggest --classmap-authoritative; \
+	composer clear-cache
+ENV PATH="${PATH}:/root/.composer/vendor/bin"
 
-# Prevent the reinstallation of vendors at every changes in the source code
+WORKDIR /srv/api
+
+# build for production
+ARG APP_ENV=prod
+
+# prevent the reinstallation of vendors at every changes in the source code
 COPY composer.json composer.lock ./
-RUN composer install --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress --no-suggest \
-	&& composer clear-cache
+RUN set -eux; \
+	composer install --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress --no-suggest; \
+	composer clear-cache
 
 COPY . ./
 
-RUN mkdir -p var/cache var/logs var/sessions \
-	&& composer dump-autoload --classmap-authoritative --no-dev \
-	&& chown -R www-data var
+RUN set -eux; \
+	mkdir -p var/cache var/log; \
+	composer dump-autoload --classmap-authoritative --no-dev; \
+	composer run-script --no-dev post-install-cmd; \
+	chmod +x bin/console; sync
+VOLUME /srv/api/var
+
+COPY docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
+RUN chmod +x /usr/local/bin/docker-entrypoint
+
+ENTRYPOINT ["docker-entrypoint"]
+CMD ["php-fpm"]
+
+FROM nginx:${NGINX_VERSION}-alpine AS api_platform_nginx
+
+COPY docker/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
+
+WORKDIR /srv/api
+
+COPY --from=api_platform_php /srv/api/public public/
+
+FROM cooptilleuls/varnish:${VARNISH_VERSION} AS api_platform_varnish
+
+COPY docker/varnish/conf/default.vcl /usr/local/etc/varnish/default.vcl

@@ -2,9 +2,14 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -14,8 +19,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Entity
  * @ApiResource(
- *     iri="http://schema.org/Book"
+ *     iri="http://schema.org/Book",
+ *     normalizationContext={"groups": {"book:read"}}
  * )
+ * @ApiFilter(PropertyFilter::class)
  */
 class Book
 {
@@ -32,185 +39,97 @@ class Book
      * @var string The ISBN of the book
      *
      * @Assert\Isbn
-     * @Assert\Type(type="string")
      * @ORM\Column(nullable=true)
+     * @Groups("book:read")
      * @ApiProperty(iri="http://schema.org/isbn")
      */
-    private $isbn;
+    public $isbn;
 
     /**
      * @var string The title of the book
      *
-     * @Assert\Type(type="string")
      * @Assert\NotBlank
      * @ORM\Column
+     * @Groups({"book:read", "review:read"})
      * @ApiProperty(iri="http://schema.org/name")
      */
-    private $title;
+    public $title;
 
     /**
      * @var string A description of the item
      *
-     * @Assert\Type(type="string")
      * @Assert\NotBlank
      * @ORM\Column(type="text")
+     * @Groups("book:read")
      * @ApiProperty(iri="http://schema.org/description")
      */
-    private $description;
+    public $description;
 
     /**
      * @var string The author of this content or rating. Please note that author is special in that HTML 5 provides a special mechanism for indicating authorship via the rel tag. That is equivalent to this and may be used interchangeably
      *
-     * @Assert\Type(type="string")
      * @Assert\NotBlank
      * @ORM\Column
+     * @Groups("book:read")
      * @ApiProperty(iri="http://schema.org/author")
      */
-    private $author;
+    public $author;
 
     /**
-     * @var \DateTime The date on which the CreativeWork was created or the item was added to a DataFeed
+     * @var \DateTimeInterface The date on which the CreativeWork was created or the item was added to a DataFeed
      *
      * @Assert\Date
      * @Assert\NotNull
      * @ORM\Column(type="date")
+     * @Groups("book:read")
      * @ApiProperty(iri="http://schema.org/dateCreated")
      */
-    private $publicationDate;
+    public $publicationDate;
 
     /**
-     * Sets id.
+     * @var Review[] The book's reviews
      *
-     * @param int $id
-     *
-     * @return $this
+     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="book", orphanRemoval=true, cascade={"persist", "remove"})
+     * @Groups("book:read")
+     * @ApiProperty(iri="http://schema.org/reviews")
      */
-    public function setId($id)
-    {
-        $this->id = $id;
+    private $reviews;
 
-        return $this;
+    public function __construct()
+    {
+        $this->reviews = new ArrayCollection();
     }
 
-    /**
-     * Gets id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * Sets isbn.
-     *
-     * @param string $isbn
-     *
-     * @return $this
-     */
-    public function setIsbn($isbn)
+    public function addReview(Review $review, bool $updateRelation = true): void
     {
-        $this->isbn = $isbn;
+        if ($this->reviews->contains($review)) {
+            return;
+        }
 
-        return $this;
+        $this->reviews->add($review);
+        if ($updateRelation) {
+            $review->setBook($this, false);
+        }
+    }
+
+    public function removeReview(Review $review, bool $updateRelation = true): void
+    {
+        $this->reviews->removeElement($review);
+        if ($updateRelation) {
+            $review->setBook(null, false);
+        }
     }
 
     /**
-     * Gets isbn.
-     *
-     * @return string
+     * @return Collection|Review[]
      */
-    public function getIsbn()
+    public function getReviews(): iterable
     {
-        return $this->isbn;
-    }
-
-    /**
-     * Sets description.
-     *
-     * @param string $description
-     *
-     * @return $this
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Gets description.
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * Sets author.
-     *
-     * @param string $author
-     *
-     * @return $this
-     */
-    public function setAuthor($author)
-    {
-        $this->author = $author;
-
-        return $this;
-    }
-
-    /**
-     * Gets author.
-     *
-     * @return string
-     */
-    public function getAuthor()
-    {
-        return $this->author;
-    }
-
-    /**
-     * Get title.
-     *
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
-     * Set title.
-     *
-     * @param string $title the value to set
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-    }
-
-    /**
-     * Get publicationDate.
-     *
-     * @return \DateTime
-     */
-    public function getPublicationDate()
-    {
-        return $this->publicationDate;
-    }
-
-    /**
-     * Set publicationDate.
-     *
-     * @param \DateTime the value to set
-     */
-    public function setPublicationDate($publicationDate)
-    {
-        $this->publicationDate = $publicationDate;
+        return $this->reviews;
     }
 }
