@@ -3,78 +3,43 @@ language: php
 dist: trusty
 sudo: required
 
-# TODO: Verify this upgrade still works.
-php:
-  - 7.2
-
-# Specify which branches to build using a safelist:
-#branches:
- # only:
-  #- master
-#Allowing specific branch to deploy for example for test purpose:
-#  - /^deploy-.*$/
-
-# clone repositories to a depth of 1 commit
-# Warning: Travis CI won’t build commits that are in the queue when pushing a new commit and depth set to 1.
-git:
-  depth: 1
-# Avoiding log file size limits.
-#  quiet: true
-
 services:
   - docker
-  - redis-server
 
 cache:
   yarn: true
   directories:
     - admin/node_modules
     - client/node_modules
-    - api/vendor
 
 # To create secure env var, first login to travis with your github account running:
-  # sudo travis login
+  # sudo travis login Todo: check if --pro option is important
 # Then run the following commmand:
   # travis encrypt 'DATABASE_PASSWORD=your_database_password'
 env:
   global:
     - APP_ENV=prod
-    # DATABASE_NAME
-    - secure: "nk/EmbFj495TnwEs96cPRHsFxShd64rpMAPsopwBjjMdi4vZpbIFS3Lu2CRdonCLskfOd0IjcybrsE0VZ+9nfo3GWSdZoEmp2OjbboF/qvzP0hRsQgA1fk7c/06O4Rb47JcCOHtOuxUe5Owxc11zlI9rcaMRN680acneoWQTB9cRihcjVi4ZyymMtjKGPtIBbBlsvwmqK2cQAv34JL/sG/umu7/3cbTOpG9BLbXI1p3svXlVqbTJpz5B5SWd/z2RZ7G+yD6bsN83GcKe/rBDYl0BTOKX5DprH3kFhWR5l6ZzGYD882V6XtR+J2+TtQKZPvvvg2hdk+012ldYDBmR4GBW3bWMWIuCAKkBxiVv1EtKttxxm7ZKdY1Jk8+lywBINXWDimZzLf6MTWbmWYRKCe40YxleGYsnbN++8SGd0VTyFkfFeKkHoL04aQMypIvi9JxBkvkNYrPWtiNSvjefLtCYkQCqm9/+Y7wcZ4H2hR/6v/wbhUU7fzTBKmKBi55Pu8v1qSaLDvihsCwWHPRNvFaZ/fpNf384PTQX6Mrwp0iP8Wuqljr0txMHawmJVs+oAjcuByOncHzpXWptnHfoTSXODQJngfduzBus/TZUWhGrTRJobElQjtmstWVo8U9JOxg1SWEhUemV/8Frsj+cLF84WcTlBwH1xmkJh9EI6qU="
-    # DATABASE_USER
-    - secure: "L1AAQyj58CBxJjLxDQbk4GGxR1hq6R0lPDKsqA5NFrbt/P5HT4KIE7GonUufC5V+3OTE6SPcDchlrQoTYgaizA75XPsn0thhsdJRWGJr+WXWwpt2wGyq5SgVjUxCJYbhO1k9Ay2COFKg6Qiat6PegdNA2qLpzvwZ08m8fCKw6VF7iiQbc3I5tkDnC80MsEofQ4XiJpY6DWgYourHoTo308DKQ/mpqy8d/D2jxY7V5hPQLBkgzkZgppMamnhHd9SXeP6v4htmXbl4GPFscP4jfT7M2mLctsi9FEFAYaM8fayiBD2sUz05m3rLErg4LgkGznzRI+6R7Ngd/0ausZCFOkAJ7lJp87NzowLLzCSnK3o0xWmZxC8M02S3A3g8w/k6cepqXWDE13idfE4fBp4k3CIGgywmjXSagBEW7xdRPDqTvDf+/rKOqdEX/zOc/6PPBVDdY1Wuaa4ZmiB1RKQilQn7N7wa9tFwdBZvPrj/jNScIcFAz9IyYxvDJUsQ1ERQ+KKHAlBAdRP5OZIYzkRFimpyE5WFzi3o2rcqKZ5T1xtsaWqDNk1gOwJ18wP0FkVBLGnNryT34ivf382dgEJvtn2IdHtcRs64lNw4DcHXVOYxbEtzIistJNTSQoNP1YQUxheTQVztKnCjmfvnG6PpINgyaUKARNT2BMdiazHu99w="    - DATABASE_PSWSD=dbPassword
-    # APP_SECRET
-    - secure: "fX9Um/12G/zNAHCYaztnk6EQZOwf1xI5ESpSkshZ2b4LQ8/s2sV64nIcjD/yRQbZ3GxBsNKdz2VenPgizliNyPTuGheOe05bNRIZKOODOjlLEsqvwjzvXNIPrWoi5xeA2ioCwPwq38QXu0DIvLsKy72YVz9pR2oi9PK5GjsRKmKLX6DOEWehfGrp1itD1mwl91mMK0gCiahspKzww5ryOBf5J0YemWoCc4ByzSGYhjL/2B/kJOS9j6Ua9UxIIPK9Qf4M+wxQct46HqY0aVk0NogAhn38ClV+9S+cMCbiUs3DCHosx/zV3wlZj4vnCCEScnbYdB/ujyCkPv8+oK+vPomOJsE94cd+4/BQYNDJ6N2ZfG23Zs8byK6PmPQqrjSKYyta1XyrvNr23k9Cn6T1h/T+WTnaB5doLZr+j91EmLuwGRxh11zolYRjKcPSZaKtGSGuFBeJtJjDTu5dvkJx8tJEWUZumjIeUKPPkbF8USJgy6/0ls1w4N08qXYAFTQAinJkF/b4Jv2HefIV1ZRN7qEQk65NNix/7NVlhdJc0rrwgcrykBz2jxvzG1SQNBMYpg+eZIB0V7BSZz+taKLjO0ZCUQOx8vzBP96PtRnJVhIPGquyLw585qE0RsLJjnFs26q4pobnhU01NdWa9SXFAHvDRIs1qi6/FmE9EPySLyk="
-    # DATABASE_PASSWORD
-    - secure: "NW4pCoTBNO1hmvecBdEUO9Ry59oFG+dGsAiLMv7bUJ73S5HAhZwQSxWxcpMHM6m3J8bcm+9Y1AC2IKxebrHMR+bghm1SRXnor+Bgi7MjRkbe/6xOX9VmwtaNMT0d1O0d71o+xwtqygwZMW+cz0DXTd4gj5MKc0N77pSlyZcdT78Wm+KtyU8WHVihsfu7YGc0vE5BO1g51reRh1DUXfEaOuVInqLSifowtICs98em+HhJVNqYRBXqyoZwFvCWOplDKhdnopfyiB8A+vf4jP1nyCrg4UeLAxw8jEWIOcqeVPKRiUMLcTTHKO2dBABVky8bLo/PyQkH9ACme9DN+aRGmfUulrRkAqhsXKLRbxlECWc+C5gKImd+D5DXTTc3xhryUjmQ1a/UyuvdO8Q1UWhwyUN3KdefqwB5dMspEvPPpZg0+uuX2tfSdfPX0muSUOrOiqxI/S34C2PY5+TM3bBVQoNZALtQF7PLc7i6cL78t2EXyB7isUgiL7Ax7JX2XupyNndzo57KBRY+HygfmUUoY57VLCO8CyFft0TAN6YpCDS74wggBh8veXDvYAzvFmejS9HxQoJ6W5ahl7yH1tyeSHC82hfaBG7E0bmxjo6C9NRmuVa/7bnyDd0MhWKkNPNuckx0Odc8tclqg5BsUzKdP8otIEZEAbHFJema1UMAxoI="
+    - secure: "MfLd6GUTSrCdSLS7+IQCRpWcxMnqf4V249AZ9du2lqGqUJeXRN6nLgZuVkPtRfGk7++1yCs2dIWxfYFRNqhjDytthGk38wYTx7HETUxIJNJkGoEwhfld5w/v6ll+AsB1pAXGe/5gmQ6TxcIpx8OC8GuxuB3hq4epkrryNTes96FVCtAgezInz1lnSyClGFZ/PT4eYIZzaAH+FVW9CNGpkaz5nGLFyDW6C9M/U/Mhx2XuUxaTyzpT1yCBpFTw3fyE0YyoYqx4pK9tlHNlbDuo7hiZYllJ2Zv1J+f2eXi41RUm4Hj1EFg6jRI9e+Qr6ED8GwzHS113lFa053dTb9y7lZMVi1yRk1KHo3fh11AQqaCGMwGq5H6dL3fkIRk3lGEujLh+PWCfEC3WIfdsTegD00vKa28dFXDsF/BdkYwS3vdWP0zWBIEPl4w/P5FcqITOqL1qmQ38m3ubopvyvxUiQFnzvG+GB9vdplDhjtFq5wF5H2MUapE3PRs1HDGaT5mYIelmXcfv3mbCBB4BaqT2QeANiWOR2yJJI3Td50k9PRnjgW5thwO0Osv6UxUbCKKVqutF8/7WIcg+r3mA0kZdPkwY/mS1jZ7YBfBy+R497iO5TtefvZZ814e8X/uVAbHJcPzOHYYzpQdfxMuShJ4eOhv8B3ZdqAahMqBgd2aN0zg="
+    - secure: "HMna0O11a9JGzEsvweL7kNc8lOyU+dkFuXlSbjoyGZRHgA0jDbk58I+cikMP0+0ihVftDOudI0BIxfB8KPNYe8e7OU99KkGSQtoCop8ABT1gM7TST1KypaJstpjxI0jpFFnSy4BEjB4kJPyXOsB6PmzT7V4S2yXo0HVvLeGHGAFdjWEPdTVyCqfOrVnFgUZApggfQ4+vjFDZqPUqjfrnUl7AF/qNcqVOUXM7AxuAmG03TD+ZSg6bg0QPaVhTM9BbYV+fhXxvobYjsBoe4NEoL/Yy5WBZpn5cF/D3c347H55ChzxeO/OmtQOHDqphAITDsrpMmDi7faKTyySlVpXwrV3OWFj9kgqMpJpiX05JUE4/0p7drWAM8bsNMKPzL4jWvBhBLjKq1Vmp32M7Pu3RCnJDTTTYUWoLupAPXFhFCJ0JNbyvi/o2BkBUed0gVqgVHvDTpE5j3lgV3HVwrE+i1CVd35gJAk0OyD1ySSmKMdjIWU2LJ2h7vpTIZlEcoMOhYVFv82+/Xj4n9dAjb4G26nD0zPMq1jf5aAf8UFXR4qBOAOhAAsM1cyoCCRcTsplOHBa11+1rVcPiWO/rRq+Dc1vzp0vF8LR7gTAVQEwGJGDBbKlKWEU4vlIb+VAxrfhHdT3Zb5W7X02qSJP6sixvnbJCBZhDbOAVcWf6b0jFelo="
+    - secure: "NK5rLjp6jFssdr4vdg/Nrj5azYhHEzT7PB4GPfL2xvX6N5dPU6y2vZ8Hs5ve+KQbHILLgF4E2cApP5Tdejrch3ayeuFVcWyN9AqzwnKy4g+OkSIZrwkR4cL3ojMfmUiQ/Py8HXdKioYm64OdZmwiFruAbK6zWVb2+6oYyza10ACgDFalKh6nEjUeYfJHQxisFWnxCNcTNJgp9WWT5QzHSGU6kD/xfkNzW7tQgQOu+k+Jc6c6djzZL/Zu3yUInSe4XxcBLybGTTMTXaSLVQBDz+QlKRlw3AMGhdc/xS5n7kuzaCmrYJOvHFIF04rbDAP20RA/yt6knMOEQ/Esged8g03Hudae4cK1/fYdp+RUY6E/W12OLzxh+RuMYxzAnm/I5PQvJruxiIm1f9P9iLt2v+LHb4YDPliBrm/CEstJ5rLCKYXIx3qtnDdV+4hjg7JSEkMBljkAfWLpbYwjcux4DYQToRTHCIRTbDbxPAEcN2dglP8UPBK6i9hJxm3lZ1N6WD4yb+BftK+9wx3VM92KXJg7vCqMmjLfrtKtl7ZhcFfDabmxHxgMRXuVuFdUXXkXnv0YZXaXzdZBzLqQsJUpjGJzxNEyY8n3H4OKTcu9ou08sWUNQhUiwm3uQUj7CYxde4Zm3g+Z0OMvbFbWojwHlvoggaxYp81yi4rFMXa6h0U="
+    - secure: "VvyqaSyVXQnAkhX5iagZiptiXnBnB5uJod4NC7YHXIc6+o/UIvjAO6ez+u5DvEJAP+QqBotlGrtTAStjwI/x4gU9LnQWQmdNVVZB3nQ5dHzaerR62NQB0vaB/00U9Dc0bP0RF/1SjCj8zWfecam6PD5N37Qqn3CgQ1DZrmi0Dq4Jq8szV+hZIUFSHJQILu625AuIw+5+DSDXEfSowa/j/EkH4mv/SIo+hcCSqJESob37wKMZVKiFjxrKmvmaqhDEKvDZFWhtZcAw0d9L7dsMD6MODWf1IO9MiQ2WvlKbkbBN8/Hh6CmcJ4yPuWFAbwD+4UjEib0Tvuy5cf4CBvs5l+s/ejmiwR8Cp7+ouBzrM6CRyf5nOaoNbC2+4irBwuVB4e0RYQcY6c+/hz8B6kA7odk9CYkU1/0Iz/1E+SMZUERQOed12gBeY0hAIucpPqkFg47YzKeB2a8MgqfvSEltdbVn+kIED6m87+kMqT/s5TilfbEviObBrjdo+zGaqQu/dbDoBT1EsZxj91FIieKw4OBm1yYfOlo0MAPxjf/Vu1X8IbVllRBLVm0H1jeZHxS7ORMetjfMr2IOJBsmC/SsPKSjrCVAHF9OdwCnHOOgTKsW7KMpm9BbkjiN5EwH3pxkDR56xd/R+jUCNnkKiHC7DStCUGjsgibmKwplkrwsFZs="
 
 # Todo: add this at the beginning of the before_install script: - if [ "TRAVIS_PULL_REQUEST" != "false" ]; then exit 0; fi
 before_install:
-  - curl -o- -L https://yarnpkg.com/install.sh | bash
-  - yes '' | pecl install apcu redis
-  - echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - echo "extension = apcu.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-
-install:
-  - sh -c "cd api && composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts"
-  - bin/console doctrine:database:create --env=prod
-  - bin/console doctrine:schema:update --env=prod --force
-  - bin/console hautelook:fixtures:load
-
-before_script:
-  - npm install -g react-scripts
-  - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
-  - sudo service mysql stop
-  - sudo service postgresql stop
+  - openssl aes-256-cbc -K $encrypted_78c7c6c95bf0_key -iv $encrypted_78c7c6c95bf0_iv -in travis-service-account.json.enc -out travis-service-account.json -d
   - curl -O https://storage.googleapis.com/kubernetes-helm/helm-v2.7.2-linux-amd64.tar.gz
   - tar -zxvf helm-v2.7.2-linux-amd64.tar.gz
+
+before_script:
+  - sudo service mysql stop
+  - sudo service postgresql stop
+  - npm install -g react-scripts
+  - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
 
 script:
   - docker-compose up -d
   - linux-amd64/helm lint api/helm/api/
   - sleep 20
-  - sh -c "cd admin && PUBLIC_URL="/api-demo-admin-test" yarn install --pure-lockfile && yarn build"
-  - sh -c "cd client && PUBLIC_URL="/api-demo-client-test" yarn install --pure-lockfile && yarn build"
   - docker-compose exec php composer install -o -n
   - docker-compose exec php bin/console security:check
   - docker-compose exec php bin/console doctrine:schema:validate --skip-sync
@@ -93,26 +58,20 @@ script:
   - curl -k https://localhost:8443
   - curl -k https://localhost:8444
 
-# Todo: Verify remote repository at the beginning of after_success step.
 after_success:
   - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
   - chmod +x ./kubectl
   - sudo mv ./kubectl /usr/local/bin/kubectl
-  - openssl aes-256-cbc -K $encrypted_78c7c6c95bf0_key -iv $encrypted_78c7c6c95bf0_iv -in credentials.tar.gz.enc -out credentials.tar.gz -d
-  - tar -xzf credentials.tar.gz
-  - rm credentials.tar.gz.enc credentials.tar.gz
   - gcloud auth activate-service-account --key-file travis-service-account.json
   - gcloud config set compute/zone europe-west3-c
   - gcloud config set project api-platform-demo-209807
   - mkdir -p ${HOME}/.kube
   - cp ./kubeConfig ${HOME}/.kube/config
-  - curl -O https://storage.googleapis.com/kubernetes-helm/helm-v2.7.2-linux-amd64.tar.gz
   - tar -zxvf helm-v2.7.2-linux-amd64.tar.gz
   - rm -rf helm-v2.7.2-linux-amd64.tar.gz
   - sudo mv linux-amd64/helm /usr/local/bin/helm
   - gcloud container clusters get-credentials "api-platform-demo"
   - helm init
-  - APP_ENV=prod composer install --no-scripts --no-dev --no-progress --no-suggest --optimize-autoloader --classmap-authoritative --no-interaction --prefer-dist
   - docker build -t gcr.io/api-platform-demo/php -t gcr.io/api-platform-demo/php:latest api/api --target api_platform_php
   - docker build -t gcr.io/api-platform-demo/nginx -t gcr.io/api-platform-demo/nginx:latest api/api --target api_platform_nginx
   - docker build -t gcr.io/api-platform-demo/varnish -t gcr.io/api-platform-demo/varnish:latest api/api --target api_platform_varnish
@@ -125,6 +84,6 @@ after_success:
       --set secret=${APP_SECRET} \
       --set postgresUser=${DATABASE_USER},postgresPassword="${DATABASE_PASSWORD}",postgresDatabase=${DATABASE_NAME} \
       --set postgresql.persistence.enabled=true \
-      --set corsAllowOrigin='^https?://localhost(:[0-9]*)?$'
+      --set corsAllowOrigin='*'
   - rm travis-service-account.json
   - gcloud auth revoke travis-service-account@api-platform-demo-209807.iam.gserviceaccount.com

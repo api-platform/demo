@@ -16,7 +16,7 @@ services:
     volumes:
       - ./api:/srv/api:rw,cached
       # If you develop on Linux, uncomment the following line to use a bind-mounted host directory instead
-      - ./api/var:/srv/api/var:rw
+      # - ./api/var:/srv/api/var:rw
 
   api:
     image: ${CONTAINER_REGISTRY_BASE}/nginx
