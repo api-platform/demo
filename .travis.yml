@@ -12,10 +12,6 @@ cache:
     - admin/node_modules
     - client/node_modules
 
-# To create secure env var, first login to travis with your github account running:
-  # sudo travis login Todo: check if --pro option is important
-# Then run the following commmand:
-  # travis encrypt 'DATABASE_PASSWORD=your_database_password'
 env:
   global:
     - APP_ENV=prod
@@ -24,7 +20,6 @@ env:
     - secure: "NK5rLjp6jFssdr4vdg/Nrj5azYhHEzT7PB4GPfL2xvX6N5dPU6y2vZ8Hs5ve+KQbHILLgF4E2cApP5Tdejrch3ayeuFVcWyN9AqzwnKy4g+OkSIZrwkR4cL3ojMfmUiQ/Py8HXdKioYm64OdZmwiFruAbK6zWVb2+6oYyza10ACgDFalKh6nEjUeYfJHQxisFWnxCNcTNJgp9WWT5QzHSGU6kD/xfkNzW7tQgQOu+k+Jc6c6djzZL/Zu3yUInSe4XxcBLybGTTMTXaSLVQBDz+QlKRlw3AMGhdc/xS5n7kuzaCmrYJOvHFIF04rbDAP20RA/yt6knMOEQ/Esged8g03Hudae4cK1/fYdp+RUY6E/W12OLzxh+RuMYxzAnm/I5PQvJruxiIm1f9P9iLt2v+LHb4YDPliBrm/CEstJ5rLCKYXIx3qtnDdV+4hjg7JSEkMBljkAfWLpbYwjcux4DYQToRTHCIRTbDbxPAEcN2dglP8UPBK6i9hJxm3lZ1N6WD4yb+BftK+9wx3VM92KXJg7vCqMmjLfrtKtl7ZhcFfDabmxHxgMRXuVuFdUXXkXnv0YZXaXzdZBzLqQsJUpjGJzxNEyY8n3H4OKTcu9ou08sWUNQhUiwm3uQUj7CYxde4Zm3g+Z0OMvbFbWojwHlvoggaxYp81yi4rFMXa6h0U="
     - secure: "VvyqaSyVXQnAkhX5iagZiptiXnBnB5uJod4NC7YHXIc6+o/UIvjAO6ez+u5DvEJAP+QqBotlGrtTAStjwI/x4gU9LnQWQmdNVVZB3nQ5dHzaerR62NQB0vaB/00U9Dc0bP0RF/1SjCj8zWfecam6PD5N37Qqn3CgQ1DZrmi0Dq4Jq8szV+hZIUFSHJQILu625AuIw+5+DSDXEfSowa/j/EkH4mv/SIo+hcCSqJESob37wKMZVKiFjxrKmvmaqhDEKvDZFWhtZcAw0d9L7dsMD6MODWf1IO9MiQ2WvlKbkbBN8/Hh6CmcJ4yPuWFAbwD+4UjEib0Tvuy5cf4CBvs5l+s/ejmiwR8Cp7+ouBzrM6CRyf5nOaoNbC2+4irBwuVB4e0RYQcY6c+/hz8B6kA7odk9CYkU1/0Iz/1E+SMZUERQOed12gBeY0hAIucpPqkFg47YzKeB2a8MgqfvSEltdbVn+kIED6m87+kMqT/s5TilfbEviObBrjdo+zGaqQu/dbDoBT1EsZxj91FIieKw4OBm1yYfOlo0MAPxjf/Vu1X8IbVllRBLVm0H1jeZHxS7ORMetjfMr2IOJBsmC/SsPKSjrCVAHF9OdwCnHOOgTKsW7KMpm9BbkjiN5EwH3pxkDR56xd/R+jUCNnkKiHC7DStCUGjsgibmKwplkrwsFZs="
 
-# Todo: add this at the beginning of the before_install script:
 before_install:
   - if [ "TRAVIS_PULL_REQUEST" != "false" ]; then exit 0; fi
   - openssl aes-256-cbc -K $encrypted_78c7c6c95bf0_key -iv $encrypted_78c7c6c95bf0_iv -in travis-demo-service-account.json.enc -out travis-demo-service-account.json -d
