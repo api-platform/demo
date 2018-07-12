@@ -12,10 +12,18 @@ metadata:
       {{ $key }}: {{ $value | quote }}
     {{- end }}
 spec:
-  backend:
-    serviceName: {{ if .Values.varnish.enabled }}varnish{{ else }}api{{ end }}
-    servicePort: 80
-  {{- if .Values.ingress.tls }}
-  tls:
-{{ toYaml .Values.ingress.tls | indent 4 }}
-  {{- end -}}
+ rules:
+ - http:
+     paths:
+     - path: /
+       backend:
+         serviceName: demo-ip
+         servicePort: 8080
+     - path: /
+       backend:
+         serviceName: {{ if .Values.varnish.enabled }}varnish{{ else }}api{{ end }}
+         servicePort: 80
+       {{- if .Values.ingress.tls }}
+       tls:
+     {{ toYaml .Values.ingress.tls | indent 4 }}
+       {{- end -}}
