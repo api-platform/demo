@@ -67,10 +67,11 @@ after_success:
   - docker build --pull -t gcr.io/api-platform-demo-209807/php -t gcr.io/api-platform-demo-209807/php:latest api --target api_platform_php
   - docker build --pull -t gcr.io/api-platform-demo-209807/nginx -t gcr.io/api-platform-demo-209807/nginx:latest api --target api_platform_nginx
   - docker build --pull -t gcr.io/api-platform-demo-209807/varnish -t gcr.io/api-platform-demo-209807/varnish:latest api --target api_platform_varnish
-  - gcloud docker -- push gcr.io/api-platform-demo-209807/php:latest
-  - gcloud docker -- push gcr.io/api-platform-demo-209807/nginx:latest
-  - gcloud docker -- push gcr.io/api-platform-demo-209807/varnish:latest
-  - helm install --namespace=${TRAVIS_COMMIT} ./api/helm/api --wait --set php.repository=gcr.io/api-platform-demo-209807/php --set nginx.repository=gcr.io/api-platform-demo-209807/nginx --set secret=${APP_SECRET} --set postgresUser=${DATABASE_USER},postgresPassword="${DATABASE_PASSWORD}",postgresDatabase=${DATABASE_NAME} --set postgresql.persistence.enabled=true --set corsAllowOrigin='*'
+  - gcloud docker -- push gcr.io/api-platform-demo-209807/php
+  - gcloud docker -- push gcr.io/api-platform-demo-209807/nginx
+  - gcloud docker -- push gcr.io/api-platform-demo-209807/varnish
+  - helm install --wait --namespace=${TRAVIS_COMMIT} ./api/helm/api --set php.repository=gcr.io/api-platform-demo-209807/php --set nginx.repository=gcr.io/api-platform-demo-209807/nginx --set secret=${APP_SECRET} --set postgresUser=${DATABASE_USER},postgresPassword="${DATABASE_PASSWORD}",postgresDatabase=${DATABASE_NAME} --set postgresql.persistence.enabled=true --set corsAllowOrigin='*'
+  - sleep 60
   - kubectl get po --namespace=${TRAVIS_COMMIT}
   - kubectl --namespace=${TRAVIS_COMMIT} get pods -l app=api-php -o jsonpath="{.items[0].metadata.name}"
   - kubectl exec -it $(kubectl --namespace=${TRAVIS_COMMIT} get pods -l app=api-php -o jsonpath="{.items[0].metadata.name}") --namespace=${TRAVIS_COMMIT} -- ash -c 'export APP_ENV=dev && composer install -n && bin/console d:s:u --force --env=dev && bin/console hautelook:fixtures:load -n && APP_ENV=prod composer --no-dev install --classmap-authoritative && bin/console d:s:u --env=prod'
