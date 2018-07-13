@@ -16,10 +16,10 @@ env:
   global:
     - APP_ENV=prod
 
-# - if [ "TRAVIS_PULL_REQUEST" != "false" ]; then exit 0; fi
 before_install:
-  - curl -O https://storage.googleapis.com/kubernetes-helm/helm-v2.7.2-linux-amd64.tar.gz
-  - tar -zxvf helm-v2.7.2-linux-amd64.tar.gz
+  - if [ "TRAVIS_PULL_REQUEST" != "false" ]; then exit 0; fi
+  - https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash -s -- --version v2.9.1
+  - tar -zxvf helm-v2.9.1-linux-amd64.tar.gz
 
 before_script:
   - sudo service mysql stop
@@ -49,34 +49,29 @@ script:
   - curl -k https://localhost:8443
   - curl -k https://localhost:8444
 
-# Todo: remove ingress output
 after_success:
   - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
   - chmod +x ./kubectl
   - sudo mv ./kubectl /usr/local/bin/kubectl
-  - echo -n ${travis} | base64 -d > travis-service-account.json
-  - gcloud auth activate-service-account travis@api-platform-demo-209807.iam.gserviceaccount.com --key-file travis-service-account.json --project=api-platform-demo-209807
+  - echo -n ${TRAVIS} | base64 -d > travis-service-account.json
+  - gcloud auth activate-service-account ${TRAVIS_SERVICE_ACCOUNT} --key-file travis-service-account.json --project=${PROJECT_NAME}
   - gcloud config set compute/zone europe-west3-c
-  - gcloud config set project api-platform-demo-209807
-  - tar -zxvf helm-v2.7.2-linux-amd64.tar.gz
-  - rm -rf helm-v2.7.2-linux-amd64.tar.gz
+  - gcloud config set project ${PROJECT_NAME}
   - sudo mv linux-amd64/helm /usr/local/bin/helm
-  - gcloud container clusters get-credentials api-platform-demo --zone europe-west3-c --project ${projectName}
+  - gcloud container clusters get-credentials api-platform-demo --zone europe-west3-c --project ${PROJECT_NAME}
   - helm init
+  - kubectl delete namespace $(kubectl get namespaces -l app=api-demo -o jsonpath="{.items[0].metadata.name}" --ignore-not-found) --ignore-not-found
   - helm dependencies update ./api/helm/api
-  - docker build --pull -t gcr.io/api-platform-demo-209807/php -t gcr.io/api-platform-demo-209807/php:latest api --target api_platform_php
-  - docker build --pull -t gcr.io/api-platform-demo-209807/nginx -t gcr.io/api-platform-demo-209807/nginx:latest api --target api_platform_nginx
-  - docker build --pull -t gcr.io/api-platform-demo-209807/varnish -t gcr.io/api-platform-demo-209807/varnish:latest api --target api_platform_varnish
-  - gcloud docker -- push gcr.io/api-platform-demo-209807/php
-  - gcloud docker -- push gcr.io/api-platform-demo-209807/nginx
-  - gcloud docker -- push gcr.io/api-platform-demo-209807/varnish
-  - helm install --wait --namespace=${TRAVIS_COMMIT} ./api/helm/api --set php.repository=gcr.io/api-platform-demo-209807/php --set nginx.repository=gcr.io/api-platform-demo-209807/nginx --set secret=${APP_SECRET} --set postgresUser=${DATABASE_USER},postgresPassword="${DATABASE_PASSWORD}",postgresDatabase=${DATABASE_NAME} --set postgresql.persistence.enabled=true --set corsAllowOrigin='*'
+  - docker build --pull -t gcr.io/${PROJECT_NAME}/php -t gcr.io/${PROJECT_NAME}/php:latest api --target api_platform_php
+  - docker build --pull -t gcr.io/${PROJECT_NAME}/nginx -t gcr.io/${PROJECT_NAME}/nginx:latest api --target api_platform_nginx
+  - docker build --pull -t gcr.io/${PROJECT_NAME}/varnish -t gcr.io/${PROJECT_NAME}/varnish:latest api --target api_platform_varnish
+  - gcloud docker -- push gcr.io/${PROJECT_NAME}/php:latest
+  - gcloud docker -- push gcr.io/${PROJECT_NAME}/nginx:latest
+  - gcloud docker -- push gcr.io/${PROJECT_NAME}/varnish:latest
+  - helm install --wait --namespace=${TRAVIS_COMMIT} ./api/helm/api --set php.repository=gcr.io/${PROJECT_NAME}/php --set nginx.repository=gcr.io/${PROJECT_NAME}/nginx --set secret=${APP_SECRET} --set postgresUser=${DATABASE_USER},postgresPassword="${DATABASE_PASSWORD}",postgresDatabase=${DATABASE_NAME} --set postgresql.persistence.enabled=true --set corsAllowOrigin='*'
   - sleep 60
   - kubectl get po --namespace=${TRAVIS_COMMIT}
   - kubectl --namespace=${TRAVIS_COMMIT} get pods -l app=api-php -o jsonpath="{.items[0].metadata.name}"
   - kubectl exec -it $(kubectl --namespace=${TRAVIS_COMMIT} get pods -l app=api-php -o jsonpath="{.items[0].metadata.name}") --namespace=${TRAVIS_COMMIT} -- ash -c 'export APP_ENV=dev && composer install -n && bin/console d:s:u --force --env=dev && bin/console hautelook:fixtures:load -n && APP_ENV=prod composer --no-dev install --classmap-authoritative && bin/console d:s:u --env=prod'
-  - kubectl delete namespace $(kubectl get namespaces -l app=api-demo -o jsonpath="{.items[0].metadata.name}" --ignore-not-found) --ignore-not-found
   - kubectl label namespace ${TRAVIS_COMMIT} app=api-demo
-  - kubectl --namespace $(kubectl get namespaces -l app=api-demo -o jsonpath="{.items[0].metadata.name}") get ingress -o jsonpath="{.items[0].status.loadBalancer.ingress[0].ip}"
-  - rm travis-service-account.json
-  - gcloud auth revoke travis@api-platform-demo-209807.iam.gserviceaccount.com
+  - gcloud auth revoke ${TRAVIS_SERVICE_ACCOUNT}

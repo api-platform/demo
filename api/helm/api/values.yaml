@@ -5,7 +5,7 @@
 env: prod
 debug: '0'
 secret: ChangeMe
-corsAllowOrigin: http://example.com
+corsAllowOrigin: *
 
 php:
   repository: gcr.io/api-platform-demo-209807/php
