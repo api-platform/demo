@@ -58,12 +58,11 @@ after_success:
   - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
   - chmod +x ./kubectl
   - sudo mv ./kubectl /usr/local/bin/kubectl
-  - echo -n ${TRAVIS} | base64 -d > travis-service-account.json
+  - echo -n ${TRAVIS_SERVICE_ACCOUNT_KEY} | base64 -d > travis-service-account.json
   - gcloud auth activate-service-account ${TRAVIS_SERVICE_ACCOUNT} --key-file travis-service-account.json --project=${PROJECT_NAME}
-  - gcloud projects add-iam-policy-binding api-platform-demo --member serviceAccount:mathieu@les-tilleuls.coop --role roles/editor
-  - gcloud config set compute/zone europe-west3-c
+  - gcloud config set compute/zone europe-west1-c
   - gcloud config set project ${PROJECT_NAME}
-  - gcloud container clusters get-credentials api-platform-demo --zone europe-west3-c --project ${PROJECT_NAME}
+  - gcloud container clusters get-credentials api-platform-demo --zone europe-west1-c --project ${PROJECT_NAME}
   - helm init --upgrade
   - kubectl delete namespace $(kubectl get namespaces -l app=api-demo -o jsonpath="{.items[0].metadata.name}" --ignore-not-found) --ignore-not-found
   - helm dependencies update ./api/helm/api
@@ -73,12 +72,12 @@ after_success:
   - gcloud docker -- push eu.gcr.io/${PROJECT_NAME}/php:latest
   - gcloud docker -- push eu.gcr.io/${PROJECT_NAME}/nginx:latest
   - gcloud docker -- push eu.gcr.io/${PROJECT_NAME}/varnish:latest
-  - helm install --wait --namespace=${TRAVIS_COMMIT} ./api/helm/api --set php.repository=eu.gcr.io/${PROJECT_NAME}/php --set nginx.repository=eu.gcr.io/${PROJECT_NAME}/nginx --set secret=${APP_SECRET} --set postgresUser=${DATABASE_USER},postgresPassword="${DATABASE_PASSWORD}",postgresDatabase=${DATABASE_NAME} --set postgresql.persistence.enabled=true --set corsAllowOrigin='*'
+  - helm install --wait --namespace=${TRAVIS_COMMIT} ./api/helm/api --set php.repository=eu.gcr.io/${PROJECT_NAME}/php --set nginx.repository=eu.gcr.io/${PROJECT_NAME}/nginx --set varnish.repository=eu.gcr.io/${PROJECT_NAME}/varnish --set secret=${APP_SECRET} --set postgresUser=${DATABASE_USER},postgresPassword="${DATABASE_PASSWORD}",postgresDatabase=${DATABASE_NAME} --set postgresql.persistence.enabled=true --set corsAllowOrigin='*'
   - sleep 60
   - kubectl exec -it $(kubectl --namespace=${TRAVIS_COMMIT} get pods -l app=api-php -o jsonpath="{.items[0].metadata.name}") --namespace=${TRAVIS_COMMIT} -- ash -c 'export APP_ENV=dev && composer install -n && bin/console d:s:u --force --env=dev && bin/console hautelook:fixtures:load -n && APP_ENV=prod composer --no-dev install --classmap-authoritative && bin/console d:s:u --env=prod'
   - kubectl label namespace ${TRAVIS_COMMIT} app=api-demo
-  - cd admin && REACT_APP_API_ENTRYPOINT=http://35.201.122.208/ build --environment=prod
-  - gsutil mb -l europe-west3 -p api-platform-demo gs://admin.api-platform.com
+  - cd admin && REACT_APP_API_ENTRYPOINT=https://admin.api-platform.com yarn build --environment=prod
+  - gsutil mb -l europe-west1 -p api-platform-demo gs://admin.api-platform.com
   - cd admin && gsutil cp -R build/* gs://admin.api-platform.com/build
   - gsutil iam ch allUsers:objectViewer gs://admin.api-platform.com
   - gsutil web set -m index.html gs://admin.api-platform.com

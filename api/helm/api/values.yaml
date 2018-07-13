@@ -8,13 +8,13 @@ secret: ChangeMe
 corsAllowOrigin: '*'
 
 php:
-  repository: eu.gcr.io/api-platform-demo-209807/php
+  repository: eu.gcr.io/api-platform-demo-210115/php
   tag: latest
   pullPolicy: Always
   replicaCount: 1
 
 nginx:
-  repository: eu.gcr.io/api-platform-demo-209807/nginx
+  repository: eu.gcr.io/api-platform-demo-210115/nginx
   tag: latest
   pullPolicy: Always
   replicaCount: 1
@@ -22,14 +22,14 @@ nginx:
 varnish:
   enabled: true
   #url: https://example.com
-  repository: eu.gcr.io/api-platform-demo-209807/varnish
+  repository: eu.gcr.io/api-platform-demo-210115/varnish
   tag: latest
   pullPolicy: Always
   replicaCount: 1
 
 ingress:
   annotations:
-    kubernetes.io/ingress.global-static-ip-name: demo-ip
+    kubernetes.io/ingress.global-static-ip-name: api-platform-demo-ip
     # kubernetes.io/ingress.class: gce
     # kubernetes.io/tls-acme: "true"
   tls:
