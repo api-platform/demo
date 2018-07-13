@@ -8,13 +8,13 @@ secret: ChangeMe
 corsAllowOrigin: '*'
 
 php:
-  repository: gcr.io/api-platform-demo-209807/php
+  repository: eu.gcr.io/api-platform-demo-209807/php
   tag: latest
   pullPolicy: Always
   replicaCount: 1
 
 nginx:
-  repository: gcr.io/api-platform-demo-209807/nginx
+  repository: eu.gcr.io/api-platform-demo-209807/nginx
   tag: latest
   pullPolicy: Always
   replicaCount: 1
@@ -22,7 +22,7 @@ nginx:
 varnish:
   enabled: true
   #url: https://example.com
-  repository: gcr.io/api-platform-demo-209807/varnish
+  repository: eu.gcr.io/api-platform-demo-209807/varnish
   tag: latest
   pullPolicy: Always
   replicaCount: 1
