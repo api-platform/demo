@@ -77,8 +77,8 @@ after_success:
   - kubectl exec -it $(kubectl --namespace=${TRAVIS_COMMIT} get pods -l app=api-php -o jsonpath="{.items[0].metadata.name}") --namespace=${TRAVIS_COMMIT} -- ash -c 'export APP_ENV=dev && composer install -n && bin/console d:s:u --force --env=dev && bin/console hautelook:fixtures:load -n && APP_ENV=prod composer --no-dev install --classmap-authoritative && bin/console d:s:u --env=prod'
   - kubectl label namespace ${TRAVIS_COMMIT} app=api-demo
   - cd admin && REACT_APP_API_ENTRYPOINT=https://admin.api-platform.com yarn build --environment=prod
-  - gsutil mb -l europe-west1 -p api-platform-demo gs://admin.api-platform.com
-  - cd admin && gsutil cp -R build/* gs://admin.api-platform.com/build
-  - gsutil iam ch allUsers:objectViewer gs://admin.api-platform.com
-  - gsutil web set -m index.html gs://admin.api-platform.com
+  - gsutil mb -l europe-west1 -p api-platform-demo gs://demo-admin.api-platform.com
+  - cd admin && gsutil cp -R build/* gs://demo-admin.api-platform.com/build
+  - gsutil iam ch allUsers:objectViewer gs://demo-admin.api-platform.com
+  - gsutil web set -m index.html gs://demo-admin.api-platform.com
   - gcloud auth revoke ${TRAVIS_SERVICE_ACCOUNT}
