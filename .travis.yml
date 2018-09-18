@@ -1,6 +1,7 @@
 language: php
 
 dist: trusty
+
 sudo: required
 
 services:
@@ -14,16 +15,20 @@ cache:
 
 env:
   global:
+    - COMPOSER_ALLOW_XDEBUG=0
     - APP_ENV=prod
     - KUBERNETES_ENV=prod
+    - BUCKET_SUFFIX=""
+    - IP="--set ingress.annotations.kubernetes.io/ingress.global-static-ip-name: api-platform-demo-ip"
 
 before_install:
+  - phpenv config-rm xdebug.ini
+  - curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash -s -- --version v2.9.1;
   - |
-    if [ $TRAVIS_BRANCH = "master" ] && [ $TRAVIS_REPO_SLUG = "api-platform/demo" ]; then
-      curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash -s -- --version v2.9.1;
-    else
+    if [ TRAVIS_BRANCH != "master" ] || [ $TRAVIS_REPO_SLUG != "api-platform/demo" ]; then
+      IP=""
       KUBERNETES_ENV=staging;
-      exit 0;
+      BUCKET_SUFFIX=".solutions";
     fi
 
 before_script:
@@ -54,32 +59,23 @@ script:
   - curl -k https://localhost:8443
   - curl -k https://localhost:8444
 
-# TODO: Keep looking to https://github.com/kubernetes/kubernetes/pull/64034 as it is in an experimental state in order to use "wait" with new implementation (to replace sleep 60).
-after_success:
-  - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-  - chmod +x ./kubectl
-  - sudo mv ./kubectl /usr/local/bin/kubectl
-  - echo -n ${TRAVIS_SERVICE_ACCOUNT_KEY} | base64 -d > travis-service-account.json
-  - gcloud auth activate-service-account ${TRAVIS_SERVICE_ACCOUNT} --key-file travis-service-account.json --project=${PROJECT_NAME}
-  - gcloud config set compute/zone europe-west1-c
-  - gcloud config set project ${PROJECT_NAME}
-  - gcloud container clusters get-credentials api-platform-demo --zone europe-west1-c --project ${PROJECT_NAME}
-  - helm init --upgrade
-  - kubectl delete namespace $(kubectl get namespaces -l app=api-demo -o jsonpath="{.items[0].metadata.name}" --ignore-not-found) --ignore-not-found
-  - helm dependencies update ./api/helm/api
-  - docker build --pull -t eu.gcr.io/${PROJECT_NAME}/php -t eu.gcr.io/${PROJECT_NAME}/php:latest api --target api_platform_php
-  - docker build --pull -t eu.gcr.io/${PROJECT_NAME}/nginx -t eu.gcr.io/${PROJECT_NAME}/nginx:latest api --target api_platform_nginx
-  - docker build --pull -t eu.gcr.io/${PROJECT_NAME}/varnish -t eu.gcr.io/${PROJECT_NAME}/varnish:latest api --target api_platform_varnish
-  - gcloud docker -- push eu.gcr.io/${PROJECT_NAME}/php:latest
-  - gcloud docker -- push eu.gcr.io/${PROJECT_NAME}/nginx:latest
-  - gcloud docker -- push eu.gcr.io/${PROJECT_NAME}/varnish:latest
-  - helm install --wait --namespace=${TRAVIS_COMMIT} ./api/helm/api --set php.repository=eu.gcr.io/${PROJECT_NAME}/php --set nginx.repository=eu.gcr.io/${PROJECT_NAME}/nginx --set varnish.repository=eu.gcr.io/${PROJECT_NAME}/varnish --set secret=${APP_SECRET} --set postgresUser=${DATABASE_USER},postgresPassword="${DATABASE_PASSWORD}",postgresDatabase=${DATABASE_NAME} --set postgresql.persistence.enabled=true --set corsAllowOrigin='*'
-  - sleep 60
-  - kubectl exec -it $(kubectl --namespace=${TRAVIS_COMMIT} get pods -l app=api-php -o jsonpath="{.items[0].metadata.name}") --namespace=${TRAVIS_COMMIT} -- ash -c 'export APP_ENV=dev && composer install -n && bin/console d:s:u --force --env=dev && bin/console hautelook:fixtures:load -n && APP_ENV=prod composer --no-dev install --classmap-authoritative && bin/console d:s:u --env=prod'
-  - kubectl label namespace ${TRAVIS_COMMIT} app=api-demo
-  - cd admin && REACT_APP_API_ENTRYPOINT=http://demo-admin.api-platform.com yarn build --environment=prod
-  - gsutil mb -l europe-west1 -p api-platform-demo gs://demo-admin.api-platform.com
-  - cd admin && gsutil cp -R build/* gs://demo-admin.api-platform.com/build
-  - gsutil iam ch allUsers:objectViewer gs://demo-admin.api-platform.com
-  - gsutil web set -m index.html gs://demo-admin.api-platform.com
-  - gcloud auth revoke ${TRAVIS_SERVICE_ACCOUNT}
+deploy:
+  - provider: script
+    script: bash scripts/deploy.sh
+    on:
+      branch: master
+  - provider: gcs
+    access_key_id:
+      secure: eSJfigRfZp7bwMBT61tes4NZZR5UnPSACWuD3seeLyMMflvfEiQBT30kMyQkcIA19cYUWuzCmdaUDGuphj8KrkPOfIqoPaG5ZM/zFbjgtJs3nNmpMt2GW/y5YFSqJR7ha0TYCUpPq9UonxEB/sdcifS7JRS0PmeEotZbcKMGmiCzDnFR8fNbDC1w1XZEfFoV+xtBYJCCDsZpPVjt+GXI+3OX31qnRCMv89aPU2lgmbUaF3oM+Bxc+9jQPEUmMKzOXt1AlIscJgkjyOIPTU9R1TsYtSNGzCxhEj2EtBdbtr2SKLdvJCaxABDtg6c0DOZSRSB5FP2kjLXm2TmtnFyn04R2RS7Cp3F5tueSpiK/51rI6oPc66OYMtWSINMhQzzWTiAdkBx2sekO9InbBgJMJgbcWt5nRvtzS/4mbCiDJxM+H4LuJHaqeCdDqZ51M1mf1HBh0diKIEn0o86fzUlPBtLZBLo/PCqGsJnLF+7VkG0AHExuJCSx8QHXfvP40+D3LtameHopx0lK+L8CMWwRzGJ5SDzzpfqoWZxwyzZjEvLzOdChWRb9jqPQDC1H48SFhsQt/eiwz0ZQq4v8I8DqQ3NkECYBoVgO7ozGN/pnqYK3i8xRnA47dGvSZrxQB32Eq0mkF6s8Rk7Xt6dI5ppNqdzjrCK2ZWijcGjBIQ769gQ=
+    secret_access_key:
+      secure: O4nNU4GlxBpnp1lJEEZKm0R3iUhK2V6qpu2JTxI4Vip6E5oAvXWJBc8keT75vbodRG2yYgmCf4HZhDnZRso6B7zY1SbE+oJjS6/jWM/Qkynf4qJ2/5NRvxjTuQsp99eqmclQ9J5CwhU690ZSZgC8eFaGN5Dwa2yJu5kBZHeUiDQgO3o3n1a2YCHBnOwQy7O7h6wj6d3iLThpfpdpLheqLF0DQ/c593Yy5mQgZRZkuqhLGWe94h8WyUtzJCmmYVP+XKNxbNKysCpD6zUulVTQ4XBYf5Z8kI2pAEP8UsTjqLZBjKdpyYqxoigyoL78hgs7KrYUBcCKW9qUsjRdXgNrsVvLYBQ+kau4eoFo4cmwlf3U37+HK1WENiLG6O3hHnu/n8b4AL2NaQPnsFWsWG1nrbfbPZ3j+Xvn6wJJWGkitUjahKFREcHSAFl5+jMqXULpTYP8X4ZkOYZ8M5V+1VhhSzqOH0lqsVYyDZbFIWf9UQJn51cNKBakULVWHvFMIlIMo4vULiXX7r4lWfY5FCYdABiOPADW2xuMg9++etlAcU4fpBl4Kf9GqWIs4XGmrVqJ9P5Jjto3J4bHyfF32v7HWC6vdwp81nvFHabMYj4AS9gmn6/90BQKEkN2OF43oRKsmq+IwFqt2HqMt7CakIYvdj5oQMu0j5lMY7JuYh1k2Ds=
+    bucket: api-platform-demo
+    skip_cleanup: true
+    acl: public-read
+    local-dir: admin/build
+    on:
+      branch: master
+      repo: api-platform/demo
+
+after_deploy:
+    ./script/after_deploy.sh
