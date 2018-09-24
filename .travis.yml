@@ -22,6 +22,7 @@ env:
     - MULTI_BRANCH=0
     - REPOSITORY=api-platform/demo
     - DEPLOYMENT_BRANCH=master
+    - PROJECT_NAME=api-platform-demo
 
 
 # Check all needed travis environment variables are set.
