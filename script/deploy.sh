@@ -16,8 +16,7 @@ helm upgrade --install --reset-values --wait --force --namespace=${TRAVIS_COMMIT
     --set nginx.repository=eu.gcr.io/${PROJECT_ID}/${REPOSITORY}/${TRAVIS_BRANCH}/nginx \
     --set varnish.repository=eu.gcr.io/${PROJECT_ID}/${REPOSITORY}/${TRAVIS_BRANCH}/varnish \
     --set secret=${APP_SECRET} \
-    --set postgresUser=${DATABASE_USER},postgresPassword="${DATABASE_PASSWORD}",postgresDatabase=${DATABASE_NAME} --set postgresql.persistence.enabled=true \
-    --set ingress.annotations.kubernetes.io/ingress.global-static-ip-name=api-platform-demo-ip
+    --set postgresUser=${DATABASE_USER},postgresPassword="${DATABASE_PASSWORD}",postgresDatabase=${DATABASE_NAME} --set postgresql.persistence.enabled=true
 # Install what needed on the php pod of the release using composer and label the namespace as the new api-demo
 kubectl exec -it $(kubectl --namespace=${TRAVIS_COMMIT} get pods -l app=api-php -o jsonpath="{.items[0].metadata.name}") --namespace=${TRAVIS_COMMIT} \
     -- ash -c'export APP_ENV=dev && composer install -n && bin/console d:s:u --force --env=dev && bin/console hautelook:fixtures:load -n && APP_ENV=prod composer --no-dev install --classmap-authoritative && bin/console d:s:u --env=prod'
