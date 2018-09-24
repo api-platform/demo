@@ -25,6 +25,7 @@ env:
     - DEPLOYMENT_BRANCH=master
 
 
+# Check all needed travis environment variables are set.
 before_install:
   - if [ -Z ${PROJECT_ID} ]; then echo 'PROJECT_ID is not defined in your travis environement variables.'; fi
   - if [ -Z ${ADMIN_BUCKET} ]; then echo 'ADMIN_BUCKET is not defined in your travis environement variables.'; fi
@@ -63,10 +64,12 @@ script:
   - curl -k https://localhost:8443
   - curl -k https://localhost:8444
 
+# Create the needed bucket in which to push builds.
 before_deploy:
-  - mb gsutil mb -l europe-west1 -p ${PROJECT_ID} -l eu gs://${ADMIN_BUCKET} || echo "Admin bucket exists"
-  - mb gsutil mb -l europe-west1 -p ${PROJECT_ID} -l eu gs://${CLIENT_BUCKET} || echo "Client bucket exists"
+  - gsutil mb -l europe-west1 -p ${PROJECT_ID} -l eu gs://${ADMIN_BUCKET} || echo "Admin bucket exists"
+  - gsutil mb -l europe-west1 -p ${PROJECT_ID} -l eu gs://${CLIENT_BUCKET} || echo "Client bucket exists"
 
+# Deploy images and bucket according to the current context, create or update Kubenetes release with updated informations.
 deploy:
   - provider: script
     script: bash scripts/deploy.sh
