@@ -20,8 +20,8 @@ env:
   global:
     - COMPOSER_ALLOW_XDEBUG=0
     - APP_ENV=prod
-    - MULTI_BRANCH=0
-    - REPOSITORY=api-platform/demo
+    - MULTI_BRANCH=1
+    - REPOSITORY=Mathieudewet/demo
     - DEPLOYMENT_BRANCH=master
 
 
