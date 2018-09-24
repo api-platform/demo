@@ -73,12 +73,14 @@ before_deploy:
 deploy:
   - provider: script
     script: bash script/deploy.sh
+    skip_cleanup: true
     on:
       branch: ${DEPLOYMENT_BRANCH}
       repo: ${REPOSITORY}
       condition: "$MULTI_BRANCH = 0"
   - provider: script
     script: bash script/deploy.sh
+    skip_cleanup: true
     on:
       branch: ${TRAVIS_BRANCH}
       repo: ${REPOSITORY}
