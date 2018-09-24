@@ -25,7 +25,16 @@ env:
     - DEPLOYMENT_BRANCH=master
 
 
-# Check all needed travis environment variables are set and install helm.
+# Check all needed travis environment variables are set.
+before_install:
+  - if [ -Z ${PROJECT_ID} ]; then echo 'PROJECT_ID is not defined in your travis environement variables.'; exit 1; fi
+  - if [ -Z ${ADMIN_BUCKET} ]; then echo 'ADMIN_BUCKET is not defined in your travis environement variables.'; exit 1; fi
+  - if [ -Z ${CLIENT_BUCKET} ]; then echo 'CLIENT_BUCKET is not defined in your travis environement variables.'; exit 1; fi
+  - if [ -Z ${TRAVIS_SERVICE_ACCOUNT} ]; then echo 'TRAVIS_SERVICE_ACCOUNT is not defined in your travis environement variables.'; exit 1; fi
+  - if [ -Z ${DATABASE_USER} ]; then echo 'DATABASE_USER is not defined in your travis environement variables.'; exit 1; fi
+  - if [ -Z ${DATABASE_PASSWORD} ]; then echo 'DATABASE_PASSWORD is not defined in your travis environement variables.'; exit 1; fi
+  - if [ -Z ${DATABASE_NAME} ]; then echo 'DATABASE_NAME is not defined in your travis environement variables.'; exit 1; fi
+
 before_script:
   - sudo service mysql stop
   - sudo service postgresql stop
@@ -34,33 +43,6 @@ before_script:
   - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
 
 script:
-  - if [ -Z ${PROJECT_ID} ]; then
-      echo 'PROJECT_ID is not defined in your travis environement variables.';
-      exit 1;
-    fi
-  - if [ -Z ${ADMIN_BUCKET} ]; then
-      echo 'ADMIN_BUCKET is not defined in your travis environement variables.';
-      exit 1; fi;
-  - if [ -Z ${CLIENT_BUCKET} ]; then
-      echo 'CLIENT_BUCKET is not defined in your travis environement variables.';
-      exit 1;
-    fi
-  - if [ -Z ${TRAVIS_SERVICE_ACCOUNT} ]; then
-      echo 'TRAVIS_SERVICE_ACCOUNT is not defined in your travis environement variables.';
-      exit 1;
-    fi
-  - if [ -Z ${DATABASE_USER} ]; then
-      echo 'DATABASE_USER is not defined in your travis environement variables.';
-      exit 1;
-    fi
-  - if [ -Z ${DATABASE_PASSWORD} ]; then
-      echo 'DATABASE_PASSWORD is not defined in your travis environement variables.';
-      exit 1;
-    fi
-  - if [ -Z ${DATABASE_NAME} ]; then
-      echo 'DATABASE_NAME is not defined in your travis environement variables.';
-      exit 1;
-    fi
   - docker-compose up -d
   - helm lint api/helm/api/
   - sleep 20
