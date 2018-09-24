@@ -72,13 +72,13 @@ before_deploy:
 # Deploy images and bucket according to the current context, create or update Kubenetes release with updated informations.
 deploy:
   - provider: script
-    script: bash scripts/deploy.sh
+    script: bash script/deploy.sh
     on:
       branch: ${DEPLOYMENT_BRANCH}
       repo: ${REPOSITORY}
       condition: "$MULTI_BRANCH = 0"
   - provider: script
-    script: bash scripts/deploy.sh
+    script: bash script/deploy.sh
     on:
       branch: ${TRAVIS_BRANCH}
       repo: ${REPOSITORY}
