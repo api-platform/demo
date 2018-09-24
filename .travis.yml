@@ -27,13 +27,13 @@ env:
 
 # Check all needed travis environment variables are set.
 before_install:
-  - if [ -Z ${PROJECT_ID} ]; then echo 'PROJECT_ID is not defined in your travis environement variables.'; fi
-  - if [ -Z ${ADMIN_BUCKET} ]; then echo 'ADMIN_BUCKET is not defined in your travis environement variables.'; fi
-  - if [ -Z ${CLIENT_BUCKET} ]; then echo 'CLIENT_BUCKET is not defined in your travis environement variables.'; fi
-  - if [ -Z ${TRAVIS_SERVICE_ACCOUNT} ]; then echo 'TRAVIS_SERVICE_ACCOUNT is not defined in your travis environement variables.'; fi
-  - if [ -Z ${DATABASE_USER} ]; then echo 'DATABASE_USER is not defined in your travis environement variables.'; fi
-  - if [ -Z ${DATABASE_PASSWORD} ]; then echo 'DATABASE_PASSWORD is not defined in your travis environement variables.'; fi
-  - if [ -Z ${DATABASE_NAME} ]; then echo 'DATABASE_NAME is not defined in your travis environement variables.'; fi
+  - if [ -Z ${PROJECT_ID} ]; then echo 'PROJECT_ID is not defined in your travis environement variables.'; exit 1; fi
+  - if [ -Z ${ADMIN_BUCKET} ]; then echo 'ADMIN_BUCKET is not defined in your travis environement variables.'; exit 1; fi
+  - if [ -Z ${CLIENT_BUCKET} ]; then echo 'CLIENT_BUCKET is not defined in your travis environement variables.'; exit 1; fi
+  - if [ -Z ${TRAVIS_SERVICE_ACCOUNT} ]; then echo 'TRAVIS_SERVICE_ACCOUNT is not defined in your travis environement variables.'; exit 1; fi
+  - if [ -Z ${DATABASE_USER} ]; then echo 'DATABASE_USER is not defined in your travis environement variables.'; exit 1; fi
+  - if [ -Z ${DATABASE_PASSWORD} ]; then echo 'DATABASE_PASSWORD is not defined in your travis environement variables.'; exit 1; fi
+  - if [ -Z ${DATABASE_NAME} ]; then echo 'DATABASE_NAME is not defined in your travis environement variables.'; exit 1; fi
 
 before_script:
   - sudo service mysql stop
