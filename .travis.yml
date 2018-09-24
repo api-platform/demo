@@ -37,8 +37,7 @@ before_install:
 before_script:
   - sudo service mysql stop
   - sudo service postgresql stop
-  - wget https://kubernetes-helm.storage.googleapis.com/helm-v2.6.1-linux-amd64.tar.gz
-  - tar xzf helm-v2.6.1-linux-amd64.tar.gz
+  - curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash -s -- --version v2.9.1;
   - npm install -g react-scripts
   - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
 
