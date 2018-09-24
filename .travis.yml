@@ -66,8 +66,8 @@ script:
 
 # Create the needed bucket in which to push builds.
 before_deploy:
-  - gsutil mb -l europe-west1 -p ${PROJECT_ID} -l eu gs://${ADMIN_BUCKET} || echo "Admin bucket exists"
-  - gsutil mb -l europe-west1 -p ${PROJECT_ID} -l eu gs://${CLIENT_BUCKET} || echo "Client bucket exists"
+  - gsutil mb -p ${PROJECT_ID} -l eu gs://${ADMIN_BUCKET} || echo "Admin bucket exists"
+  - gsutil mb -p ${PROJECT_ID} -l eu gs://${CLIENT_BUCKET} || echo "Client bucket exists"
 
 # Deploy images and bucket according to the current context, create or update Kubenetes release with updated informations.
 deploy:
@@ -138,5 +138,3 @@ deploy:
       repo: ${REPOSITORY}
       condition: "$MULTI_BRANCH = 1"
 
-after_deploy:
-    - gcloud auth revoke ${TRAVIS_SERVICE_ACCOUNT}
