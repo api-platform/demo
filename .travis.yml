@@ -34,6 +34,14 @@ before_install:
   - if [ -Z ${DATABASE_PASSWORD} ]; then echo 'DATABASE_PASSWORD is not defined in your travis environement variables.'; fi
   - if [ -Z ${DATABASE_NAME} ]; then echo 'DATABASE_NAME is not defined in your travis environement variables.'; fi
 
+before_script:
+  - sudo service mysql stop
+  - sudo service postgresql stop
+  - wget https://kubernetes-helm.storage.googleapis.com/helm-v2.6.1-linux-amd64.tar.gz
+  - tar xzf helm-v2.6.1-linux-amd64.tar.gz
+  - npm install -g react-scripts
+  - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
+
 script:
   - docker-compose up -d
   - helm lint api/helm/api/
