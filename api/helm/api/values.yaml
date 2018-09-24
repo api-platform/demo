@@ -29,6 +29,7 @@ varnish:
 
 ingress:
   annotations:
+    kubernetes.io/ingress.global-static-ip-name: api-platform-demo-ip
     # kubernetes.io/ingress.class: gce
     # kubernetes.io/tls-acme: "true"
   tls:
