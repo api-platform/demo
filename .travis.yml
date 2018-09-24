@@ -25,9 +25,8 @@ env:
 
 
 # Check all needed travis environment variables are set.
-# TODO find why echo before exit doesn't print and resolve it.
+# TODO fix display of missing env var. (exiting without printing for now)
 before_install:
-  - echo ${PROJECT_ID}
   - if [ -z "${PROJECT_ID}" ]; then echo 'PROJECT_ID is not defined in your travis environement variables.'; exit 1; fi
   - if [ -z "${ADMIN_BUCKET}" ]; then echo 'ADMIN_BUCKET is not defined in your travis environement variables.'; exit 1; fi
   - if [ -z "${CLIENT_BUCKET}" ]; then echo 'CLIENT_BUCKET is not defined in your travis environement variables.'; exit 1; fi
@@ -35,7 +34,6 @@ before_install:
   - if [ -z "${DATABASE_USER}" ]; then echo 'DATABASE_USER is not defined in your travis environement variables.'; exit 1; fi
   - if [ -z "${DATABASE_PASSWORD}" ]; then echo 'DATABASE_PASSWORD is not defined in your travis environement variables.'; exit 1; fi
   - if [ -z "${DATABASE_NAME}" ]; then echo 'DATABASE_NAME is not defined in your travis environement variables.'; exit 1; fi
-  - if [ -z "${TEST}" ]; then echo 'TEST is not defined in your travis environement variables.'; exit 1; fi
 
 before_script:
   - sudo service mysql stop
