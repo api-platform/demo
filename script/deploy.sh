@@ -9,7 +9,7 @@ echo -n ${TRAVIS_SERVICE_ACCOUNT_KEY} | base64 -d > travis-service-account.json
 # Connect to the project as travis service account by gcloud using the travis service account access file we just created above and configure project.
 gcloud auth activate-service-account ${TRAVIS_SERVICE_ACCOUNT} --key-file travis-service-account.json --project=${PROJECT_ID}
 gcloud config set compute/zone europe-west1-c
-gcloud config set project ${PROJECT_ID}
+gcloud config set core/project ${PROJECT_ID}
 gcloud container clusters get-credentials api-platform-demo --zone europe-west1-c --project ${PROJECT_ID}
 helm init --upgrade
 # If exist, delete the last namespace we created with app label set to api-demo
