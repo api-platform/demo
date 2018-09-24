@@ -19,8 +19,8 @@ cache:
 env:
   global:
     - COMPOSER_ALLOW_XDEBUG=0
-    - MULTI_BRANCH=1
-    - REPOSITORY=Mathieudewet/demo
+    - MULTI_BRANCH=0
+    - REPOSITORY=api-platform/demo
     - DEPLOYMENT_BRANCH=master
 
 

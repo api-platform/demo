@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# If exist, delete the last namespace we created with app label set to api-demo
+# If exist, delete the last namespace we created with app label set to api-demo.
 kubectl delete namespace $(kubectl get namespaces -l app=api-demo -o jsonpath="{.items[0].metadata.name}" --ignore-not-found) --ignore-not-found
 # Update dependencies and docker image end push them taking care to separate by repositories and branches.
 helm dependencies update ./api/helm/api
@@ -24,6 +24,5 @@ kubectl exec -it $(kubectl --namespace=${TRAVIS_COMMIT} get pods -l app=api-php 
 kubectl label namespace ${TRAVIS_COMMIT} app=api-demo
 # Build and push the client and the admin
 export REACT_APP_API_ENTRYPOINT_IP=$(kubectl --namespace `echo ${TRAVIS_COMMIT}` get ingress -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}')
-#TODO use REACT_APP_API_ENTRYPOINT instead of REACT_APP_API_ENTRYPOINT_IP, remove REACT_APP_API_ENTRYPOINT_IP as we doesnt need it anymore.
 cd admin && yarn && REACT_APP_API_ENTRYPOINT=https://${REACT_APP_API_ENTRYPOINT_IP} yarn build --environment=prod
 cd ../client && yarn &&  REACT_APP_ADMIN_HOST_HTTPS=https://demo-admin.api-platform.com REACT_APP_API_CACHED_HOST_HTTPS=https://${REACT_APP_API_ENTRYPOINT_IP}:443 yarn build --environment=prod
