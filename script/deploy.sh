@@ -2,19 +2,19 @@
 
 # If exist, delete the last namespace we created with app label set to api-demo
 kubectl delete namespace $(kubectl get namespaces -l app=api-demo -o jsonpath="{.items[0].metadata.name}" --ignore-not-found) --ignore-not-found
-# Update dependencies and docker image end push them.
+# Update dependencies and docker image end push them taking care to separate by repositories and branches.
 helm dependencies update ./api/helm/api
-docker build --pull -t eu.gcr.io/${PROJECT_ID}/php -t eu.gcr.io/${PROJECT_ID}/php:latest api --target api_platform_php
-docker build --pull -t eu.gcr.io/${PROJECT_ID}/nginx -t eu.gcr.io/${PROJECT_ID}/nginx:latest api --target api_platform_nginx
-docker build --pull -t eu.gcr.io/${PROJECT_ID}/varnish -t eu.gcr.io/${PROJECT_ID}/varnish:latest api --target api_platform_varnish
-gcloud docker -- push eu.gcr.io/${PROJECT_ID}/php:latest
-gcloud docker -- push eu.gcr.io/${PROJECT_ID}/nginx:latest
-gcloud docker -- push eu.gcr.io/${PROJECT_ID}/varnish:latest
+docker build --pull -t eu.gcr.io/${PROJECT_ID}/${REPOSITORY}/${TRAVIS_BRANCH}/php -t eu.gcr.io/${PROJECT_ID}/${REPOSITORY}/${TRAVIS_BRANCH}/php:latest api --target api_platform_php
+docker build --pull -t eu.gcr.io/${PROJECT_ID}/${REPOSITORY}/${TRAVIS_BRANCH}/nginx -t eu.gcr.io/${PROJECT_ID}/${REPOSITORY}/${TRAVIS_BRANCH}/nginx:latest api --target api_platform_nginx
+docker build --pull -t eu.gcr.io/${PROJECT_ID}/${REPOSITORY}/${TRAVIS_BRANCH}/varnish -t eu.gcr.io/${PROJECT_ID}/${REPOSITORY}/${TRAVIS_BRANCH}/varnish:latest api --target api_platform_varnish
+gcloud docker -- push eu.gcr.io/${PROJECT_ID}/${REPOSITORY}/${TRAVIS_BRANCH}/php:latest
+gcloud docker -- push eu.gcr.io/${PROJECT_ID}/${REPOSITORY}/${TRAVIS_BRANCH}/nginx:latest
+gcloud docker -- push eu.gcr.io/${PROJECT_ID}/${REPOSITORY}/${TRAVIS_BRANCH}/varnish:latest
 # Perform a rolling update if a release in the given namespace ever exist, create one otherwise.
 helm upgrade --install --reset-values --wait --force --namespace=${TRAVIS_COMMIT} --recreate-pods demo ./api/helm/api  \
-    --set php.repository=eu.gcr.io/${PROJECT_ID}/php \
-    --set nginx.repository=eu.gcr.io/${PROJECT_ID}/nginx \
-    --set varnish.repository=eu.gcr.io/${PROJECT_ID}/varnish \
+    --set php.repository=eu.gcr.io/${PROJECT_ID}/${REPOSITORY}/${TRAVIS_BRANCH}/php \
+    --set nginx.repository=eu.gcr.io/${PROJECT_ID}/${REPOSITORY}/${TRAVIS_BRANCH}/nginx \
+    --set varnish.repository=eu.gcr.io/${PROJECT_ID}/${REPOSITORY}/${TRAVIS_BRANCH}/varnish \
     --set secret=${APP_SECRET} \
     --set postgresUser=${DATABASE_USER},postgresPassword="${DATABASE_PASSWORD}",postgresDatabase=${DATABASE_NAME} --set postgresql.persistence.enabled=true \
     --set ingress.annotations.kubernetes.io/ingress.global-static-ip-name=api-platform-demo-ip

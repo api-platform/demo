@@ -13,13 +13,12 @@ cache:
     - admin/node_modules
     - client/node_modules
 
-# If you want to use multi branch deployment or branch naming, set MULTI_BRANCH value to 1.addons:
+# If you want to use multi branch deployment or branch naming, set MULTI_BRANCH value to 1 and set your DEPLOYMENT_BRANCH.
 # Don't forget to change the repo name to feet your needs.
 #TODO Find another way to disable xdebug as that way do not work.
 env:
   global:
     - COMPOSER_ALLOW_XDEBUG=0
-    - APP_ENV=prod
     - MULTI_BRANCH=1
     - REPOSITORY=Mathieudewet/demo
     - DEPLOYMENT_BRANCH=master
