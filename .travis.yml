@@ -26,14 +26,16 @@ env:
 
 
 # Check all needed travis environment variables are set.
+# TODO find why echo before exit doesn't print and resolve it.
 before_install:
-  - if [ -Z ${PROJECT_ID} ]; then echo 'PROJECT_ID is not defined in your travis environement variables.'; exit 1; fi
-  - if [ -Z ${ADMIN_BUCKET} ]; then echo 'ADMIN_BUCKET is not defined in your travis environement variables.'; exit 1; fi
-  - if [ -Z ${CLIENT_BUCKET} ]; then echo 'CLIENT_BUCKET is not defined in your travis environement variables.'; exit 1; fi
-  - if [ -Z ${TRAVIS_SERVICE_ACCOUNT} ]; then echo 'TRAVIS_SERVICE_ACCOUNT is not defined in your travis environement variables.'; exit 1; fi
-  - if [ -Z ${DATABASE_USER} ]; then echo 'DATABASE_USER is not defined in your travis environement variables.'; exit 1; fi
-  - if [ -Z ${DATABASE_PASSWORD} ]; then echo 'DATABASE_PASSWORD is not defined in your travis environement variables.'; exit 1; fi
-  - if [ -Z ${DATABASE_NAME} ]; then echo 'DATABASE_NAME is not defined in your travis environement variables.'; exit 1; fi
+  - echo ${PROJECT_ID}
+  - if [ -z" ${PROJECT_ID}" ]; then echo 'PROJECT_ID is not defined in your travis environement variables.'; exit 1; fi
+  - if [ -z "${ADMIN_BUCKET}" ]; then echo 'ADMIN_BUCKET is not defined in your travis environement variables.'; exit 1; fi
+  - if [ -z "${CLIENT_BUCKET}" ]; then echo 'CLIENT_BUCKET is not defined in your travis environement variables.'; exit 1; fi
+  - if [ -z "${TRAVIS_SERVICE_ACCOUNT}" ]; then echo 'TRAVIS_SERVICE_ACCOUNT is not defined in your travis environement variables.'; exit 1; fi
+  - if [ -z "${DATABASE_USER}" ]; then echo 'DATABASE_USER is not defined in your travis environement variables.'; exit 1; fi
+  - if [ -z "${DATABASE_PASSWORD}" ]; then echo 'DATABASE_PASSWORD is not defined in your travis environement variables.'; exit 1; fi
+  - if [ -z "${DATABASE_NAME}" ]; then echo 'DATABASE_NAME is not defined in your travis environement variables.'; exit 1; fi
 
 before_script:
   - sudo service mysql stop
@@ -64,8 +66,20 @@ script:
   - curl -k https://localhost:8443
   - curl -k https://localhost:8444
 
+# Get kubectl and make it executable
+# Create the travis service account access file from travis environment variables
+# Connect to the project as travis service account by gcloud using the travis service account access file we just created above and configure project.
 # Create the needed bucket in which to push builds.
 before_deploy:
+  - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+  - chmod +x ./kubectl
+  - sudo mv ./kubectl /usr/local/bin/kubectl
+  - echo -n ${TRAVIS_SERVICE_ACCOUNT_KEY} | base64 -d > travis-service-account.json
+  - gcloud auth activate-service-account ${TRAVIS_SERVICE_ACCOUNT} --key-file travis-service-account.json --project=${PROJECT_ID}
+  - gcloud config set compute/zone europe-west1-c
+  - gcloud config set core/project ${PROJECT_ID}
+  - gcloud container clusters get-credentials api-platform-demo --zone europe-west1-c --project ${PROJECT_ID}
+  - helm init --upgrade
   - gsutil mb -p ${PROJECT_ID} -l eu gs://${ADMIN_BUCKET} || echo "Admin bucket exists"
   - gsutil mb -p ${PROJECT_ID} -l eu gs://${CLIENT_BUCKET} || echo "Client bucket exists"
 
