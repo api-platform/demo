@@ -14,16 +14,15 @@ cache:
     - client/node_modules
 
 # If you want to use multi branch deployment or branch naming, set MULTI_BRANCH value to 1 and set your DEPLOYMENT_BRANCH.
-# Don't forget to change the repo name to feet your needs.
-#TODO Find another way to disable xdebug as that way do not work.
+# Don't forget to change the repo name to fit your needs.
 env:
   global:
     - BRANCH=${TRAVIS_BRANCH}
     - BRANCH=`echo $BRANCH | sed -E "s/\//-/g"`
-    - COMPOSER_ALLOW_XDEBUG=0
     - MULTI_BRANCH=0
     - REPOSITORY=api-platform/demo
     - DEPLOYMENT_BRANCH=master
+    - PROD_DNS=demo.api-platform.com
 
 
 # Check all needed travis environment variables are set.
@@ -42,6 +41,7 @@ before_install:
   - if [[ -z "${DEV_CLIENT_BUCKET}" && MULTI_BRANCH == "1" ]]; then echo 'DEV_CLIENT_BUCKET is not defined in your travis environement variables.'; exit 1; fi
 
 before_script:
+  - phpenv config-rm xdebug.ini
   - sudo service mysql stop
   - sudo service postgresql stop
   - curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash -s -- --version v2.9.1;
