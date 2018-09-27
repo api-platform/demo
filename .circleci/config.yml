@@ -9,40 +9,31 @@ executors:
       DEPLOYMENT_BRANCH: master
       PROD_DNS: demo.api-platform.com
 
+commands:
+  formatbranch:
+    description: "Well format branch name"
+    steps:
+    - run: |
+        echo 'CHANGE BRANCH ENV VAR'
+        echo 'export BRANCH=`echo $CIRCLE_BRANCH | sed -E "s/\//-/g"` >> $BASH_ENV
+        echo 'export BRANCH=${BRANCH,,} >> $BASH_ENV
+        source $BASH_ENV
 
 jobs:
   test:
     executor: demo-executor
     steps:
-    - run: |
-        pwd
-        ls -la
-        printenv
-        echo 'CHANGE BRANCH ENV VAR'
-        echo 'export BRANCH=`echo $CIRCLE_BRANCH | sed -E "s/\//-/g"` >> $BASH_ENV
-        echo 'export BRANCH=${BRANCH,,} >> $BASH_ENV
-        printenv
-    - checkout
-    - run: |
-        pwd
-        ls -la
+    - run:
+        command: |
+        formatbranch
         printenv
 
   deploy:
     executor: demo-executor
     steps:
-    - run: |
-        pwd
-        ls -la
-        printenv
-        echo 'CHANGE BRANCH ENV VAR'
-        echo 'export BRANCH=`echo $CIRCLE_BRANCH | sed -E "s/\//-/g"` >> $BASH_ENV
-        echo 'export BRANCH=${BRANCH,,} >> $BASH_ENV
-        printenv
-    - checkout
-    - run: |
-        pwd
-        ls -la
+    - run:
+        command: |
+        formatbranch
         printenv
 
 workflows:
