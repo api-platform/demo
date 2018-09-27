@@ -58,10 +58,10 @@ workflows:
     - deploy:
         requires:
           - test
-        filters:
-          branch:
-            only:
-              master
+#        filters:
+#          branch:
+#            only:
+#              master
 
 
 
