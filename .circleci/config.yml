@@ -1,7 +1,7 @@
 version: 2.1
 
 executors:
-  executor:
+  demo-executor:
     docker:
     - image: circleci/php:7.2.10-fpm-stretch-node-browsers-legacy
     machine: true
@@ -14,7 +14,7 @@ executors:
 
 jobs:
   test:
-    executor: executor
+    executor: demo-executor
     steps:
     - run: |
         pwd
@@ -31,7 +31,7 @@ jobs:
         printenv
 
   deploy:
-    executor: executor
+    executor: demo-executor
     steps:
     - run: |
         pwd
