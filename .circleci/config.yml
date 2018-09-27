@@ -25,16 +25,16 @@ jobs:
     steps:
     - run:
         command: |
-        formatbranch
-        printenv
+          formatbranch
+          printenv
 
   deploy:
     executor: demo-executor
     steps:
     - run:
         command: |
-        formatbranch
-        printenv
+          formatbranch
+          printenv
 
 workflows:
   version: 2
