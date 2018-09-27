@@ -1,5 +1,15 @@
 version: 2.1
 
+commands:
+  formatbranch:
+    description: "Well format branch name"
+    steps:
+    - run: |
+        echo 'CHANGE BRANCH ENV VAR'
+        echo 'export BRANCH=`echo $CIRCLE_BRANCH | sed -E "s/\//-/g"` >> $BASH_ENV
+        echo 'export BRANCH=${BRANCH,,} >> $BASH_ENV
+        source $BASH_ENV
+
 executors:
   demo-executor:
     machine: true
@@ -8,16 +18,6 @@ executors:
       REPOSITORY: api-platform/demo
       DEPLOYMENT_BRANCH: master
       PROD_DNS: demo.api-platform.com
-
-commands:
-  formatbranch:
-    description: "Well format branch name"
-    steps:
-      - run: |
-          echo 'CHANGE BRANCH ENV VAR'
-          echo 'export BRANCH=`echo $CIRCLE_BRANCH | sed -E "s/\//-/g"` >> $BASH_ENV
-          echo 'export BRANCH=${BRANCH,,} >> $BASH_ENV
-          source $BASH_ENV
 
 jobs:
   test:
