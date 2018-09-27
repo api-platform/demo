@@ -1,10 +1,93 @@
-version: 2
-jobs:
-  build:
+version: 2.1
+
+executors:
+  executor:
     docker:
     - image: circleci/php:7.2.10-fpm-stretch-node-browsers-legacy
+    machine: true
+    macos:
+      xcode: "9.0"
+    environment:
+      MULTI_BRANCH: 0
+      REPOSITORY: api-platform/demo
+      DEPLOYMENT_BRANCH: master
+      PROD_DNS: demo.api-platform.com
 
+jobs:
+  test:
+    executor: executor
     steps:
+    - run: |
+        pwd
+        ls -la
+        printenv
+        echo 'CHANGE BRANCH ENV VAR'
+        echo 'export BRANCH=`echo $CIRCLE_BRANCH | sed -E "s/\//-/g"` >> $BASH_ENV
+        echo 'export BRANCH=${BRANCH,,} >> $BASH_ENV
+        printenv
     - checkout
-    - run:
-        command: pwd && ls -la
+    - run: |
+        pwd
+        ls -la
+        printenv
+
+  deploy:
+    executor: executor
+    steps:
+    - run: |
+        pwd
+        ls -la
+        printenv
+    - checkout
+    - run: |
+        pwd
+        ls -la
+        printenv
+
+workflows:
+  version: 2
+  # Workflow name
+  workflow:
+    jobs:
+    - test
+    - deploy:
+        requires:
+          - test
+        filters:
+          branch:
+            only:
+              master
+
+
+
+# Workflow example
+
+#workflows:
+#  version: 2
+#  build-deploy:
+#    jobs:
+#    - build
+#    - deploy-stage:
+#        requires:
+#        - build
+#        filters:
+#          branches:
+#            only: staging
+#    - deploy-prod:
+#        requires:
+#        - build
+#        filters:
+#          branches:
+#            only: master
+
+
+# Deploy example
+
+#jobs:
+#  deploy:
+#    executor: s3/default
+#    steps:
+#    - s3/deploy:
+#        from: "somepath/somefile"
+#        to: $S3BUCKETURI
+#        overwrite: false
