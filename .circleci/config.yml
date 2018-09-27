@@ -2,8 +2,6 @@ version: 2.1
 
 executors:
   demo-executor:
-    docker:
-    - image: circleci/php:7.2.10-fpm-stretch-node-browsers-legacy
     machine: true
     environment:
       MULTI_BRANCH: 0
