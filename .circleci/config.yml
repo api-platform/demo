@@ -13,6 +13,7 @@ executors:
       DEPLOYMENT_BRANCH: master
       PROD_DNS: demo.api-platform.com
 
+
 jobs:
   test:
     executor: executor
@@ -37,6 +38,10 @@ jobs:
     - run: |
         pwd
         ls -la
+        printenv
+        echo 'CHANGE BRANCH ENV VAR'
+        echo 'export BRANCH=`echo $CIRCLE_BRANCH | sed -E "s/\//-/g"` >> $BASH_ENV
+        echo 'export BRANCH=${BRANCH,,} >> $BASH_ENV
         printenv
     - checkout
     - run: |
