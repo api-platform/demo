@@ -24,9 +24,9 @@ jobs:
     executor: demo-executor
     steps:
     - run:
-        command: |
-          formatbranch
-          printenv
+        command: formatbranch
+    - run:
+        command: printenv
 
   deploy:
     executor: demo-executor
