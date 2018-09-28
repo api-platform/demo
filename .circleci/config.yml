@@ -12,7 +12,8 @@ commands:
 
 executors:
   demo-executor:
-    machine: true
+    docker:
+      - image: .circleci/php:7.2.10-fpm-stretch-node-browsers-legacy
     environment:
       MULTI_BRANCH: 0
       REPOSITORY: api-platform/demo
@@ -24,7 +25,6 @@ jobs:
   prepare:
     executor: demo-executor
     steps:
-      - checkout
       - formatbranch
       - run: |
           printenv
