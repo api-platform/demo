@@ -41,8 +41,8 @@ jobs:
           sudo apt-get install -y nodejs
           sudo npm install -g react-scripts
           while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
-          sudo apt-get remove docker-compose
-          sudo curl -L https://github.com/docker/compose/releases/download/${VERSION}/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+          sudo apt-get -y install python-pip
+          sudo pip install docker-compose
           ls -la
           ./ci/test.sh
 
