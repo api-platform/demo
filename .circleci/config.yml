@@ -37,7 +37,8 @@ jobs:
           pwd
           ls -la
           ls -la /
-          sudo  curl -L https://www.npmjs.com/install.sh | sh
+          curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+          sudo apt-get install -y nodejs
           sudo npm install -g react-scripts
           while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
           ls -la
