@@ -36,6 +36,8 @@ jobs:
           if [[ -z "${DATABASE_NAME}" ]]; then echo 'DATABASE_NAME is not defined in your travis environement variables.'; exit 1; fi
           if [[ -z "${DEV_ADMIN_BUCKET}" && MULTI_BRANCH == "1" ]]; then echo 'DEV_ADMIN_BUCKET is not defined in your travis environement variables.'; exit 1; fi
           if [[ -z "${DEV_CLIENT_BUCKET}" && MULTI_BRANCH == "1" ]]; then echo 'DEV_CLIENT_BUCKET is not defined in your travis environement variables.'; exit 1; fi
+          pwd
+          ls -la
           ./ci/env.sh
 
   deploy:
