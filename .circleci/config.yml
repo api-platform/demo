@@ -13,7 +13,7 @@ commands:
 executors:
   demo-executor:
     machine:
-      image: circleci/classic:201708-01
+      image: circleci/classic:201808-01
 
 # Dont forget to add the needed environment variables in you circleCI repository.
 jobs:
