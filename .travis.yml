@@ -39,6 +39,7 @@ before_script:
   - npm install -g react-scripts
   - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
   - ./ci/test.sh
+  - echo 'Tests passed'
 
 # Get kubectl and make it executable
 # Create the travis service account access file from travis environment variables
