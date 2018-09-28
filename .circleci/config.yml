@@ -14,11 +14,6 @@ executors:
   demo-executor:
     docker:
       - image: .circleci/php:7.2.10-fpm-stretch-node-browsers-legacy
-    environment:
-      MULTI_BRANCH: 0
-      REPOSITORY: api-platform/demo
-      DEPLOYMENT_BRANCH: master
-      PROD_DNS: demo.api-platform.com
 
 # Dont forget to add the needed environment variables in you circleCI repository.
 jobs:
@@ -40,6 +35,7 @@ jobs:
           pwd
           ls -la
           ./ci/env.sh
+          printenv
 
   deploy:
     executor: demo-executor
