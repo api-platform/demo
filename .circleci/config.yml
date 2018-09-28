@@ -24,6 +24,7 @@ jobs:
   prepare:
     executor: demo-executor
     steps:
+      - checkout
       - formatbranch
       - run: |
           printenv
