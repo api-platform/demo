@@ -23,7 +23,7 @@ jobs:
       - checkout
       - formatbranch
       - run: |
-          ./ci/before_deploy.sh
+          ./ci/before_install.sh
           source ./ci/env.sh
           source $BASH_ENV
 

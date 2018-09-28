@@ -16,7 +16,7 @@ cache:
 # If you want to use multi branch deployment or branch naming, set MULTI_BRANCH value to 1 and set your DEPLOYMENT_BRANCH.
 # Don't forget to change the repo name to fit your needs.
 # If you need explanation about Parameter expansion, just see https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html
-# TODO change the name of the service account to CI_SERVICE_ACCOUNT here, in GCP and in CI repositories env var.
+# TODO change the name of the service account to CI_SERVICE_ACCOUNT here, in GCP and in CI repositories env var in order to improve reusability and be able to use before_install.sh script in before_install stage.
 env:
   global:
     - BRANCH=${TRAVIS_BRANCH}
@@ -28,7 +28,7 @@ env:
 # When working in dev branchs we don't want to override the master builds so we need to define à DEV_ADMIN_BUCKET and a DEV_CLIENT_BUCKET.
 # If you really want branch naming, you can instead create buckets on the fly using subdomains e.g  gs://${BRANCH}.you-domain.com
 before_install:
-  - ./ci/before_deploy.sh
+  - ./ci/before_install.sh
   - ./ci/env.sh
 
 before_script:
@@ -48,8 +48,8 @@ before_deploy:
   - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
   - chmod +x ./kubectl
   - sudo mv ./kubectl /usr/local/bin/kubectl
-  - echo -n ${TRAVIS_SERVICE_ACCOUNT_KEY} | base64 -d > travis-service-account.json
-  - gcloud auth activate-service-account ${TRAVIS_SERVICE_ACCOUNT} --key-file travis-service-account.json --project=${PROJECT_ID}
+  - echo -n ${CI_SERVICE_ACCOUNT} | base64 -d > travis-service-account.json
+  - gcloud auth activate-service-account ${CI_SERVICE_ACCOUNT} --key-file travis-service-account.json --project=${PROJECT_ID}
   - gcloud config set compute/zone europe-west1-c
   - gcloud config set core/project ${PROJECT_ID}
   - gcloud container clusters get-credentials api-platform-demo --zone europe-west1-c --project ${PROJECT_ID}
