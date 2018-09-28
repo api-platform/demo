@@ -16,26 +16,19 @@ cache:
 # If you want to use multi branch deployment or branch naming, set MULTI_BRANCH value to 1 and set your DEPLOYMENT_BRANCH.
 # Don't forget to change the repo name to fit your needs.
 # If you need explanation about Parameter expansion, just see https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html
+# TODO change the name of the service account to CI_SERVICE_ACCOUNT here, in GCP and in CI repositories env var.
 env:
   global:
     - BRANCH=${TRAVIS_BRANCH}
     - BRANCH=`echo $BRANCH | sed -E "s/\//-/g"`
     - BRANCH=${BRANCH,,}
+    - CI_SERVICE_ACCOUNT=${TRAVIS_SERVICE_ACCOUNT}
 
 # Check all needed travis environment variables are set.
 # When working in dev branchs we don't want to override the master builds so we need to define à DEV_ADMIN_BUCKET and a DEV_CLIENT_BUCKET.
 # If you really want branch naming, you can instead create buckets on the fly using subdomains e.g  gs://${BRANCH}.you-domain.com
-# TODO change the name of the service account to CI_SERVICE_ACCOUNT here, in GCP and in CI repositories env var in order to put all this in the env.sh file.
 before_install:
-  - if [[ -z "${PROJECT_ID}" ]]; then echo 'PROJECT_ID is not defined in your travis environement variables.'; exit 1; fi
-  - if [[ -z "${ADMIN_BUCKET}" ]]; then echo 'ADMIN_BUCKET is not defined in your travis environement variables.'; exit 1; fi
-  - if [[ -z "${CLIENT_BUCKET}" ]]; then echo 'CLIENT_BUCKET is not defined in your travis environement variables.'; exit 1; fi
-  - if [[ -z "${TRAVIS_SERVICE_ACCOUNT}" ]]; then echo 'TRAVIS_SERVICE_ACCOUNT is not defined in your travis environement variables.'; exit 1; fi
-  - if [[ -z "${DATABASE_USER}" ]]; then echo 'DATABASE_USER is not defined in your travis environement variables.'; exit 1; fi
-  - if [[ -z "${DATABASE_PASSWORD}" ]]; then echo 'DATABASE_PASSWORD is not defined in your travis environement variables.'; exit 1; fi
-  - if [[ -z "${DATABASE_NAME}" ]]; then echo 'DATABASE_NAME is not defined in your travis environement variables.'; exit 1; fi
-  - if [[ -z "${DEV_ADMIN_BUCKET}" && MULTI_BRANCH == "1" ]]; then echo 'DEV_ADMIN_BUCKET is not defined in your travis environement variables.'; exit 1; fi
-  - if [[ -z "${DEV_CLIENT_BUCKET}" && MULTI_BRANCH == "1" ]]; then echo 'DEV_CLIENT_BUCKET is not defined in your travis environement variables.'; exit 1; fi
+  - ./ci/before_deploy.sh
   - ./ci/env.sh
 
 before_script:
