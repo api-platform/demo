@@ -25,6 +25,7 @@ env:
 # Check all needed travis environment variables are set.
 # When working in dev branchs we don't want to override the master builds so we need to define à DEV_ADMIN_BUCKET and a DEV_CLIENT_BUCKET.
 # If you really want branch naming, you can instead create buckets on the fly using subdomains e.g  gs://${BRANCH}.you-domain.com
+# TODO change the name of the service account to CI_SERVICE_ACCOUNT here, in GCP and in CI repositories env var in order to put all this in the env.sh file.
 before_install:
   - if [[ -z "${PROJECT_ID}" ]]; then echo 'PROJECT_ID is not defined in your travis environement variables.'; exit 1; fi
   - if [[ -z "${ADMIN_BUCKET}" ]]; then echo 'ADMIN_BUCKET is not defined in your travis environement variables.'; exit 1; fi
@@ -35,38 +36,16 @@ before_install:
   - if [[ -z "${DATABASE_NAME}" ]]; then echo 'DATABASE_NAME is not defined in your travis environement variables.'; exit 1; fi
   - if [[ -z "${DEV_ADMIN_BUCKET}" && MULTI_BRANCH == "1" ]]; then echo 'DEV_ADMIN_BUCKET is not defined in your travis environement variables.'; exit 1; fi
   - if [[ -z "${DEV_CLIENT_BUCKET}" && MULTI_BRANCH == "1" ]]; then echo 'DEV_CLIENT_BUCKET is not defined in your travis environement variables.'; exit 1; fi
+  - ./ci/env.sh
 
 before_script:
-  - ./env_ci.sh
-  - printenv
   - phpenv config-rm xdebug.ini
   - sudo service mysql stop
   - sudo service postgresql stop
   - curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash -s -- --version v2.9.1;
   - npm install -g react-scripts
   - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
-
-script:
-  - docker-compose up -d
-  - helm lint api/helm/api/
-  - sleep 20
-  - docker-compose exec php composer install -o -n
-  - docker-compose exec php bin/console security:check
-  - docker-compose exec php bin/console doctrine:schema:validate --skip-sync
-  - docker-compose exec php bin/console doctrine:schema:drop --force
-  - docker-compose exec php bin/console doctrine:schema:create
-  - docker-compose exec php bin/console hautelook:fixtures:load -n
-  - docker-compose exec php bin/console doctrine:schema:drop --env=test --force
-  - docker-compose exec php bin/console cache:warmup --env=test
-  - docker-compose exec php bin/behat
-  - curl http://localhost
-  - curl http://localhost:81
-  - curl http://localhost:8080
-  - curl http://localhost:8081
-  - curl -k https://localhost
-  - curl -k https://localhost:444
-  - curl -k https://localhost:8443
-  - curl -k https://localhost:8444
+  - ./ci/test.sh
 
 # Get kubectl and make it executable
 # Create the travis service account access file from travis environment variables
@@ -83,25 +62,26 @@ before_deploy:
   - gcloud container clusters get-credentials api-platform-demo --zone europe-west1-c --project ${PROJECT_ID}
   - helm init --upgrade
   - |
-    if [[ "${MULTI_BRANCH}" == "0" ]]; then
+    if [[ "${MULTI_BRANCH}" == "0" && "${CURRENT_CI}" == "travis" ]]; then
       gsutil mb -p ${PROJECT_ID} -l eu gs://${ADMIN_BUCKET} || echo "Admin bucket exists";
       gsutil mb -p ${PROJECT_ID} -l eu gs://${CLIENT_BUCKET} || echo "Client bucket exists";
-    else
+    elif [[ "${CURRENT_CI}" == "travis" ]]
+    then
       gsutil mb -p ${PROJECT_ID} -l eu gs://${DEV_ADMIN_BUCKET} || echo "Dev admin bucket exists"
       gsutil mb -p ${PROJECT_ID} -l eu gs://${DEV_CLIENT_BUCKET} || echo "Dev client bucket exists"
     fi;
 
-# Deploy images and bucket according to the current context, create or update Kubenetes release with updated informations.
+# Deploy images and buckets according to the current context, create or update Kubenetes release with updated informations.
 deploy:
-  - provider: script
-    script: bash script/deploy.sh
+  - provider: ci
+    script: bash ci/deploy.sh
     skip_cleanup: true
     on:
       branch: ${DEPLOYMENT_BRANCH}
       repo: ${REPOSITORY}
       condition: "$MULTI_BRANCH == 0 && $TRAVIS_PULL_REQUEST == 'false' && CURRENT_CI == 'travis'"
-  - provider: script
-    script: bash script/deploy.sh
+  - provider: ci
+    script: bash ci/deploy.sh
     skip_cleanup: true
     on:
       repo: ${REPOSITORY}
