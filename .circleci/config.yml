@@ -36,6 +36,7 @@ jobs:
           pwd
           ls -la
           ./ci/env.sh
+          source $BASH_ENV
           printenv
 
   deploy:
