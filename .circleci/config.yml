@@ -12,7 +12,8 @@ commands:
 
 executors:
   demo-executor:
-    machine: true
+    docker:
+      - image: circleci/php:7.2.10-fpm-stretch-node-browsers-legacy
 
 # Dont forget to add the needed environment variables in you circleCI repository.
 jobs:
