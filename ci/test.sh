@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/../"
 docker-compose up -d
 helm lint api/helm/api/
 sleep 20
