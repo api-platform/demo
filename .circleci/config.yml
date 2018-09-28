@@ -8,7 +8,7 @@ commands:
           echo 'CHANGE BRANCH ENV VAR'
           echo 'export BRANCH=`echo $CIRCLE_BRANCH | sed -E "s/\//-/g"` >> $BASH_ENV
           echo 'export BRANCH=${BRANCH,,} >> $BASH_ENV
-          ./ci/env.sh >> $BASH_ENV
+          ./ci/env.sh
           source $BASH_ENV
 
 executors:
@@ -24,7 +24,6 @@ jobs:
       - checkout
       - formatbranch
       - run: |
-          printenv
           if [[ -z "${PROJECT_ID}" ]]; then echo 'PROJECT_ID is not defined in your travis environement variables.'; exit 1; fi
           if [[ -z "${ADMIN_BUCKET}" ]]; then echo 'ADMIN_BUCKET is not defined in your travis environement variables.'; exit 1; fi
           if [[ -z "${CLIENT_BUCKET}" ]]; then echo 'CLIENT_BUCKET is not defined in your travis environement variables.'; exit 1; fi
