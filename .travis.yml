@@ -39,13 +39,13 @@ before_script:
   - npm install -g react-scripts
   - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
   - ./ci/test.sh
-  - echo 'Tests passed'
 
 # Get kubectl and make it executable
 # Create the travis service account access file from travis environment variables
 # Connect to the project as travis service account by gcloud using the travis service account access file we just created above and configure project.
 # Create the needed bucket in which to push builds.
 before_deploy:
+  - echo 'before deploy'
   - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
   - chmod +x ./kubectl
   - sudo mv ./kubectl /usr/local/bin/kubectl

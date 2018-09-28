@@ -2,6 +2,7 @@
 
 
 # Update dependencies and docker image end push them taking care to separate by repositories and branches.
+echo 'deploy script'
 helm dependencies update ./api/helm/api
 
 # You can customize it to fit your needs, for example for branch naming e.g. PHP_REPOSITORY="eu.gcr.io/${PROJECT_ID}/php-${BRANCH}"
