@@ -41,6 +41,7 @@ jobs:
     executor: demo-executor
     steps:
       - formatbranch
+      - run : printenv
 
 workflows:
   version: 2
