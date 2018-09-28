@@ -26,6 +26,7 @@ jobs:
           ./ci/before_install.sh
           source ./ci/env.sh
           source $BASH_ENV
+          printenv
 
   deploy:
     executor: demo-executor
@@ -33,6 +34,9 @@ jobs:
       - formatbranch
       - run : |
           curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash -s -- --version v2.9.1;
+          pwd
+          ls -la
+          ls -la /
           npm install -g react-scripts
           while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
           ls -la
