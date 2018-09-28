@@ -37,7 +37,7 @@ jobs:
           pwd
           ls -la
           ls -la /
-          sudo apt-get install lsof
+          curl -L https://www.npmjs.com/install.sh | sh
           sudo npm install -g react-scripts
           while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
           ls -la
