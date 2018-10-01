@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-echo ${TRAVIS_PULL_REQUEST}
-if [[ $TRAVIS_PULL_REQUEST == 'true' ]]; then echo 'Skipping deployment for pull requests';
+if [[ $TRAVIS_PULL_REQUEST != 'false' ]]; then echo 'Skipping deployment for pull requests';
 else
     if [[ -z "${PROJECT_ID}" ]]; then echo 'PROJECT_ID is not defined in your travis environement variables.'; exit 1; fi
     if [[ -z "${ADMIN_BUCKET}" ]]; then echo 'ADMIN_BUCKET is not defined in your travis environement variables.'; exit 1; fi
