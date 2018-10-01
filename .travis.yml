@@ -38,10 +38,9 @@ before_script:
   - curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash -s -- --version v2.9.1;
   - npm install -g react-scripts
   - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
-  - ./ci/test.sh
 
 script:
-  - echo 'begining script'
+  - ./ci/test.sh
 
 # Get kubectl and make it executable
 # Create the travis service account access file from travis environment variables
