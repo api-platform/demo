@@ -11,12 +11,12 @@ docker-compose exec php bin/console doctrine:schema:create
 docker-compose exec php bin/console hautelook:fixtures:load -n
 docker-compose exec php bin/console doctrine:schema:drop --env=test --force
 docker-compose exec php bin/console cache:warmup --env=test
-docker-compose exec php bin/behat
-curl http://localhost
-curl http://localhost:81
-curl http://localhost:8080
-curl http://localhost:8081
-curl -k https://localhost
-curl -k https://localhost:444
-curl -k https://localhost:8443
-curl -k https://localhost:8444
+docker-compose exec php bin/behat --format=progress
+curl -s http://localhost # Client
+curl -s http://localhost:81 # Admin
+curl -s http://localhost:8080 # API
+curl -s http://localhost:8081 # Varnish
+curl -k -s https://localhost # Client (HTTP/2)
+curl -k -s https://localhost:444 # Admin (HTTP/2)
+curl -k -s https://localhost:8443 # API (HTTP/2)
+curl -k -s https://localhost:8444 # Varnish (HTTP/2)
