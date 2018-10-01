@@ -59,14 +59,14 @@ before_deploy:
 
 # Deploy images and buckets according to the current context, create or update Kubenetes release with updated informations.
 deploy:
-  - provider: ci
+  - provider: script
     script: bash ci/deploy.sh
     skip_cleanup: true
     on:
       branch: ${DEPLOYMENT_BRANCH}
       repo: ${REPOSITORY}
       condition: "$MULTI_BRANCH == 0 && $TRAVIS_PULL_REQUEST == 'false' && $CURRENT_CI == 'travis'"
-  - provider: ci
+  - provider: script
     script: bash ci/deploy.sh
     skip_cleanup: true
     on:
