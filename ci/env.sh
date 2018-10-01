@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# Choose the CI you want to run the deployments.
+# Both CI will make tests but only the one specified will deploy.
+# Current available choices are travis and circleci.
+export CURRENT_CI='travis'
+export MULTI_BRANCH=0
+export REPOSITORY='api-platform/demo'
+export DEPLOYMENT_BRANCH'=master'
+export PROD_DNS='demo.api-platform.com'
