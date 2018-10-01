@@ -24,7 +24,7 @@ env:
     - BRANCH=${BRANCH,,}
     - CI_SERVICE_ACCOUNT=${TRAVIS_SERVICE_ACCOUNT}
 
-# Check all needed travis environment variables are set.
+# Check that all needed travis environment variables are set.
 # When working in dev branchs we don't want to override the master builds so we need to define à DEV_ADMIN_BUCKET and a DEV_CLIENT_BUCKET.
 # If you really want branch naming, you can instead create buckets on the fly using subdomains e.g  gs://${BRANCH}.you-domain.com
 before_install:
