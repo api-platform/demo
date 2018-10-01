@@ -29,7 +29,7 @@ env:
 # If you really want branch naming, you can instead create buckets on the fly using subdomains e.g  gs://${BRANCH}.you-domain.com
 before_install:
   - ./ci/before_install.sh
-  - ./ci/env.sh
+  - source ./ci/env.sh
   - echo ${REPOSITORY}
 
 before_script:
