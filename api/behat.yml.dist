@@ -14,7 +14,7 @@ default:
         bootstrap: "features/bootstrap/bootstrap.php"
         class: "App\\Kernel"
     Behat\MinkExtension:
-      base_url: "http://localhost/"
+      base_url: "https://localhost/"
       sessions:
         default:
           symfony2: ~

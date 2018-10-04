@@ -29,7 +29,7 @@ gcloud docker -- push ${VARNISH_REPOSITORY}:latest;
 
 # Perform a rolling update if a release in the given namespace ever exist, create one otherwise.
 # Be aware that we have the static ip for the master branch but it belongs to you to care about others.
-helm upgrade --install --reset-values --wait --force --namespace=${BRANCH} --recreate-pods demo ./api/helm/api STATIC_IP  \
+helm upgrade --install --reset-values --wait --force --namespace=${BRANCH} --recreate-pods demo ./api/helm/api STATIC_IP \
     --set php.repository=${PHP_REPOSITORY} \
     --set nginx.repository=${NGINX_REPOSITORY} \
     --set varnish.repository=${VARNISH_REPOSITORY} \
@@ -49,7 +49,7 @@ else
 fi
 
 cd admin && yarn && REACT_APP_API_ENTRYPOINT=https://${API_ENTRYPOINT} yarn build --environment=prod;
-cd ../client && yarn &&  REACT_APP_ADMIN_HOST_HTTPS=https://${ADMIN_BUCKET} REACT_APP_ADMIN_HOST_HTTP=http://${ADMIN_BUCKET} REACT_APP_API_CACHED_HOST_HTTPS=https://${API_ENTRYPOINT} REACT_APP_API_CACHED_HOST_HTTP=http://${API_ENTRYPOINT} yarn build --environment=prod;
+cd ../client && yarn && REACT_APP_ADMIN_HOST_HTTPS=https://${ADMIN_BUCKET} REACT_APP_ADMIN_HOST_HTTP=http://${ADMIN_BUCKET} REACT_APP_API_CACHED_HOST_HTTPS=https://${API_ENTRYPOINT} REACT_APP_API_CACHED_HOST_HTTP=http://${API_ENTRYPOINT} yarn build --environment=prod && cd ..;
 
 if [[ ${BRANCH} == "master" ]]
 then
