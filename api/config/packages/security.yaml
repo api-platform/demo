@@ -16,3 +16,6 @@ security:
 
             # form_login: ~
             # https://symfony.com/doc/current/security/form_login_setup.html
+
+    access_control:
+        - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
