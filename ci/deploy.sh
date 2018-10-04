@@ -48,6 +48,22 @@ else
     export API_ENTRYPOINT=$(kubectl --namespace `echo ${BRANCH}` get ingress -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}');
 fi
 
-
 cd admin && yarn && REACT_APP_API_ENTRYPOINT=https://${API_ENTRYPOINT} yarn build --environment=prod;
 cd ../client && yarn &&  REACT_APP_ADMIN_HOST_HTTPS=https://${ADMIN_BUCKET} REACT_APP_ADMIN_HOST_HTTP=http://${ADMIN_BUCKET} REACT_APP_API_CACHED_HOST_HTTPS=https://${API_ENTRYPOINT} REACT_APP_API_CACHED_HOST_HTTP=http://${API_ENTRYPOINT} yarn build --environment=prod;
+
+if [[ ${BRANCH} == "master" ]]
+then
+    gsutil rsync -R admin/build gs://${ADMIN_BUCKET}
+    gsutil rsync -R admin/build gs://${CLIENT_BUCKET}
+    gsutil web set -m index.html gs://${ADMIN_BUCKET}
+    gsutil web set -m index.html gs://${CLIENT_BUCKET}
+    gsutil iam ch allUsers:objectViewer gs://${CLIENT_BUCKET}
+    gsutil iam ch allUsers:objectViewer gs://${ADMIN_BUCKET}
+else
+    gsutil rsync -R admin/build gs://${DEV_ADMIN_BUCKET}
+    gsutil rsync -R admin/build gs://${DEV_CLIENT_BUCKET}
+    gsutil web set -m index.html gs://${DEV_ADMIN_BUCKET}
+    gsutil web set -m index.html gs://${DEV_CLIENT_BUCKET}
+    gsutil iam ch allUsers:objectViewer gs://${DEV_ADMIN_BUCKET}
+    gsutil iam ch allUsers:objectViewer gs://${DEV_CLIENT_BUCKET}
+fi
