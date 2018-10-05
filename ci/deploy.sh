@@ -29,7 +29,7 @@ gcloud docker -- push ${VARNISH_REPOSITORY}:latest;
 
 # Perform a rolling update if a release in the given namespace ever exist, create one otherwise.
 # Be aware that we have the static ip for the master branch but it belongs to you to care about others.
-helm upgrade --install --reset-values --wait --force --namespace=${BRANCH} --recreate-pods demo ./api/helm/api STATIC_IP \
+helm upgrade demo ./api/helm/api ${STATIC_IP} --install --reset-values --wait --force --namespace=${BRANCH} --recreate-pods \
     --set php.repository=${PHP_REPOSITORY} \
     --set nginx.repository=${NGINX_REPOSITORY} \
     --set varnish.repository=${VARNISH_REPOSITORY} \
