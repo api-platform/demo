@@ -37,6 +37,8 @@ helm upgrade api-platform-demo ./api/helm/api ${STATIC_IP} --install --reset-val
     --set secret=${APP_SECRET} \
     --set postgresUser=${DATABASE_USER},postgresPassword="${DATABASE_PASSWORD}",postgresDatabase=${DATABASE_NAME} --set postgresql.persistence.enabled=true;
 
+sleep 50;
+
 kubectl exec -it $(kubectl --namespace=${BRANCH} get pods -l app=api-php -o jsonpath="{.items[0].metadata.name}") --namespace=${BRANCH} \
     -- ash -c'export APP_ENV=dev && composer install -n && bin/console d:s:u --force --env=dev && bin/console hautelook:fixtures:load -n && APP_ENV=prod composer --no-dev install --classmap-authoritative && bin/console d:s:u --env=prod';
 
