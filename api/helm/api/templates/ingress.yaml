@@ -13,7 +13,7 @@ metadata:
     {{- end }}
 spec:
   backend:
-    serviceName: {{ if .Values.varnish.enabled }}varnish{{ else }}api{{ end }}
+    serviceName: api
     servicePort: 80
   {{- if .Values.ingress.tls }}
   tls:
