@@ -8,32 +8,26 @@ use Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationPro
 use Symfony\Component\Security\Core\User\UserChecker;
 use Symfony\Component\Security\Core\User\InMemoryUserProvider;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
-use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Encoder\PlaintextPasswordEncoder;
 
 class AuthController extends AbstractController
 {
-
-    public function login_check(Request $request)
+    public function loginCheck(Request $request)
     {
-        // set the in_memory provider
-        $userProvider = new InMemoryUserProvider(
-            array(
-                'admin' => array(
-                    // password is "foo"
-                    'password' => '5FZ2Z8QIkA7UTZ4BYkoC+GsReLf569mSKDsfods6LYQ8t+a8EW9oaircfMpmaLbPBh4FOBiiFyLfuZmTSUwzZg==',
-                    'roles'    => array('ROLE_ADMIN'),
-                ),
-            )
-        );
+        $userProvider = new InMemoryUserProvider([
+            'admin' => [
+                'password' => 'foo',
+                'roles' => array('ROLE_ADMIN'),
+            ],
+        ]);
 
         // encoder array of password encoders (see below)
         $encoderFactory = new EncoderFactory([
-            User::class => new MessageDigestPasswordEncoder('sha512', true, 5000)
+            User::class => new PlaintextPasswordEncoder(),
         ]);
 
-        // define the data object provider
         $daoProvider = new DaoAuthenticationProvider(
             $userProvider,
             new UserChecker(),
@@ -49,8 +43,7 @@ class AuthController extends AbstractController
         );
 
         return $this->json([
-            'token' => $daoProvider->authenticate($unauthenticatedToken)
+            'token' => $daoProvider->authenticate($unauthenticatedToken),
         ]);
     }
-
 }
