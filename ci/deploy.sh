@@ -44,7 +44,7 @@ kubectl exec -it $(kubectl --namespace=${BRANCH} get pods -l app=api-php -o json
 
 # For the master branch the REACT_APP_API_ENTRYPOINT will be the URL plug on your static IP.
 # For Dev branchs you can use the IP retrievable by the kubectl get ingress command.
-if [[ ${BRANCH} == "master" ]]
+if [[ ${BRANCH} == ${DEPLOYMENT_BRANCH} ]]
 then
     export API_ENTRYPOINT=${PROD_DNS};
 else
@@ -54,7 +54,7 @@ fi
 cd admin && yarn && REACT_APP_API_ENTRYPOINT=https://${API_ENTRYPOINT} yarn build --environment=prod;
 cd ../client && yarn && REACT_APP_ADMIN_HOST_HTTPS=https://${ADMIN_BUCKET} REACT_APP_ADMIN_HOST_HTTP=http://${ADMIN_BUCKET} REACT_APP_API_CACHED_HOST_HTTPS=https://${API_ENTRYPOINT} REACT_APP_API_CACHED_HOST_HTTP=http://${API_ENTRYPOINT} yarn build --environment=prod && cd ..;
 
-if [[ ${BRANCH} == "master" ]]
+if [[ ${BRANCH} == ${DEPLOYMENT_BRANCH} ]]
 then
     gsutil rsync -R admin/build gs://${ADMIN_BUCKET}
     gsutil rsync -R admin/build gs://${CLIENT_BUCKET}
