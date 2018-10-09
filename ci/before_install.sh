@@ -9,6 +9,4 @@ else
     if [[ -z "${DATABASE_USER}" ]]; then echo 'DATABASE_USER is not defined in your travis environement variables.'; fi
     if [[ -z "${DATABASE_PASSWORD}" ]]; then echo 'DATABASE_PASSWORD is not defined in your travis environement variables.'; fi
     if [[ -z "${DATABASE_NAME}" ]]; then echo 'DATABASE_NAME is not defined in your travis environement variables.'; fi
-    if [[ -z "${DEV_ADMIN_BUCKET}" && MULTI_BRANCH == "1" ]]; then echo 'DEV_ADMIN_BUCKET is not defined in your travis environement variables.'; fi
-    if [[ -z "${DEV_CLIENT_BUCKET}" && MULTI_BRANCH == "1" ]]; then echo 'DEV_CLIENT_BUCKET is not defined in your travis environement variables.'; fi
 fi
