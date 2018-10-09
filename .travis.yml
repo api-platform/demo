@@ -57,31 +57,39 @@ deploy:
       repo: ${REPOSITORY}
       condition: ${CURRENT_CI} == 'travis' && $MULTI_BRANCH == 0 && ${TRAVIS_PULL_REQUEST} == 'false' && -n ${CI_TAG}
   - provider: script
-    script: bash ci/deploy.sh
+    script: -bash ci/deploy.sh
     skip_cleanup: true
     on:
       repo: ${REPOSITORY}
       condition: ${CURRENT_CI} == 'travis' && ${MULTI_BRANCH} == 1 && ${TRAVIS_PULL_REQUEST} == 'true'
   - provider: script
-    script: bash ci/buckets_builds.sh
+    script:
+      ./ci/admin_build.sh;
+      ./ci/client_build.sh;
     skip_cleanup: true
     on:
       repo: ${REPOSITORY}
       condition: ${CURRENT_CI} == 'travis'  && ${MULTI_BRANCH} == 0 && ${TRAVIS_PULL_REQUEST} == 'false' && -n ${CI_TAG}
   - provider: script
-    script: bash ci/buckets_builds.sh
+    script:
+      ./ci/admin_build.sh;
+      ./ci/client_build.sh;
     skip_cleanup: true
     on:
       repo: ${REPOSITORY}
         condition: ${CURRENT_CI} == 'travis' && ${MULTI_BRANCH} == 1 && ${TRAVIS_PULL_REQUEST} == 'true'
   - provider: script
-    script: bash ci/buckets_deploy.sh
+    script:
+      ./ci/admin_deploy.sh;
+      ./ci/client_deploy.sh;
     skip_cleanup: true
     on:
       repo: ${REPOSITORY}
       condition: ${CURRENT_CI} == 'travis' && ${MULTI_BRANCH} == 0 && ${TRAVIS_PULL_REQUEST} == 'false' && -n ${CI_TAG}
   - provider: script
-    script: bash ci/buckets_deploy.sh
+    script:
+      ./ci/admin_deploy.sh;
+      ./ci/client_deploy.sh;
     skip_cleanup: true
     on:
       repo: ${REPOSITORY}
