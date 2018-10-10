@@ -1,0 +1,120 @@
+version: 2.1
+
+executors:
+  demo-executor:
+    machine:
+      image: circleci/classic:201808-01
+
+# Dont forget to add the needed environment variables in you circleCI repository.
+jobs:
+  prepare:
+    executor: demo-executor
+    steps:
+      - checkout
+      - formatbranch
+      - run: |
+          source ./ci/.env
+          printenv
+          ./ci/before_install.sh
+
+  test:
+    executor: demo-executor
+    steps:
+      - checkout
+      - run : |
+          curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash -s -- --version v2.9.1;
+          curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+          sudo apt-get install -y nodejs
+          sudo npm install -g react-scripts
+          while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
+          ./ci/test.sh
+
+  before_deploy:
+    executor: demo-executor
+    steps:
+      - checkout
+      - run: |
+          source ./ci/.env
+          if [[ "${CURRENT_CI}" != "circle" ]] exit;
+          ./ci/before_deploy.sh
+
+  deploy_api:
+    executor: demo-executor
+    steps:
+      - checkout
+      - run: |
+          source ./ci/.env
+          ./ci/deploy.sh
+
+  deploy_admin:
+    executor: demo-executor
+    steps:
+    - checkout
+    - run: |
+        source ./ci/.env
+        ./ci/admin_deploy.sh
+
+  deploy_client:
+    executor: demo-executor
+    steps:
+      - checkout
+      - run: |
+          source ./ci/.env
+          ./ci/client_deploy.sh
+
+workflows:
+  version: 2
+  # Workflow name
+  workflow:
+    jobs:
+    - prepare
+    - test:
+        requires:
+          - prepare
+    - deploy_api:
+        requires:
+          - test
+    - deploy_admin:
+        requires:
+          - deploy_api
+    - deploy_client:
+        requires:
+          - deploy_api
+
+#        filters:
+#          branch:
+#            only:
+#              master
+
+
+# Workflow example
+
+#workflows:
+#  version: 2
+#  build-deploy:
+#    jobs:
+#    - build
+#    - deploy-stage:
+#        requires:
+#        - build
+#        filters:
+#          branches:
+#            only: staging
+#    - deploy-prod:
+#        requires:
+#        - build
+#        filters:
+#          branches:
+#            only: master
+
+
+# Deploy example
+
+#jobs:
+#  deploy:
+#    executor: s3/default
+#    steps:
+#    - s3/deploy:
+#        from: "somepath/somefile"
+#        to: $S3BUCKETURI
+#        overwrite: false
