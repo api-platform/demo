@@ -37,15 +37,8 @@ script:
 # Create the needed bucket in which to push builds.
 before_deploy:
   - ./ci/before_deploy.sh
-  - |
-    if [[ "${MULTI_BRANCH}" == "0" && "${CURRENT_CI}" == "travis" && -n ${CI_TAG} ]]; then
-      gsutil mb -p ${PROJECT_ID} -l eu gs://${ADMIN_BUCKET} || echo "Admin bucket exists";
-      gsutil mb -p ${PROJECT_ID} -l eu gs://${CLIENT_BUCKET} || echo "Client bucket exists";
-    elif [[ "${CURRENT_CI}" == "travis" && ${TRAVIS_PULL_REQUEST} == 'true' ]]
-    then
-      gsutil mb -p ${PROJECT_ID} -l eu gs://${ADMIN_BUCKET} || echo "Admin bucket exists"
-      gsutil mb -p ${PROJECT_ID} -l eu gs://${CLIENT_BUCKET} || echo "Client bucket exists"
-    fi;
+  - gsutil mb -p "${PROJECT_ID}" -l eu gs://"${ADMIN_BUCKET}" || echo "Admin bucket exists";
+  - gsutil mb -p "${PROJECT_ID}" -l eu gs://"${CLIENT_BUCKET}" || echo "Client bucket exists";
 
 # Deploy images and buckets according to the current context, create or update Kubenetes release with updated informations.
 deploy:
@@ -53,45 +46,45 @@ deploy:
     script: bash ci/deploy.sh
     skip_cleanup: true
     on:
-      branch: ${DEPLOYMENT_BRANCH}
-      repo: ${REPOSITORY}
-      condition: ${CURRENT_CI} == 'travis' && $MULTI_BRANCH == 0 && ${TRAVIS_PULL_REQUEST} == 'false' && -n ${CI_TAG}
+      branch: "${DEPLOYMENT_BRANCH}"
+      repo: "${REPOSITORY}"
+      condition: "${CURRENT_CI} == travis && ${PRODUCTION_DEPLOY} == 1"
   - provider: script
-    script: -bash ci/deploy.sh
+    script: bash ci/deploy.sh
     skip_cleanup: true
     on:
-      repo: ${REPOSITORY}
-      condition: ${CURRENT_CI} == 'travis' && ${MULTI_BRANCH} == 1 && ${TRAVIS_PULL_REQUEST} == 'true'
-  - provider: script
-    script:
-      ./ci/admin_build.sh;
-      ./ci/client_build.sh;
-    skip_cleanup: true
-    on:
-      repo: ${REPOSITORY}
-      condition: ${CURRENT_CI} == 'travis'  && ${MULTI_BRANCH} == 0 && ${TRAVIS_PULL_REQUEST} == 'false' && -n ${CI_TAG}
+      repo: "${REPOSITORY}"
+      condition: "${CURRENT_CI} == travis && ${MULTI_BRANCH} == 1"
   - provider: script
     script:
       ./ci/admin_build.sh;
       ./ci/client_build.sh;
     skip_cleanup: true
     on:
-      repo: ${REPOSITORY}
-        condition: ${CURRENT_CI} == 'travis' && ${MULTI_BRANCH} == 1 && ${TRAVIS_PULL_REQUEST} == 'true'
+      repo: "${REPOSITORY}"
+      condition: "${CURRENT_CI} == travis && ${PRODUCTION_DEPLOY} == 1"
+  - provider: script
+    script:
+      ./ci/admin_build.sh;
+      ./ci/client_build.sh;
+    skip_cleanup: true
+    on:
+      repo: "${REPOSITORY}"
+        condition: "${CURRENT_CI} == travis && ${MULTI_BRANCH} == 1"
   - provider: script
     script:
       ./ci/admin_deploy.sh;
       ./ci/client_deploy.sh;
     skip_cleanup: true
     on:
-      repo: ${REPOSITORY}
-      condition: ${CURRENT_CI} == 'travis' && ${MULTI_BRANCH} == 0 && ${TRAVIS_PULL_REQUEST} == 'false' && -n ${CI_TAG}
+      repo: "${REPOSITORY}"
+      condition: "${CURRENT_CI} == travis && ${PRODUCTION_DEPLOY} == 1"
   - provider: script
     script:
       ./ci/admin_deploy.sh;
       ./ci/client_deploy.sh;
     skip_cleanup: true
     on:
-      repo: ${REPOSITORY}
-      condition: ${CURRENT_CI} == 'travis' && ${MULTI_BRANCH} == 1 && ${TRAVIS_PULL_REQUEST} == 'true'
+      repo: "${REPOSITORY}"
+      condition: "${CURRENT_CI} == travis && ${MULTI_BRANCH} == 1"
 
