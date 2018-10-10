@@ -48,13 +48,7 @@ deploy:
     on:
       branch: "${DEPLOYMENT_BRANCH}"
       repo: "${REPOSITORY}"
-      condition: "${CURRENT_CI} == travis && ${PRODUCTION_DEPLOY} == 1"
-  - provider: script
-    script: bash ci/deploy.sh
-    skip_cleanup: true
-    on:
-      repo: "${REPOSITORY}"
-      condition: "${CURRENT_CI} == travis && ${MULTI_BRANCH} == 1"
+      condition: "${CURRENT_CI} == travis && ${DEPLOYMENT} == 1"
   - provider: script
     script:
       ./ci/admin_deploy.sh;
@@ -62,13 +56,5 @@ deploy:
     skip_cleanup: true
     on:
       repo: "${REPOSITORY}"
-      condition: "${CURRENT_CI} == travis && ${PRODUCTION_DEPLOY} == 1"
-  - provider: script
-    script:
-      ./ci/admin_deploy.sh;
-      ./ci/client_deploy.sh;
-    skip_cleanup: true
-    on:
-      repo: "${REPOSITORY}"
-      condition: "${CURRENT_CI} == travis && ${MULTI_BRANCH} == 1"
+      condition: "${CURRENT_CI} == travis && ${DEPLOYMENT} == 1"
 
