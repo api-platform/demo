@@ -70,7 +70,7 @@ deploy:
     skip_cleanup: true
     on:
       repo: "${REPOSITORY}"
-        condition: "${CURRENT_CI} == travis && ${MULTI_BRANCH} == 1"
+      condition: "${CURRENT_CI} == travis && ${MULTI_BRANCH} == 1"
   - provider: script
     script:
       ./ci/admin_deploy.sh;
