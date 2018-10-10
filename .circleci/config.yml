@@ -35,7 +35,7 @@ jobs:
       - checkout
       - run: |
           source ./ci/.env
-          if [[ "${CURRENT_CI}" != "circle" ]] exit;
+          if [[ "${CURRENT_CI}" != "circle" ]] || [[ ${DEPLOYMENT} == 0" ]];then exit;fi
           ./ci/before_deploy.sh
 
   deploy_api:
