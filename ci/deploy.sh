@@ -23,6 +23,7 @@ then
     # You can also rollback if there was ann error by running kubectl rollout undo deployment/your-deployment --namespace=your_namespace
     # Here we check if a running release with named api-platform-demo already exist to update or intall it.
     helm list -q --pending --deployed | grep ${RELEASE_NAME}
+    # This line check what the last command return in order to know if we should rolling update or create the release
     if [ $? == 0 ]; then
         kubectl set image deployments/api-php "${PHP_REPOSITORY}"
         kubectl set image deployments/api-nginx ${NGINX_REPOSITORY}

@@ -57,22 +57,6 @@ deploy:
       condition: "${CURRENT_CI} == travis && ${MULTI_BRANCH} == 1"
   - provider: script
     script:
-      ./ci/admin_build.sh;
-      ./ci/client_build.sh;
-    skip_cleanup: true
-    on:
-      repo: "${REPOSITORY}"
-      condition: "${CURRENT_CI} == travis && ${PRODUCTION_DEPLOY} == 1"
-  - provider: script
-    script:
-      ./ci/admin_build.sh;
-      ./ci/client_build.sh;
-    skip_cleanup: true
-    on:
-      repo: "${REPOSITORY}"
-      condition: "${CURRENT_CI} == travis && ${MULTI_BRANCH} == 1"
-  - provider: script
-    script:
       ./ci/admin_deploy.sh;
       ./ci/client_deploy.sh;
     skip_cleanup: true
