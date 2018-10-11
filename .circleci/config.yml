@@ -13,7 +13,6 @@ jobs:
       - checkout
       - run: |
           source ./ci/.env
-          printenv
           ./ci/before_install.sh
 
   test:
@@ -25,17 +24,17 @@ jobs:
           curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
           sudo apt-get install -y nodejs
           sudo npm install -g react-scripts
-          while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
           ./ci/test.sh
 
   before_deploy:
     executor: demo-executor
     steps:
-      - checkout
-      - run: |
-          source ./ci/.env
-          if [[ "${CURRENT_CI}" != "circle" ]] || [[ ${DEPLOYMENT} == 0" ]];then exit;fi
-          ./ci/before_deploy.sh
+      - steps:
+          - checkout
+          - run: |
+              source ./ci/.env
+              if [[ "${CURRENT_CI}" != "circle" ]] || [[ ${DEPLOYMENT} == 0" ]] || [[ "${CIRCLE_PROJECT_REPONAME}" != "${REPOSITORY}" ]]; then exit; fi
+              ./ci/before_deploy.sh
 
   deploy_api:
     executor: demo-executor
@@ -63,16 +62,18 @@ jobs:
 
 workflows:
   version: 2
-  # Workflow name
   workflow:
     jobs:
     - prepare
     - test:
         requires:
           - prepare
+    - before_deploy:
+        requires:
+          - prepare
     - deploy_api:
         requires:
-          - test
+          - before_deploy
     - deploy_admin:
         requires:
           - deploy_api

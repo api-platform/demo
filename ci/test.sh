@@ -2,7 +2,7 @@
 
 docker-compose up -d
 helm lint api/helm/api/
-sleep 20
+while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
 docker-compose exec php composer install -o -n
 docker-compose exec php bin/console security:check
 docker-compose exec php bin/console doctrine:schema:validate --skip-sync

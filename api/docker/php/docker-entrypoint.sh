@@ -27,7 +27,6 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'bin/console' ]; then
         done
         bin/console doctrine:schema:update --force --no-interaction
         bin/console hautelook:fixtures:load -n
-        composer install --classmap-authoritative --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress --no-suggest
         composer install --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress --no-suggest
         composer clear-cache
     fi
