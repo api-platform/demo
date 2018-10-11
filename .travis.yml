@@ -17,7 +17,7 @@ cache:
 # Don't forget to change the repo name to fit your needs.
 # Check that all needed travis environment variables are set.
 before_install:
-  - ./ci/before_install.sh
+  - ./ci/check_ci_env_vars.sh
   - source ./ci/.env
 
 before_script:

@@ -13,7 +13,7 @@ jobs:
       - checkout
       - run: |
           source ./ci/.env
-          ./ci/before_install.sh
+          ./ci/check_ci_env_vars.sh
 
   test:
     executor: demo-executor
