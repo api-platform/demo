@@ -9,6 +9,6 @@ then
     gcloud docker -- push "${IMAGE_REPOSITORY}";
 else
     # Build and push the docker images.
-    docker build --pull -t "${IMAGE_REPOSITORY}":"${BRANCH}" api --target api_platform_"${1}";
-    gcloud docker -- push "${IMAGE_REPOSITORY}":"${BRANCH}";
+    docker build --pull -t "${IMAGE_REPOSITORY}":"${COMMIT}" api --target api_platform_"${1}";
+    gcloud docker -- push "${IMAGE_REPOSITORY}":"${COMMIT}";
 fi
