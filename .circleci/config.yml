@@ -22,8 +22,6 @@ jobs:
       - run : |
           curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash -s -- --version v2.9.1;
           curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
-          sudo apt-get install -y nodejs
-          sudo npm install -g react-scripts
           ./ci/test.sh
 
   before_deploy:
