@@ -35,6 +35,30 @@ jobs:
           if [[ "${CURRENT_CI}" != "circle" ]] || [[ ${DEPLOYMENT} == 0" ]] || [[ "${CIRCLE_PROJECT_REPONAME}" != "${REPOSITORY}" ]]; then exit; fi
           ./ci/before_deploy.sh
 
+  build_php:
+    executor: demo-executor
+    steps:
+    - checkout
+    - run: |
+        source ./ci/.env
+        ./ci/build_image.sh php
+
+  build_nginx:
+    executor: demo-executor
+    steps:
+    - checkout
+    - run: |
+        source ./ci/.env
+        ./ci/build_image.sh nginx
+
+  build_varnish:
+    executor: demo-executor
+    steps:
+    - checkout_from_cache
+    - run: |
+        source ./ci/.env
+        ./ci/build_image.sh varnish
+
   deploy_api:
     executor: demo-executor
     steps:
@@ -69,10 +93,21 @@ workflows:
           - prepare
     - before_deploy:
         requires:
-          - prepare
-    - deploy_api:
+          - test
+    - build_php:
         requires:
           - before_deploy
+    - build_nginx:
+        requires:
+          - before_deploy
+    - build_varnish:
+        requires:
+          - before_deploy
+    - deploy_api:
+        requires:
+          - build_php
+          - build_nginx
+          - build_varnish
     - deploy_admin:
         requires:
           - deploy_api

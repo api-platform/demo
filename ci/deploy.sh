@@ -10,14 +10,6 @@ export VARNISH_REPOSITORY="eu.gcr.io/${PROJECT_ID}/varnish";
 
 if [[ "${MULTI_BRANCH}"== 0 ]]
 then
-    # Build and push the docker images.
-    docker build --pull -t "${PHP_REPOSITORY}" api --target api_platform_php;
-    docker build --pull -t "${NGINX_REPOSITORY}" api --target api_platform_nginx;
-    docker build --pull -t "${VARNISH_REPOSITORY}" api --target api_platform_varnish;
-    gcloud docker -- push "${PHP_REPOSITORY}";
-    gcloud docker -- push "${NGINX_REPOSITORY}";
-    gcloud docker -- push "${VARNISH_REPOSITORY}";
-
     # You can get the deployments name by running kubectl get deployments --namespace=you_namespace
     # You can check everything is fine by running kubectl rollout status deployment/your-deployment --namespace=your_namespace
     # You can also rollback if there was ann error by running kubectl rollout undo deployment/your-deployment --namespace=your_namespace
@@ -41,14 +33,6 @@ then
     # For the master branch the REACT_APP_API_ENTRYPOINT will be the URL plug on your static IP.
     export API_ENTRYPOINT="${PROD_DNS}";
 else
-    # Build and push the docker images.
-    docker build --pull -t "${PHP_REPOSITORY}":"${BRANCH}" api --target api_platform_php;
-    docker build --pull -t ${NGINX_REPOSITORY}:"${BRANCH}" api --target api_platform_nginx;
-    docker build --pull -t ${VARNISH_REPOSITORY}:"${BRANCH}" api --target api_platform_varnish;
-    gcloud docker -- push "${PHP_REPOSITORY}":"${BRANCH}";
-    gcloud docker -- push ${NGINX_REPOSITORY}:"${BRANCH}";
-    gcloud docker -- push ${VARNISH_REPOSITORY}:"${BRANCH}";
-
     kubectl create namespace "${BRANCH}" || echo 'Namespace already exist, updating.';
     # Upgrading the release by forcing pods to recreate if needed this is not a rolling update and downtime may occur.
     helm upgrade "${RELEASE_NAME}" ./api/helm/api --install --reset-values --wait --force --namespace="${BRANCH}" --recreate-pods \
