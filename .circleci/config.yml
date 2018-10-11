@@ -29,12 +29,11 @@ jobs:
   before_deploy:
     executor: demo-executor
     steps:
-      - steps:
-          - checkout
-          - run: |
-              source ./ci/.env
-              if [[ "${CURRENT_CI}" != "circle" ]] || [[ ${DEPLOYMENT} == 0" ]] || [[ "${CIRCLE_PROJECT_REPONAME}" != "${REPOSITORY}" ]]; then exit; fi
-              ./ci/before_deploy.sh
+      - checkout
+      - run: |
+          source ./ci/.env
+          if [[ "${CURRENT_CI}" != "circle" ]] || [[ ${DEPLOYMENT} == 0" ]] || [[ "${CIRCLE_PROJECT_REPONAME}" != "${REPOSITORY}" ]]; then exit; fi
+          ./ci/before_deploy.sh
 
   deploy_api:
     executor: demo-executor
