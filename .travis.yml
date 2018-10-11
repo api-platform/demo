@@ -25,6 +25,7 @@ before_script:
   - sudo service mysql stop
   - sudo service postgresql stop
   - curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash -s -- --version v2.9.1;
+  - which npm
   - npm i -g npm
   - npm install -g react-scripts
 
