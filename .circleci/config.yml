@@ -11,7 +11,6 @@ jobs:
     executor: demo-executor
     steps:
       - checkout
-      - formatbranch
       - run: |
           source ./ci/.env
           printenv
