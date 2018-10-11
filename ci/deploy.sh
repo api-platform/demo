@@ -20,16 +20,16 @@ then
     # This line check what the last command return in order to know if we should rolling update or create the release
     if [ $? == 0 ]; then
         kubectl set image deployments/api-php "${PHP_REPOSITORY}"
-        kubectl set image deployments/api-nginx ${NGINX_REPOSITORY}
-        kubectl set image deployments/api-varnish ${VARNISH_REPOSITORY}
+        kubectl set image deployments/api-nginx "${NGINX_REPOSITORY}"
+        kubectl set image deployments/api-varnish "${VARNISH_REPOSITORY}"
     else
         helm install ./api/helm/api --wait \
             --set ingress.annotations.kubernetes.io/ingress.global-static-ip-name: "${STATIC_IP}" \
             --set php.repository="${PHP_REPOSITORY}" \
-            --set nginx.repository=${NGINX_REPOSITORY} \
-            --set varnish.repository=${VARNISH_REPOSITORY} \
+            --set nginx.repository="${NGINX_REPOSITORY}" \
+            --set varnish.repository="${VARNISH_REPOSITORY}" \
             --set secret="${APP_SECRET}" \
-            --set postgresUser=${DATABASE_USER},postgresPassword="${DATABASE_PASSWORD}",postgresDatabase="${DATABASE_NAME}" --set postgresql.persistence.enabled=true;
+            --set postgresUser="${DATABASE_USER}",postgresPassword="${DATABASE_PASSWORD}",postgresDatabase="${DATABASE_NAME}" --set postgresql.persistence.enabled=true;
     fi
 
     # For the master branch the REACT_APP_API_ENTRYPOINT will be the URL plug on your static IP.
@@ -39,8 +39,8 @@ else
     # Upgrading the release by forcing pods to recreate if needed this is not a rolling update and downtime may occur.
     helm upgrade "${RELEASE_NAME}" ./api/helm/api --install --reset-values --wait --force --namespace="${COMMIT}" --recreate-pods \
         --set php.repository="${PHP_REPOSITORY}":"${COMMIT}" \
-        --set nginx.repository=${NGINX_REPOSITORY}:"${COMMIT}" \
-        --set varnish.repository=${VARNISH_REPOSITORY}:"${COMMIT}" \
+        --set nginx.repository="${NGINX_REPOSITORY}":"${COMMIT}" \
+        --set varnish.repository="${VARNISH_REPOSITORY}":"${COMMIT}" \
         --set secret="${APP_SECRET}" \
         --set postgresUser="${DATABASE_USER}",postgresPassword="${DATABASE_PASSWORD}",postgresDatabase="${DATABASE_NAME}" --set postgresql.persistence.enabled=true;
 
