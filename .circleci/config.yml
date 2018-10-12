@@ -1,0 +1,114 @@
+version: 2.1
+
+executors:
+  demo-executor:
+    machine:
+      image: circleci/classic:201808-01
+
+# Dont forget to add the needed environment variables in you circleCI repository.
+jobs:
+  prepare:
+    executor: demo-executor
+    steps:
+      - checkout
+      - run: |
+          source ./ci/.env
+          ./ci/check_ci_env_vars.sh
+
+  test:
+    executor: demo-executor
+    steps:
+      - checkout
+      - run : |
+          curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash -s -- --version v2.9.1;
+          curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+          ./ci/test.sh
+
+  before_deploy:
+    executor: demo-executor
+    steps:
+      - checkout
+      - run: |
+          source ./ci/.env
+          if [[ "${CURRENT_CI}" != "circle" ]] || [[ ${DEPLOYMENT} == 0" ]] || [[ "${CIRCLE_PROJECT_REPONAME}" != "${REPOSITORY}" ]]; then exit; fi
+          ./ci/before_deploy.sh
+
+  build_php:
+    executor: demo-executor
+    steps:
+    - checkout
+    - run: |
+        source ./ci/.env
+        ./ci/build_image.sh php
+
+  build_nginx:
+    executor: demo-executor
+    steps:
+    - checkout
+    - run: |
+        source ./ci/.env
+        ./ci/build_image.sh nginx
+
+  build_varnish:
+    executor: demo-executor
+    steps:
+    - checkout_from_cache
+    - run: |
+        source ./ci/.env
+        ./ci/build_image.sh varnish
+
+  deploy_api:
+    executor: demo-executor
+    steps:
+      - checkout
+      - run: |
+          source ./ci/.env
+          ./ci/deploy.sh
+
+  deploy_admin:
+    executor: demo-executor
+    steps:
+    - checkout
+    - run: |
+        source ./ci/.env
+        ./ci/admin_deploy.sh
+
+  deploy_client:
+    executor: demo-executor
+    steps:
+      - checkout
+      - run: |
+          source ./ci/.env
+          ./ci/client_deploy.sh
+
+workflows:
+  version: 2
+  workflow:
+    jobs:
+    - prepare
+    - test:
+        requires:
+          - prepare
+    - before_deploy:
+        requires:
+          - test
+    - build_php:
+        requires:
+          - before_deploy
+    - build_nginx:
+        requires:
+          - before_deploy
+    - build_varnish:
+        requires:
+          - before_deploy
+    - deploy_api:
+        requires:
+          - build_php
+          - build_nginx
+          - build_varnish
+    - deploy_admin:
+        requires:
+          - deploy_api
+    - deploy_client:
+        requires:
+          - deploy_api
