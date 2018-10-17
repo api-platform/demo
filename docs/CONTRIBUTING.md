@@ -94,6 +94,146 @@ Now force push to update your PR:
 git push --force
 ```
 
+## API tests
+
+There are two kinds of tests in the API: unit (`phpunit`) and integration tests (`behat`).
+
+Both `phpunit` and `behat` are development dependencies and should be available in the `vendor` directory.
+
+API tests must be run in the `api` directory.
+
+### PHPUnit and coverage generation
+
+To launch unit tests:
+
+```bash
+bin/phpunit
+```
+
+If you want coverage, you will need the `phpdbg` package and run:
+
+```bash
+phpdbg -qrr bin/phpunit --coverage-html coverage
+```
+
+Sometimes there might be an error with too many open files when generating coverage. To fix this, you can increase the
+`ulimit`, for example:
+
+```bash
+ulimit -n 4000
+```
+
+Coverage will be available in `coverage/index.html`.
+
+### Behat
+
+To launch Behat tests:
+
+```bash
+bin/behat
+```
+
+You may need to clear the cache manually before running Behat tests because of the temporary database. To do so, just
+remove the `test` cache directory:
+
+```bash
+rm -r var/cache/test
+```
+
+### Doctrine schema validation
+
+To analyse your Doctrine schema, use:
+
+```bash
+bin/console doctrine:schema:validate --skip-sync
+```
+
+### Security checker
+
+To check security issues in project dependencies, use:
+
+```bash
+bin/security-checker security:check
+```
+
+## Doctrine migrations
+
+Here we use the doctrine migrations bundle to manage the database's schema.
+
+To generate a migration version file, use the following command:
+
+```bash
+bin/console doctrine:migrations:diff
+```
+
+To generate a blank migration file:
+
+```bash
+bin/console doctrine:migrations:generate
+```
+
+To execute the migrations:
+
+```bash
+bin/console doctrine:migrations:migrate
+```
+
+To see the complete documentation: https://symfony.com/doc/master/bundles/DoctrineMigrationsBundle/index.html
+
+## Doctrine extensions
+
+To use the doctrine extension bundle, you have to enable each extension you need in the `app/config.yml` file.
+
+See details at the documentation [https://github.com/Atlantic18/DoctrineExtensions](https://github.com/Atlantic18/DoctrineExtensions).
+
+## Client tests
+
+Client tests must be run in the `client` directory.
+
+### Jest and coverage generation
+
+To launch unit tests:
+
+```bash
+yarn jest
+```
+
+If you want coverage, add `--coverage` option:
+
+```bash
+yarn jest --coverage
+```
+
+Coverage will be available in `coverage/clover.xml`.
+
+### Nightwatch.js
+
+Nightwatch.js is pre-configured in this project. It's available for different usages.
+
+#### Run Nightwatch.js in the docker container
+
+This is the easiest solution to run tests:
+
+```bash
+docker-compose exec client yarn nightwatch -e docker
+```
+
+#### Run Nightwatch.js locally with a local Selenium server
+
+This usage requires the project running at http://localhost:3000, and Selenium running at http://localhost:4444.
+
+```bash
+yarn nightwatch
+```
+
+#### Run Nightwatch.js locally, and automatically start a local Selenium server
+
+This usage requires JAVA installed on your machine, and the project running at http://localhost:3000.
+
+```bash
+yarn nightwatch -e local
+```
+
 # License and Copyright Attribution
 
 When you open a Pull Request to the API Platform project, you agree to license your code under the [MIT license](LICENSE)
