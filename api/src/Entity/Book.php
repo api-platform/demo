@@ -31,11 +31,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Book
 {
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="guid")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="UUID")
      */
     private $id;
 
@@ -106,7 +106,7 @@ class Book
         $this->reviews = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }

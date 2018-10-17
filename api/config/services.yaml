@@ -2,6 +2,8 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'en'
+    env(MERCURE_PUBLISH_URL): ''
+    env(MERCURE_JWT_SECRET): ''
 
 services:
     # default configuration for services in *this* file

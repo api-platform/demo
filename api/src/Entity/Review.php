@@ -26,11 +26,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Review
 {
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="guid")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="UUID")
      */
     private $id;
 
@@ -90,7 +90,7 @@ class Review
      */
     public $publicationDate;
 
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }
