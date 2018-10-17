@@ -8,3 +8,5 @@
 **/.dockerignore
 Dockerfile*
 .env*
+*.crt
+*.key
