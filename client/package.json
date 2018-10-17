@@ -17,12 +17,12 @@
   },
   "devDependencies": {
     "jest-junit": "^5.2.0",
-    "react-scripts": "1.1.4"
+    "react-scripts": "^2.0.3"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "jest": {
@@ -34,5 +34,11 @@
       "/node_modules/",
       "/features"
     ]
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
