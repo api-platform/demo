@@ -6,7 +6,7 @@ body {
 
 /***** GLOBAL *****/
 
-.welcome {
+.root {
     height: 100vh;
     width: 100vw;
     text-align: center;
@@ -17,13 +17,13 @@ body {
     background-color: #ececec;
 }
 
-.welcome a {
+.root a {
     text-decoration: none;
     color: #38a9b4;
     font-weight: bold;
 }
 
-.welcome h1 {
+.root h1 {
     font-family: 'Roboto Slab', serif;
     font-weight: 300;
     font-size: 36px;
@@ -31,19 +31,19 @@ body {
     line-height: 30px;
 }
 
-.welcome h1 strong {
+.root h1 strong {
     font-weight: 700;
     color: #38a9b4;
 }
 
-.welcome h2 {
+.root h2 {
     text-transform: uppercase;
     font-size: 18px;
     font-weight: bold;
     margin: 25px 0 5px;
 }
 
-.welcome h3 {
+.root h3 {
     text-transform: uppercase;
     font-weight: 500;
     color: #38a9b4;
@@ -54,12 +54,12 @@ body {
 
 /***** TOP *****/
 
-.welcome__top {
+.root__top {
     background-color: #67cece;
     padding-bottom: 40px;
 }
 
-.welcome__flag {
+.root__flag {
     transform: rotate(30deg);
     position: fixed;
     right: -190px;
@@ -70,7 +70,7 @@ body {
 
 /***** MAIN *****/
 
-.welcome__main {
+.root__main {
     box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14),
         0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.3);
     width: 80%;
@@ -240,7 +240,7 @@ a.other__button {
 
 /***** HELP *****/
 
-.welcome__help {
+.root__help {
     background-color: white;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
     padding: 10px;
@@ -252,7 +252,7 @@ a.other__button {
     text-align: center;
 }
 
-.welcome__help h2 {
+.root__help h2 {
     color: #aaa;
     font-size: 12px;
     margin: 10px 0;
@@ -285,7 +285,7 @@ a.other__button {
 
 @media (max-width: 1200px) {
     .main__aside,
-    .welcome__help {
+    .root__help {
         display: none;
     }
     .main__content {
@@ -296,13 +296,13 @@ a.other__button {
 }
 
 @media (max-width: 600px) {
-    .welcome__main {
+    .root__main {
         width: calc(100% - 40px);
     }
-    .welcome h1 {
+    .root h1 {
         display: none;
     }
-    .welcome__flag,
+    .root__flag,
     .main__other {
         display: none;
     }
