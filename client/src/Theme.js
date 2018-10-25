@@ -1,3 +1,7 @@
+/**
+ * This is a demo template.
+ * Please remove it and create your custom template.
+ */
 import React from 'react';
 import './theme.css';
 

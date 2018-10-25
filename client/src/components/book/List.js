@@ -1,3 +1,7 @@
+/**
+ * This is a demo component using a demo template.
+ * Please remove them and create yours.
+ */
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
@@ -30,6 +34,7 @@ class List extends Component {
     return <Fragment>
         <div className="main__aside"></div>
         <div className="main__content">
+            <div className="alert alert-warning">This is a demo component using a demo template. Please remove them and create yours.</div>
             <h1>Books List</h1>
             <div className="main__other">
               {this.props.loading && <div className="alert alert-info">Loading...</div>}
