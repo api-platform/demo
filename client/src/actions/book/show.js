@@ -1,29 +1,28 @@
+import { push } from 'connected-react-router';
 import {
   fetch,
-  normalize,
   extractHubURL,
+  normalize,
   mercureSubscribe as subscribe
 } from '../../utils/dataAccess';
-import { success as deleteSuccess } from './delete';
 
 export function error(error) {
-  return { type: 'BOOK_LIST_ERROR', error };
+  return { type: 'BOOK_SHOW_ERROR', error };
 }
 
 export function loading(loading) {
-  return { type: 'BOOK_LIST_LOADING', loading };
+  return { type: 'BOOK_SHOW_LOADING', loading };
 }
 
 export function success(retrieved) {
-  return { type: 'BOOK_LIST_SUCCESS', retrieved };
+  return { type: 'BOOK_SHOW_SUCCESS', retrieved };
 }
 
-export function list(page = '/books') {
+export function retrieve(id) {
   return dispatch => {
     dispatch(loading(true));
-    dispatch(error(''));
 
-    fetch(page)
+    return fetch(id)
       .then(response =>
         response
           .json()
@@ -35,13 +34,7 @@ export function list(page = '/books') {
         dispatch(loading(false));
         dispatch(success(retrieved));
 
-        if (hubURL)
-          dispatch(
-            mercureSubscribe(
-              hubURL,
-              retrieved['hydra:member'].map(i => i['@id'])
-            )
-          );
+        if (hubURL) dispatch(mercureSubscribe(hubURL, retrieved['@id']));
       })
       .catch(e => {
         dispatch(loading(false));
@@ -54,14 +47,15 @@ export function reset(eventSource) {
   return dispatch => {
     if (eventSource) eventSource.close();
 
-    dispatch({ type: 'BOOK_LIST_RESET' });
-    dispatch(deleteSuccess(null));
+    dispatch({ type: 'BOOK_SHOW_RESET' });
+    dispatch(error(null));
+    dispatch(loading(false));
   };
 }
 
-export function mercureSubscribe(hubURL, topics) {
+export function mercureSubscribe(hubURL, topic) {
   return dispatch => {
-    topics.forEach(topic => hubURL.searchParams.append('topic', topic));
+    hubURL.searchParams.append('topic', topic);
 
     const eventSource = subscribe(hubURL);
     eventSource.onopen = () => dispatch(mercureOpen(eventSource));
@@ -71,17 +65,17 @@ export function mercureSubscribe(hubURL, topics) {
 }
 
 export function mercureOpen(eventSource) {
-  return { type: 'BOOK_LIST_MERCURE_OPEN', eventSource };
+  return { type: 'BOOK_SHOW_MERCURE_OPEN', eventSource };
 }
 
 export function mercureMessage(retrieved) {
   return dispatch => {
     if (1 === Object.keys(retrieved).length) {
-      // A displayed item has been deleted
-      dispatch(list());
+      // The displayed item has been deleted
+      dispatch(push('..'));
       return;
     }
 
-    dispatch({ type: 'BOOK_LIST_MERCURE_MESSAGE', retrieved });
+    dispatch({ type: 'BOOK_SHOW_MERCURE_MESSAGE', retrieved });
   };
 }

@@ -20,7 +20,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ApiResource(
  *     iri="http://schema.org/Book",
- *     normalizationContext={"groups": {"book:read"}}
+ *     normalizationContext={"groups": {"book:read"}},
+ *     mercure=true
  * )
  * @ApiFilter(PropertyFilter::class)
  */

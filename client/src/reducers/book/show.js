@@ -2,10 +2,10 @@ import { combineReducers } from 'redux';
 
 export function error(state = null, action) {
   switch (action.type) {
-    case 'BOOK_LIST_ERROR':
+    case 'BOOK_SHOW_ERROR':
       return action.error;
 
-    case 'BOOK_LIST_RESET':
+    case 'BOOK_SHOW_RESET':
       return null;
 
     default:
@@ -15,10 +15,10 @@ export function error(state = null, action) {
 
 export function loading(state = false, action) {
   switch (action.type) {
-    case 'BOOK_LIST_LOADING':
+    case 'BOOK_SHOW_LOADING':
       return action.loading;
 
-    case 'BOOK_LIST_RESET':
+    case 'BOOK_SHOW_RESET':
       return false;
 
     default:
@@ -28,19 +28,12 @@ export function loading(state = false, action) {
 
 export function retrieved(state = null, action) {
   switch (action.type) {
-    case 'BOOK_LIST_SUCCESS':
+    case 'BOOK_SHOW_SUCCESS':
+    case 'BOOK_SHOW_MERCURE_MESSAGE':
       return action.retrieved;
 
-    case 'BOOK_LIST_RESET':
+    case 'BOOK_SHOW_RESET':
       return null;
-
-    case 'BOOK_LIST_MERCURE_MESSAGE':
-      return {
-        ...state,
-        'hydra:member': state['hydra:member'].map(item =>
-          item['@id'] === action.retrieved['@id'] ? action.retrieved : item
-        )
-      };
 
     default:
       return state;
@@ -49,10 +42,10 @@ export function retrieved(state = null, action) {
 
 export function eventSource(state = null, action) {
   switch (action.type) {
-    case 'BOOK_LIST_MERCURE_OPEN':
+    case 'BOOK_SHOW_MERCURE_OPEN':
       return action.eventSource;
 
-    case 'BOOK_LIST_RESET':
+    case 'BOOK_SHOW_RESET':
       return null;
 
     default:
