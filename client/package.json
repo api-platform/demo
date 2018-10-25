@@ -16,6 +16,7 @@
     "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
+    "jest-junit": "^5.2.0",
     "react-scripts": "1.1.4"
   },
   "scripts": {
@@ -23,5 +24,15 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "jest": {
+    "reporters": [
+      "default",
+      "jest-junit"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/features"
+    ]
   }
 }
