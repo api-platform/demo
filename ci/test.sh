@@ -15,7 +15,7 @@ docker-compose exec php bin/console doctrine:schema:drop --env=test --force
 docker-compose exec php bin/console cache:warmup --env=test
 docker-compose exec php bin/behat --format=progress
 docker-compose exec client yarn install --pure-lockfile
-docker-compose exec client yarn jest --ci --reporters=default --reporters=jest-junit
+docker-compose exec client yarn jest --ci --reporters=default --reporters=jest-junit --passWithNoTests
 docker-compose exec client yarn eslint src
 curl -s http://localhost # Client
 curl -s http://localhost:81 # Admin
