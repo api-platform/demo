@@ -96,7 +96,7 @@ git push --force
 
 ## API tests
 
-There are two kinds of tests in the API: unit (`phpunit`) and integration tests (`behat`).
+There are two kinds of tests in the API: unit (`phpunit`) and integration (`behat`) tests.
 
 Both `phpunit` and `behat` are development dependencies and should be available in the `vendor` directory.
 
