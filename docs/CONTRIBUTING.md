@@ -195,12 +195,12 @@ docker-compose exec client yarn jest --coverage
 
 Coverage will be available in `coverage/clover.xml`.
 
-### Nightwatch.js
+### E2E
 
-Nightwatch.js is pre-configured in this project:
+Cucumber.js is pre-configured in this project:
 
 ```bash
-docker-compose exec client yarn nightwatch -e docker
+docker-compose exec client yarn cucumber-js
 ```
 
 # License and Copyright Attribution
