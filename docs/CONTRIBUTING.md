@@ -44,7 +44,6 @@ When you send a PR, just make sure that:
 
 * You add valid test cases.
 * Tests are green.
-* You make a PR on the related documentation in the [api-platform/docs](https://github.com/api-platform/docs) repository.
 * You make the PR on the same branch you based your changes on. If you see commits
   that you did not make in your PR, you're doing it wrong.
 * Also don't forget to add a comment when you update a PR with a ping to [the maintainers](https://github.com/orgs/api-platform/people),
@@ -63,7 +62,6 @@ All Pull Requests must include the following header:
 | Tests pass?   | yes
 | Fixed tickets | #1234, #5678
 | License       | MIT
-| Doc PR        | api-platform/docs#1234
 ```
 
 ## Squash your Commits
@@ -96,7 +94,8 @@ git push --force
 
 ## API tests
 
-There are two kinds of tests in the API: unit (`phpunit`) and integration (`behat`) tests.
+There are two kinds of tests in the API: unit ([`phpunit`](https://phpunit.de)) and integration
+([`behat`](http://behat.org)) tests.
 
 Both `phpunit` and `behat` are development dependencies and should be available in the `vendor` directory.
 
@@ -181,7 +180,7 @@ See details at the documentation [https://github.com/Atlantic18/DoctrineExtensio
 
 ### Jest and coverage generation
 
-To launch unit tests:
+To launch unit tests using [Jest](https://jestjs.io):
 
 ```bash
 docker-compose exec client yarn jest
@@ -195,9 +194,9 @@ docker-compose exec client yarn jest --coverage
 
 Coverage will be available in `coverage/clover.xml`.
 
-### E2E
+### E2e
 
-Cucumber.js is pre-configured in this project:
+E2e tests are pre-configured in this project using [Cucumber.js](https://cucumber.io) & [Prettier](https://prettier.io):
 
 ```bash
 docker-compose exec client yarn cucumber-js
