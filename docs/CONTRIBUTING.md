@@ -146,6 +146,8 @@ To check security issues in project dependencies, use:
 docker-compose exec php bin/security-checker security:check
 ```
 
+See details at the [documentation](https://github.com/sensiolabs/security-checker).
+
 ## Doctrine Migrations
 
 Here we use the doctrine migrations bundle to manage the database's schema.
@@ -168,13 +170,13 @@ To execute the migrations:
 docker-compose exec php bin/console doctrine:migrations:migrate
 ```
 
-To see the complete documentation: https://symfony.com/doc/master/bundles/DoctrineMigrationsBundle/index.html
+To see the [complete documentation](https://symfony.com/doc/master/bundles/DoctrineMigrationsBundle/index.html).
 
 ## Doctrine Extensions
 
 To use the doctrine extension bundle, you have to enable each extension you need in the `app/config.yml` file.
 
-See details at the documentation [https://github.com/Atlantic18/DoctrineExtensions](https://github.com/Atlantic18/DoctrineExtensions).
+See details at the [documentation](https://github.com/Atlantic18/DoctrineExtensions).
 
 ## Client tests
 
