@@ -29,75 +29,78 @@ for i in "${ENV_VARS[@]}"; do
     fi
 done
 
-if [[ $CURRENT_CI == "circleci" && $CIRCLECI == true ]]; then
+export DEV_CLIENT_PREFIX=dev-client.demo.
+export DEV_ADMIN_PREFIX=dev-admin.demo.
+export MULTI_BRANCH_DEV_CLIENT_PREFIX=-client.demo.
+export MULTI_BRANCH_DEV_ADMIN_PREFIX=-admin.demo.
+
+if [[ ${CURRENT_CI} == "circleci" && $CIRCLECI == true ]]; then
 # Dev environment without checking if this is a PR or not.
-    export DEPLOY_NAMESPACE="$(echo $CIRCLE_BRANCH | sed 's/\//-/g')"
-    export DEPLOY_TAG=$CIRCLE_SHA1
-    export ZONE=$DEV_DNS
+    export DEPLOY_NAMESPACE="$(echo ${CIRCLE_BRANCH} | sed 's/\//-/g')"
+    export DEPLOY_TAG=${CIRCLE_SHA1}
+    export ZONE=${DEV_DNS}
     # Set CLIENT_BUCKET and ADMIN_BUCKET depending on whether we are on multi-branch or not.
-    export CLIENT_BUCKET=dev-client.$DEV_DNS
-    export ADMIN_BUCKET=dev-admin.$DEV_DNS
-    if [[ $MULTI_BRANCH == 1 ]]; then
-        export CLIENT_BUCKET=$BRANCH-client.$DEV_DNS
-        export ADMIN_BUCKET=$BRANCH-admin.$DEV_DNS
+    export CLIENT_BUCKET="${DEV_CLIENT_PREFIX}${DEV_DNS}"
+    export ADMIN_BUCKET="${DEV_ADMIN_PREFIX}${DEV_DNS}"
+    if [[ ${MULTI_BRANCH} == 1 ]]; then
+        export CLIENT_BUCKET="${BRANCH}${MULTI_BRANCH_DEV_CLIENT_PREFIX}${DEV_DNS}"
+        export ADMIN_BUCKET="${BRANCH}${MULTI_BRANCH_DEV_ADMIN_PREFIX}${DEV_DNS}"
     fi
-    export API_DNS=api-$DEPLOY_NAMESPACE.$DEV_DNS
-    export API_DNS_PREFIX=api-$DEPLOY_NAMESPACE
-    export ADMIN_DNS=admin-$DEPLOY_NAMESPACE.$DEV_DNS
+    export API_DNS=api-${DEPLOY_NAMESPACE}.${DEV_DNS}
+    export API_DNS_PREFIX=api-${DEPLOY_NAMESPACE}
+    export ADMIN_DNS=admin-${DEPLOY_NAMESPACE}.${DEV_DNS}
     export IS_PROD_DEPLOY=false
     if [[ ! -z $CIRCLE_PULL_REQUEST ]]; then
     # If it is a PR.
         export DEPLOY_NAMESPACE="pr-$(echo $CIRCLE_PULL_REQUEST | sed 's/[^0-9]*//g')"
-        export API_DNS=api-$DEPLOY_NAMESPACE.$DEV_DNS
-        export API_DNS_PREFIX=api-$DEPLOY_NAMESPACE
-        export ADMIN_DNS=admin-$DEPLOY_NAMESPACE.$DEV_DNS
-    elif [[ ! -z $CIRCLE_TAG && $CIRCLE_PROJECT_REPONAME == $REPOSITORY ]]; then
-    # If it is prod (tag is set and circle project reponame is the good one).
-        export DEPLOY_NAMESPACE=$DEPLOYMBUCKET_NAMEENT_BRANCH
-        export DEPLOY_TAG=$CIRCLE_TAG
-        export ZONE=$PROD_DNS
-        export API_DNS=api.$PROD_DNS
-        export API_DNS_PREFIX=api
-        export ADMIN_DNS=admin.$PROD_DNS
-        export IS_PROD_DEPLOY=true
-        export CLIENT_BUCKET=$PROD_CLIENT_BUCKET_NAME
-        export ADMIN_BUCKET=$PROD_ADMIN_BUCKET_NAME
-    fi
-elif [[ $CURRENT_CI == "travis" && $TRAVIS == true ]]; then
-# Dev environment without checking if this is a PR or not.
-    export DEPLOY_NAMESPACE="$(echo $TRAVIS_BRANCH | sed 's/[^0-9]*//g')"
-    export DEPLOY_TAG=$TRAVIS_COMMIT
-    export ZONE=$DEV_DNS
-    # Set CLIENT_BUCKET and ADMIN_BUCKET depending on whether we are on multi-branch or not.
-    export CLIENT_BUCKET=dev-client.$DEV_DNS
-    export ADMIN_BUCKET=dev-admin.$DEV_DNS
-    if [[ $MULTI_BRANCH == 1 ]]; then
-        export CLIENT_BUCKET=$BRANCH-client.$DEV_DNS
-        export ADMIN_BUCKET=$BRANCH-admin.$DEV_DNS
-    fi
-    export API_DNS=api-$DEPLOY_NAMESPACE.$DEV_DNS
-    export API_DNS_PREFIX=api-$DEPLOY_NAMESPACE
-    export ADMIN_DNS=admin-$DEPLOY_NAMESPACE.$DEV_DNS
-    export IS_PROD_DEPLOY=false
-    # If it is a PR.
-    if [[ ! -z $TRAVIS_PULL_REQUEST ]]; then
-    # If it is a PR.
-        export DEPLOY_NAMESPACE="pr-$(echo $TRAVIS_PULL_REQUEST | sed 's/[^0-9]*//g')"
-        export API_DNS=api-$DEPLOY_NAMESPACE.$DEV_DNS
-        export API_DNS_PREFIX=api-$DEPLOY_NAMESPACE
-        export ADMIN_DNS=admin-$DEPLOY_NAMESPACE.$DEV_DNS
-    # If it is prod (tag is set and circle project reponame is the good one).
-    elif [[ ! -z $TRAVIS_TAG && $TRAVIS_REPO_SLUG == $REPOSITORY ]]; then
+        export API_DNS=api-${DEPLOY_NAMESPACE}.${DEV_DNS}
+        export API_DNS_PREFIX=api-${DEPLOY_NAMESPACE}
+        export ADMIN_DNS=admin-${DEPLOY_NAMESPACE}.${DEV_DNS}
+    elif [[ ! -z ${CIRCLE_TAG} && ${CIRCLE_PROJECT_REPONAME} == $REPOSITORY ]]; then
     # If it is prod (tag is set and circle project reponame is the good one).
         export DEPLOY_NAMESPACE=$DEPLOYMENT_BRANCH
-        export DEPLOY_TAG=$TRAVIS_TAG
-        export ZONE=$PROD_DNS
-        export API_DNS=api.$PROD_DNS
+        export DEPLOY_TAG=${CIRCLE_TAG}
+        export ZONE=${PROD_DNS}
+        export API_DNS=api.${PROD_DNS}
         export API_DNS_PREFIX=api
-        export ADMIN_DNS=admin.$PROD_DNS
+        export ADMIN_DNS=admin.${PROD_DNS}
         export IS_PROD_DEPLOY=true
-        export CLIENT_BUCKET=$PROD_CLIENT_BUCKET_NAME
-        export ADMIN_BUCKET=$PROD_ADMIN_BUCKET_NAME
+        export CLIENT_BUCKET=${PROD_CLIENT_BUCKET_NAME}
+        export ADMIN_BUCKET=${PROD_ADMIN_BUCKET_NAME}
+    fi
+elif [[ ${CURRENT_CI} == "travis" && ${TRAVIS} == true ]]; then
+# Dev environment without checking if this is a PR or not.
+    export DEPLOY_NAMESPACE="$(echo ${TRAVIS}_BRANCH | sed 's/[^0-9]*//g')"
+    export DEPLOY_TAG=${TRAVIS}_COMMIT
+    export ZONE=${DEV_DNS}
+    # Set CLIENT_BUCKET and ADMIN_BUCKET depending on whether we are on multi-branch or not.
+    export CLIENT_BUCKET="${DEV_CLIENT_PREFIX}${DEV_DNS}"
+    export ADMIN_BUCKET="${DEV_ADMIN_PREFIX}${DEV_DNS}"
+    if [[ ${MULTI_BRANCH} == 1 ]]; then
+        export CLIENT_BUCKET="${BRANCH}${MULTI_BRANCH_DEV_CLIENT_PREFIX}${DEV_DNS}"
+        export ADMIN_BUCKET="${BRANCH}${MULTI_BRANCH_DEV_ADMIN_PREFIX}${DEV_DNS}"
+    fi
+    export API_DNS=api-${DEPLOY_NAMESPACE}.${DEV_DNS}
+    export API_DNS_PREFIX=api-${DEPLOY_NAMESPACE}
+    export ADMIN_DNS=admin-${DEPLOY_NAMESPACE}.${DEV_DNS}
+    export IS_PROD_DEPLOY=false
+    if [[ ! -z ${TRAVIS_PULL_REQUEST} ]]; then
+    # If it is a PR.
+        export DEPLOY_NAMESPACE="pr-$(echo ${TRAVIS_PULL_REQUEST} | sed 's/[^0-9]*//g')"
+        export API_DNS=api-${DEPLOY_NAMESPACE}.${DEV_DNS}
+        export API_DNS_PREFIX=api-${DEPLOY_NAMESPACE}
+        export ADMIN_DNS=admin-${DEPLOY_NAMESPACE}.${DEV_DNS}
+    elif [[ ! -z ${TRAVIS_TAG} && ${TRAVIS_REPO_SLUG} == ${REPOSITORY} ]]; then
+    # If it is prod (tag is set and circle project reponame is the good one).
+        export DEPLOY_NAMESPACE=${DEPLOYMENT_BRANCH}
+        export DEPLOY_TAG=${TRAVIS_TAG}
+        export ZONE=${PROD_DNS}
+        export API_DNS=api.${PROD_DNS}
+        export API_DNS_PREFIX=api
+        export ADMIN_DNS=admin.${PROD_DNS}
+        export IS_PROD_DEPLOY=true
+        export CLIENT_BUCKET=${PROD_CLIENT_BUCKET_NAME}
+        export ADMIN_BUCKET=${PROD_ADMIN_BUCKET_NAME}
     fi
 else
     echo "Your CI is not supported."
