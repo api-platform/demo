@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# TODO: remove this as we check in init.sh
 if [[ -z "${PROJECT_ID}" ]]; then echo 'PROJECT_ID is not defined in your CI environement variables.'; fi
 if [[ -z "${ADMIN_BUCKET}" ]]; then echo 'ADMIN_BUCKET is not defined in your CI environement variables.'; fi
 if [[ -z "${CLIENT_BUCKET}" ]]; then echo 'CLIENT_BUCKET is not defined in your CI environement variables.'; fi

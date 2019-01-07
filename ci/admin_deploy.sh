@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-cd "$(dirname "$0")"/..
+source `dirname $0`/auth.sh
+cd `dirname $0`/..
 
 # Admin build deployment to bucket
 yarn install --pure-lockfile

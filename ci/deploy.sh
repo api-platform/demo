@@ -3,6 +3,15 @@
 # Update dependencies and docker image end push them taking care to separate by repositories and branches.
 echo 'deploy script'
 
+# TODO: check if we need to move this in other script as circle may not need it
+curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
+
+helm init --upgrade --service-account tiller
+helm repo update
+helm dependencies update ./api/helm/api
+
 export PHP_REPOSITORY="eu.gcr.io/${PROJECT_ID}/php";
 export NGINX_REPOSITORY="eu.gcr.io/${PROJECT_ID}/nginx";
 export VARNISH_REPOSITORY="eu.gcr.io/${PROJECT_ID}/varnish";
