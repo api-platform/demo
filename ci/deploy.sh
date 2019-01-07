@@ -2,7 +2,6 @@
 
 # Update dependencies and docker image end push them taking care to separate by repositories and branches.
 echo 'deploy script'
-helm dependencies update ./api/helm/api
 
 export PHP_REPOSITORY="eu.gcr.io/${PROJECT_ID}/php";
 export NGINX_REPOSITORY="eu.gcr.io/${PROJECT_ID}/nginx";
@@ -37,7 +36,7 @@ then
 else
     kubectl create namespace "${COMMIT}" || echo 'Namespace already exist, updating.';
     # Upgrading the release by forcing pods to recreate if needed this is not a rolling update and downtime may occur.
-    helm upgrade "${RELEASE_NAME}" ./api/helm/api --install --reset-values --wait --force --namespace="${COMMIT}" --recreate-pods \
+    helm upgrade "${PROJECT_NAME}" ./api/helm/api --install --reset-values --wait --force --namespace="${COMMIT}" --recreate-pods \
         --set php.repository="${PHP_REPOSITORY}":"${COMMIT}" \
         --set nginx.repository="${NGINX_REPOSITORY}":"${COMMIT}" \
         --set varnish.repository="${VARNISH_REPOSITORY}":"${COMMIT}" \
