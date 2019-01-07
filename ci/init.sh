@@ -16,13 +16,9 @@ ENV_VARS=(
     PROD_DNS
     PROD_DATABASE_URL
     PROJECT_ID
-    CLIENT_REPOSITORY
-    ADMIN_REPOSITORY
     CLUSTER_NAME
     CURRENT_CI
     DEPLOYMENT_BRANCH
-    DEPLOY_REPOSITORY
-    DOCKER_REPOSITORY
     MULTI_BRANCH
     NGINX_REPOSITORY
     PHP_REPOSITORY
@@ -55,13 +51,6 @@ then
     fi
 fi
 
-# Check if we are in production or branch naming deployment.
-if [[ ${MULTI_BRANCH} == 1 ]];
-then
-    export ADMIN_BUCKET="${BRANCH}.${ADMIN_BUCKET}"
-    export CLIENT_BUCKET="${BRANCH}.${CLIENT_BUCKET}"
-fi
-
 # Check in which kind of deployment we are.
 # If you want to deploy on tag you can do this instead: ! [[ "${MULTI_BRANCH}" == 0 ]] && [[ "${TRAVIS_PULL_REQUEST}" == "false" ]] && [[ -n "${CI_TAG}" ]]
 ! [[ "${MULTI_BRANCH}" == 0 ]] && [[ "${TRAVIS_PULL_REQUEST}" == "false" ]] && [[ "${BRANCH}" == ${DEPLOYMENT_BRANCH} ]]
@@ -72,3 +61,10 @@ export MULTI_BRANCH=$?
 
 ! [[ "${MULTI_BRANCH}" == 1 ]] || [[ "${PRODUCTION_DEPLOY}" == 1 ]]
 export DEPLOYMENT=$?
+
+# Check if we are in production or branch naming deployment.
+if [[ ${MULTI_BRANCH} == 1 ]];
+then
+    export ADMIN_BUCKET="${BRANCH}.${ADMIN_BUCKET}"
+    export CLIENT_BUCKET="${BRANCH}.${CLIENT_BUCKET}"
+fi
