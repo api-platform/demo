@@ -13,6 +13,7 @@ jobs:
       - checkout
       - run: |
           source ./ci/.env
+          source ./ci/init.sh
           ./ci/check_ci_env_vars.sh
 
   test:
@@ -30,6 +31,7 @@ jobs:
       - checkout
       - run: |
           source ./ci/.env
+          source ./ci/init.sh
           if [[ "${CURRENT_CI}" != "circle" ]] || [[ ${DEPLOYMENT} == 0" ]] || [[ "${CIRCLE_PROJECT_REPONAME}" != "${REPOSITORY}" ]]; then exit; fi
           ./ci/before_deploy.sh
 
@@ -63,6 +65,7 @@ jobs:
       - checkout
       - run: |
           source ./ci/.env
+          source ./ci/init.sh
           ./ci/deploy.sh
 
   deploy_admin:
@@ -79,6 +82,7 @@ jobs:
       - checkout
       - run: |
           source ./ci/.env
+          source ./ci/init.sh
           ./ci/client_deploy.sh
 
 workflows:

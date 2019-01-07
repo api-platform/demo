@@ -19,6 +19,7 @@ cache:
 before_install:
   - ./ci/check_ci_env_vars.sh
   - source ./ci/.env
+  - source ./ci/init.sh
 
 before_script:
   - phpenv config-rm xdebug.ini
