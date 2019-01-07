@@ -10,7 +10,7 @@ gcloud config set core/project "${PROJECT_ID}"
 gcloud container clusters get-credentials api-platform-demo --zone europe-west1-c --project "${PROJECT_ID}"
 helm init --upgrade
 
-# In orderto use branch naming buckets see the link below:
+# In order to use branch naming buckets see the link below:
 # https://stackoverflow.com/questions/39333431/how-to-enable-additional-users-to-create-domain-named-buckets-in-google-cloud-st
 gsutil mb -p "${PROJECT_ID}" -l eu gs://"${ADMIN_BUCKET}" || echo "Admin bucket exists"
 gsutil mb -p "${PROJECT_ID}" -l eu gs://"${CLIENT_BUCKET}" || echo "Client bucket exists"
