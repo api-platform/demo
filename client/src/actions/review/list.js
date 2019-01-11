@@ -7,18 +7,18 @@ import {
 import { success as deleteSuccess } from './delete';
 
 export function error(error) {
-  return { type: 'BOOK_LIST_ERROR', error };
+  return { type: 'REVIEW_LIST_ERROR', error };
 }
 
 export function loading(loading) {
-  return { type: 'BOOK_LIST_LOADING', loading };
+  return { type: 'REVIEW_LIST_LOADING', loading };
 }
 
 export function success(retrieved) {
-  return { type: 'BOOK_LIST_SUCCESS', retrieved };
+  return { type: 'REVIEW_LIST_SUCCESS', retrieved };
 }
 
-export function list(page = 'books') {
+export function list(page = 'reviews') {
   return dispatch => {
     dispatch(loading(true));
     dispatch(error(''));
@@ -54,7 +54,7 @@ export function reset(eventSource) {
   return dispatch => {
     if (eventSource) eventSource.close();
 
-    dispatch({ type: 'BOOK_LIST_RESET' });
+    dispatch({ type: 'REVIEW_LIST_RESET' });
     dispatch(deleteSuccess(null));
   };
 }
@@ -70,16 +70,16 @@ export function mercureSubscribe(hubURL, topics) {
 }
 
 export function mercureOpen(eventSource) {
-  return { type: 'BOOK_LIST_MERCURE_OPEN', eventSource };
+  return { type: 'REVIEW_LIST_MERCURE_OPEN', eventSource };
 }
 
 export function mercureMessage(retrieved) {
   return dispatch => {
     if (1 === Object.keys(retrieved).length) {
-      dispatch({ type: 'BOOK_LIST_MERCURE_DELETED', retrieved });
+      dispatch({ type: 'REVIEW_LIST_MERCURE_DELETED', retrieved });
       return;
     }
 
-    dispatch({ type: 'BOOK_LIST_MERCURE_MESSAGE', retrieved });
+    dispatch({ type: 'REVIEW_LIST_MERCURE_MESSAGE', retrieved });
   };
 }

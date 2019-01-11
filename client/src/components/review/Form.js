@@ -24,7 +24,7 @@ class Form extends Component {
     return (
       <div className={`form-group`}>
         <label
-          htmlFor={`book_${data.input.name}`}
+          htmlFor={`review_${data.input.name}`}
           className="form-control-label"
         >
           {data.input.name}
@@ -35,7 +35,7 @@ class Form extends Component {
           step={data.step}
           required={data.required}
           placeholder={data.placeholder}
-          id={`book_${data.input.name}`}
+          id={`review_${data.input.name}`}
         />
         {isInvalid && <div className="invalid-feedback">{data.meta.error}</div>}
       </div>
@@ -47,44 +47,35 @@ class Form extends Component {
       <form onSubmit={this.props.handleSubmit}>
         <Field
           component={this.renderField}
-          name="isbn"
+          name="body"
           type="text"
-          placeholder="The ISBN of the book"
+          placeholder="The actual body of the review"
         />
         <Field
           component={this.renderField}
-          name="title"
-          type="text"
-          placeholder="The title of the book"
-          required={true}
+          name="rating"
+          type="number"
+          placeholder="A rating"
+          normalize={v => parseFloat(v)}
         />
         <Field
           component={this.renderField}
-          name="description"
+          name="book"
           type="text"
-          placeholder="A description of the item"
+          placeholder="The item that is being reviewed/rated"
           required={true}
         />
         <Field
           component={this.renderField}
           name="author"
           type="text"
-          placeholder="The author of this content or rating. Please note that author is special in that HTML 5 provides a special mechanism for indicating authorship via the rel tag. That is equivalent to this and may be used interchangeably"
-          required={true}
+          placeholder="Author the author of the review"
         />
         <Field
           component={this.renderField}
           name="publicationDate"
           type="dateTime"
-          placeholder="The date on which the CreativeWork was created or the item was added to a DataFeed"
-          required={true}
-        />
-        <Field
-          component={this.renderField}
-          name="reviews"
-          type="text"
-          placeholder="The book's reviews"
-          normalize={v => (v === '' ? [] : v.split(','))}
+          placeholder="Author the author of the review"
         />
 
         <button type="submit" className="btn btn-success">
@@ -96,7 +87,7 @@ class Form extends Component {
 }
 
 export default reduxForm({
-  form: 'book',
+  form: 'review',
   enableReinitialize: true,
   keepDirtyOnReinitialize: true
 })(Form);

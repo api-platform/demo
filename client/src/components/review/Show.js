@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { retrieve, reset } from '../../actions/book/show';
-import { del } from '../../actions/book/delete';
+import { retrieve, reset } from '../../actions/review/show';
+import { del } from '../../actions/review/delete';
 
 class Show extends Component {
   static propTypes = {
@@ -69,16 +69,16 @@ class Show extends Component {
             </thead>
             <tbody>
               <tr>
-                <th scope="row">isbn</th>
-                <td>{item['isbn']}</td>
+                <th scope="row">body</th>
+                <td>{item['body']}</td>
               </tr>
               <tr>
-                <th scope="row">title</th>
-                <td>{item['title']}</td>
+                <th scope="row">rating</th>
+                <td>{item['rating']}</td>
               </tr>
               <tr>
-                <th scope="row">description</th>
-                <td>{item['description']}</td>
+                <th scope="row">book</th>
+                <td>{this.renderLinks('books', item['book'])}</td>
               </tr>
               <tr>
                 <th scope="row">author</th>
@@ -88,10 +88,6 @@ class Show extends Component {
                 <th scope="row">publicationDate</th>
                 <td>{item['publicationDate']}</td>
               </tr>
-              <tr>
-                <th scope="row">reviews</th>
-                <td>{this.renderLinks('reviews', item['reviews'])}</td>
-              </tr>
             </tbody>
           </table>
         )}
@@ -99,7 +95,7 @@ class Show extends Component {
           Back to list
         </Link>
         {item && (
-          <Link to={`/books/edit/${encodeURIComponent(item['@id'])}`}>
+          <Link to={`/reviews/edit/${encodeURIComponent(item['@id'])}`}>
             <button className="btn btn-warning">Edit</button>
           </Link>
         )}
@@ -124,13 +120,13 @@ class Show extends Component {
 }
 
 const mapStateToProps = state => ({
-  retrieved: state.book.show.retrieved,
-  error: state.book.show.error,
-  loading: state.book.show.loading,
-  eventSource: state.book.show.eventSource,
-  deleteError: state.book.del.error,
-  deleteLoading: state.book.del.loading,
-  deleted: state.book.del.deleted
+  retrieved: state.review.show.retrieved,
+  error: state.review.show.error,
+  loading: state.review.show.loading,
+  eventSource: state.review.show.eventSource,
+  deleteError: state.review.del.error,
+  deleteLoading: state.review.del.loading,
+  deleted: state.review.del.deleted
 });
 
 const mapDispatchToProps = dispatch => ({

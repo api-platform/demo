@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -20,7 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     iri="http://schema.org/Review",
  *     normalizationContext={"groups": {"review:read"}}
  * )
- * @ApiFilter(SearchFilter::class, properties={"book": "exact"})
+ * @ApiFilter(OrderFilter::class, properties={"id", "publicationDate"})
  */
 class Review
 {
@@ -43,7 +44,7 @@ class Review
     public $body;
 
     /**
-     * @var int
+     * @var int A rating
      *
      * @Assert\Range(min=0, max=5)
      * @ORM\Column(type="smallint")
@@ -64,6 +65,7 @@ class Review
     /**
      * @var Book The item that is being reviewed/rated
      *
+     * @ApiFilter(SearchFilter::class)
      * @Assert\NotNull
      * @ORM\ManyToOne(targetEntity=Book::class, inversedBy="reviews")
      * @Groups("review:read")

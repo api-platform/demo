@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { list, reset } from '../../actions/book/list';
+import { list, reset } from '../../actions/review/list';
 
 class List extends Component {
   static propTypes = {
@@ -37,7 +37,7 @@ class List extends Component {
   render() {
     return (
       <div>
-        <h1>Book List</h1>
+        <h1>Review List</h1>
 
         {this.props.loading && (
           <div className="alert alert-info">Loading...</div>
@@ -61,12 +61,11 @@ class List extends Component {
           <thead>
             <tr>
               <th>id</th>
-              <th>isbn</th>
-              <th>title</th>
-              <th>description</th>
+              <th>body</th>
+              <th>rating</th>
+              <th>book</th>
               <th>author</th>
               <th>publicationDate</th>
-              <th>reviews</th>
               <th colSpan={2} />
             </tr>
           </thead>
@@ -79,12 +78,11 @@ class List extends Component {
                       {item['@id']}
                     </Link>
                   </th>
-                  <td>{item['isbn']}</td>
-                  <td>{item['title']}</td>
-                  <td>{item['description']}</td>
+                  <td>{item['body']}</td>
+                  <td>{item['rating']}</td>
+                  <td>{this.renderLinks('books', item['book'])}</td>
                   <td>{item['author']}</td>
                   <td>{item['publicationDate']}</td>
-                  <td>{this.renderLinks('reviews', item['reviews'])}</td>
                   <td>
                     <Link to={`show/${encodeURIComponent(item['@id'])}`}>
                       <span className="fa fa-search" aria-hidden="true" />
@@ -170,7 +168,7 @@ const mapStateToProps = state => {
     error,
     eventSource,
     deletedItem
-  } = state.book.list;
+  } = state.review.list;
   return { retrieved, loading, error, eventSource, deletedItem };
 };
 

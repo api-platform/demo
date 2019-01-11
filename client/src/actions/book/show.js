@@ -1,4 +1,3 @@
-import { push } from 'connected-react-router';
 import {
   fetch,
   extractHubURL,
@@ -55,12 +54,11 @@ export function reset(eventSource) {
 
 export function mercureSubscribe(hubURL, topic) {
   return dispatch => {
-    hubURL.searchParams.append('topic', topic);
-
-    const eventSource = subscribe(hubURL);
-    eventSource.onopen = () => dispatch(mercureOpen(eventSource));
-    eventSource.onmessage = event =>
-      dispatch(mercureMessage(normalize(JSON.parse(event.data))));
+    const eventSource = subscribe(hubURL, [topic]);
+    dispatch(mercureOpen(eventSource));
+    eventSource.addEventListener('message', event =>
+      dispatch(mercureMessage(normalize(JSON.parse(event.data))))
+    );
   };
 }
 
@@ -71,8 +69,7 @@ export function mercureOpen(eventSource) {
 export function mercureMessage(retrieved) {
   return dispatch => {
     if (1 === Object.keys(retrieved).length) {
-      // The displayed item has been deleted
-      dispatch(push('..'));
+      dispatch({ type: 'BOOK_SHOW_MERCURE_DELETED', retrieved });
       return;
     }
 

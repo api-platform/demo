@@ -5,6 +5,9 @@ export function error(state = null, action) {
     case 'BOOK_LIST_ERROR':
       return action.error;
 
+    case 'BOOK_LIST_MERCURE_DELETED':
+      return `${action.retrieved['@id']} has been deleted by another user.`;
+
     case 'BOOK_LIST_RESET':
       return null;
 
@@ -39,6 +42,14 @@ export function retrieved(state = null, action) {
         ...state,
         'hydra:member': state['hydra:member'].map(item =>
           item['@id'] === action.retrieved['@id'] ? action.retrieved : item
+        )
+      };
+
+    case 'BOOK_LIST_MERCURE_DELETED':
+      return {
+        ...state,
+        'hydra:member': state['hydra:member'].filter(
+          item => item['@id'] !== action.retrieved['@id']
         )
       };
 

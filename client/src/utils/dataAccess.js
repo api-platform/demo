@@ -35,8 +35,12 @@ export function fetch(id, options = {}) {
   });
 }
 
-export function mercureSubscribe(url) {
-  return new EventSource(url);
+export function mercureSubscribe(url, topics) {
+  topics.forEach(topic =>
+    url.searchParams.append('topic', new URL(topic, ENTRYPOINT))
+  );
+
+  return new EventSource(url.toString());
 }
 
 export function normalize(data) {
