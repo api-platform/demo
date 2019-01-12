@@ -11,7 +11,7 @@ sleep 20
 docker-compose exec php composer install -o -n
 docker-compose exec php bin/console security:check
 docker-compose exec php bin/console doctrine:schema:validate --skip-sync
-docker-compose exec php bin/console doctrine:schema:drop --force
+#docker-compose exec php bin/console doctrine:schema:drop --force
 docker-compose exec php bin/console doctrine:schema:create
 #docker-compose exec php bin/console hautelook:fixtures:load -n --env=dev
 docker-compose exec php bin/console doctrine:schema:drop --env=test --force
