@@ -2,6 +2,9 @@
 
 set -e
 
+docker-compose down -v
+docker-compose pull --ignore-pull-failures
+docker-compose build --pull
 docker-compose up -d
 helm lint api/helm/api/
 sleep 20
