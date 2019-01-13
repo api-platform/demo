@@ -1,3 +1,11 @@
+parameters:
+    # Adds fallbacks if the env var is not set.
+    # This allows you to run cache:warmup even if your
+    # environment variables are not available yet.
+    # You should not need to change this value.
+    env(VARNISH_URL): ''
+    env(MERCURE_SUBSCRIBE_URL): ''
+
 api_platform:
     title: API Platform's demo
     version: 1.0.0
@@ -17,6 +25,9 @@ api_platform:
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
     http_cache:
+        #invalidation:
+        #    enabled: true
+        #    varnish_urls: ['%env(VARNISH_URL)%']
         max_age: 0
         shared_max_age: 3600
         vary: ['Content-Type', 'Authorization']
@@ -24,3 +35,5 @@ api_platform:
     collection:
         pagination:
             items_per_page: 30
+    mercure:
+        hub_url: '%env(MERCURE_SUBSCRIBE_URL)%'

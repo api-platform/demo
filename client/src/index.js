@@ -1,42 +1,56 @@
 import React from 'react';
-import ReactDom from 'react-dom';
+import ReactDOM from 'react-dom';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import { reducer as form } from 'redux-form';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import createBrowserHistory from 'history/createBrowserHistory';
-import { syncHistoryWithStore, routerReducer as routing } from 'react-router-redux';
+import {
+  ConnectedRouter,
+  connectRouter,
+  routerMiddleware
+} from 'connected-react-router';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.css';
-import registerServiceWorker from './registerServiceWorker';
+import * as serviceWorker from './serviceWorker';
 // Import your reducers and routes here
-import Welcome from './Welcome';
-import Theme from './Theme';
 import book from './reducers/book/';
-import bookRoutes from './routes/book';
+import review from './reducers/review/';
 
+import bookRoutes from './routes/book';
+import reviewRoutes from './routes/review';
+
+import Welcome from './Welcome';
+
+const history = createBrowserHistory();
 const store = createStore(
-  combineReducers({routing, form, book, /* Add your reducers here */}),
-  applyMiddleware(thunk),
+  combineReducers({
+    router: connectRouter(history),
+    form,
+    book,
+    review
+    /* Add your reducers here */
+  }),
+  applyMiddleware(routerMiddleware(history), thunk)
 );
 
-const history = syncHistoryWithStore(createBrowserHistory(), store);
-
-ReactDom.render(
+ReactDOM.render(
   <Provider store={store}>
-    <Theme>
-      <Router history={history}>
-        <Switch>
-          <Route path="/" component={Welcome} strict={true} exact={true}/>
-          {bookRoutes}
-          {/* Add your routes here */}
-          <Route render={() => <h1>Not Found</h1>}/>
-        </Switch>
-      </Router>
-    </Theme>
+    <ConnectedRouter history={history}>
+      <Switch>
+        <Route path="/" component={Welcome} strict={true} exact={true}/>
+        {bookRoutes}
+        {reviewRoutes}
+        {/* Add your routes here */}}
+        <Route render={() => <h1>Not Found</h1>} />
+      </Switch>
+    </ConnectedRouter>
   </Provider>,
   document.getElementById('root')
 );
 
-registerServiceWorker();
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: http://bit.ly/CRA-PWA
+serviceWorker.unregister();

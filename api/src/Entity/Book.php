@@ -5,6 +5,8 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -20,9 +22,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ApiResource(
  *     iri="http://schema.org/Book",
- *     normalizationContext={"groups": {"book:read"}}
+ *     normalizationContext={"groups": {"book:read"}},
+ *     mercure=true
  * )
  * @ApiFilter(PropertyFilter::class)
+ * @ApiFilter(OrderFilter::class, properties={"id", "title", "author", "isbn", "publicationDate"})
  */
 class Book
 {
@@ -48,6 +52,7 @@ class Book
     /**
      * @var string The title of the book
      *
+     * @ApiFilter(SearchFilter::class, strategy="ipartial")
      * @Assert\NotBlank
      * @ORM\Column
      * @Groups({"book:read", "review:read"})
@@ -68,6 +73,7 @@ class Book
     /**
      * @var string The author of this content or rating. Please note that author is special in that HTML 5 provides a special mechanism for indicating authorship via the rel tag. That is equivalent to this and may be used interchangeably
      *
+     * @ApiFilter(SearchFilter::class, strategy="ipartial")
      * @Assert\NotBlank
      * @ORM\Column
      * @Groups("book:read")

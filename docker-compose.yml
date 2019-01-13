@@ -64,6 +64,19 @@ services:
     ports:
       - "5432:5432"
 
+  mercure:
+    # In production, you may want to use the managed version of Mercure, https://mercure.rocks
+    image: dunglas/mercure
+    environment:
+      # You should definitely change all these values in production
+      - JWT_KEY=!UnsecureChangeMe!
+      - ALLOW_ANONYMOUS=1
+      - CORS_ALLOWED_ORIGINS=*
+      - PUBLISH_ALLOWED_ORIGINS=http://localhost:1337,https://localhost:1338
+      - DEMO=1
+    ports:
+      - "1337:80"
+
   client:
     # Use a static website hosting service in production
     # See https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#deployment
@@ -106,10 +119,11 @@ services:
       - api
       - cache-proxy
     ports:
-      - "443:443"
-      - "444:444"
-      - "8443:8443"
-      - "8444:8444"
+      - "443:443" # client
+      - "444:444" # admin
+      - "8443:8443" # api
+      - "8444:8444" # cache-proxy
+      - "1338:1338" # mercure
 
   #blackfire:
   #  image: blackfire/blackfire
