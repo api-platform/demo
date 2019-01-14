@@ -11,3 +11,4 @@ behat.yml
 
 /helm/api/charts
 /helm/api/requirements.lock
+/coverage

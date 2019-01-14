@@ -44,7 +44,6 @@ When you send a PR, just make sure that:
 
 * You add valid test cases.
 * Tests are green.
-* You make a PR on the related documentation in the [api-platform/docs](https://github.com/api-platform/docs) repository.
 * You make the PR on the same branch you based your changes on. If you see commits
   that you did not make in your PR, you're doing it wrong.
 * Also don't forget to add a comment when you update a PR with a ping to [the maintainers](https://github.com/orgs/api-platform/people),
@@ -63,7 +62,6 @@ All Pull Requests must include the following header:
 | Tests pass?   | yes
 | Fixed tickets | #1234, #5678
 | License       | MIT
-| Doc PR        | api-platform/docs#1234
 ```
 
 ## Squash your Commits
@@ -92,6 +90,118 @@ Now force push to update your PR:
 
 ```bash
 git push --force
+```
+
+## API tests
+
+There are two kinds of tests in the API: unit ([`phpunit`](https://phpunit.de)) and integration
+([`behat`](http://behat.org)) tests.
+
+Both `phpunit` and `behat` are development dependencies and should be available in the `vendor` directory.
+
+### PHPUnit and coverage generation
+
+To launch unit tests:
+
+```bash
+docker-compose exec php bin/phpunit
+```
+
+If you want coverage, you will need the `phpdbg` package and run:
+
+```bash
+docker-compose exec php phpdbg -qrr bin/phpunit --coverage-html coverage
+```
+
+Coverage will be available in `api/coverage/index.html`.
+
+### Behat
+
+To launch Behat tests:
+
+```bash
+docker-compose exec php bin/behat
+```
+
+You may need to clear the cache manually before running Behat tests because of the temporary database. To do so, just
+remove the `test` cache directory:
+
+```bash
+docker-compose exec php rm -r var/cache/test
+```
+
+### Doctrine schema validation
+
+To analyse your Doctrine schema, use:
+
+```bash
+docker-compose exec php bin/console doctrine:schema:validate --skip-sync
+```
+
+### Security checker
+
+To check security issues in project dependencies, use:
+
+```bash
+docker-compose exec php bin/security-checker security:check
+```
+
+See details at the [documentation](https://github.com/sensiolabs/security-checker).
+
+## Doctrine Migrations
+
+Here we use the doctrine migrations bundle to manage the database's schema.
+
+To generate a migration version file, use the following command:
+
+```bash
+docker-compose exec php bin/console doctrine:migrations:diff
+```
+
+To generate a blank migration file:
+
+```bash
+docker-compose exec php bin/console doctrine:migrations:generate
+```
+
+To execute the migrations:
+
+```bash
+docker-compose exec php bin/console doctrine:migrations:migrate
+```
+
+To see the [complete documentation](https://symfony.com/doc/master/bundles/DoctrineMigrationsBundle/index.html).
+
+## Doctrine Extensions
+
+To use the doctrine extension bundle, you have to enable each extension you need in the `app/config.yml` file.
+
+See details at the [documentation](https://github.com/Atlantic18/DoctrineExtensions).
+
+## Client tests
+
+### Jest and coverage generation
+
+To launch unit tests using [Jest](https://jestjs.io):
+
+```bash
+docker-compose exec client yarn jest
+```
+
+If you want coverage, add `--coverage` option:
+
+```bash
+docker-compose exec client yarn jest --coverage
+```
+
+Coverage will be available in `coverage/clover.xml`.
+
+### E2e
+
+E2e tests are pre-configured in this project using [Cucumber.js](https://cucumber.io) & [Prettier](https://prettier.io):
+
+```bash
+docker-compose exec client yarn cucumber-js
 ```
 
 # License and Copyright Attribution
