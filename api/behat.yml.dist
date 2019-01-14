@@ -11,7 +11,7 @@ default:
   extensions:
     Behat\Symfony2Extension:
       kernel:
-        bootstrap: "features/bootstrap/bootstrap.php"
+        bootstrap: "config/bootstrap.php"
         class: "App\\Kernel"
     Behat\MinkExtension:
       base_url: "https://localhost/"
