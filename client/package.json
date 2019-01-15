@@ -24,7 +24,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "pretest": "react-scripts build",
+    "pree2e": "react-scripts build",
+    "e2e": "cucumber-js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

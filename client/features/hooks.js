@@ -1,6 +1,5 @@
 const { After, AfterAll } = require('cucumber');
 const { scope } = require('./support');
-const { dashboard } = require('./pages');
 const path = require('path');
 
 After(async scenario => {
@@ -23,11 +22,6 @@ After(async scenario => {
   }
 
   if (scope.browser) {
-    const button = await page.$(dashboard.selectors.logout);
-    if (button) {
-      await button.click();
-    }
-
     const cookies = await page.cookies();
     if (cookies && cookies.length > 0) {
       await page.deleteCookie(...cookies);

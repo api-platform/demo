@@ -11,5 +11,5 @@ Then('I see a list of books', async () => {
         visible: true,
         timeout: navigation.SELECTOR_TIMEOUT,
     });
-    await assert.containsText(book.selectors.title, 'Books List');
+    await assert.containsText(book.selectors.title, 'Book List');
 });

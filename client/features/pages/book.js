@@ -1,5 +1,5 @@
 module.exports = {
-  url: '/books',
+  url: '/books/',
   selectors: {
     title: 'h1',
   },
