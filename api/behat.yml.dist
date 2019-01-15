@@ -5,6 +5,7 @@ default:
     default:
       contexts:
         - FeatureContext: { doctrine: "@doctrine" }
+        - BookContext: { doctrine: "@doctrine" }
         - Behat\MinkExtension\Context\MinkContext
         - Behatch\Context\RestContext
         - Behatch\Context\JsonContext

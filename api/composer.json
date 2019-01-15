@@ -6,13 +6,14 @@
         "ext-iconv": "*",
         "api-platform/api-pack": "^1.1",
         "api-platform/core": "^2.4@dev",
+        "doctrine/doctrine-migrations-bundle": "^2.0",
         "guzzlehttp/guzzle": "^6.3",
         "symfony/console": "4.2.*",
         "symfony/dotenv": "4.2.*",
         "symfony/flex": "^1.1",
         "symfony/framework-bundle": "4.2.*",
-        "symfony/yaml": "4.2.*",
         "symfony/mercure-bundle": "*",
+        "symfony/yaml": "4.2.*",
         "webonyx/graphql-php": "^0.13"
     },
     "require-dev": {

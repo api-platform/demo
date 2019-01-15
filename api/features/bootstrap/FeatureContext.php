@@ -1,14 +1,15 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Context\SnippetAcceptingContext;
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\MinkExtension\Context\MinkContext;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Tools\SchemaTool;
 
 /**
  * Defines application features from the specific context.
  */
-class FeatureContext implements Context, SnippetAcceptingContext
+class FeatureContext implements Context
 {
     /**
      * @var ManagerRegistry
@@ -26,6 +27,11 @@ class FeatureContext implements Context, SnippetAcceptingContext
     private $classes;
 
     /**
+     * @var MinkContext
+     */
+    private $minkContext;
+
+    /**
      * Initializes context.
      *
      * Every scenario gets its own context instance.
@@ -41,12 +47,27 @@ class FeatureContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @BeforeScenario @createSchema
+     * @BeforeScenario
      */
-    public function createDatabase()
+    public function gatherContexts(BeforeScenarioScope $scope)
     {
-        $this->schemaTool->dropSchema($this->classes);
-        $this->doctrine->getManager()->clear();
-        $this->schemaTool->createSchema($this->classes);
+        $this->minkContext = $scope->getEnvironment()->getContext(MinkContext::class);
+        $this->minkContext->getSession()->getDriver()->getClient()->disableReboot();
+    }
+
+    /**
+     * @BeforeScenario
+     */
+    public function createTransaction()
+    {
+        $this->doctrine->getConnection()->beginTransaction();
+    }
+
+    /**
+     * @AfterScenario
+     */
+    public function rollbackTransaction()
+    {
+        $this->doctrine->getConnection()->rollback();
     }
 }
