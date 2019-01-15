@@ -27,6 +27,7 @@ env:
 # When working in dev branchs we don't want to override the master builds so we need to define à DEV_ADMIN_BUCKET and a DEV_CLIENT_BUCKET.
 # If you really want branch naming, you can instead create buckets on the fly using subdomains e.g  gs://${BRANCH}.you-domain.com
 before_install:
+  - nvm install node
   - ./ci/before_install.sh
   - source ./ci/.env
 
@@ -34,7 +35,7 @@ before_script:
   - phpenv config-rm xdebug.ini
   - sudo service mysql stop
   - sudo service postgresql stop
-  - curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash -s -- --version v2.9.1;
+  - curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash -s -- --version v2.11.0;
   - npm install -g react-scripts
   - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
 
@@ -124,4 +125,3 @@ deploy:
 #      branch: ${TRAVIS_BRANCH}
 #      repo: ${REPOSITORY}
 #      condition: "$MULTI_BRANCH == 1 && $CURRENT_CI == 'travis'"
-
