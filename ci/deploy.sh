@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+set -e
 
 # Update dependencies and docker image end push them taking care to separate by repositories and branches.
 echo 'deploy script'

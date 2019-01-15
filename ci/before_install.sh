@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 if [[ $TRAVIS_PULL_REQUEST != 'false' ]]; then echo 'Skipping deployment for pull requests';
 else
     if [[ -z "${PROJECT_ID}" ]]; then echo 'PROJECT_ID is not defined in your travis environement variables.'; fi
