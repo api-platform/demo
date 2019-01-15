@@ -6,10 +6,12 @@ ARG PUPPETEER_VERSION=1.10.0
 
 WORKDIR /usr/src/client
 
-RUN apk add --no-cache ca-certificates python bash make g++ chromium; \
+RUN apk add --no-cache ca-certificates chromium; \
+    apk add --no-cache --virtual .gyp python bash make g++; \
     apk add --no-cache --virtual .build-deps openssl; \
     yarn global add @api-platform/client-generator puppeteer@${PUPPETEER_VERSION}; \
-    yarn cache clean
+    yarn cache clean; \
+	apk del .gyp
 
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 ENV NODE_PATH="/usr/local/share/.config/yarn/global/node_modules:${NODE_PATH}"
