@@ -1,0 +1,458 @@
+# PHP CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-php/ for more details
+#
+# Configuration reference: https://circleci.com/docs/2.0/configuration-reference/
+#
+version: 2.1
+
+commands:
+  build_spa:
+    description: Build SPA
+    parameters:
+      path:
+        type: string
+    steps:
+      - restore_cache:
+          keys:
+            - circle-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Build app
+          working_directory: << parameters.path >>
+          command: |
+              source ../.ci/.env
+              source ../.ci/init.sh
+              REACT_APP_API_ENTRYPOINT="https://${API_DNS}" yarn build
+      - save_cache:
+          paths:
+            - << parameters.path >>/build
+          key: << parameters.path >>-build-{{ .Environment.CIRCLE_SHA1 }}
+
+  deploy_spa:
+    description: Deploy SPA
+    parameters:
+      path:
+        type: string
+    steps:
+      - restore_cache:
+          keys:
+            - admin-build-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          keys:
+            - client-build-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          keys:
+            - circle-{{ .Environment.CIRCLE_SHA1 }}
+      - run: |
+            source .ci/.env
+            source .ci/init.sh
+            source .ci/auth.sh
+            .ci/deploy_spa.sh << parameters.path >>
+
+executors:
+  php-executor:
+    docker:
+      - image: eu.gcr.io/$PROJECT_ID/php
+        auth:
+          username: _json_key
+          password: $GCR_API_KEY
+        environment:
+          APP_ENV: test
+
+  deploy-executor:
+    docker:
+      - image: eu.gcr.io/$PROJECT_ID/deploy
+        auth:
+          username: _json_key
+          password: $GCR_API_KEY
+
+  client-executor:
+    docker:
+      - image: eu.gcr.io/$PROJECT_ID/client
+        auth:
+          username: _json_key
+          password: $GCR_API_KEY
+        environment:
+          JEST_JUNIT_OUTPUT: coverage/junit.xml
+
+  docker-executor:
+    docker:
+      - image: eu.gcr.io/$PROJECT_ID/docker
+        auth:
+          username: _json_key
+          password: $GCR_API_KEY
+jobs:
+  # API
+  init-api:
+    executor: php-executor
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - vendor-{{ checksum "api/composer.lock" }}
+            - vendor-
+      - run:
+          name: Install dependencies
+          working_directory: api
+          command: composer install --prefer-dist --no-progress --no-suggest --no-interaction
+      - run:
+          name: Build swagger documentation
+          working_directory: api
+          command: bin/console api:swagger:export > swagger.json
+      - save_cache:
+          paths:
+            - api/vendor
+          key: vendor-{{ checksum "api/composer.lock" }}
+      - save_cache:
+          paths:
+            - ./api
+          key: api-{{ .Environment.CIRCLE_SHA1 }}
+      - save_cache:
+          paths:
+            - ./.ci
+          key: circle-{{ .Environment.CIRCLE_SHA1 }}
+
+  phpunit:
+    executor: php-executor
+    steps:
+      - restore_cache:
+          keys:
+            - api-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: PHPUnit
+          working_directory: api
+          command: bin/phpunit --log-junit coverage/junit.xml
+      - store_test_results:
+          path: api/coverage
+
+  security_checker:
+    executor: php-executor
+    steps:
+      - restore_cache:
+          keys:
+            - api-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Security checker
+          working_directory: api
+          command: bin/security-checker security:check
+
+  monitor_health:
+    executor: php-executor
+    steps:
+      - restore_cache:
+          keys:
+            - api-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Monitor health
+          working_directory: api
+          command: bin/console monitor:health
+
+  doctrine_schema_validator:
+    executor: php-executor
+    steps:
+      - restore_cache:
+          keys:
+            - api-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Doctrine schema validator
+          working_directory: api
+          command: bin/console doctrine:schema:validate --skip-sync
+
+  php_cs_fixer:
+    executor: php-executor
+    steps:
+      - restore_cache:
+          keys:
+            - api-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: PHP CS fixer
+          working_directory: api
+          command: bin/php-cs-fixer fix --dry-run --ansi --verbose
+
+  phpstan:
+    executor: php-executor
+    steps:
+      - restore_cache:
+          keys:
+            - api-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: PHPStan
+          working_directory: api
+          command: bin/phpstan analyse -l 0 src
+
+  insight:
+    executor: php-executor
+    steps:
+      - restore_cache:
+          keys:
+            - api-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Run analysis
+          working_directory: api
+          command: |
+            bin/insight configure --quiet --user-uuid $INSIGHT_USER_UUID --api-token $INSIGHT_USER_TOKEN
+            bin/insight analyze $INSIGHT_PROJECT_UUID --format=json > insight.json
+      - store_artifacts:
+          path: api/insight.json
+          destination: insight.json
+
+  behat:
+    docker:
+      - image: eu.gcr.io/$PROJECT_ID/php
+        auth:
+          username: _json_key
+          password: $GCR_API_KEY
+        environment:
+          APP_ENV: test
+          DATABASE_URL: pgsql://root@localhost/datab
+          MAILER_URL: smtp://localhost:25
+          REDIS_SESSION_HOST: localhost
+          REDIS_CACHE_HOST: localhost
+          MONGODB_URL: mongodb://root:p4ssw0rd@localhost:27017
+      - image: postgres:9.6-alpine
+        environment:
+          POSTGRES_DB: datab
+          POSTGRES_USER: root
+      - image: bitnami/mongodb:4.1.4
+        environment:
+          MONGODB_ROOT_PASSWORD: p4ssw0rd
+      - image: redis:4-alpine
+      - image: tophfr/mailcatcher:0.6.5
+    steps:
+      - restore_cache:
+          keys:
+            - api-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Execute migrations
+          working_directory: api
+          command: |
+            wget https://github.com/jwilder/dockerize/releases/download/v0.3.0/dockerize-linux-amd64-v0.3.0.tar.gz
+            tar -C /usr/local/bin -xzvf dockerize-linux-amd64-v0.3.0.tar.gz
+            rm dockerize-linux-amd64-v0.3.0.tar.gz
+            echo "Waiting for PostgreSQL to be ready..."
+            dockerize -wait tcp://localhost:5432 -timeout 1m
+            bin/console doctrine:migrations:migrate --no-interaction
+      - run:
+          name: Behat
+          working_directory: api
+          command: bin/behat -p ci
+      - store_artifacts:
+          path: api/var/log
+
+  swagger_validator:
+    executor: client-executor
+    steps:
+      - restore_cache:
+          keys:
+            - api-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Swagger validator
+          working_directory: api
+          command: swagger-cli validate swagger.json
+      - store_artifacts:
+          path: api/swagger.json
+          destination: swagger.json
+
+  deploy-api:
+    executor: deploy-executor
+    steps:
+      - setup_remote_docker
+      - restore_cache:
+          keys:
+            - api-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          keys:
+            - circle-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Deploy API
+          command: |
+            source .ci/.env
+            source .ci/init.sh
+            source .ci/auth.sh
+            .ci/deploy_api.sh
+
+  # Client
+  init-client:
+    executor: client-executor
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - node_modules-{{ checksum "client/yarn.lock" }}
+            - node_modules-
+      - run:
+          name: Install dependencies
+          working_directory: client
+          command: yarn install --pure-lockfile
+      - save_cache:
+          paths:
+            - client/node_modules
+          key: node_modules-{{ checksum "client/yarn.lock" }}
+      - save_cache:
+          paths:
+            - ./client
+          key: client-{{ .Environment.CIRCLE_SHA1 }}
+
+  jest:
+    executor: client-executor
+    steps:
+      - restore_cache:
+          keys:
+            - client-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Jest
+          working_directory: client
+          command: yarn jest --ci --reporters=default --reporters=jest-junit --passWithNoTests
+      - store_test_results:
+          path: client/coverage
+
+  eslint:
+    executor: client-executor
+    steps:
+      - restore_cache:
+          keys: 
+            - client-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: ESLint
+          working_directory: client
+          command: yarn eslint src features
+
+  e2e:
+    executor: docker-executor
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - checkout
+      - run:
+          name: Start services
+          command: |
+            cp api/.env.dist api/.env
+            echo $GCR_API_KEY | docker login -u _json_key --password-stdin https://eu.gcr.io
+            docker-compose pull --ignore-pull-failures
+            docker-compose build
+            docker-compose up -d
+            echo "Waiting for PHP container to be up and ready..."
+            until [[ $(docker-compose logs --tail 1 php) = *"ready to handle connections"* ]]; do
+              sleep 1
+            done
+      - run:
+          name: Build client
+          command: docker-compose exec -e REACT_APP_API_ENTRYPOINT=https://h2-proxy:8443 client yarn build
+      - run:
+          name: Run tests
+          command: docker-compose exec client yarn cucumber-js
+
+  build-client:
+    executor: client-executor
+    steps:
+      - restore_cache:
+          keys:
+            - client-{{ .Environment.CIRCLE_SHA1 }}
+      - build_spa:
+          path: client
+
+  deploy-client:
+    executor: deploy-executor
+    steps:
+      - deploy_spa:
+          path: prospective
+      - deploy_spa:
+          path: expertise
+
+  # Admin
+  build-admin:
+    executor: client-executor
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - node_modules-{{ checksum "admin/yarn.lock" }}
+            - node_modules-
+      - run:
+          name: Install dependencies
+          working_directory: admin
+          command: yarn install --pure-lockfile
+      - save_cache:
+          paths:
+            - admin/node_modules
+          key: node_modules-{{ checksum "admin/yarn.lock" }}
+      - build_spa:
+          path: admin
+
+  deploy-admin:
+    executor: deploy-executor
+    steps:
+      - deploy_spa:
+          path: admin
+
+workflows:
+  version: 2
+  init-and-deploy:
+    jobs:
+      # API
+      - init-api
+      - phpunit:
+          requires:
+            - init-api
+      - security_checker:
+          requires:
+            - init-api
+      - monitor_health:
+          requires:
+            - init-api
+      - doctrine_schema_validator:
+          requires:
+            - init-api
+      - php_cs_fixer:
+          requires:
+            - init-api
+      - phpstan:
+          requires:
+            - init-api
+      - insight:
+          requires:
+            - init-api
+      - swagger_validator:
+          requires:
+            - init-api
+      - behat:
+          requires:
+            - init-api
+      - deploy-api:
+          requires:
+            - phpunit
+            - security_checker
+            - monitor_health
+            - doctrine_schema_validator
+            - php_cs_fixer
+            - phpstan
+            - insight
+            - behat
+            - swagger_validator
+       # Client
+      - init-client
+      - jest:
+         requires:
+            - init-client
+      - e2e:
+          requires:
+            - init-client
+      - eslint:
+          requires:
+            - init-client
+      - build-client:
+          requires:
+            - deploy-api
+            - eslint
+            - jest
+            - e2e
+      - deploy-client:
+          requires:
+            - build-client
+      # Admin
+      - build-admin:
+          requires:
+            - deploy-api
+      - deploy-admin:
+          requires:
+            - build-admin
