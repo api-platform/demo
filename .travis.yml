@@ -27,9 +27,9 @@ env:
 # When working in dev branchs we don't want to override the master builds so we need to define à DEV_ADMIN_BUCKET and a DEV_CLIENT_BUCKET.
 # If you really want branch naming, you can instead create buckets on the fly using subdomains e.g  gs://${BRANCH}.you-domain.com
 before_install:
+  - source ./ci/.env
   - nvm install node
   - ./ci/before_install.sh
-  - source ./ci/.env
 
 before_script:
   - phpenv config-rm xdebug.ini
