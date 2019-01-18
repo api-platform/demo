@@ -5,7 +5,7 @@
 env: prod
 debug: '0'
 secret: ChangeMe
-corsAllowOrigin: "^https?://.*?.api-platform.com$"
+corsAllowOrigin: "^https?://.*?\\.api-platform\\.com$"
 trustedHosts: "^.*\\.api\\-platform\\.com$"
 trustedProxies:
     - 103.21.244.0/22
