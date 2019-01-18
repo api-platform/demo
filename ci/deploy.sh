@@ -55,21 +55,21 @@ else
 fi
 
 cd admin && yarn && REACT_APP_API_ENTRYPOINT=https://${API_ENTRYPOINT} CI=false yarn build --environment=prod;
-cd ../client && yarn && REACT_APP_ADMIN_HOST_HTTPS=https://${ADMIN_BUCKET} REACT_APP_ADMIN_HOST_HTTP=http://${ADMIN_BUCKET} REACT_APP_API_CACHED_HOST_HTTPS=https://${API_ENTRYPOINT} REACT_APP_API_CACHED_HOST_HTTP=http://${API_ENTRYPOINT} yarn build --environment=prod && cd ..;
+cd ../client && yarn && REACT_APP_ADMIN_HOST_HTTPS=https://${ADMIN_BUCKET} REACT_APP_ADMIN_HOST_HTTP=http://${ADMIN_BUCKET} REACT_APP_API_CACHED_HOST_HTTPS=https://${API_ENTRYPOINT} REACT_APP_API_CACHED_HOST_HTTP=http://${API_ENTRYPOINT} REACT_APP_API_ENTRYPOINT=http://${API_ENTRYPOINT} yarn build --environment=prod && cd ..;
 
 if [[ ${BRANCH} == ${DEPLOYMENT_BRANCH} ]]
 then
     gsutil rsync -R admin/build gs://${ADMIN_BUCKET}
     gsutil rsync -R client/build gs://${CLIENT_BUCKET}
-    gsutil web set -m index.html gs://${ADMIN_BUCKET}
-    gsutil web set -m index.html gs://${CLIENT_BUCKET}
+    gsutil web set -m index.html -e index.html gs://${ADMIN_BUCKET}
+    gsutil web set -m index.html -e index.html gs://${CLIENT_BUCKET}
     gsutil iam ch allUsers:objectViewer gs://${CLIENT_BUCKET}
     gsutil iam ch allUsers:objectViewer gs://${ADMIN_BUCKET}
 else
     gsutil rsync -R admin/build gs://${DEV_ADMIN_BUCKET}
     gsutil rsync -R client/build gs://${DEV_CLIENT_BUCKET}
-    gsutil web set -m index.html gs://${DEV_ADMIN_BUCKET}
-    gsutil web set -m index.html gs://${DEV_CLIENT_BUCKET}
+    gsutil web set -m index.html -e index.html gs://${DEV_ADMIN_BUCKET}
+    gsutil web set -m index.html -e index.html gs://${DEV_CLIENT_BUCKET}
     gsutil iam ch allUsers:objectViewer gs://${DEV_ADMIN_BUCKET}
     gsutil iam ch allUsers:objectViewer gs://${DEV_CLIENT_BUCKET}
 fi
