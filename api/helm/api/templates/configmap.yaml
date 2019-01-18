@@ -12,7 +12,7 @@ data:
   debug: {{ .Values.debug | quote }}
   cors-allow-origin: {{ .Values.corsAllowOrigin | quote }}
   varnish-url: {{ if .Values.varnish.enabled }}http://varnish{{ else }}{{ .Values.varnish.url | quote }}{{ end }}
-  trusted-hosts: {{ .Values.trustedHosts | quote }}
+  trusted-hosts: {{ join "," .Values.trustedHosts }}
   trusted-proxies: {{ join "," .Values.trustedProxies }}
   mercure-acmeHosts: {{ .Values.mercure.acmeHosts | quote }}
   mercure-allowAnonymous: {{ .Values.mercure.allowAnonymous | quote }}
