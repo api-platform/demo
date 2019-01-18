@@ -34,7 +34,7 @@ if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? false) {
 }
 
 if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? false) {
-    Request::setTrustedHosts(explode(',', $trustedHosts));
+    //Request::setTrustedHosts(explode(',', $trustedHosts)); fixing demo
 }
 
 $kernel = new Kernel($env, $debug);
