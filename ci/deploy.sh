@@ -30,8 +30,7 @@ gcloud docker -- push ${PHP_REPOSITORY}:latest;
 gcloud docker -- push ${NGINX_REPOSITORY}:latest;
 gcloud docker -- push ${VARNISH_REPOSITORY}:latest;
 
-
-echo "Installing or upgrading release"
+echo "Installing or upgrading release '${RELEASE}' on namespace '${NAMESPACE}'"
 # Perform a rolling update if a release in the given namespace ever exist, create one otherwise.
 # Be aware that we have the static ip for the master branch but it belongs to you to care about others.
 helm upgrade --install --reset-values --wait --force --namespace=${NAMESPACE} --recreate-pods ${RELEASE} ./api/helm/api ${STATIC_IP} \
