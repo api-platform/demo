@@ -99,7 +99,7 @@ mercure:
 
 ingress:
   annotations:
-    kubernetes.io/ingress.global-static-ip-name: staging-demo-ip
+    kubernetes.io/ingress.global-static-ip-name: demo-ip
     # kubernetes.io/ingress.class: gce
     # kubernetes.io/tls-acme: "true"
   tls:
