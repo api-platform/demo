@@ -12,7 +12,7 @@ then
     export PHP_REPOSITORY="eu.gcr.io/${PROJECT_ID}/php";
     export NGINX_REPOSITORY="eu.gcr.io/${PROJECT_ID}/nginx";
     export VARNISH_REPOSITORY="eu.gcr.io/${PROJECT_ID}/varnish";
-    export STATIC_IP="--set ingress.annotations.kubernetes.io/ingress.global-static-ip-name: demo-ip";
+    export STATIC_IP="--set ingress.annotations.kubernetes.io/ingress.global-static-ip-name=demo-ip";
 else
     export PHP_REPOSITORY="eu.gcr.io/${PROJECT_ID}/php-staging";
     export NGINX_REPOSITORY="eu.gcr.io/${PROJECT_ID}/nginx-staging";
@@ -33,7 +33,7 @@ gcloud docker -- push ${VARNISH_REPOSITORY}:latest;
 echo "Installing or upgrading release '${RELEASE}' on namespace '${NAMESPACE}'"
 # Perform a rolling update if a release in the given namespace ever exist, create one otherwise.
 # Be aware that we have the static ip for the master branch but it belongs to you to care about others.
-helm upgrade --install --reset-values --wait --force --namespace=${NAMESPACE} --recreate-pods ${RELEASE} ./api/helm/api ${STATIC_IP} \
+helm upgrade --install --reset-values --wait --force --namespace=${NAMESPACE} --recreate-pods ${RELEASE} ./api/helm/api \
     --set php.repository=${PHP_REPOSITORY} \
     --set nginx.repository=${NGINX_REPOSITORY} \
     --set varnish.repository=${VARNISH_REPOSITORY} \
