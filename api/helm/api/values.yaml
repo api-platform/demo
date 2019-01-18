@@ -31,6 +31,8 @@ php:
   tag: latest
   pullPolicy: Always
   replicaCount: 1
+  mercure:
+    jwt: ""
 
 nginx:
   repository: eu.gcr.io/api-platform-demo-210115/nginx
@@ -50,7 +52,7 @@ mercure:
   enabled: true
   acmeHosts: ""
   allowAnonymous: "0"
-  corsAllowedOrigins: ""
+  corsAllowedOrigins: "^https?://.*?\\.api-platform\\.com$"
   debug: "0"
   demo: "0"
   jwtKey: "!UnsecureChangeMe!"
