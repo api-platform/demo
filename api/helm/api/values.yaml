@@ -49,7 +49,7 @@ varnish:
   replicaCount: 1
 
 mercure:
-  enabled: true
+  enabled: false
   acmeHosts: ""
   allowAnonymous: "0"
   corsAllowedOrigins: "^https?://.*?\\.api-platform\\.com$"
