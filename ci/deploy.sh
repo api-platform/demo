@@ -12,12 +12,10 @@ then
     export PHP_REPOSITORY="eu.gcr.io/${PROJECT_ID}/php";
     export NGINX_REPOSITORY="eu.gcr.io/${PROJECT_ID}/nginx";
     export VARNISH_REPOSITORY="eu.gcr.io/${PROJECT_ID}/varnish";
-    export STATIC_IP="--set ingress.annotations.kubernetes.io/ingress.global-static-ip-name=demo-ip";
 else
     export PHP_REPOSITORY="eu.gcr.io/${PROJECT_ID}/php-staging";
     export NGINX_REPOSITORY="eu.gcr.io/${PROJECT_ID}/nginx-staging";
     export VARNISH_REPOSITORY="eu.gcr.io/${PROJECT_ID}/varnish-staging";
-    export STATIC_IP="";
 fi
 export NAMESPACE=demo-${BRANCH};
 export RELEASE=${NAMESPACE};
@@ -38,6 +36,8 @@ helm upgrade --install --reset-values --wait --force --namespace=${NAMESPACE} --
     --set nginx.repository=${NGINX_REPOSITORY} \
     --set varnish.repository=${VARNISH_REPOSITORY} \
     --set secret=${APP_SECRET} \
+    --set php.mercure.jwt=${MERCURE_JWT} \
+    --set mercure.jwtKey=${MERCURE_JWT_KEY} \
     --set postgresUser=${DATABASE_USER},postgresPassword="${DATABASE_PASSWORD}",postgresDatabase=${DATABASE_NAME} --set postgresql.persistence.enabled=true;
 
 echo "Waiting for api-php to be up and ready..."

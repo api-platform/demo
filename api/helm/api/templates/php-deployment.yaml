@@ -62,6 +62,11 @@ spec:
                 secretKeyRef:
                   name: {{ template "fullname" . }}
                   key: database-url
+            - name: MERCURE_JWT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "fullname" . }}
+                  key: mercure-jwt
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- if .Values.nodeSelector }}
