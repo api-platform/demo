@@ -1,0 +1,21 @@
+{{- if .Values.mercure.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: mercure
+  labels:
+    app: {{ template "name" . }}-mercure
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.mercure.service.type }}
+  ports:
+    - port: {{ .Values.mercure.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ template "name" . }}-mercure
+    release: {{ .Release.Name }}
+{{- end -}}

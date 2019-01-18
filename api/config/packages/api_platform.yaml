@@ -35,4 +35,5 @@ api_platform:
     collection:
         pagination:
             items_per_page: 30
-    mercure: false
+    mercure:
+        hub_url: '%env(MERCURE_SUBSCRIBE_URL)%'
