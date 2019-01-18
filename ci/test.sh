@@ -21,6 +21,7 @@ docker-compose exec client yarn install --pure-lockfile
 docker-compose exec client yarn jest --ci --reporters=default --reporters=jest-junit --passWithNoTests
 docker-compose exec client yarn eslint src
 docker-compose exec client yarn e2e
+docker-compose exec client rm -rf build
 curl -s http://localhost # Client
 curl -s http://localhost:81 # Admin
 curl -s http://localhost:8080 # API
