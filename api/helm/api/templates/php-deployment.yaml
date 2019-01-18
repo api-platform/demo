@@ -22,6 +22,16 @@ spec:
           ports:
             - containerPort: 9000
           env:
+            - name: TRUSTED_HOSTS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "fullname" . }}
+                  key: trusted-hosts
+            - name: TRUSTED_PROXIES
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "fullname" . }}
+                  key: trusted-proxies
             - name: APP_ENV
               valueFrom:
                 configMapKeyRef:

@@ -24,6 +24,11 @@ if ($debug) {
     Debug::enable();
 }
 
+// Support CloudFlare Flexible SSL
+if ($_SERVER['HTTP_CF_VISITOR'] ?? false) {
+    $_SERVER['HTTP_X_FORWARDED_PROTO'] = \json_decode($_SERVER['HTTP_CF_VISITOR'], true)['scheme'];
+}
+
 if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? false) {
     Request::setTrustedProxies(explode(',', $trustedProxies), Request::HEADER_X_FORWARDED_ALL);
 }
