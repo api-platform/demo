@@ -51,7 +51,7 @@ varnish:
 mercure:
   enabled: true
   acmeHosts: ""
-  allowAnonymous: "0"
+  allowAnonymous: "1"
   corsAllowedOrigins: "^https?://.*?\\.api-platform\\.com$"
   debug: "0"
   demo: "0"

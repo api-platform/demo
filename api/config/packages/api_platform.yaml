@@ -30,7 +30,7 @@ api_platform:
         #    varnish_urls: ['%env(VARNISH_URL)%']
         max_age: 0
         shared_max_age: 3600
-        vary: ['Content-Type', 'Authorization']
+        vary: ['Content-Type', 'Authorization', 'Origin']
         public: true
     collection:
         pagination:
