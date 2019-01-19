@@ -64,12 +64,12 @@ spec:
                   key: database-url
             - name: MERCURE_PUBLISH_URL
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                   name: {{ template "fullname" . }}
                   key: mercure-publish-url
             - name: MERCURE_SUBSCRIBE_URL
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                   name: {{ template "fullname" . }}
                   key: mercure-subscribe-url
             - name: MERCURE_JWT
