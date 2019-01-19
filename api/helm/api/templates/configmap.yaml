@@ -21,3 +21,5 @@ data:
   mercure-demo: {{ .Values.mercure.demo | quote }}
   mercure-logFormat: {{ .Values.mercure.logFormat | quote }}
   mercure-publishAllowedOrigins: {{ .Values.mercure.publishAllowedOrigins | quote }}
+  mercure-publish-url: {{ .Values.mercure.publishUrl | quote }}
+  mercure-subscribe-url: {{ .Values.mercure.subscribeUrl | quote }}

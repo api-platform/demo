@@ -15,6 +15,13 @@ spec:
   backend:
     serviceName: {{ if .Values.varnish.enabled }}varnish{{ else }}api{{ end }}
     servicePort: 80
+  rules:
+  - http:
+      paths:
+      - path: /hub
+        backend:
+          serviceName: mercure
+          servicePort: 80
   {{- if .Values.ingress.tls }}
   tls:
 {{ toYaml .Values.ingress.tls | indent 4 }}
