@@ -70,7 +70,7 @@ mercure:
   nameOverride: ""
   fullnameOverride: ""
   service:
-    type: ClusterIP
+    type: NodePort
     port: 80
   ingress:
     enabled: false
