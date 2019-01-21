@@ -55,16 +55,16 @@ const Welcome = () => (
                             <Api />
                         </div>
                         <div className="other__content">
-                            <h3>API</h3>
-                            <ButtonsGroup
-                                httpLink={API_HOST_HTTP}
-                                httpsLink={API_HOST_HTTPS}
-                            />
-                            <h3>Cached API</h3>
-                            <ButtonsGroup
-                                httpLink={API_CACHED_HOST_HTTP}
-                                httpsLink={API_CACHED_HOST_HTTPS}
-                            />
+                            <h3>
+                              <a
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                href={API_CACHED_HOST_HTTPS}
+                                className="other__button"
+                              >
+                                API
+                              </a>
+                            </h3>
                         </div>
                     </div>
                     <div className="other__bloc">
@@ -72,11 +72,16 @@ const Welcome = () => (
                             <Admin />
                         </div>
                         <div className="other__content">
-                            <h3>Admin</h3>
-                            <ButtonsGroup
-                                httpLink={ADMIN_HOST_HTTP}
-                                httpsLink={ADMIN_HOST_HTTPS}
-                            />
+                            <h3>
+                              <a
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                href={ADMIN_HOST_HTTPS}
+                                className="other__button"
+                              >
+                                Admin
+                              </a>
+                            </h3>
                         </div>
                     </div>
                 </div>
@@ -104,28 +109,6 @@ const Welcome = () => (
                 title="Chat with the community on Slack!"
             />
         </div>
-    </div>
-);
-
-const ButtonsGroup = ({ httpLink, httpsLink }) => (
-    <div className="buttons__group">
-        <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href={httpLink}
-            className="other__button"
-        >
-            http
-        </a>
-        <div className="buttons__or" />
-        <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href={httpsLink}
-            className="other__button"
-        >
-            https
-        </a>
     </div>
 );
 
