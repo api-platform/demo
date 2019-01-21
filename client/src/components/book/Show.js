@@ -118,7 +118,7 @@ class Show extends Component {
     }
 
     return (
-      <Link to={`../${type}/show/${encodeURIComponent(items)}`}>{items}</Link>
+      <Link to={`../../${type}/show/${encodeURIComponent(items)}`}>{items}</Link>
     );
   };
 }
