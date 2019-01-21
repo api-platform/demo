@@ -58,6 +58,7 @@ before_deploy:
       gsutil mb -p ${PROJECT_ID} -l eu gs://${DEV_ADMIN_BUCKET} || echo "Dev admin bucket exists"
       gsutil mb -p ${PROJECT_ID} -l eu gs://${DEV_CLIENT_BUCKET} || echo "Dev client bucket exists"
     fi;
+    npm install --global "@clarketm/jwt-cli"
 
 # Deploy images and buckets according to the current context, create or update Kubenetes release with updated informations.
 deploy:

@@ -19,6 +19,10 @@ else
 fi
 export NAMESPACE=demo-${BRANCH};
 export RELEASE=${NAMESPACE};
+if [[ -z $MERCURE_JWT_KEY ]]; then
+    export MERCURE_JWT_KEY=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1);
+    export MERCURE_JWT=$(jwt sign --noCopy '{"mercure": {"publish": ["*"]}}' $MERCURE_JWT_KEY);
+fi
 
 # Build and push the docker images.
 docker build --pull -t ${PHP_REPOSITORY} -t ${PHP_REPOSITORY}:latest api --target api_platform_php;
