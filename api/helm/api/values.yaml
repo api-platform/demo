@@ -4,7 +4,7 @@
 
 env: prod
 debug: '0'
-secret: ChangeMe
+secret: ""
 corsAllowOrigin: "^https?://.*?\\.api-platform\\.com$"
 trustedHosts: "^.*\\.api\\-platform\\.com$"
 trustedProxies:
@@ -55,7 +55,7 @@ mercure:
   corsAllowedOrigins: "^https?://.*?\\.api-platform\\.com$"
   debug: "0"
   demo: "0"
-  jwtKey: "!UnsecureChangeMe!"
+  jwtKey: ""
   logFormat: "FLUENTD"
   publishAllowedOrigins: ""
   publisherJwtKey: ""
@@ -114,9 +114,9 @@ postgresql:
   enabled: true
   # If bringing your own PostgreSQL, the full uri to use
   #url: pgsql://api-platform:!ChangeMe!@example.com/api?serverVersion=10.1
-  postgresUser: api-platform
-  postgresPassword: ChangeMe
-  postgresDatabase: api
+  postgresUser: ""
+  postgresPassword: ""
+  postgresDatabase: ""
   # Persistent Volume Storage configuration.
   # ref: https://kubernetes.io/docs/user-guide/persistent-volumes
   persistence:
