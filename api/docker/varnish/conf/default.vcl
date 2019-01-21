@@ -36,7 +36,7 @@ sub vcl_backend_response {
 sub vcl_deliver {
   # Don't send cache tags related headers to the client
   unset resp.http.url;
-  # Uncomment the following line to NOT send the "Cache-Tags" header to the client (prevent using CloudFlare cache tags)
+  # Comment the following line to send the "Cache-Tags" header to the client (e.g. to use CloudFlare cache tags)
   unset resp.http.Cache-Tags;
 }
 
@@ -57,6 +57,11 @@ sub vcl_recv {
     }
 
     return(synth(400, "ApiPlatform-Ban-Regex HTTP header must be set."));
+  }
+
+  # For health checks
+  if (req.method == "GET" && req.url == "/healthz") {
+    return(synth(200, "OK"));
   }
 }
 
