@@ -62,7 +62,7 @@ mercure:
   subscriberJwtKey: ""
   replicaCount: 1
   publishUrl: http://mercure/hub
-  subscribeUrl: https://demo.api-platform.com/hub
+  subscribeUrl: https://demo-mercure.api-platform.com/hub
   image:
     repository: dunglas/mercure
     tag: latest
