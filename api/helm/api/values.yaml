@@ -107,8 +107,8 @@ ingress:
   tls:
     # Secrets must be manually created in the namespace.
     - hosts:
-        - demo.api-platform.com
-        - demo-mercure.api-platform.com
+        mercure: demo.api-platform.com
+        api: demo-mercure.api-platform.com
 
 postgresql:
   enabled: true
