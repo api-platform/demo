@@ -14,3 +14,8 @@ else
     if [[ -z "${DEV_ADMIN_BUCKET}" && MULTI_BRANCH == "1" ]]; then echo 'DEV_ADMIN_BUCKET is not defined in your travis environement variables.'; fi
     if [[ -z "${DEV_CLIENT_BUCKET}" && MULTI_BRANCH == "1" ]]; then echo 'DEV_CLIENT_BUCKET is not defined in your travis environement variables.'; fi
 fi
+
+# to enable blackfire, set the BLACKFIRE_SERVER_ID and BLACKFIRE_SERVER_TOKEN variables.
+if [[ ! -z "${BLACKFIRE_SERVER_ID}" && ! -z "${BLACKFIRE_SERVER_TOKEN}" ]]; then
+    export BLACKFIRE_ENABLED=true;
+fi;
