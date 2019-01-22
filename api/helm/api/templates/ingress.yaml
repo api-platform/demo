@@ -16,13 +16,13 @@ spec:
     serviceName: {{ if .Values.varnish.enabled }}varnish{{ else }}api{{ end }}
     servicePort: 80
   rules:
-  - host: {{ index (index .Values.ingress.tls 0).hosts 0 }}
+  - host: demo.api-platform.com
     http:
       paths:
       - backend:
           serviceName: {{ if .Values.varnish.enabled }}varnish{{ else }}api{{ end }}
           servicePort: 80
-  - host: {{ index (index .Values.ingress.tls 0).hosts 1 }}
+  - host: demo-mercure.api-platform.com
     http:
       paths:
       - backend:
