@@ -126,7 +126,7 @@ services:
   #blackfire:
   #  image: blackfire/blackfire
   #  environment:
-  #      # Exposes the host BLACKFIRE_SERVER_ID and TOKEN environment variables.
+  #      # Exposes the host BLACKFIRE_SERVER_ID and BLACKFIRE_SERVER_TOKEN environment variables.
   #      - BLACKFIRE_SERVER_ID
   #      - BLACKFIRE_SERVER_TOKEN
 
