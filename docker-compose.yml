@@ -123,12 +123,12 @@ services:
       - "8444:8444" # cache-proxy
       - "1338:1338" # mercure
 
-  #blackfire:
-  #  image: blackfire/blackfire
-  #  environment:
-  #      # Exposes the host BLACKFIRE_SERVER_ID and BLACKFIRE_SERVER_TOKEN environment variables.
-  #      - BLACKFIRE_SERVER_ID
-  #      - BLACKFIRE_SERVER_TOKEN
+  blackfire:
+    image: blackfire/blackfire
+    environment:
+        # Exposes the host BLACKFIRE_SERVER_ID and BLACKFIRE_SERVER_TOKEN environment variables.
+        - BLACKFIRE_SERVER_ID
+        - BLACKFIRE_SERVER_TOKEN
 
 volumes:
   db-data: {}
