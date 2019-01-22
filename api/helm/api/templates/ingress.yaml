@@ -16,12 +16,6 @@ spec:
     serviceName: {{ if .Values.varnish.enabled }}varnish{{ else }}api{{ end }}
     servicePort: 80
   rules:
-  - host: demo.api-platform.com
-    http:
-      paths:
-      - backend:
-          serviceName: {{ if .Values.varnish.enabled }}varnish{{ else }}api{{ end }}
-          servicePort: 80
   - host: demo-mercure.api-platform.com
     http:
       paths:
