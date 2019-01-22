@@ -12,15 +12,20 @@ metadata:
       {{ $key }}: {{ $value | quote }}
     {{- end }}
 spec:
-  backend:
-    serviceName: {{ if .Values.varnish.enabled }}varnish{{ else }}api{{ end }}
-    servicePort: 80
   rules:
-  - http:
+  - host: {{ .Values.ingress.tls.hosts[0] }}
+    http:
       paths:
-      - path: /hub
+      - path: /
         backend:
           serviceName: mercure
+          servicePort: 80
+  - host: {{ .Values.ingress.tls.hosts[1] }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ if .Values.varnish.enabled }}varnish{{ else }}api{{ end }}
           servicePort: 80
   {{- if .Values.ingress.tls }}
   tls:
