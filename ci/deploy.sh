@@ -39,10 +39,8 @@ helm upgrade --install --reset-values --wait --force --namespace=${NAMESPACE} --
     --set php.repository=${PHP_REPOSITORY} \
     --set nginx.repository=${NGINX_REPOSITORY} \
     --set varnish.repository=${VARNISH_REPOSITORY} \
-    --set secret=${APP_SECRET} \
     --set php.mercure.jwt=${MERCURE_JWT} \
-    --set mercure.jwtKey=${MERCURE_JWT_KEY} \
-    --set postgresql.postgresUser=${DATABASE_USER},postgresql.postgresPassword="${DATABASE_PASSWORD}",postgresql.postgresDatabase=${DATABASE_NAME} --set postgresql.persistence.enabled=true;
+    --set mercure.jwtKey=${MERCURE_JWT_KEY};
 
 echo "Waiting for api-php to be up and ready..."
 sleep 60
