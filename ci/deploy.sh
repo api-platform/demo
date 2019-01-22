@@ -23,6 +23,9 @@ if [[ -z $MERCURE_JWT_KEY ]]; then
     export MERCURE_JWT_KEY=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1);
     export MERCURE_JWT=$(jwt sign --noCopy '{"mercure": {"publish": ["*"]}}' $MERCURE_JWT_KEY);
 fi
+if [[ -z $DATABASE_PASSWORD ]]; then
+    export DATABASE_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1);
+fi
 
 # Build and push the docker images.
 docker build --pull -t ${PHP_REPOSITORY} -t ${PHP_REPOSITORY}:latest api --target api_platform_php;
@@ -40,7 +43,8 @@ helm upgrade --install --reset-values --wait --force --namespace=${NAMESPACE} --
     --set nginx.repository=${NGINX_REPOSITORY} \
     --set varnish.repository=${VARNISH_REPOSITORY} \
     --set php.mercure.jwt=${MERCURE_JWT} \
-    --set mercure.jwtKey=${MERCURE_JWT_KEY};
+    --set mercure.jwtKey=${MERCURE_JWT_KEY} \
+    --set postgresql.postgresPassword=${DATABASE_PASSWORD};
 
 echo "Waiting for api-php to be up and ready..."
 sleep 60
