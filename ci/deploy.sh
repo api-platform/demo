@@ -43,7 +43,6 @@ helm upgrade --install --reset-values --wait --force --namespace=${NAMESPACE} --
     --set php.repository=${PHP_REPOSITORY} \
     --set nginx.repository=${NGINX_REPOSITORY} \
     --set varnish.repository=${VARNISH_REPOSITORY} \
-    --set secret=${APP_SECRET} \
     --set blackfire.blackfire.server_id=${BLACKFIRE_SERVER_ID} \
     --set blackfire.blackfire.server_token=${BLACKFIRE_SERVER_TOKEN} \
     --set blackfire.blackfire.enabled=${BLACKFIRE_ENABLED} \
