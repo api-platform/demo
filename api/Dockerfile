@@ -4,7 +4,6 @@
 ARG PHP_VERSION=7.2
 ARG NGINX_VERSION=1.15
 ARG VARNISH_VERSION=6.0
-ARG INSTALL_BLACKFIRE=false
 
 FROM php:${PHP_VERSION}-fpm-alpine AS api_platform_php
 
@@ -52,6 +51,7 @@ RUN set -eux; \
 	\
 	apk del .build-deps
 
+ARG INSTALL_BLACKFIRE=false
 RUN if [ "$INSTALL_BLACKFIRE" = true ] ; then version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
     && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/alpine/amd64/$version \
     && mkdir -p /tmp/blackfire \
