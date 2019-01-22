@@ -106,7 +106,8 @@ ingress:
     # kubernetes.io/tls-acme: "true"
   tls:
     # Secrets must be manually created in the namespace.
-    - hosts:
+    - secretName: noc-ingress-tls
+      hosts:
         - demo.api-platform.com
         - demo-mercure.api-platform.com
 

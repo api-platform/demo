@@ -13,14 +13,14 @@ metadata:
     {{- end }}
 spec:
   rules:
-  - host: {{ .Values.ingress.tls.hosts[0] }}
+  - host: demo.api-platform.com
     http:
       paths:
       - path: /
         backend:
           serviceName: mercure
           servicePort: 80
-  - host: {{ .Values.ingress.tls.hosts[1] }}
+  - host: demo-mercure.api-platform.com
     http:
       paths:
       - path: /
