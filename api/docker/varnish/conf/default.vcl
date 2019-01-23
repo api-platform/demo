@@ -42,7 +42,7 @@ sub vcl_recv {
        # Removing the Blackfire header avoids to trigger the profiling.
        # Not returning let it go trough your usual workflow as a regular
        # ESI request without distinction.
-       unset req.http.X-Blackfire-Query;
+       #unset req.http.X-Blackfire-Query;
    } else {
        return (pass);
    }

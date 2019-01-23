@@ -1,0 +1,40 @@
+name "Test our API with Blackfire.io"
+
+ scenario
+    name "Test my API"
+    endpoint "http://localhost:8080"
+
+     visit url('/')
+        name "Docs"
+        header "accept: text/html"
+        expect status_code() == 200
+        expect body() matches "/This is a demo application/"
+
+     visit url('/books')
+        name "Books list"
+        header "accept: application/ld+json"
+        expect status_code() == 200
+        expect json('length("hydra:member")') > 10
+
+     visit url('/books')
+        name "Post a new book"
+        method "POST"
+        header "accept: application/ld+json"
+        header "content-type: application/ld+json"
+        body
+        """
+        {
+          "isbn": "978-2-918390-36-7",
+          "title": "Code performance explained",
+          "description": "Blackfire.io, the book",
+          "author": "Fabien Potencier",
+          "publicationDate": "today"
+        }
+        """
+        expect status_code() == 201
+        set id json('"@id"')
+
+     visit url(id)
+        header "accept: application/ld+json"
+        expect status_code() == 200
+        expect json('"isbn"') == "978-2-918390-36-7"
