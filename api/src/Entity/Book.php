@@ -33,7 +33,6 @@ class Book
     /**
      * @var string
      *
-     * @Groups("book:read")
      * @ORM\Column(type="guid")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="UUID")

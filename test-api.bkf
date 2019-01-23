@@ -14,7 +14,7 @@ scenario
         name "Books list"
         header "accept: application/ld+json"
         expect status_code() == 200
-        expect json("length('hydra:member')") > 10
+        expect json('length("hydra:member")') > 10
 
     visit url('/books')
         name "Post a new book"
@@ -32,7 +32,9 @@ scenario
         }
         """
         expect status_code() == 201
-        set id json('id')
+        set id json('"@id"')
 
-    visit url('/books/' ~ id)
+    visit url(id)
+        header "accept: application/ld+json"
         expect status_code() == 200
+        expect json('"isbn"') == "978-2-918390-36-7"
