@@ -29,7 +29,7 @@ if [[ -z $DATABASE_PASSWORD ]]; then
 fi
 
 # Build and push the docker images.
-docker build --build-arg INSTALL_BLACKFIRE=${BLACKFIRE_ENABLED} --pull -t ${PHP_REPOSITORY} -t ${PHP_REPOSITORY}:latest api --target api_platform_php;
+docker build --build-arg INSTALL_BLACKFIRE=${BLACKFIRE_ENABLED} --build-arg NAMESPACE=${NAMESPACE} --pull -t ${PHP_REPOSITORY} -t ${PHP_REPOSITORY}:latest api --target api_platform_php;
 docker build --pull -t ${NGINX_REPOSITORY} -t ${NGINX_REPOSITORY}:latest api --target api_platform_nginx;
 docker build --pull -t ${VARNISH_REPOSITORY} -t ${VARNISH_REPOSITORY}:latest api --target api_platform_varnish;
 gcloud docker -- push ${PHP_REPOSITORY}:latest;
