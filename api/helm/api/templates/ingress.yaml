@@ -12,14 +12,19 @@ metadata:
       {{ $key }}: {{ $value | quote }}
     {{- end }}
 spec:
-  backend:
-    serviceName: {{ if .Values.varnish.enabled }}varnish{{ else }}api{{ end }}
-    servicePort: 80
   rules:
-  - host: demo-mercure.api-platform.com
+  - host: {{ .Values.hostname }}
     http:
       paths:
-      - backend:
+      - path: /*
+        backend:
+          serviceName: {{ if .Values.varnish.enabled }}varnish{{ else }}api{{ end }}
+          servicePort: 80
+  - host: {{ .Values.mercure.hostname }}
+    http:
+      paths:
+      - path: /*
+        backend:
           serviceName: mercure
           servicePort: 80
   {{- if .Values.ingress.tls }}

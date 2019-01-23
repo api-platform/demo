@@ -7,6 +7,7 @@ debug: '0'
 secret: ""
 corsAllowOrigin: "^https?://.*?\\.api-platform\\.com$"
 trustedHosts: "^.*\\.api\\-platform\\.com$"
+hostname: demo.api-platform.com
 trustedProxies:
     - 103.21.244.0/22
     - 103.22.200.0/22
@@ -50,6 +51,7 @@ varnish:
 
 mercure:
   enabled: true
+  hostname: demo-mercure.api-platform.com
   acmeHosts: ""
   allowAnonymous: "1"
   corsAllowedOrigins: "^https?://.*?\\.api-platform\\.com$"
@@ -100,10 +102,7 @@ mercure:
   affinity: {}
 
 externaldns:
-  enabled: true
-  annotations:
-    external-dns.alpha.kubernetes.io/hostname: api-platform.com
-    external-dns.alpha.kubernetes.io/ttl: "120"
+  hostname: api-platform.com
   cloudflare:
     apiKey: ""
     apiEmail: ""
@@ -111,7 +110,7 @@ externaldns:
 ingress:
   annotations:
     # kubernetes.io/ingress.global-static-ip-name: chart-ip
-    # kubernetes.io/ingress.class: gce
+    kubernetes.io/ingress.class: gce
     # kubernetes.io/tls-acme: "true"
   tls:
     # Secrets must be manually created in the namespace.

@@ -7,12 +7,6 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  {{ if and (not .Values.varnish.enabled) (.Values.externaldns.enabled) -}}
-  annotations:
-    {{- range $key, $value := .Values.externaldns.annotations }}
-    {{ $key }}: {{ $value | quote }}
-    {{- end -}}
-  {{- end }}
 spec:
   type: NodePort
   ports:

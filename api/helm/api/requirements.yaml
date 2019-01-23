@@ -10,4 +10,3 @@ dependencies:
 - name: external-dns
   version: 1.3.3
   repository: https://kubernetes-charts.storage.googleapis.com/
-  condition: externaldns.enabled

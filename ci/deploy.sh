@@ -48,21 +48,17 @@ helm upgrade --install --reset-values --wait --force --namespace=${NAMESPACE} --
     --set blackfire.blackfire.enabled=${BLACKFIRE_ENABLED} \
     --set php.mercure.jwt=${MERCURE_JWT} \
     --set mercure.jwtKey=${MERCURE_JWT_KEY} \
-    --set postgresql.postgresPassword=${DATABASE_PASSWORD};
+    --set postgresql.postgresPassword=${DATABASE_PASSWORD} \
+    --set hostname=${API_ENTRYPOINT} \
+    --set mercure.hostname=${MERCURE_ENTRYPOINT} \
+    --set mercure.subscribeUrl=${MERCURE_ENTRYPOINT}/hub \
+    --set externaldns.cloudflare.apiKey=${CLOUDFLARE_API_KEY} \
+    --set externaldns.cloudflare.apiEmail=${CLOUDFLARE_API_EMAIL};
 
 echo "Waiting for api-php to be up and ready..."
 sleep 60
 kubectl exec -it $(kubectl --namespace=${NAMESPACE} get pods -l app=api-php -o jsonpath="{.items[0].metadata.name}") --namespace=${NAMESPACE} \
     -- sh -c 'APP_ENV=dev composer install -n && bin/console d:m:m --no-interaction --env=prod && bin/console d:s:u --force --env=prod && bin/console hautelook:fixtures:load -n --env=dev && APP_ENV=prod composer --no-dev install --classmap-authoritative && echo deployed';
-
-# For the master branch the REACT_APP_API_ENTRYPOINT will be the URL plug on your static IP.
-# For Dev branchs you can use the IP retrievable by the kubectl get ingress command.
-if [[ ${BRANCH} == ${DEPLOYMENT_BRANCH} ]]
-then
-    export API_ENTRYPOINT=${PROD_DNS};
-else
-    export API_ENTRYPOINT=$(kubectl --namespace `echo ${NAMESPACE}` get ingress -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}');
-fi
 
 cd admin && yarn && REACT_APP_API_ENTRYPOINT=https://${API_ENTRYPOINT} CI=false yarn build --environment=prod;
 cd ../client && yarn && REACT_APP_ADMIN_HOST_HTTPS=https://${ADMIN_BUCKET} REACT_APP_ADMIN_HOST_HTTP=http://${ADMIN_BUCKET} REACT_APP_API_CACHED_HOST_HTTPS=https://${API_ENTRYPOINT} REACT_APP_API_CACHED_HOST_HTTP=http://${API_ENTRYPOINT} REACT_APP_API_ENTRYPOINT=https://${API_ENTRYPOINT} yarn build --environment=prod && cd ..;
