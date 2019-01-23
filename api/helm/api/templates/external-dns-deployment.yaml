@@ -1,0 +1,33 @@
+{{- if .Values.externaldns.enabled -}}
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: external-dns
+spec:
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: external-dns
+    spec:
+      containers:
+      - name: external-dns
+        image: registry.opensource.zalan.do/teapot/external-dns:latest
+        args:
+        - --source=service
+        - --domain-filter={{ .Values.externaldns.hostname | quote }}
+        - --provider=cloudflare
+        - --cloudflare-proxied
+        env:
+        - name: CF_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: cloudflare-api-key
+        - name: CF_API_EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: cloudflare-api-email
+{{- end -}}

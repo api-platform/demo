@@ -99,16 +99,25 @@ mercure:
   tolerations: []
   affinity: {}
 
+externaldns:
+  enabled: true
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: api-platform.com
+    external-dns.alpha.kubernetes.io/ttl: "120"
+  cloudflare:
+    apiKey: ""
+    apiEmail: ""
+
 ingress:
   annotations:
-    kubernetes.io/ingress.global-static-ip-name: demo-ip
+    # kubernetes.io/ingress.global-static-ip-name: chart-ip
     # kubernetes.io/ingress.class: gce
     # kubernetes.io/tls-acme: "true"
   tls:
     # Secrets must be manually created in the namespace.
-#    - hosts:
-#        - demo.api-platform.com
-#        - demo-mercure.api-platform.com
+    # - hosts:
+        # - demo.api-platform.com
+        # - demo-mercure.api-platform.com
 
 postgresql:
   enabled: true
