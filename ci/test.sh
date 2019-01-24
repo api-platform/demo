@@ -6,7 +6,6 @@ docker-compose down -v
 docker-compose pull --ignore-pull-failures
 docker-compose build --pull
 docker-compose up -d
-helm lint api/helm/api/
 sleep 20
 docker-compose exec php composer install -o -n
 docker-compose exec php bin/console security:check

@@ -1,12 +1,13 @@
 dependencies:
 - name: postgresql
-  version: 0.8.1
+  version: ~3.9.0
   repository: https://kubernetes-charts.storage.googleapis.com/
   condition: postgresql.enabled
 - name: blackfire
-  version: 0.1.0
+  version: ~0.1.0
   repository: https://tech.sparkfabrik.com/blackfire-chart/
   condition: blackfire.enabled
 - name: external-dns
-  version: 1.3.3
+  version: ~1.3.0
   repository: https://kubernetes-charts.storage.googleapis.com/
+  condition: external-dns.enabled
