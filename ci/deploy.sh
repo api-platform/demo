@@ -40,7 +40,11 @@ helm upgrade --install --reset-values --force --namespace=${NAMESPACE} --recreat
     --set ingress.hosts.mercure.host=$MERCURE_ENTRYPOINT \
     --set mercure.subscribeUrl="${MERCURE_ENTRYPOINT}/hub" \
     --set external-dns.cloudflare.apiKey=$CLOUDFLARE_API_KEY \
-    --set external-dns.cloudflare.email=$CLOUDFLARE_API_EMAIL
+    --set external-dns.cloudflare.email=$CLOUDFLARE_API_EMAIL \
+    --set corsAllowOrigin=$CORS_ALLOW_ORIGIN \
+    --set mercure.corsAllowOrigin=$CORS_ALLOW_ORIGIN \
+    --set trustedHosts=$TRUSTED_HOSTS \
+    --set mercure.domainFilters="{$DOMAIN}" \
 
 # Reload fixtures: this is specific for this project!
 echo "Waiting for the PHP container to be up and ready..."

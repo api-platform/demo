@@ -27,9 +27,9 @@ if [[ -z $DATABASE_PASSWORD ]]; then
     export DATABASE_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 fi
 
-export PHP_REPOSITORY="eu.gcr.io/${PROJECT_ID}/php"
-export NGINX_REPOSITORY="eu.gcr.io/${PROJECT_ID}/nginx"
-export VARNISH_REPOSITORY="eu.gcr.io/${PROJECT_ID}/varnish"
+export PHP_REPOSITORY="${DOCKER_REPOSITORY}/php"
+export NGINX_REPOSITORY="${DOCKER_REPOSITORY}/nginx"
+export VARNISH_REPOSITORY="${DOCKER_REPOSITORY}/varnish"
 if [[ $BRANCH == $DEPLOYMENT_BRANCH ]]
 then
     export TAG=latest
