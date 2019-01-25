@@ -2,12 +2,18 @@
 
 set -e
 
+# TODO Remove
+export CF_API_KEY=$CLOUDFLARE_API_KEY
+export CF_API_EMAIL=$CLOUDFLARE_API_EMAIL
+
 # Check that all needed environment variables are set.
 if [[ $TRAVIS_PULL_REQUEST != 'false' ]]; then echo 'Skipping deployment for pull requests';
 else
     if [[ -z $PROJECT_ID ]]; then echo 'PROJECT_ID is not defined in your travis environment variables.'; fi
     if [[ -z $CI_SERVICE_ACCOUNT ]]; then echo 'CI_SERVICE_ACCOUNT is not defined in your ci repository environment variables.'; fi
     if [[ -z $CI_SERVICE_ACCOUNT_KEY ]]; then echo 'CI_SERVICE_ACCOUNT_KEY is not defined in your ci repository environment variables.'; fi
+    if [[ -z $CF_API_KEY ]]; then echo 'CF_API_KEY is not defined in your ci repository environment variables.'; fi
+    if [[ -z $CF_API_EMAIL ]]; then echo 'CF_API_EMAIL is not defined in your ci repository environment variables.'; fi
 fi
 
 # To enable blackfire, set the BLACKFIRE_SERVER_ID and BLACKFIRE_SERVER_TOKEN variables.

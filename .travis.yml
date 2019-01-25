@@ -17,7 +17,7 @@ cache:
 env:
   global:
     - BRANCH=$TRAVIS_BRANCH
-    - RELEASE=demo-`echo $BRANCH | sed -E "s/\//-/g" | sed -e 's/\(.*\)/\L\1/'`
+    - RELEASE=`echo $BRANCH | sed -E "s/\//-/g" | sed -e 's/\(.*\)/\L\1/'`
     - NAMESPACE=$RELEASE
 
 before_script:
@@ -30,12 +30,12 @@ before_script:
   - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
 
 script:
-  #- ./ci/test.sh
+  #- ./ci/test
   - echo 'skipped'
 
 before_install:
   - source ./ci/.env
-  - source ./ci/before_deploy.sh
+  - source ./ci/before_deploy
 
 # Create the travis service account access file from travis environment variables
 # Connect to the project as travis service account by gcloud using the travis service account access file we just created above and configure project.
@@ -43,7 +43,7 @@ before_install:
 # Deploy images and buckets according to the current context, create or update Kubenetes release with updated informations.
 deploy:
   - provider: script
-    script: bash ci/deploy.sh
+    script: bash ci/deploy
     skip_cleanup: true
     on:
       all_branches: true

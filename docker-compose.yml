@@ -49,12 +49,12 @@ services:
 
   db:
     # In production, you may want to use a managed database service
-    image: postgres:9.6-alpine
+    image: bitnami/postgresql
     environment:
-      - POSTGRES_DB=api
-      - POSTGRES_USER=api-platform
+      - POSTGRESQL_DATABASE=api
+      - POSTGRESQL_USERNAME=api-platform
       # You should definitely change the password in production
-      - POSTGRES_PASSWORD=!ChangeMe!
+      - POSTGRESQL_PASSWORD=!ChangeMe!
     volumes:
       - db-data:/var/lib/postgresql/data:rw
       # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!

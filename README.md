@@ -26,6 +26,8 @@ environment variables in your CI:
  * `PROJECT_ID`: GCP project id (i.e: `api-platform-demo-123456`)
  * `CI_SERVICE_ACCOUNT`: GCP service account
  * `CI_SERVICE_ACCOUNT_KEY`: GCP service account key
+ * `CF_API_KEY`: Cloudflare API key
+ * `CF_API_EMAIL`: Cloudflare email
 
 **Important: do not check "_Display value in build log_"!**
 

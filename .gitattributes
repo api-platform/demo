@@ -20,3 +20,4 @@ bin/console text eol=lf
 LICENSE export-ignore
 README.md export-ignore
 update-deps.sh export-ignore
+ci/bin/* binary
