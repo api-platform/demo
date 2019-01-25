@@ -17,7 +17,7 @@ cache:
 env:
   global:
     - BRANCH=$TRAVIS_BRANCH
-    - RELEASE=`echo $BRANCH | sed -E "s/\//-/g" | sed -e 's/\(.*\)/\L\1/'`
+    - RELEASE=demo-`echo $BRANCH | sed -E "s/\//-/g" | sed -e 's/\(.*\)/\L\1/'`
     - NAMESPACE=$RELEASE
 
 before_script:
