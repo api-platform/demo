@@ -44,7 +44,7 @@ helm upgrade --install --reset-values --force --namespace=${NAMESPACE} --recreat
     --set corsAllowOrigin=$CORS_ALLOW_ORIGIN \
     --set mercure.corsAllowOrigin=$CORS_ALLOW_ORIGIN \
     --set trustedHosts=$TRUSTED_HOSTS \
-    --set mercure.domainFilters="{$DOMAIN}" \
+    --set mercure.domainFilters="{$DOMAIN}"
 
 # Reload fixtures: this is specific for this project!
 echo "Waiting for the PHP container to be up and ready..."

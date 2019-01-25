@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 php:
-  repository: eu.gcr.io/api-platform-demo-210115/php
+  repository: "eu.gcr.io/${PROJECT_ID}/php"
   tag: latest
   pullPolicy: Always
   replicaCount: 1
@@ -34,7 +34,7 @@ php:
     - 192.168.0.0/16
 
 nginx:
-  repository: eu.gcr.io/api-platform-demo-210115/nginx
+  repository: "eu.gcr.io/${PROJECT_ID}/nginx"
   tag: latest
   pullPolicy: Always
   replicaCount: 1
@@ -42,7 +42,7 @@ nginx:
 varnish:
   enabled: true
   #url: https://example.com
-  repository: eu.gcr.io/api-platform-demo-210115/varnish
+  repository: "eu.gcr.io/${PROJECT_ID}/varnish"
   tag: latest
   pullPolicy: Always
   replicaCount: 1
