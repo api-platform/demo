@@ -7,6 +7,9 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: {{ .Values.ingress.hosts.api.host }}
+    external-dns.alpha.kubernetes.io/ttl: "120"
 spec:
   type: NodePort
   ports:

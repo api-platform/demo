@@ -46,7 +46,7 @@ helm upgrade --install --reset-values --force --namespace=${NAMESPACE} --recreat
 echo "Waiting for the PHP container to be up and ready..."
 sleep 60
 kubectl exec --namespace=$NAMESPACE -it $(kubectl --namespace=$NAMESPACE get pods -l app=api-php -o jsonpath="{.items[0].metadata.name}") \
-    -- sh -c 'APP_ENV=dev composer install -n && bin/console d:m:m -n -e prod && bin/console d:s:u --force -e prod && bin/console h:f:l -n -e dev && APP_ENV=prod composer --no-dev install --classmap-authoritative && echo deployed'
+    -- sh -c 'APP_ENV=dev composer install -n && bin/console d:s:u --force -e prod && bin/console h:f:l -n -e dev && APP_ENV=prod composer --no-dev install --classmap-authoritative && echo deployed'
 
 # Build & deploy the admin.
 cd admin && CI=false yarn install && REACT_APP_API_ENTRYPOINT=https://$API_ENTRYPOINT CI=false yarn build --environment=prod && cd ..
