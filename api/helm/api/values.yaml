@@ -106,6 +106,8 @@ external-dns:
   cloudflare:
     apiKey: ""
     email: ""
+  rbac:
+    create: true
 
 ingress:
   annotations:
@@ -136,9 +138,9 @@ postgresql:
   # ref: https://kubernetes.io/docs/user-guide/persistent-volumes
   persistence:
     enabled: false
-  image:
-    repository: postgres
-    tag: alpine
+#  image:
+#    repository: postgres
+#    tag: alpine
 
 blackfire:
   blackfire:
