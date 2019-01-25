@@ -112,10 +112,10 @@ external-dns:
 ingress:
   annotations:
     # kubernetes.io/ingress.global-static-ip-name: chart-ip
-    kubernetes.io/ingress.class: gce
+    # kubernetes.io/ingress.class: gce
     # kubernetes.io/tls-acme: "true"
   tls:
-    # Secrets must be manually created in the namespace.
+    # Secrets must be manually created in the namespace, you can also use cert-manager.
     # - hosts:
       # - demo.api-platform.com
       # - demo-mercure.api-platform.com

@@ -57,9 +57,11 @@ cd admin && CI=false yarn install && REACT_APP_API_ENTRYPOINT=https://$API_ENTRY
 gsutil rsync -R admin/build gs://$ADMIN_BUCKET
 gsutil web set -m index.html -e index.html gs://$ADMIN_BUCKET
 gsutil iam ch allUsers:objectViewer gs://$ADMIN_BUCKET
+flarectl dns c --zone=$DOMAIN --name=$ADMIN_BUCKET --type=CNAME --content=c.storage.googleapis.com --proxy
 
 # Build & deploy the client.
 cd client && yarn install && REACT_APP_ADMIN_HOST_HTTPS=https://$ADMIN_BUCKET REACT_APP_API_CACHED_HOST_HTTPS=https://$API_ENTRYPOINT REACT_APP_API_ENTRYPOINT=https://$API_ENTRYPOINT yarn build --environment=prod && cd ..
 gsutil rsync -R client/build gs://$CLIENT_BUCKET
 gsutil web set -m index.html -e index.html gs://$CLIENT_BUCKET
 gsutil iam ch allUsers:objectViewer gs://$CLIENT_BUCKET
+flarectl dns c --zone=$DOMAIN --name=$CLIENT_BUCKET --type=CNAME --content=c.storage.googleapis.com --proxy
