@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -e
+
+NAMESPACES=$(kubectl get namespaces --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')
+BRANCHES=$(git ls-remote --heads origin | awk -F '	' '{print $2}' | sed -E 's#^refs/heads/(.*)#\1#g' | sed -E "s/\//-/g" | sed -e 's/\(.*\)/\L\1/')
+DIFF=($(comm -3 <(echo "${NAMESPACES[*]}") <(echo "${BRANCHES[*]}")))
+
+for i in "${DIFF[@]}"; do
+    echo "Remove namespace/release $i"
+    helm delete --purge $i || echo "Release $i does not exist"
+    kubectl delete namespace $i --wait --cascade || echo "Namespace $i does not exist"
+done

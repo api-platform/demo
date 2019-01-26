@@ -51,8 +51,8 @@ echo "Waiting for the PHP container to be up and ready..."
 sleep 60
 kubectl exec --namespace=$NAMESPACE -it $(kubectl --namespace=$NAMESPACE get pods -l app=api-php -o jsonpath="{.items[0].metadata.name}") \
     -- sh -c 'APP_ENV=dev composer install -n && bin/console d:s:u --force -e prod && bin/console h:f:l -n -e dev && APP_ENV=prod composer --no-dev install --classmap-authoritative && exit 0'
-echo -e "\033[0;33mAPI successfully deployed to ${API_ENTRYPOINT}\033[0m"
-echo -e "\033[0;33mMercure successfully deployed to ${MERCURE_ENTRYPOINT}\033[0m"
+echo -e "\033[0;33m\e[1mAPI successfully deployed to https://${API_ENTRYPOINT}\e[8m\033[0m"
+echo -e "\033[0;33m\e[1mMercure successfully deployed to https://${MERCURE_ENTRYPOINT}\e[8m\033[0m"
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 # Build & deploy the admin.
@@ -61,7 +61,7 @@ gsutil rsync -R admin/build gs://$ADMIN_BUCKET
 gsutil web set -m index.html -e index.html gs://$ADMIN_BUCKET
 gsutil iam ch allUsers:objectViewer gs://$ADMIN_BUCKET
 $DIR/bin/flarectl dns c --zone=$DOMAIN --name=$ADMIN_BUCKET --type=CNAME --content=c.storage.googleapis.com --proxy
-echo -e "\033[0;33mAdmin successfully deployed to ${ADMIN_BUCKET}\033[0m"
+echo -e "\033[0;33m\e[1mAdmin successfully deployed to https://${ADMIN_BUCKET}\e[8m\033[0m"
 
 # Build & deploy the client.
 cd client && yarn install && REACT_APP_ADMIN_HOST_HTTPS=https://$ADMIN_BUCKET REACT_APP_API_CACHED_HOST_HTTPS=https://$API_ENTRYPOINT REACT_APP_API_ENTRYPOINT=https://$API_ENTRYPOINT yarn build --environment=prod && cd ..
@@ -69,4 +69,7 @@ gsutil rsync -R client/build gs://$CLIENT_BUCKET
 gsutil web set -m index.html -e index.html gs://$CLIENT_BUCKET
 gsutil iam ch allUsers:objectViewer gs://$CLIENT_BUCKET
 $DIR/bin/flarectl dns c --zone=$DOMAIN --name=$CLIENT_BUCKET --type=CNAME --content=c.storage.googleapis.com --proxy
-echo -e "\033[0;33mClient successfully deployed to ${CLIENT_BUCKET}\033[0m"
+echo -e "\033[0;33m\e[1mClient successfully deployed to https://${CLIENT_BUCKET}\e[8m\033[0m"
+
+# Clean useless deploys
+#$DIR/clean
