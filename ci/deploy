@@ -72,4 +72,4 @@ $DIR/bin/flarectl dns c --zone=$DOMAIN --name=$CLIENT_BUCKET --type=CNAME --cont
 echo -e "\033[0;33m\e[1mClient successfully deployed to https://${CLIENT_BUCKET}\e[8m\033[0m"
 
 # Clean useless deploys
-#$DIR/clean
+$DIR/clean

@@ -2,10 +2,6 @@
 
 set -e
 
-# TODO Remove
-export CF_API_KEY=$CLOUDFLARE_API_KEY
-export CF_API_EMAIL=$CLOUDFLARE_API_EMAIL
-
 # Check that all needed environment variables are set.
 if [[ $TRAVIS_PULL_REQUEST != 'false' ]]; then echo 'Skipping deployment for pull requests';
 else

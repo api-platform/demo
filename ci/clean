@@ -8,6 +8,6 @@ DIFF=($(comm -3 <(echo "${NAMESPACES[*]}") <(echo "${BRANCHES[*]}")))
 
 for i in "${DIFF[@]}"; do
     echo "Remove namespace/release $i"
-    helm delete --purge $i || echo "Release $i does not exist"
-    kubectl delete namespace $i --wait --cascade || echo "Namespace $i does not exist"
+#    helm delete --purge $i || echo "Release $i does not exist"
+#    kubectl delete namespace $i --wait --cascade || echo "Namespace $i does not exist"
 done
