@@ -29,6 +29,6 @@ environment variables in your CI:
  * `CF_API_KEY`: Cloudflare API key
  * `CF_API_EMAIL`: Cloudflare email
 
-**Important: do not check "_Display value in build log_"!**
+**Important: do not check "_Display value in build log_" for security reason!**
 
 Deployment will be done automatically by the CI.

@@ -2,7 +2,7 @@
 
 set -e
 
-# Update dependencies and docker image end push them taking care to separate by repositories and branches.
+# Update dependencies & docker image and push them taking care to separate by repositories and branches.
 helm init --upgrade
 helm repo add blackfire https://tech.sparkfabrik.com/blackfire-chart/
 helm dependencies update ./api/helm/api
