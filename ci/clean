@@ -3,7 +3,7 @@
 set -e
 
 # Get kubernetes namespaces
-NAMESPACES=$(kubectl get namespaces --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')
+NAMESPACES=$(kubectl get namespaces -l project=true --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')
 
 # Get git repository branches
 BRANCHES=$(git ls-remote --heads origin | awk -F '	' '{print $2}' | sed -E 's#^refs/heads/(.*)#\1#g' | sed -E "s/\//-/g" | sed -e 's/\(.*\)/\L\1/')
@@ -16,7 +16,10 @@ NAMESPACES_TO_DELETE=($(comm -12 <(for X in "${DIFF[@]}"; do echo "${X}"; done|s
 
 # Remove useless kubernetes namespaces
 for i in "${NAMESPACES_TO_DELETE[@]}"; do
-    echo "Remove namespace/release $i"
-#    helm delete --purge $i || echo "Release $i does not exist"
-#    kubectl delete namespace $i --wait --cascade || echo "Namespace $i does not exist"
+    if [[ $DEPLOYMENT_BRANCH != $i ]]
+    then
+        echo "Remove namespace/release $i"
+#        helm delete --purge $i || echo "Release $i does not exist"
+#        kubectl delete namespace $i --wait --cascade || echo "Namespace $i does not exist"
+    fi
 done

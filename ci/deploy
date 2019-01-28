@@ -26,7 +26,7 @@ fi
 
 # Perform a rolling update if a release in the given namespace ever exist, create one otherwise.
 echo "Installing/upgrading release '${RELEASE}' on namespace '${NAMESPACE}'"
-helm upgrade --install --reset-values --force --namespace=${NAMESPACE} --recreate-pods ${RELEASE} ./api/helm/api \
+helm upgrade --install --reset-values --force --namespace=$NAMESPACE --recreate-pods $RELEASE ./api/helm/api \
     --set php.repository=$PHP_REPOSITORY,php.tag=$TAG \
     --set nginx.repository=$NGINX_REPOSITORY,nginx.tag=$TAG \
     --set varnish.repository=$VARNISH_REPOSITORY,varnish.tag=$TAG \

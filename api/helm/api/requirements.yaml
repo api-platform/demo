@@ -11,3 +11,6 @@ dependencies:
   version: ~1.3.0
   repository: https://kubernetes-charts.storage.googleapis.com/
   condition: external-dns.enabled
+- name: magic-namespace
+  version: ~0.3.0
+  repository: https://kubernetes-charts.storage.googleapis.com/
