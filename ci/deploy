@@ -22,6 +22,21 @@ if [[ $BRANCH != $DEPLOYMENT_BRANCH ]]
 then
     helm delete --purge $RELEASE || echo "No release to purge"
     kubectl delete namespace $NAMESPACE --wait --cascade || echo "No namespace to purge"
+
+    # Create namespace with kubernetes to add labels on it
+    cat <<EOF | kubectl create -f -
+{
+  "kind": "Namespace",
+  "apiVersion": "v1",
+  "metadata": {
+	"name": "$NAMESPACE",
+	"labels": {
+		"name": "$NAMESPACE",
+		"project": "true"
+	}
+  }
+}
+EOF
 fi
 
 # Perform a rolling update if a release in the given namespace ever exist, create one otherwise.

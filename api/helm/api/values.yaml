@@ -98,11 +98,6 @@ mercure:
   tolerations: []
   affinity: {}
 
-magic-namespace:
-  namespaceAttributes:
-    labels:
-      project: true
-
 external-dns:
   enabled: true
   domainFilters:
