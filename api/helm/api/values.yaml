@@ -2,12 +2,19 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-env: prod
-debug: '0'
-secret: ""
-corsAllowOrigin: "^https?://.*?\\.api-platform\\.com$"
-trustedHosts: "^.*\\.api\\-platform\\.com$"
-trustedProxies:
+php:
+  repository: "eu.gcr.io/${PROJECT_ID}/php"
+  tag: latest
+  pullPolicy: Always
+  replicaCount: 1
+  mercure:
+    jwt: ""
+  env: prod
+  debug: '0'
+  secret: ""
+  corsAllowOrigin: "^https?://.*?\\.api-platform\\.com$"
+  trustedHosts: "^.*\\.api\\-platform\\.com$"
+  trustedProxies:
     - 103.21.244.0/22
     - 103.22.200.0/22
     - 103.31.4.0/22
@@ -26,16 +33,8 @@ trustedProxies:
     - 172.16.0.0/12
     - 192.168.0.0/16
 
-php:
-  repository: eu.gcr.io/api-platform-demo-210115/php
-  tag: latest
-  pullPolicy: Always
-  replicaCount: 1
-  mercure:
-    jwt: ""
-
 nginx:
-  repository: eu.gcr.io/api-platform-demo-210115/nginx
+  repository: "eu.gcr.io/${PROJECT_ID}/nginx"
   tag: latest
   pullPolicy: Always
   replicaCount: 1
@@ -43,7 +42,7 @@ nginx:
 varnish:
   enabled: true
   #url: https://example.com
-  repository: eu.gcr.io/api-platform-demo-210115/varnish
+  repository: "eu.gcr.io/${PROJECT_ID}/varnish"
   tag: latest
   pullPolicy: Always
   replicaCount: 1
@@ -99,28 +98,49 @@ mercure:
   tolerations: []
   affinity: {}
 
+external-dns:
+  enabled: true
+  domainFilters:
+    - api-platform.com
+  provider: cloudflare
+  cloudflare:
+    apiKey: ""
+    email: ""
+  rbac:
+    create: true
+
 ingress:
   annotations:
-    kubernetes.io/ingress.global-static-ip-name: demo-ip
+    # kubernetes.io/ingress.global-static-ip-name: chart-ip
     # kubernetes.io/ingress.class: gce
     # kubernetes.io/tls-acme: "true"
   tls:
-    # Secrets must be manually created in the namespace.
-#    - hosts:
-#        - demo.api-platform.com
-#        - demo-mercure.api-platform.com
+    # Secrets must be manually created in the namespace, you can also use cert-manager.
+    # - hosts:
+      # - demo.api-platform.com
+      # - demo-mercure.api-platform.com
+  hosts:
+    api:
+      host: demo.api-platform.com
+      serviceName: varnish
+    mercure:
+      host: demo-mercure.api-platform.com
+      serviceName: mercure
 
 postgresql:
   enabled: true
   # If bringing your own PostgreSQL, the full uri to use
   #url: pgsql://api-platform:!ChangeMe!@example.com/api?serverVersion=10.1
-  postgresUser: "api-platform"
-  postgresPassword: ""
-  postgresDatabase: "api"
+  postgresqlUsername: "api-platform"
+  postgresqlPassword: ""
+  postgresqlDatabase: "api"
   # Persistent Volume Storage configuration.
   # ref: https://kubernetes.io/docs/user-guide/persistent-volumes
   persistence:
     enabled: false
+#  image:
+#    repository: postgres
+#    tag: alpine
 
 blackfire:
   blackfire:

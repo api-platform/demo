@@ -8,6 +8,7 @@
         "api-platform/core": "^2.4@dev",
         "doctrine/doctrine-migrations-bundle": "^2.0",
         "guzzlehttp/guzzle": "^6.3",
+        "ramsey/uuid-doctrine": "^1.5",
         "symfony/console": "4.2.*",
         "symfony/dotenv": "4.2.*",
         "symfony/flex": "^1.1",
