@@ -2,6 +2,11 @@
 
 set -e
 
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+
+source $DIR/.env
+source $DIR/before_deploy
+
 # Update dependencies & docker image and push them taking care to separate by repositories and branches.
 helm init --upgrade
 helm repo add blackfire https://tech.sparkfabrik.com/blackfire-chart/
@@ -69,7 +74,6 @@ kubectl exec --namespace=$NAMESPACE -it $(kubectl --namespace=$NAMESPACE get pod
 echo -e "\033[0;33m\e[1mAPI successfully deployed to https://${API_ENTRYPOINT}\e[8m\033[0m"
 echo -e "\033[0;33m\e[1mMercure successfully deployed to https://${MERCURE_ENTRYPOINT}\e[8m\033[0m"
 
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 # Build & deploy the admin.
 cd admin && CI=false yarn install && REACT_APP_API_ENTRYPOINT=https://$API_ENTRYPOINT CI=false yarn build --environment=prod && cd ..
 gsutil rsync -R admin/build gs://$ADMIN_BUCKET
