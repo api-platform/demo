@@ -32,7 +32,7 @@ then
 	"name": "$NAMESPACE",
 	"labels": {
 		"name": "$NAMESPACE",
-		"project": "true"
+		"project": "$PROJECT_NAME"
 	}
   }
 }

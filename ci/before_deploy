@@ -29,6 +29,7 @@ if [[ -z $DATABASE_PASSWORD ]]; then
     export DATABASE_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 fi
 
+export PROJECT_NAME=`echo $REPOSITORY | sed -E "s/\//-/g" | sed -e 's/\(.*\)/\L\1/'`
 export PHP_REPOSITORY="${DOCKER_REPOSITORY}/php"
 export NGINX_REPOSITORY="${DOCKER_REPOSITORY}/nginx"
 export VARNISH_REPOSITORY="${DOCKER_REPOSITORY}/varnish"
