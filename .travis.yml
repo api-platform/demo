@@ -30,12 +30,7 @@ before_script:
   - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
 
 script:
-  #- ./ci/test
-  - echo 'skipped'
-
-before_install:
-  - source ./ci/.env
-  - source ./ci/before_deploy
+  - ./ci/test
 
 # Create the travis service account access file from travis environment variables
 # Connect to the project as travis service account by gcloud using the travis service account access file we just created above and configure project.

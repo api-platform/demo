@@ -3,7 +3,7 @@
 set -e
 
 # Get kubernetes namespaces
-NAMESPACES=$(kubectl get namespaces -l project=true --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')
+NAMESPACES=$(kubectl get namespaces -l project=$PROJECT_NAME --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')
 
 # Get git repository branches
 BRANCHES=$(git ls-remote --heads origin | awk -F '	' '{print $2}' | sed -E 's#^refs/heads/(.*)#\1#g' | sed -E "s/\//-/g" | sed -e 's/\(.*\)/\L\1/')
