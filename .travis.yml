@@ -20,6 +20,9 @@ env:
     - RELEASE=`echo $BRANCH | sed -E "s/\//-/g" | sed -e 's/\(.*\)/\L\1/'`
     - NAMESPACE=$RELEASE
 
+before_install:
+  - source ci/.env
+
 before_script:
   - phpenv config-rm xdebug.ini
   - sudo service mysql stop
@@ -33,7 +36,6 @@ script:
   - ./ci/test
 
 before_deploy:
-  - source ci/.env
   - source ci/before_deploy
 
 # Create the travis service account access file from travis environment variables

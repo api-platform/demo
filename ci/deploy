@@ -2,6 +2,18 @@
 
 set -e
 
+# Get kubectl and make it executable
+curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
+
+# Authenticate on GCP
+echo -n $CI_SERVICE_ACCOUNT_KEY | base64 -d > travis-service-account.json
+gcloud auth activate-service-account $CI_SERVICE_ACCOUNT --key-file travis-service-account.json --project=$PROJECT_ID
+gcloud config set compute/zone europe-west1-c
+gcloud config set core/project $PROJECT_ID
+gcloud container clusters get-credentials api-platform-demo --zone europe-west1-c --project $PROJECT_ID
+
 # Update dependencies & docker image and push them taking care to separate by repositories and branches.
 helm init --upgrade
 helm repo add blackfire https://tech.sparkfabrik.com/blackfire-chart/
@@ -11,7 +23,7 @@ gsutil mb -p $PROJECT_ID -l eu gs://$ADMIN_BUCKET || echo "Admin bucket exists"
 gsutil mb -p $PROJECT_ID -l eu gs://$CLIENT_BUCKET || echo "Client bucket exists"
 
 # Build and push the docker images.
-docker build --build-arg INSTALL_BLACKFIRE=$BLACKFIRE_ENABLED --pull -t $PHP_REPOSITORY:$TAG api --target api_platform_php
+docker build --pull -t $PHP_REPOSITORY:$TAG api --target api_platform_php
 docker build --pull -t $NGINX_REPOSITORY:$TAG api --target api_platform_nginx
 docker build --pull -t $VARNISH_REPOSITORY:$TAG api --target api_platform_varnish
 gcloud docker -- push $PHP_REPOSITORY:$TAG
