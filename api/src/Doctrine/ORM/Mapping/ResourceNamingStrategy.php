@@ -67,8 +67,8 @@ class ResourceNamingStrategy implements NamingStrategyInterface
 
     private static function shortName(string $className): string
     {
-        if (false !== strpos($className, '\\')) {
-            $className = substr($className, strrpos($className, '\\') + 1);
+        if (false !== \strpos($className, '\\')) {
+            $className = \substr($className, \strrpos($className, '\\') + 1);
         }
 
         return $className;

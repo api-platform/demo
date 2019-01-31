@@ -9,7 +9,7 @@ WORKDIR /usr/src/client
 RUN apk add --no-cache ca-certificates chromium; \
     apk add --no-cache --virtual .gyp python bash make g++; \
     apk add --no-cache --virtual .build-deps openssl; \
-    yarn global add @api-platform/client-generator puppeteer@${PUPPETEER_VERSION}; \
+    yarn global add swagger-cli @api-platform/client-generator puppeteer@${PUPPETEER_VERSION}; \
     yarn cache clean; \
 	apk del .gyp
 
