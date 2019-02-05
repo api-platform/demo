@@ -8348,10 +8348,10 @@ querystringify@^2.0.0:
   resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-2.1.0.tgz#7ded8dfbf7879dcc60d0a644ac6754b283ad17ef"
   integrity sha512-sluvZZ1YiTLD5jsqZcDmFyV2EwToyXZBfpoVOmktMmW+VEnhgakFHnasVph65fOjGPTWN0Nw3+XQaSeMayr0kg==
 
-ra-core@^2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/ra-core/-/ra-core-2.6.1.tgz#553204b51e3380f8c590143c51811a92f8a93b97"
-  integrity sha512-V1GqBAjrmX8tEc0Af1+l31bDh03uAJpqWQJ+7vw7Gco9bh05WnscSqn2LIIfhzXYqG3VybmqjqkxN+62FqZx/Q==
+ra-core@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/ra-core/-/ra-core-2.7.0.tgz#4291b4609b096d3c90eb6e795e0aa60e2395e1db"
+  integrity sha512-X90tdhLafEhwMdzM/yXua/Dn93RA/d963aJgjWsyogfs8QtnewVQxIBljXokSH2iaMzf5vbbbogrVuJhF4mDSw==
   dependencies:
     classnames "~2.2.5"
     date-fns "^1.29.0"
@@ -8360,7 +8360,7 @@ ra-core@^2.6.1:
     node-polyglot "^2.2.2"
     prop-types "~15.6.1"
     query-string "~5.1.1"
-    ra-language-english "^2.6.1"
+    ra-language-english "^2.7.0"
     react-redux "~5.0.7"
     react-router "~4.2.0"
     react-router-dom "~4.2.2"
@@ -8371,15 +8371,15 @@ ra-core@^2.6.1:
     redux-saga "~0.16.0"
     reselect "~3.0.0"
 
-ra-language-english@^2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/ra-language-english/-/ra-language-english-2.6.1.tgz#0d0c08f69c2ab3b93a8e4b1a57a08c8fbd14b513"
-  integrity sha512-2RtMhnk+6nDksbqTskWivYHSeEZdkenKvShePYLn+FlVb5DJMGOJrGOq8Br1jySSjR2QOWRz1DilDVA3RMTc/w==
+ra-language-english@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/ra-language-english/-/ra-language-english-2.7.0.tgz#84de3d67db84cccb1745257551e2f9a9a9470f13"
+  integrity sha512-Q57ZfuXqDbESu1Iln7P61Q4mEemFWElCqxmclfJHpLNOr+Dx1gqlrHiGgzmJazGeCrCS1X6shoKI601T5Wt7sw==
 
-ra-ui-materialui@^2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/ra-ui-materialui/-/ra-ui-materialui-2.6.1.tgz#864d2800e0050d7f079ddabcfbf3c6e94c531ea3"
-  integrity sha512-PDdJy13MtBz64vOztxpL9VhevZdb4KcehLdHs5C/I2vayC0VRPebbToFeGCmyRE02XFl+VZzvpEM7BR009+Xwg==
+ra-ui-materialui@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/ra-ui-materialui/-/ra-ui-materialui-2.7.0.tgz#bf25e3034a891e64c287bc1c39ad2f726b20e14d"
+  integrity sha512-VGXSB/67Ax0KpamN9ZWl0Wk1vrJV5jt3RwY6W+X+3bR7Aymi7U/FTCgE138TMsDi5iX0twgqd+IVuiTJzLr3lA==
   dependencies:
     "@material-ui/core" "^1.4.0"
     "@material-ui/icons" "^1.0.0"
@@ -8390,7 +8390,7 @@ ra-ui-materialui@^2.6.1:
     material-ui-chip-input "1.0.0-beta.6 - 1.0.0-beta.8"
     papaparse "^4.1.4"
     prop-types "~15.6.1"
-    ra-core "^2.6.1"
+    ra-core "^2.7.0"
     react-autosuggest "^9.4.2"
     react-dropzone "~4.0.1"
     react-headroom "^2.2.4"
@@ -8484,13 +8484,13 @@ rdf-canonize@^0.3.0:
     rdf-canonize-native "^0.3.0"
 
 react-admin@^2.5.2:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/react-admin/-/react-admin-2.6.1.tgz#f1f5e603259d9800a72fcfe0b91c8059b07909bc"
-  integrity sha512-az1Vornx5d0D31CBAoJ2z45PiYFlU/DAT5JtA7nl4y7pVrOoaybkNaq5pmCT0hyDlRpUQ4ygPiV62R6IsYvlpg==
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/react-admin/-/react-admin-2.7.0.tgz#4b32f97af43df1fab6894d21fa00be8bd0ac61d2"
+  integrity sha512-yV6NQbcCV2hkjvWOlvj/DuH6alk8WNYGiPkdqZ8NMHyTROai9SB12TYQv/jaArSDx8M3dhzJD88cFOJiA0dWbw==
   dependencies:
-    ra-core "^2.6.1"
-    ra-language-english "^2.6.1"
-    ra-ui-materialui "^2.6.1"
+    ra-core "^2.7.0"
+    ra-language-english "^2.7.0"
+    ra-ui-materialui "^2.7.0"
 
 react-app-polyfill@^0.2.0:
   version "0.2.0"
