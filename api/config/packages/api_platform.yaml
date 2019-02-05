@@ -12,7 +12,8 @@ api_platform:
     description: |
       This is a demo application of the [API Platform](https://api-platform.com) framework.
       [Its source code](https://github.com/api-platform/demo) includes various examples, check it out!
-      You may also be insterested by [the GraphQL entrypoint](/graphql).
+      You may also be interested by [the GraphQL entrypoint](/graphql).
+      [A PWA](https://demo-client.api-platform.com) and [an admin](https://demo-admin.api-platform.com) are consuming this API.
     formats:
         jsonld: ['application/ld+json']
         jsonhal: ['application/hal+json']
