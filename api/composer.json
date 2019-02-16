@@ -9,6 +9,7 @@
         "doctrine/doctrine-migrations-bundle": "^2.0",
         "guzzlehttp/guzzle": "^6.3",
         "ramsey/uuid-doctrine": "^1.5",
+        "sensiolabs/security-checker": "^5.0",
         "symfony/console": "4.2.*",
         "symfony/dotenv": "4.2.*",
         "symfony/flex": "^1.1",
@@ -25,7 +26,6 @@
         "behat/symfony2-extension": "^2.1.4",
         "behatch/contexts": "^3.0",
         "hautelook/alice-bundle": "^2.3",
-        "sensiolabs/security-checker": "^5.0",
         "symfony/dotenv": "4.2.*",
         "symfony/profiler-pack": "^1.0",
         "symfony/var-dumper": "4.2.*"
@@ -57,7 +57,8 @@
     "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+            "assets:install %PUBLIC_DIR%": "symfony-cmd",
+            "security-checker security:check": "script"
         },
         "post-install-cmd": [
             "@auto-scripts"

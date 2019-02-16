@@ -47,56 +47,31 @@ varnish:
   pullPolicy: Always
   replicaCount: 1
 
+postgresql:
+  enabled: true
+  # If bringing your own PostgreSQL, the full uri to use
+  #url: pgsql://api-platform:!ChangeMe!@example.com/api?serverVersion=10.1
+  postgresqlUsername: "api-platform"
+  postgresqlPassword: ""
+  postgresqlDatabase: "api"
+  # Persistent Volume Storage configuration.
+  # ref: https://kubernetes.io/docs/user-guide/persistent-volumes
+  persistence:
+    enabled: false
+#  image:
+#    repository: postgres
+#    tag: alpine
+
 mercure:
   enabled: true
-  acmeHosts: ""
-  allowAnonymous: "1"
-  corsAllowedOrigins: "^https?://.*?\\.api-platform\\.com$"
-  debug: "0"
-  demo: "0"
-  jwtKey: ""
-  logFormat: "FLUENTD"
-  publishAllowedOrigins: ""
-  publisherJwtKey: ""
-  subscriberJwtKey: ""
-  replicaCount: 1
   publishUrl: http://mercure/hub
   subscribeUrl: https://demo-mercure.api-platform.com/hub
-  image:
-    repository: dunglas/mercure
-    tag: latest
-    pullPolicy: Always
-  nameOverride: ""
-  fullnameOverride: ""
+  allowAnonymous: "1"
+  corsAllowedOrigins: "^https?://.*?\\.api-platform\\.com$"
+  acmeHosts: "" # TODO: Fix the Mercure chart
   service:
     type: NodePort
     port: 80
-  ingress:
-    enabled: false
-    annotations: {}
-      # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
-    paths: []
-    hosts:
-      - chart-example.local
-    tls: []
-    #  - secretName: chart-example-tls
-    #    hosts:
-    #      - chart-example.local
-  resources: {}
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #  cpu: 100m
-    #  memory: 128Mi
-    # requests:
-    #  cpu: 100m
-    #  memory: 128Mi
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
 
 external-dns:
   enabled: true
@@ -126,21 +101,6 @@ ingress:
     mercure:
       host: demo-mercure.api-platform.com
       serviceName: mercure
-
-postgresql:
-  enabled: true
-  # If bringing your own PostgreSQL, the full uri to use
-  #url: pgsql://api-platform:!ChangeMe!@example.com/api?serverVersion=10.1
-  postgresqlUsername: "api-platform"
-  postgresqlPassword: ""
-  postgresqlDatabase: "api"
-  # Persistent Volume Storage configuration.
-  # ref: https://kubernetes.io/docs/user-guide/persistent-volumes
-  persistence:
-    enabled: false
-#  image:
-#    repository: postgres
-#    tag: alpine
 
 blackfire:
   blackfire:

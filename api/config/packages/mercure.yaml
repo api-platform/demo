@@ -1,13 +1,5 @@
-parameters:
-    # Adds fallbacks if the env var is not set.
-    # This allows you to run cache:warmup even if your
-    # environment variables are not available yet.
-    # You should not need to change this value.
-    env(MERCURE_PUBLISH_URL): ''
-    env(MERCURE_JWT): ''
-
 mercure:
     hubs:
         default:
             url: '%env(MERCURE_PUBLISH_URL)%'
-            jwt: '%env(MERCURE_JWT)%'
+            jwt: '%env(MERCURE_JWT_SECRET)%'
