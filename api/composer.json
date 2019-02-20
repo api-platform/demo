@@ -25,7 +25,7 @@
         "behat/symfony2-extension": "^2.1.4",
         "behatch/contexts": "^3.0",
         "hautelook/alice-bundle": "^2.3",
-        "sensiolabs/security-checker": "^4.1",
+        "sensiolabs/security-checker": "^5.0",
         "symfony/dotenv": "4.2.*",
         "symfony/profiler-pack": "^1.0",
         "symfony/var-dumper": "4.2.*"
