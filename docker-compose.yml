@@ -126,9 +126,10 @@ services:
   blackfire:
     image: blackfire/blackfire
     environment:
-        # Exposes the host BLACKFIRE_SERVER_ID and BLACKFIRE_SERVER_TOKEN environment variables.
-        - BLACKFIRE_SERVER_ID
-        - BLACKFIRE_SERVER_TOKEN
+      - BLACKFIRE_CLIENT_ID
+      - BLACKFIRE_CLIENT_TOKEN
+      - BLACKFIRE_SERVER_ID
+      - BLACKFIRE_SERVER_TOKEN
 
 volumes:
   db-data: {}
