@@ -2,19 +2,22 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "name" . }}-varnish
+  name: {{ template "fullname" . }}-varnish
   labels:
-    app: {{ template "name" . }}-varnish
-    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "name" . }}-varnish
+    app.kubernetes.io/part-of: {{ include "name" . }}
+    helm.sh/chart: {{ include "chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.varnish.replicaCount }}
   template:
     metadata:
       labels:
-        app: {{ template "name" . }}-varnish
-        release: {{ .Release.Name }}
+        app.kubernetes.io/name: {{ include "name" . }}-varnish
+        helm.sh/chart: {{ include "chart" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
     spec:
       containers:
         - name: {{ .Chart.Name }}-varnish

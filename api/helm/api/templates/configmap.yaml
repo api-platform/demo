@@ -3,10 +3,11 @@ kind: ConfigMap
 metadata:
   name: {{ template "fullname" . }}
   labels:
-    app: {{ template "fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    app.kubernetes.io/name: {{ include "name" . }}
+    app.kubernetes.io/part-of: {{ include "name" . }}
+    helm.sh/chart: {{ include "chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
   env: {{ .Values.php.env | quote }}
   debug: {{ .Values.php.debug | quote }}
@@ -14,12 +15,5 @@ data:
   varnish-url: {{ if .Values.varnish.enabled }}http://varnish{{ else }}{{ .Values.varnish.url | quote }}{{ end }}
   trusted-hosts: {{ .Values.php.trustedHosts | quote }}
   trusted-proxies: {{ join "," .Values.php.trustedProxies }}
-  mercure-acmeHosts: {{ .Values.mercure.acmeHosts | quote }}
-  mercure-allowAnonymous: {{ .Values.mercure.allowAnonymous | quote }}
-  mercure-corsAllowedOrigins: {{ .Values.mercure.corsAllowedOrigins | quote }}
-  mercure-debug: {{ .Values.mercure.debug | quote }}
-  mercure-demo: {{ .Values.mercure.demo | quote }}
-  mercure-logFormat: {{ .Values.mercure.logFormat | quote }}
-  mercure-publishAllowedOrigins: {{ .Values.mercure.publishAllowedOrigins | quote }}
   mercure-publish-url: {{ .Values.mercure.publishUrl | quote }}
   mercure-subscribe-url: {{ .Values.mercure.subscribeUrl | quote }}

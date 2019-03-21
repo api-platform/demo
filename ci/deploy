@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 
 set -e
+set +v
 
-# Get kubectl and make it executable
-curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-chmod +x ./kubectl
-sudo mv ./kubectl /usr/local/bin/kubectl
+if ! type kubectl > /dev/null; then
+    # Get kubectl and make it executable
+    curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+    chmod +x ./kubectl
+    sudo mv ./kubectl /usr/local/bin/kubectl
+fi
 
 # Authenticate on GCP
 echo -n $CI_SERVICE_ACCOUNT_KEY | base64 -d > travis-service-account.json
 gcloud auth activate-service-account $CI_SERVICE_ACCOUNT --key-file travis-service-account.json --project=$PROJECT_ID
+
 gcloud config set compute/zone europe-west1-c
 gcloud config set core/project $PROJECT_ID
 gcloud container clusters get-credentials api-platform-demo --zone europe-west1-c --project $PROJECT_ID
@@ -23,12 +27,12 @@ gsutil mb -p $PROJECT_ID -l eu gs://$ADMIN_BUCKET || echo "Admin bucket exists"
 gsutil mb -p $PROJECT_ID -l eu gs://$CLIENT_BUCKET || echo "Client bucket exists"
 
 # Build and push the docker images.
-docker build --pull -t $PHP_REPOSITORY:$TAG api --target api_platform_php
-docker build --pull -t $NGINX_REPOSITORY:$TAG api --target api_platform_nginx
-docker build --pull -t $VARNISH_REPOSITORY:$TAG api --target api_platform_varnish
-gcloud docker -- push $PHP_REPOSITORY:$TAG
-gcloud docker -- push $NGINX_REPOSITORY:$TAG
-gcloud docker -- push $VARNISH_REPOSITORY:$TAG
+#docker build --pull -t $PHP_REPOSITORY:$TAG api --target api_platform_php
+#docker build --pull -t $NGINX_REPOSITORY:$TAG api --target api_platform_nginx
+#docker build --pull -t $VARNISH_REPOSITORY:$TAG api --target api_platform_varnish
+#gcloud docker -- push $PHP_REPOSITORY:$TAG
+#gcloud docker -- push $NGINX_REPOSITORY:$TAG
+#gcloud docker -- push $VARNISH_REPOSITORY:$TAG
 
 if [[ $BRANCH != $DEPLOYMENT_BRANCH ]]
 then
@@ -54,29 +58,31 @@ fi
 # Perform a rolling update if a release in the given namespace ever exist, create one otherwise.
 echo "Installing/upgrading release '${RELEASE}' on namespace '${NAMESPACE}'"
 helm upgrade --install --reset-values --force --namespace=$NAMESPACE --recreate-pods $RELEASE ./api/helm/api \
+    --set php.corsAllowOrigin=$CORS_ALLOW_ORIGIN \
+    --set php.trustedHosts=$TRUSTED_HOSTS \
     --set php.repository=$PHP_REPOSITORY,php.tag=$TAG \
+    --set php.mercure.jwt=$MERCURE_JWT \
     --set nginx.repository=$NGINX_REPOSITORY,nginx.tag=$TAG \
     --set varnish.repository=$VARNISH_REPOSITORY,varnish.tag=$TAG \
     --set blackfire.blackfire.server_id=$BLACKFIRE_SERVER_ID \
     --set blackfire.blackfire.server_token=$BLACKFIRE_SERVER_TOKEN \
     --set blackfire.blackfire.enabled=$BLACKFIRE_ENABLED \
-    --set php.mercure.jwt=$MERCURE_JWT \
-    --set mercure.jwtKey=$MERCURE_JWT_KEY \
     --set postgresql.postgresqlPassword=$DATABASE_PASSWORD \
     --set ingress.hosts.api.host=$API_ENTRYPOINT \
     --set ingress.hosts.mercure.host=$MERCURE_ENTRYPOINT \
-    --set mercure.subscribeUrl="https://${MERCURE_ENTRYPOINT}/hub" \
     --set external-dns.cloudflare.apiKey=$CF_API_KEY \
     --set external-dns.cloudflare.email=$CF_API_EMAIL \
-    --set corsAllowOrigin=$CORS_ALLOW_ORIGIN \
+    --set mercure.publishUrl="http://${RELEASE}-mercure/hub" \
+    --set mercure.subscribeUrl="https://${MERCURE_ENTRYPOINT}/hub" \
+    --set mercure.jwtKey=$MERCURE_JWT_KEY \
     --set mercure.corsAllowOrigin=$CORS_ALLOW_ORIGIN \
-    --set trustedHosts=$TRUSTED_HOSTS \
     --set mercure.domainFilters="{$DOMAIN}"
 
 # Reload fixtures: this is specific for this project!
 echo "Waiting for the PHP container to be up and ready..."
-sleep 60
-kubectl exec --namespace=$NAMESPACE -it $(kubectl --namespace=$NAMESPACE get pods -l app=api-php -o jsonpath="{.items[0].metadata.name}") \
+kubectl rollout status -n "$NAMESPACE" -w "deployment/${RELEASE}-api-php"
+kubectl rollout status -n "$NAMESPACE" -w "statefulset/${RELEASE}-postgresql"
+kubectl exec --namespace=$NAMESPACE -it $(kubectl --namespace=$NAMESPACE get pods -l app.kubernetes.io/name=api-php -o jsonpath="{.items[0].metadata.name}") \
     -- sh -c 'APP_ENV=dev composer install -n && bin/console d:s:u --force -e prod && bin/console h:f:l -n -e dev && APP_ENV=prod composer --no-dev install --classmap-authoritative && exit 0'
 echo -e "\033[0;33m\e[1mAPI successfully deployed to https://${API_ENTRYPOINT}\e[8m\033[0m"
 echo -e "\033[0;33m\e[1mMercure successfully deployed to https://${MERCURE_ENTRYPOINT}\e[8m\033[0m"
