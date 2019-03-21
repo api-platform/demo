@@ -57,7 +57,7 @@ fi
 
 # Perform a rolling update if a release in the given namespace ever exist, create one otherwise.
 echo "Installing/upgrading release '${RELEASE}' on namespace '${NAMESPACE}'"
-helm upgrade --install --reset-values --force --namespace=$NAMESPACE $RELEASE ./api/helm/api \
+helm upgrade --install --reset-values --force --namespace=$NAMESPACE --recreate-pods $RELEASE ./api/helm/api \
     --set php.corsAllowOrigin=$CORS_ALLOW_ORIGIN \
     --set php.trustedHosts=$TRUSTED_HOSTS \
     --set php.repository=$PHP_REPOSITORY,php.tag=$TAG \
@@ -83,6 +83,7 @@ helm upgrade --install --reset-values --force --namespace=$NAMESPACE $RELEASE ./
 echo "Waiting for the PHP container to be up and ready..."
 kubectl rollout status -n "$NAMESPACE" -w "deployment/${RELEASE}-api-php"
 kubectl rollout status -n "$NAMESPACE" -w "statefulset/${RELEASE}-postgresql"
+sleep 60
 kubectl exec --namespace=$NAMESPACE -it $(kubectl --namespace=$NAMESPACE get pods -l app.kubernetes.io/name=api-php -o jsonpath="{.items[0].metadata.name}") \
     -- sh -c 'APP_ENV=dev composer install -n && bin/console d:s:u --force -e prod && bin/console h:f:l -n -e dev && APP_ENV=prod composer --no-dev install --classmap-authoritative && exit 0'
 echo -e "\033[0;33m\e[1mAPI successfully deployed to https://${API_ENTRYPOINT}\e[8m\033[0m"
