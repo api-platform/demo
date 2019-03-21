@@ -58,6 +58,7 @@ postgresql:
   # ref: https://kubernetes.io/docs/user-guide/persistent-volumes
   persistence:
     enabled: false
+  pullPolicy: IfNotPresent
 #  image:
 #    repository: postgres
 #    tag: alpine
