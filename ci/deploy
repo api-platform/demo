@@ -70,6 +70,7 @@ helm upgrade --install --reset-values --force --namespace=$NAMESPACE --recreate-
     --set postgresql.postgresqlPassword=$DATABASE_PASSWORD \
     --set ingress.hosts.api.host=$API_ENTRYPOINT \
     --set ingress.hosts.mercure.host=$MERCURE_ENTRYPOINT \
+    --set ingress.hosts.mercure.serviceName=${RELEASE}-mercure \
     --set external-dns.cloudflare.apiKey=$CF_API_KEY \
     --set external-dns.cloudflare.email=$CF_API_EMAIL \
     --set mercure.publishUrl="http://${RELEASE}-mercure/hub" \
