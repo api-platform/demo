@@ -67,7 +67,7 @@ services:
     image: dunglas/mercure
     environment:
       # You should definitely change all these values in production
-      - JWT_KEY=!UnsecureChangeMe!
+      - JWT_KEY=!InsecureChangeMe! # You have to change MERCURE_JWT_SECRET in api/.env when you change this. You can put the old value of MERCURE_JWT_SECRET into the debugger on https://jwt.io/ and put the new value of JWT_KEY in the "secret" field to obtain the new encoded value for MERCURE_JWT_SECRET
       - ALLOW_ANONYMOUS=1
       - CORS_ALLOWED_ORIGINS=*
       - PUBLISH_ALLOWED_ORIGINS=http://localhost:1337,https://localhost:1338
