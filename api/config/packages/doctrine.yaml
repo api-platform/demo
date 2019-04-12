@@ -9,12 +9,12 @@ doctrine:
     dbal:
         # configure these for your database server
         driver: 'pdo_pgsql'
-        server_version: '9.6'
+        server_version: '10'
 
         url: '%env(resolve:DATABASE_URL)%'
     orm:
         auto_generate_proxy_classes: true
-        naming_strategy: doctrine.orm.naming_strategy.underscore
+        naming_strategy: App\Doctrine\ORM\Mapping\ResourceNamingStrategy
         auto_mapping: true
         mappings:
             App:

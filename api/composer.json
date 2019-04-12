@@ -2,19 +2,21 @@
     "type": "project",
     "license": "MIT",
     "require": {
-        "php": "^7.1.3",
+        "php": "^7.2",
+        "ext-ctype": "*",
         "ext-iconv": "*",
         "api-platform/api-pack": "^1.1",
-        "api-platform/core": "^2.4@dev",
+        "api-platform/core": "2.4.x-dev",
         "doctrine/doctrine-migrations-bundle": "^2.0",
         "guzzlehttp/guzzle": "^6.3",
+        "lexik/jwt-authentication-bundle": "^2.6",
         "ramsey/uuid-doctrine": "^1.5",
         "sensiolabs/security-checker": "^5.0",
         "symfony/console": "4.2.*",
         "symfony/dotenv": "4.2.*",
         "symfony/flex": "^1.1",
         "symfony/framework-bundle": "4.2.*",
-        "symfony/mercure-bundle": "*",
+        "symfony/mercure-bundle": "^0.1.1",
         "symfony/yaml": "4.2.*",
         "webonyx/graphql-php": "^0.13"
     },
@@ -27,6 +29,7 @@
         "behatch/contexts": "^3.0",
         "hautelook/alice-bundle": "^2.3",
         "symfony/dotenv": "4.2.*",
+        "symfony/maker-bundle": "^1.11",
         "symfony/profiler-pack": "^1.0",
         "symfony/var-dumper": "4.2.*"
     },
@@ -50,9 +53,10 @@
         "paragonie/random_compat": "2.*",
         "symfony/polyfill-ctype": "*",
         "symfony/polyfill-iconv": "*",
-        "symfony/polyfill-php71": "*",
+        "symfony/polyfill-php56": "*",
         "symfony/polyfill-php70": "*",
-        "symfony/polyfill-php56": "*"
+        "symfony/polyfill-php71": "*",
+        "symfony/polyfill-php72": "*"
     },
     "scripts": {
         "auto-scripts": {

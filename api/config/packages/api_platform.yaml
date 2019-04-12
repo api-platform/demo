@@ -30,3 +30,8 @@ api_platform:
             items_per_page: 30
     mercure:
         hub_url: '%env(MERCURE_SUBSCRIBE_URL)%'
+    swagger:
+        api_keys:
+            apiKey:
+                name: Authorization
+                type: header
