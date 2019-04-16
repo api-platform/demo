@@ -6,8 +6,10 @@ services:
     build:
       context: ./api
       target: api_platform_php
-      cache_from:
+      cache_from: &api_cache_from
         - ${CONTAINER_REGISTRY_BASE}/php
+        - ${CONTAINER_REGISTRY_BASE}/nginx
+        - ${CONTAINER_REGISTRY_BASE}/varnish
     depends_on:
       - db
     # Comment out these volumes in production
@@ -21,8 +23,7 @@ services:
     build:
       context: ./api
       target: api_platform_nginx
-      cache_from:
-        - ${CONTAINER_REGISTRY_BASE}/nginx
+      cache_from: *api_cache_from
     depends_on:
       - php
     # Comment out this volume in production
@@ -36,8 +37,7 @@ services:
     build:
       context: ./api
       target: api_platform_varnish
-      cache_from:
-        - ${CONTAINER_REGISTRY_BASE}/varnish
+      cache_from: *api_cache_from
     depends_on:
       - api
     volumes:
@@ -49,7 +49,7 @@ services:
 
   db:
     # In production, you may want to use a managed database service
-    image: bitnami/postgresql
+    image: bitnami/postgresql:10
     environment:
       - POSTGRESQL_DATABASE=api
       - POSTGRESQL_USERNAME=api-platform

@@ -23,6 +23,18 @@ if [[ -z $MERCURE_JWT_KEY ]]; then
     export MERCURE_JWT_SECRET
 fi
 
+# Generate random passphrase and keys for JWT signing if not set
+if [ -z "$JWT_PASSPHRASE" ]; then
+    JWT_PASSPHRASE=$(< /dev/urandom tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+    export JWT_PASSPHRASE
+fi
+if [ -z "$JWT_SECRET_KEY" ]; then
+    JWT_SECRET_KEY=$(openssl genpkey -pass file:<(echo "$JWT_PASSPHRASE") -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096)
+    export JWT_SECRET_KEY
+    JWT_PUBLIC_KEY=$(openssl pkey -in <(echo "$JWT_SECRET_KEY") -passin file:<(echo "$JWT_PASSPHRASE") -pubout)
+    export JWT_PUBLIC_KEY
+fi
+
 # Generate random database password if not set
 if [[ -z $DATABASE_PASSWORD ]]; then
     export DATABASE_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)

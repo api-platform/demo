@@ -14,3 +14,7 @@ behat.yml
 /helm/api/charts
 /helm/api/requirements.lock
 /coverage
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###

@@ -9,6 +9,10 @@ php:
   replicaCount: 1
   mercure:
     jwtSecret: ""
+  jwt:
+    secretKey: ""
+    publicKey: ""
+    passphrase: ""
   env: prod
   debug: '0'
   secret: ""
@@ -50,7 +54,7 @@ varnish:
 postgresql:
   enabled: true
   # If bringing your own PostgreSQL, the full uri to use
-  #url: pgsql://api-platform:!ChangeMe!@example.com/api?serverVersion=10.1
+  #url: pgsql://api-platform:!ChangeMe!@example.com/api?serverVersion=10
   postgresqlUsername: "api-platform"
   postgresqlPassword: ""
   postgresqlDatabase: "api"
@@ -59,9 +63,9 @@ postgresql:
   persistence:
     enabled: false
   pullPolicy: IfNotPresent
-#  image:
-#    repository: postgres
-#    tag: alpine
+  image:
+    repository: bitnami/postgresql
+    tag: 10
 
 mercure:
   enabled: true
