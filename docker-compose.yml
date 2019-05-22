@@ -10,9 +10,23 @@ services:
         - ${CONTAINER_REGISTRY_BASE}/php
         - ${CONTAINER_REGISTRY_BASE}/nginx
         - ${CONTAINER_REGISTRY_BASE}/varnish
+    restart: on-failure
     depends_on:
       - db
-      - mercure
+    # Comment out these volumes in production
+    volumes:
+      - ./api:/srv/api:rw,cached
+      # If you develop on Linux, uncomment the following line to use a bind-mounted host directory instead
+      # - ./api/var:/srv/api/var:rw
+
+  consumer:
+    image: ${CONTAINER_REGISTRY_BASE}/php
+    build:
+      context: ./api
+      target: api_platform_php
+      cache_from: *api_cache_from
+    command: bin/console messenger:consume
+    restart: on-failure
     # Comment out these volumes in production
     volumes:
       - ./api:/srv/api:rw,cached
@@ -91,6 +105,7 @@ services:
       - /usr/src/client/node_modules
     ports:
       - "80:3000"
+      - "5000:5000"
 
   admin:
     # Use a static website hosting service in production

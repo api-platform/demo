@@ -29,6 +29,19 @@ export function loading(state = false, action) {
   }
 }
 
+export function loadCover(state = false, action) {
+  switch (action.type) {
+    case 'BOOK_SHOW_LOAD_COVER':
+      return action.loadCover;
+
+    case 'BOOK_SHOW_RESET':
+      return false;
+
+    default:
+      return state;
+  }
+}
+
 export function retrieved(state = null, action) {
   switch (action.type) {
     case 'BOOK_SHOW_SUCCESS':
@@ -56,4 +69,4 @@ export function eventSource(state = null, action) {
   }
 }
 
-export default combineReducers({ error, loading, retrieved, eventSource });
+export default combineReducers({ error, loading, retrieved, eventSource, loadCover });

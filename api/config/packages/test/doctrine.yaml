@@ -1,3 +1,4 @@
+# todo Set doctrine connection to PostgreSQL to test "LISTEN" workflow
 doctrine:
     dbal:
         charset: 'UTF8'

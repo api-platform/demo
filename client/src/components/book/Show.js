@@ -2,16 +2,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { retrieve, reset } from '../../actions/book/show';
+import { retrieve, reset, generateCover } from '../../actions/book/show';
 import { del } from '../../actions/book/delete';
 
 class Show extends Component {
   static propTypes = {
     retrieved: PropTypes.object,
     loading: PropTypes.bool.isRequired,
+    loadCover: PropTypes.bool.isRequired,
     error: PropTypes.string,
     eventSource: PropTypes.instanceOf(EventSource),
     retrieve: PropTypes.func.isRequired,
+    generateCover: PropTypes.func.isRequired,
     reset: PropTypes.func.isRequired,
     deleteError: PropTypes.string,
     deleteLoading: PropTypes.bool.isRequired,
@@ -26,6 +28,10 @@ class Show extends Component {
   componentWillUnmount() {
     this.props.reset(this.props.eventSource);
   }
+
+  generateCover = () => {
+    this.props.generateCover(decodeURIComponent(this.props.match.params.id));
+  };
 
   del = () => {
     if (window.confirm('Are you sure you want to delete this item?'))
@@ -92,6 +98,24 @@ class Show extends Component {
                 <th scope="row">reviews</th>
                 <td>{this.renderLinks('reviews', item['reviews'])}</td>
               </tr>
+              <tr>
+                <th scope="row">cover</th>
+                <td>
+                  {!item['cover'] && !this.props.loadCover && (
+                    <button onClick={this.generateCover} className="btn btn-primary">
+                      Generate cover
+                    </button>
+                  )}
+                  {this.props.loadCover && (
+                    <div className="alert alert-info" role="status">
+                      Loading...
+                    </div>
+                  )}
+                  {item['cover'] && (
+                    <img src={item['cover']} title="cover" alt={item['title']} />
+                  )}
+                </td>
+              </tr>
             </tbody>
           </table>
         )}
@@ -127,6 +151,7 @@ const mapStateToProps = state => ({
   retrieved: state.book.show.retrieved,
   error: state.book.show.error,
   loading: state.book.show.loading,
+  loadCover: state.book.show.loadCover,
   eventSource: state.book.show.eventSource,
   deleteError: state.book.del.error,
   deleteLoading: state.book.del.loading,
@@ -136,7 +161,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   retrieve: id => dispatch(retrieve(id)),
   del: item => dispatch(del(item)),
-  reset: eventSource => dispatch(reset(eventSource))
+  reset: eventSource => dispatch(reset(eventSource)),
+  generateCover: id => dispatch(generateCover(id))
 });
 
 export default connect(

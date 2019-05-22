@@ -9,7 +9,7 @@ const goto = async (page = '') => {
       ignoreHTTPSErrors: true,
       headless: isCIEnv,
       slowMo: isCIEnv ? 0 : 2,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
     });
   }
 
