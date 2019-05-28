@@ -233,6 +233,18 @@
     "phpdocumentor/type-resolver": {
         "version": "0.4.0"
     },
+    "phpunit/php-code-coverage": {
+        "version": "7.0.3"
+    },
+    "phpunit/php-file-iterator": {
+        "version": "2.0.2"
+    },
+    "phpunit/php-text-template": {
+        "version": "1.2.1"
+    },
+    "phpunit/php-token-stream": {
+        "version": "3.0.1"
+    },
     "psr/cache": {
         "version": "1.0.1"
     },
@@ -266,17 +278,26 @@
             "ref": "471aed0fbf5620b8d7f92b7a5ebbbf6c0945c27a"
         }
     },
+    "sebastian/code-unit-reverse-lookup": {
+        "version": "1.0.1"
+    },
     "sebastian/comparator": {
         "version": "3.0.2"
     },
     "sebastian/diff": {
         "version": "3.0.2"
     },
+    "sebastian/environment": {
+        "version": "4.2.2"
+    },
     "sebastian/exporter": {
         "version": "3.1.0"
     },
     "sebastian/recursion-context": {
         "version": "3.0.0"
+    },
+    "sebastian/version": {
+        "version": "2.0.1"
     },
     "sensiolabs/security-checker": {
         "version": "4.0",
@@ -546,6 +567,9 @@
             "version": "1.0",
             "ref": "fe5a50faf580eb58f08ada2abe8afbd2d4941e05"
         }
+    },
+    "theseer/tokenizer": {
+        "version": "1.1.2"
     },
     "twig/twig": {
         "version": "v2.7.2"

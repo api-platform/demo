@@ -12,6 +12,7 @@ services:
         - ${CONTAINER_REGISTRY_BASE}/varnish
     depends_on:
       - db
+      - mercure
     # Comment out these volumes in production
     volumes:
       - ./api:/srv/api:rw,cached
