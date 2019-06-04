@@ -101,7 +101,7 @@ JSON
   "type": "object",
   "properties": {
     "@context": {"pattern": "^/contexts/Book$"},
-    "@id": {"pattern": "^/books/[\\w-;=]+$"},
+    "@id": {"pattern": "^/books/[\\w\\-;=]+$"},
     "@type": {"pattern": "^http://schema.org/Book$"},
     "isbn": {"pattern": "^9781782164104$"},
     "title": {"pattern": "^Persistence in PHP with the Doctrine ORM$"},
@@ -201,7 +201,7 @@ JSON
         {
           "type": "object",
           "properties": {
-            "@id": {"pattern": "^/books/[\\w-;=]+$"},
+            "@id": {"pattern": "^/books/[\\w\\-;=]+$"},
             "@type": {"pattern": "^http://schema.org/Book$"},
             "isbn": {"pattern": "^9781782164104$"},
             "title": {"pattern": "^Persistence in PHP with the Doctrine ORM$"},
@@ -322,7 +322,7 @@ JSON
   "type": "object",
   "properties": {
     "@context": {"pattern": "^/contexts/Review$"},
-    "@id": {"pattern": "^/reviews/[\\w-;=]+$"},
+    "@id": {"pattern": "^/reviews/[\\w\\-;=]+$"},
     "@type": {"pattern": "^http://schema.org/Review$"},
     "body": {"pattern": "^Must have!$"},
     "rating": {"type": "integer"},
@@ -332,7 +332,7 @@ JSON
     "book": {
       "type": "object",
       "properties": {
-        "@id": {"pattern": "^/books/[\\w-;=]+$"},
+        "@id": {"pattern": "^/books/[\\w\\-;=]+$"},
         "@type": {"pattern": "^http://schema.org/Book$"},
         "title": {"pattern": "^Persistence in PHP with the Doctrine ORM$"}
       }
@@ -398,7 +398,7 @@ JSON
         {
           "type": "object",
           "properties": {
-            "@id": {"pattern": "^/reviews/[\\w-;=]+$"},
+            "@id": {"pattern": "^/reviews/[\\w\\-;=]+$"},
             "@type": {"pattern": "^http://schema.org/Review$"},
             "body": {"pattern": "^Must have!$"},
             "rating": {"type": "integer"},
@@ -408,7 +408,7 @@ JSON
             "book": {
               "type": "object",
               "properties": {
-                "@id": {"pattern": "^/books/[\\w-;=]+$"},
+                "@id": {"pattern": "^/books/[\\w\\-;=]+$"},
                 "@type": {"pattern": "^http://schema.org/Book$"},
                 "title": {"pattern": "^Persistence in PHP with the Doctrine ORM$"}
               }
@@ -421,7 +421,7 @@ JSON
     "hydra:view": {
       "type": "object",
       "properties": {
-        "@id": {"pattern": "^/reviews\\?book=%2Fbooks%2F[\\w-;=]+$"},
+        "@id": {"pattern": "^/reviews\\?book=%2Fbooks%2F[\\w\\-;=]+$"},
         "@type": {"pattern": "^hydra:PartialCollectionView$"}
       }
     },

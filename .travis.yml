@@ -32,8 +32,8 @@ before_script:
   - npm install -g react-scripts
   - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
 
-script: true
-  #- ./ci/test
+script:
+  - ./ci/test
 
 before_deploy:
   - source ci/before_deploy

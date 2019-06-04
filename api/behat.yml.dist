@@ -9,6 +9,7 @@ default:
                 - Behat\MinkExtension\Context\MinkContext
                 - Behatch\Context\RestContext
                 - Behatch\Context\JsonContext
+                - CoverageContext
 
     extensions:
         Behat\Symfony2Extension:
