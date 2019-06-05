@@ -1,0 +1,320 @@
+version: 2.1
+
+executors:
+  php-executor:
+    docker:
+      - image: quay.io/api-platform/php
+    environment:
+      APP_ENV: test
+
+  client-executor:
+    docker:
+      - image: node:11.5-alpine
+
+  docker-executor:
+    docker:
+      - image: docker/compose:1.23.2
+
+  deploy-executor:
+    docker:
+      - image: google/cloud-sdk:slim
+
+jobs:
+  # API
+  init-api:
+    executor: php-executor
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - vendor-{{ checksum "api/composer.lock" }}
+            - vendor-
+      - run:
+          name: Install dependencies
+          working_directory: api
+          command: composer install --prefer-dist --no-progress --no-suggest --no-interaction
+      - save_cache:
+          paths:
+            - api/vendor
+          key: vendor-{{ checksum "api/composer.lock" }}
+      - run:
+          name: Build swagger documentation
+          working_directory: api
+          command: bin/console api:swagger:export > swagger.json
+      - store_artifacts:
+          path: api/swagger.json
+          destination: swagger.json
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - ./api
+
+  security-checker:
+    executor: php-executor
+    steps:
+      - attach_workspace:
+          at: ./
+      - run:
+          name: Security checker
+          working_directory: api
+          command: bin/console security:check
+
+  doctrine-schema-validator:
+    executor: php-executor
+    steps:
+      - attach_workspace:
+          at: ./
+      - run:
+          name: Doctrine schema validator
+          working_directory: api
+          command: bin/console doctrine:schema:validate --skip-sync
+
+  behat:
+    docker:
+      - image: quay.io/api-platform/php
+        environment:
+          APP_ENV: test
+          MERCURE_PUBLISH_URL: http://mercure/hub
+          MERCURE_SUBSCRIBE_URL: http://mercure/hub
+          MERCURE_JWT_SECRET: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtZXJjdXJlIjp7InN1YnNjcmliZSI6WyJmb28iLCJiYXIiXSwicHVibGlzaCI6WyJmb28iXX19.qOwClmp3euDLhEQ2lOB0TLUHsobaAoe-nZ1iU3h_Eas'
+      - image: dunglas/mercure
+        name: mercure
+        environment:
+          JWT_KEY: '!InsecureChangeMe!'
+          ALLOW_ANONYMOUS: 1
+          CORS_ALLOWED_ORIGINS: '*'
+          PUBLISH_ALLOWED_ORIGINS: 'http://localhost,http://mercure'
+          DEMO: 1
+    steps:
+      - attach_workspace:
+          at: ./
+      - run:
+          name: Prepare environment
+          working_directory: api
+          command: |
+            bin/console doctrine:schema:drop --env=test --force
+            bin/console doctrine:schema:create --env=test
+            bin/console cache:warmup --env=test
+      - run:
+          name: Behat
+          working_directory: api
+          command: phpdbg -qrr vendor/bin/behat --format=progress
+      - store_artifacts:
+          path: api/var/log
+
+  phpunit:
+    executor: php-executor
+    steps:
+      - attach_workspace:
+          at: ./
+      - run:
+          name: PHPUnit
+          working_directory: api
+          command: bin/phpunit --log-junit coverage/junit.xml
+      - store_test_results:
+          path: api/coverage
+
+  monitor-health:
+    executor: php-executor
+    steps:
+      - attach_workspace:
+          at: ./
+      - run:
+          name: Monitor health
+          working_directory: api
+          command: bin/console monitor:health
+
+  php-cs-fixer:
+    executor: php-executor
+    steps:
+      - attach_workspace:
+          at: ./
+      - run:
+          name: PHP CS fixer
+          working_directory: api
+          command: vendor/bin/php-cs-fixer fix --dry-run --ansi --verbose
+
+  phpstan:
+    executor: php-executor
+    steps:
+      - attach_workspace:
+          at: ./
+      - run:
+          name: PHPStan
+          working_directory: api
+          command: vendor/bin/phpstan analyse -c phpstan.neon.dist -l6 --ansi src tests
+
+  swagger-validator:
+    executor: client-executor
+    steps:
+      - run:
+          command: apk add ca-certificates
+      - attach_workspace:
+          at: ./
+      - run:
+          name: Install swagger-cli
+          command: yarn global add swagger-cli
+      - run:
+          name: Swagger validator
+          working_directory: api
+          command: swagger-cli validate swagger.json
+
+  # Client
+  init-client:
+    executor: client-executor
+    steps:
+      - checkout
+      - run:
+          command: apk add ca-certificates
+      - restore_cache:
+          keys:
+            - node_modules-{{ checksum "client/yarn.lock" }}
+            - node_modules-
+      - run:
+          name: Install dependencies
+          working_directory: client
+          command: yarn install --pure-lockfile
+      - save_cache:
+          paths:
+            - client/node_modules
+          key: node_modules-{{ checksum "client/yarn.lock" }}
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - ./client
+
+  jest:
+    executor: client-executor
+    environment:
+      JEST_JUNIT_OUTPUT: coverage/junit.xml
+    steps:
+      - run:
+          command: apk add ca-certificates
+      - attach_workspace:
+          at: ./
+      - run:
+          name: Jest
+          working_directory: client
+          command: yarn jest --ci --reporters=default --reporters=jest-junit --passWithNoTests
+      - store_test_results:
+          path: client/coverage
+
+  eslint:
+    executor: client-executor
+    steps:
+      - run:
+          command: apk add ca-certificates
+      - attach_workspace:
+          at: ./
+      - run:
+          name: ESLint
+          working_directory: client
+          command: yarn eslint src features
+
+  e2e:
+    executor: docker-executor
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - checkout
+      - run:
+          name: Start services
+          command: |
+            wget https://github.com/mikefarah/yq/releases/download/2.2.1/yq_linux_amd64
+            chmod +x ./yq_linux_amd64
+            docker-compose config --services | while read -r line ; do
+              ./yq_linux_amd64 delete -i docker-compose.yml "services.$line.volumes"
+            done
+            ./yq_linux_amd64 delete -i docker-compose.yml "volumes"
+            if [ ! -z $CI_SERVICE_ACCOUNT_KEY ]; then
+              echo -n $CI_SERVICE_ACCOUNT_KEY | base64 -d | docker login -u _json_key --password-stdin https://eu.gcr.io
+              source ci/.env
+              sed -i -E 's@CONTAINER_REGISTRY_BASE=.*@CONTAINER_REGISTRY_BASE='"$DOCKER_REPOSITORY"'@g' .env
+            fi
+            docker-compose pull --ignore-pull-failures
+            docker-compose build --pull
+            docker-compose up -d
+            sleep 10
+      - run:
+          name: Run tests
+          command: docker-compose exec -e REACT_APP_API_ENTRYPOINT=https://h2-proxy:8443 -e REACT_APP_SSE_ENTRYPOINT=https://h2-proxy:1338 client yarn e2e
+
+  # Deploy
+  deploy:
+    executor: deploy-executor
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - checkout
+      - restore_cache:
+          keys:
+            - vendor-{{ checksum "api/composer.lock" }}
+      - restore_cache:
+          keys:
+            - node_modules-{{ checksum "client/yarn.lock" }}
+      - deploy:
+          name: Deploy
+          command: |
+            source ci/.env
+            if [[ $REPOSITORY == $(echo $CIRCLE_REPOSITORY_URL | sed -E 's/^[^:]+:(.*)\.git/\1/g') && $CURRENT_CI == "circleci" ]] && [[ $FEATURE_DEPLOY == "1" || $DEPLOYMENT_BRANCH == $CIRCLE_BRANCH ]]; then
+              export BRANCH=$CIRCLE_BRANCH
+              ci/deploy
+            else
+              echo "Deployment skipped"
+            fi
+
+workflows:
+  version: 2
+  test-and-deploy:
+    jobs:
+      # API
+      - init-api
+      - security-checker:
+          requires:
+            - init-api
+      - doctrine-schema-validator:
+          requires:
+            - init-api
+      - phpunit:
+          requires:
+            - init-api
+      - monitor-health:
+          requires:
+            - init-api
+      - php-cs-fixer:
+          requires:
+            - init-api
+      - phpstan:
+          requires:
+            - init-api
+      - behat:
+          requires:
+            - init-api
+      - swagger-validator:
+          requires:
+            - init-api
+       # Client
+      - init-client
+      - jest:
+         requires:
+            - init-client
+#      - e2e:
+#          requires:
+#            - init-client
+      - eslint:
+          requires:
+            - init-client
+      # Deploy
+      - deploy:
+          requires:
+            - security-checker
+            - doctrine-schema-validator
+            - behat
+            - swagger-validator
+            - phpunit
+            - monitor-health
+            - php-cs-fixer
+            - phpstan
+            - jest
+#            - e2e
+            - eslint

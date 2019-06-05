@@ -1,0 +1,43 @@
+liip_monitor:
+    # enabling the controller requires that `assets` are enabled in the framework bundle
+    enable_controller: false
+    checks:
+        php_extensions:
+            - apcu
+            - curl
+            - date
+            - dom
+            - fileinfo
+            - hash
+            - iconv
+            - intl
+            - json
+            - mbstring
+            - openssl
+            - pcre
+            - PDO
+            - pdo_pgsql
+            - reflection
+            - spl
+            - tokenizer
+            - xml
+            - Zend OPcache
+        php_version:
+            '7.1':          '>='
+        readable_directory: ['%kernel.cache_dir%', '%kernel.logs_dir%']
+        writable_directory: ['%kernel.cache_dir%', '%kernel.logs_dir%']
+        symfony_version:    ~
+        php_flags:
+            session.auto_start: false
+            short_open_tag: false
+        expressions:
+            opcache:
+                label:               OPcache
+                warning_expression:  ini('opcache.revalidate_freq') > 0
+                critical_expression: ini('opcache.enable')
+                warning_message:     OPcache not optimized for production
+                critical_message:    OPcache not enabled
+            date.timezone:
+                label:                Date Timezone
+                warning_expression:   ini('date.timezone') == 'UTC'
+                warning_message:      PHP parameter date.timezone should be set to UTC
