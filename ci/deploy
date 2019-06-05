@@ -2,7 +2,6 @@
 
 set -e
 set +v
-set -x
 
 if ! type kubectl > /dev/null; then
     # Get kubectl and make it executable
