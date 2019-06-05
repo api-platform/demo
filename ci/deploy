@@ -27,12 +27,12 @@ gsutil mb -p $PROJECT_ID -l eu gs://$ADMIN_BUCKET || echo "Admin bucket exists"
 gsutil mb -p $PROJECT_ID -l eu gs://$CLIENT_BUCKET || echo "Client bucket exists"
 
 # Build and push the docker images.
-#docker build --pull -t $PHP_REPOSITORY:$TAG api --target api_platform_php
-#docker build --pull -t $NGINX_REPOSITORY:$TAG api --target api_platform_nginx
-#docker build --pull -t $VARNISH_REPOSITORY:$TAG api --target api_platform_varnish
-#gcloud docker -- push $PHP_REPOSITORY:$TAG
-#gcloud docker -- push $NGINX_REPOSITORY:$TAG
-#gcloud docker -- push $VARNISH_REPOSITORY:$TAG
+docker build --pull -t $PHP_REPOSITORY:$TAG api --target api_platform_php
+docker build --pull -t $NGINX_REPOSITORY:$TAG api --target api_platform_nginx
+docker build --pull -t $VARNISH_REPOSITORY:$TAG api --target api_platform_varnish
+gcloud docker -- push $PHP_REPOSITORY:$TAG
+gcloud docker -- push $NGINX_REPOSITORY:$TAG
+gcloud docker -- push $VARNISH_REPOSITORY:$TAG
 
 if [[ $BRANCH != $DEPLOYMENT_BRANCH ]]
 then
