@@ -1,3 +1,0 @@
-liip_monitor:
-    checks:
-        doctrine_dbal: default

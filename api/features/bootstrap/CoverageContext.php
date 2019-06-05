@@ -38,7 +38,7 @@ final class CoverageContext implements Context
     public static function tearDown()
     {
         (new Facade())->process(self::$coverage, __DIR__.'/../../coverage');
-        (new Clover())->process(self::$coverage, __DIR__.'/../../coverage/'.(\getenv('FEATURE') ?: 'behat').'.xml');
+        (new Clover())->process(self::$coverage, __DIR__.'/../../coverage/'.(getenv('FEATURE') ?: 'behat').'.xml');
     }
 
     /**

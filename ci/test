@@ -6,9 +6,7 @@ docker-compose down -v
 docker-compose pull --ignore-pull-failures
 docker-compose build --pull
 docker-compose up -d
-until [[ $(docker-compose logs --tail 1 php) = *"ready to handle connections"* ]]; do
-    sleep 1
-done
+sleep 20
 docker-compose exec php composer install -o -n
 docker-compose exec php bin/console security:check
 docker-compose exec php bin/console doctrine:schema:validate --skip-sync
@@ -17,17 +15,11 @@ docker-compose exec php bin/console doctrine:schema:drop --env=test --force
 docker-compose exec php bin/console doctrine:schema:create --env=test
 docker-compose exec php bin/console cache:warmup --env=test
 docker-compose exec php phpdbg -qrr vendor/bin/behat --format=progress --no-interaction
-docker-compose exec php bin/phpunit --log-junit coverage/junit.xml
-docker-compose exec php bin/console monitor:health
-docker-compose exec php vendor/bin/php-cs-fixer fix --dry-run --ansi --verbose
-docker-compose exec php vendor/bin/phpstan analyse -c phpstan.neon.dist -l6 --ansi src tests
 docker-compose exec client yarn install --pure-lockfile
 docker-compose exec client yarn jest --ci --reporters=default --reporters=jest-junit --passWithNoTests
-docker-compose exec client yarn eslint src features
+docker-compose exec client yarn eslint src
 docker-compose exec client yarn e2e
 docker-compose exec client rm -rf build
-docker-compose exec php bin/console api:swagger:export > client/swagger.json
-docker-compose exec client swagger-cli validate swagger.json
 curl -s http://localhost # Client
 curl -s http://localhost:81 # Admin
 curl -s http://localhost:8080 # API

@@ -5,8 +5,8 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ApiResource(
  *     iri="http://schema.org/Book",
- *     normalizationContext={"groups"={"book:read"}},
+ *     normalizationContext={"groups": {"book:read"}},
  *     mercure=true,
  *     itemOperations={
  *         "get",
@@ -100,7 +100,7 @@ class Book
     public $publicationDate;
 
     /**
-     * @var ArrayCollection|Collection|Review[] The book's reviews
+     * @var Review[] The book's reviews
      *
      * @ORM\OneToMany(targetEntity=Review::class, mappedBy="book", orphanRemoval=true, cascade={"persist", "remove"})
      * @Groups("book:read")

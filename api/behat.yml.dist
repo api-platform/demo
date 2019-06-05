@@ -3,8 +3,6 @@ default:
         error_reporting: 16383 # E_ALL & ~E_USER_DREPRECATED
     suites:
         default:
-            filters:
-                tags: ~@ignore
             contexts:
                 - FeatureContext: { doctrine: "@doctrine" }
                 - BookContext: { doctrine: "@doctrine" }
@@ -18,7 +16,6 @@ default:
             kernel:
                 bootstrap: features/bootstrap/bootstrap.php
                 class: App\Kernel
-                debug: false
         Behat\MinkExtension:
             base_url: "https://localhost/"
             sessions:

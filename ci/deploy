@@ -4,96 +4,17 @@ set -e
 set +v
 set -x
 
-# Check that all needed environment variables are set.
-PASS=true
-if [[ -z $PROJECT_ID ]]; then echo 'PROJECT_ID is not defined in your travis environment variables.'; PASS=false; fi
-if [[ -z $CI_SERVICE_ACCOUNT ]]; then echo 'CI_SERVICE_ACCOUNT is not defined in your ci repository environment variables.'; PASS=false; fi
-if [[ -z $CI_SERVICE_ACCOUNT_KEY ]]; then echo 'CI_SERVICE_ACCOUNT_KEY is not defined in your ci repository environment variables.'; PASS=false; fi
-if [[ -z $CF_API_KEY ]]; then echo 'CF_API_KEY is not defined in your ci repository environment variables.'; PASS=false; fi
-if [[ -z $CF_API_EMAIL ]]; then echo 'CF_API_EMAIL is not defined in your ci repository environment variables.'; PASS=false; fi
-if [[ -z $BRANCH ]]; then echo 'BRANCH is not defined in your ci repository environment variables. Did you change the configuration to an invalid one?'; PASS=false; fi
-if [[ $PASS != "true" ]]; then exit 1; fi
-
-# To enable blackfire, set the BLACKFIRE_SERVER_ID and BLACKFIRE_SERVER_TOKEN variables.
-if [[ ! -z $BLACKFIRE_SERVER_ID && ! -z $BLACKFIRE_SERVER_TOKEN ]]; then
-    export BLACKFIRE_ENABLED=true
-fi
-
-if ! type npm > /dev/null; then
-    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-    curl -sL https://deb.nodesource.com/setup_10.x | bash -
-    apt install -y nodejs yarn
-fi
-
-# Generate random key & jwt for Mercure if not set
-if [[ -z $MERCURE_JWT_KEY ]]; then
-    npm install --global "@clarketm/jwt-cli"
-    MERCURE_JWT_KEY=$(< /dev/urandom tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
-    export MERCURE_JWT_KEY
-    MERCURE_JWT_SECRET=$(jwt sign --noCopy --expiresIn "100 years" '{"mercure": {"publish": ["*"]}}' "$MERCURE_JWT_KEY")
-    export MERCURE_JWT_SECRET
-fi
-
-# Generate random passphrase and keys for JWT signing if not set
-if [ -z "$JWT_PASSPHRASE" ]; then
-    JWT_PASSPHRASE=$(< /dev/urandom tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
-    export JWT_PASSPHRASE
-fi
-if [ -z "$JWT_SECRET_KEY" ]; then
-    JWT_SECRET_KEY=$(openssl genpkey -pass file:<(echo "$JWT_PASSPHRASE") -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096)
-    export JWT_SECRET_KEY
-    JWT_PUBLIC_KEY=$(openssl pkey -in <(echo "$JWT_SECRET_KEY") -passin file:<(echo "$JWT_PASSPHRASE") -pubout)
-    export JWT_PUBLIC_KEY
-fi
-
-# Generate random database password if not set
-if [[ -z $DATABASE_PASSWORD ]]; then
-    export DATABASE_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
-fi
-
-export RELEASE=`echo $BRANCH | sed -E "s/\//-/g" | sed -e 's/\(.*\)/\L\1/'`
-export NAMESPACE=$RELEASE
-export PROJECT_NAME=`echo $REPOSITORY | sed -E "s/\//-/g" | sed -e 's/\(.*\)/\L\1/'`
-export PHP_REPOSITORY="${DOCKER_REPOSITORY}/php"
-export NGINX_REPOSITORY="${DOCKER_REPOSITORY}/nginx"
-export VARNISH_REPOSITORY="${DOCKER_REPOSITORY}/varnish"
-export ADMIN_REPOSITORY="${DOCKER_REPOSITORY}/admin"
-export CLIENT_REPOSITORY="${DOCKER_REPOSITORY}/client"
-if [[ $BRANCH == $DEPLOYMENT_BRANCH ]]
-then
-    export TAG=latest
-    export API_ENTRYPOINT="${API_SUBDOMAIN}.${DOMAIN}"
-    export MERCURE_ENTRYPOINT="${MERCURE_SUBDOMAIN}.${DOMAIN}"
-    export ADMIN_BUCKET="${ADMIN_SUBDOMAIN}.${DOMAIN}"
-    export CLIENT_BUCKET="${CLIENT_SUBDOMAIN}.${DOMAIN}"
-else
-    export TAG=$RELEASE
-    export API_ENTRYPOINT="${API_SUBDOMAIN}-${RELEASE}.${DOMAIN}"
-    export MERCURE_ENTRYPOINT="${MERCURE_SUBDOMAIN}-${RELEASE}.${DOMAIN}"
-    export ADMIN_BUCKET="${ADMIN_SUBDOMAIN}-${RELEASE}.${DOMAIN}"
-    export CLIENT_BUCKET="${CLIENT_SUBDOMAIN}-${RELEASE}.${DOMAIN}"
-fi
-
 if ! type kubectl > /dev/null; then
     # Get kubectl and make it executable
     curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-    chmod +x kubectl
-    if type sudo > /dev/null; then
-        sudo mv ./kubectl /usr/local/bin/kubectl
-    else
-        mv ./kubectl /usr/local/bin/kubectl
-    fi
-fi
-
-if ! type helm > /dev/null; then
-    # Get helm and make it executable
-    curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash -s -- --version v2.11.0
+    chmod +x ./kubectl
+    sudo mv ./kubectl /usr/local/bin/kubectl
 fi
 
 # Authenticate on GCP
-echo -n $CI_SERVICE_ACCOUNT_KEY | base64 -d > service-account.json
-gcloud auth activate-service-account $CI_SERVICE_ACCOUNT --key-file service-account.json --project=$PROJECT_ID
+echo -n $CI_SERVICE_ACCOUNT_KEY | base64 -d > travis-service-account.json
+gcloud auth activate-service-account $CI_SERVICE_ACCOUNT --key-file travis-service-account.json --project=$PROJECT_ID
+
 gcloud config set compute/zone europe-west1-c
 gcloud config set core/project $PROJECT_ID
 gcloud container clusters get-credentials api-platform-demo --zone europe-west1-c --project $PROJECT_ID
@@ -110,13 +31,9 @@ gsutil mb -p $PROJECT_ID -l eu gs://$CLIENT_BUCKET || echo "Client bucket exists
 #docker build --pull -t $PHP_REPOSITORY:$TAG api --target api_platform_php
 #docker build --pull -t $NGINX_REPOSITORY:$TAG api --target api_platform_nginx
 #docker build --pull -t $VARNISH_REPOSITORY:$TAG api --target api_platform_varnish
-#docker build --pull -t $ADMIN_REPOSITORY:$TAG admin
-#docker build --pull -t $CLIENT_REPOSITORY:$TAG client
 #gcloud docker -- push $PHP_REPOSITORY:$TAG
 #gcloud docker -- push $NGINX_REPOSITORY:$TAG
 #gcloud docker -- push $VARNISH_REPOSITORY:$TAG
-#gcloud docker -- push $ADMIN_REPOSITORY:$TAG
-#gcloud docker -- push $CLIENT_REPOSITORY:$TAG
 
 if [[ $BRANCH != $DEPLOYMENT_BRANCH ]]
 then
