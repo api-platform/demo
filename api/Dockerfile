@@ -91,6 +91,8 @@ COPY bin bin/
 COPY config config/
 COPY public public/
 COPY src src/
+# only for demo
+COPY fixtures fixtures/
 
 RUN set -eux; \
 	mkdir -p var/cache var/log; \
