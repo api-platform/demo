@@ -19,7 +19,7 @@ if [[ -z $MERCURE_JWT_KEY ]]; then
     npm install --global "@clarketm/jwt-cli"
     MERCURE_JWT_KEY=$(< /dev/urandom tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
     export MERCURE_JWT_KEY
-    MERCURE_JWT_SECRET=$(jwt sign --noCopy '{"mercure": {"publish": ["*"]}}' "$MERCURE_JWT_KEY")
+    MERCURE_JWT_SECRET=$(jwt sign --noCopy --expiresIn "100 years" '{"mercure": {"publish": ["*"]}}' "$MERCURE_JWT_KEY")
     export MERCURE_JWT_SECRET
 fi
 
