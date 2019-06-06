@@ -20,8 +20,8 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'bin/console' ] || { [ "$1" = 'php' ] && [ "
 			echo "$jwt_passphrase" | openssl pkey -in config/jwt/private.pem -passin stdin -out config/jwt/public.pem -pubout
 		fi
 	fi
-	setfacl -R -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
-	setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
+	setfacl -R -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt || echo "setfacl failed"
+	setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt || echo "setfacl failed"
 
 	if [ "$APP_ENV" != 'prod' ]; then
 		composer install --prefer-dist --no-progress --no-suggest --no-interaction

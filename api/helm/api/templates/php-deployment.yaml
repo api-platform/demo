@@ -82,23 +82,31 @@ spec:
                   name: {{ template "fullname" . }}
                   key: mercure-jwt-secret
             - name: JWT_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "fullname" . }}
-                  key: jwt-secret-key
+              value: '%kernel.project_dir%/config/jwt/private.pem'
             - name: JWT_PUBLIC_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "fullname" . }}
-                  key: jwt-public-key
+              value: '%kernel.project_dir%/config/jwt/public.pem'
             - name: JWT_PASSPHRASE
               valueFrom:
                 secretKeyRef:
                   name: {{ template "fullname" . }}
                   key: jwt-passphrase
+          volumeMounts:
+            - name: jwt-secret-key
+              mountPath: "/srv/api/config/jwt/private.pem"
+              readOnly: true
+            - name: jwt-public-key
+              mountPath: "/srv/api/config/jwt/public.pem"
+              readOnly: true
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- if .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
     {{- end }}
+      volumes:
+        - name: jwt-secret-key
+          secret:
+            secretName: jwt-secret-key
+        - name: jwt-public-key
+          secret:
+            secretName: jwt-public-key
