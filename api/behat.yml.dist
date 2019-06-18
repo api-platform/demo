@@ -9,6 +9,30 @@ default:
                 - Behat\MinkExtension\Context\MinkContext
                 - Behatch\Context\RestContext
                 - Behatch\Context\JsonContext
+
+    extensions:
+        Behat\Symfony2Extension:
+            kernel:
+                bootstrap: features/bootstrap/bootstrap.php
+                class: App\Kernel
+        Behat\MinkExtension:
+            base_url: "https://localhost/"
+            sessions:
+                default:
+                    symfony2: ~
+        Behatch\Extension: ~
+
+coverage:
+    calls:
+        error_reporting: 16383 # E_ALL & ~E_USER_DREPRECATED
+    suites:
+        default:
+            contexts:
+                - FeatureContext: { doctrine: "@doctrine" }
+                - BookContext: { doctrine: "@doctrine" }
+                - Behat\MinkExtension\Context\MinkContext
+                - Behatch\Context\RestContext
+                - Behatch\Context\JsonContext
                 - CoverageContext
 
     extensions:
