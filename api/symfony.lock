@@ -403,9 +403,6 @@
             "src/Kernel.php"
         ]
     },
-    "symfony/http-client": {
-        "version": "v4.3.2"
-    },
     "symfony/http-foundation": {
         "version": "v4.2.8"
     },
@@ -441,9 +438,6 @@
     },
     "symfony/polyfill-mbstring": {
         "version": "v1.10.0"
-    },
-    "symfony/polyfill-php73": {
-        "version": "v1.11.0"
     },
     "symfony/profiler-pack": {
         "version": "v1.0.4"

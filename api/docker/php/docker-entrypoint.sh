@@ -23,6 +23,7 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'bin/console' ] || { [ "$1" = 'php' ] && [ "
 		fi
 	fi
 
+
 	if [ "$APP_ENV" != 'prod' ]; then
 		composer install --prefer-dist --no-progress --no-suggest --no-interaction
 	fi
@@ -31,14 +32,6 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'bin/console' ] || { [ "$1" = 'php' ] && [ "
 	until bin/console doctrine:query:sql "SELECT 1" > /dev/null 2>&1; do
 		sleep 1
 	done
-
-	# Reload fixtures every time a container is starting
-	# Demo purpose only: don't do this for real production apps
-	# For real production apps, you should also move hautelook/alice-bundle to dev dependencies
-	if [ "$APP_ENV" == 'prod' ]; then
-		bin/console doctrine:schema:create || bin/console doctrine:schema:update --force
-		bin/console hautelook:fixtures:load -n
-	fi
 
 	if [ "$APP_ENV" != 'prod' ]; then
 		bin/console doctrine:schema:update --force --no-interaction
