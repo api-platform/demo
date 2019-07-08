@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4db129722635383645a5aa991b9d6ce0",
+    "content-hash": "a6f889b733e2009b55f6f5c8849a4bfe",
     "packages": [
         {
             "name": "api-platform/api-pack",
@@ -1775,16 +1775,16 @@
         },
         {
             "name": "lexik/jwt-authentication-bundle",
-            "version": "v2.6.2",
+            "version": "v2.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lexik/LexikJWTAuthenticationBundle.git",
-                "reference": "bd0f5abbabc628ebec6fd7f3197abe5616e11633"
+                "reference": "ba179c2f876b96e5cffe5ee75cac883cfe3f8847"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lexik/LexikJWTAuthenticationBundle/zipball/bd0f5abbabc628ebec6fd7f3197abe5616e11633",
-                "reference": "bd0f5abbabc628ebec6fd7f3197abe5616e11633",
+                "url": "https://api.github.com/repos/lexik/LexikJWTAuthenticationBundle/zipball/ba179c2f876b96e5cffe5ee75cac883cfe3f8847",
+                "reference": "ba179c2f876b96e5cffe5ee75cac883cfe3f8847",
                 "shasum": ""
             },
             "require": {
@@ -1868,7 +1868,7 @@
                 "rest",
                 "symfony"
             ],
-            "time": "2019-04-01T10:25:29+00:00"
+            "time": "2018-11-18T21:13:33+00:00"
         },
         {
             "name": "namshi/jose",

@@ -9,7 +9,7 @@
         "api-platform/core": "2.4.x-dev",
         "doctrine/doctrine-migrations-bundle": "^2.0",
         "guzzlehttp/guzzle": "^6.3",
-        "lexik/jwt-authentication-bundle": "^2.6",
+        "lexik/jwt-authentication-bundle": "2.6.1",
         "ramsey/uuid-doctrine": "^1.5",
         "sensiolabs/security-checker": "^5.0",
         "symfony/console": "4.2.*",
