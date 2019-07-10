@@ -15,6 +15,9 @@ api_platform:
         yaml: ['application/x-yaml']
         csv: ['text/csv']
         html: ['text/html']
+    patch_formats:
+        json: ['application/merge-patch+json']
+        jsonapi: ['application/vnd.api+json']
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
     http_cache:
