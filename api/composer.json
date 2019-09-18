@@ -6,19 +6,19 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "api-platform/api-pack": "^1.1",
-        "api-platform/core": "2.4.x-dev",
+        "api-platform/core": "2.5.x-dev",
         "doctrine/doctrine-migrations-bundle": "^2.0",
         "guzzlehttp/guzzle": "^6.3",
         "lexik/jwt-authentication-bundle": "^2.6",
         "ramsey/uuid-doctrine": "^1.5",
         "sensiolabs/security-checker": "^5.0",
-        "symfony/console": "4.2.*",
-        "symfony/dotenv": "4.2.*",
+        "symfony/console": "4.3.*",
+        "symfony/dotenv": "4.3.*",
         "symfony/flex": "^1.1",
-        "symfony/framework-bundle": "4.2.*",
+        "symfony/framework-bundle": "4.3.*",
         "symfony/mercure-bundle": "^0.1.1",
-        "symfony/translation": "4.2.*",
-        "symfony/yaml": "4.2.*",
+        "symfony/translation": "4.3.*",
+        "symfony/yaml": "4.3.*",
         "webonyx/graphql-php": "^0.13"
     },
     "require-dev": {
@@ -32,7 +32,7 @@
         "phpunit/php-code-coverage": "^7.0",
         "symfony/maker-bundle": "^1.11",
         "symfony/profiler-pack": "^1.0",
-        "symfony/var-dumper": "4.2.*"
+        "symfony/var-dumper": "4.3.*"
     },
     "config": {
         "preferred-install": {
@@ -78,7 +78,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "4.2.*"
+            "require": "4.3.*"
         }
     }
 }
