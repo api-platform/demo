@@ -65,6 +65,9 @@ RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY docker/php/php.ini /usr/local/etc/php/php.ini
 
+# Workaround to allow using PHPUnit 8 with Symfony 4.3
+ENV SYMFONY_PHPUNIT_VERSION=8.3
+
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
 ENV COMPOSER_ALLOW_SUPERUSER=1
 # install Symfony Flex globally to speed up download of Composer packages (parallelized prefetching)

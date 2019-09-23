@@ -1,3 +1,7 @@
+/helm/api/charts
+/helm/api/requirements.lock
+/coverage
+
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
@@ -7,14 +11,17 @@
 /vendor/
 ###< symfony/framework-bundle ###
 
-###> behat/symfony2-extension ###
-behat.yml
-###< behat/symfony2-extension ###
-
-/helm/api/charts
-/helm/api/requirements.lock
-/coverage
-
 ###> lexik/jwt-authentication-bundle ###
 /config/jwt/*.pem
 ###< lexik/jwt-authentication-bundle ###
+
+###> symfony/phpunit-bridge ###
+.phpunit
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###
+
+###> friendsofphp/php-cs-fixer ###
+/.php_cs
+/.php_cs.cache
+###< friendsofphp/php-cs-fixer ###

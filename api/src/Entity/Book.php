@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
@@ -29,7 +30,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *         "get",
  *         "put",
  *         "patch",
- *         "delete"={"access_control"="is_granted('ROLE_ADMIN')"},
+ *         "delete"={"security"="is_granted('ROLE_ADMIN')"},
  *     },
  * )
  * @ApiFilter(PropertyFilter::class)
@@ -92,7 +93,7 @@ class Book
     /**
      * @var \DateTimeInterface The date on which the CreativeWork was created or the item was added to a DataFeed
      *
-     * @Assert\Date
+     * @Assert\Type(\DateTimeInterface::class)
      * @Assert\NotNull
      * @ORM\Column(type="date")
      * @Groups("book:read")
@@ -106,6 +107,7 @@ class Book
      * @ORM\OneToMany(targetEntity=Review::class, mappedBy="book", orphanRemoval=true, cascade={"persist", "remove"})
      * @Groups("book:read")
      * @ApiProperty(iri="http://schema.org/reviews")
+     * @ApiSubresource
      */
     private $reviews;
 
