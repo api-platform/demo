@@ -20,8 +20,6 @@ api_platform:
     patch_formats:
         json: ['application/merge-patch+json']
         jsonapi: ['application/vnd.api+json']
-    swagger:
-        versions: [3, 2]
     http_cache:
         #invalidation:
         #    enabled: true
@@ -40,3 +38,4 @@ api_platform:
             apiKey:
                 name: Authorization
                 type: header
+        versions: [3, 2]
