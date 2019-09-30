@@ -22,10 +22,11 @@ api_platform:
         jsonapi: ['application/vnd.api+json']
     swagger:
         versions: [3, 2]
+        api_keys:
+            apiKey:
+                name: Authorization
+                type: header
     http_cache:
-        #invalidation:
-        #    enabled: true
-        #    varnish_urls: ['%env(VARNISH_URL)%']
         max_age: 0
         shared_max_age: 3600
         vary: ['Content-Type', 'Authorization', 'Origin']
@@ -35,8 +36,3 @@ api_platform:
             items_per_page: 30
     mercure:
         hub_url: '%env(MERCURE_SUBSCRIBE_URL)%'
-    swagger:
-        api_keys:
-            apiKey:
-                name: Authorization
-                type: header
