@@ -8,6 +8,7 @@ Install
 =======
 
     $ git clone https://github.com/api-platform/demo.git
+    $ cd demo
     $ docker-compose up
 
 And go to https://localhost.
