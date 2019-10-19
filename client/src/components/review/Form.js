@@ -69,13 +69,13 @@ class Form extends Component {
           component={this.renderField}
           name="author"
           type="text"
-          placeholder="Author the author of the review"
+          placeholder="The author of the review"
         />
         <Field
           component={this.renderField}
           name="publicationDate"
           type="dateTime"
-          placeholder="Author the author of the review"
+          placeholder="Publication date of the review"
         />
 
         <button type="submit" className="btn btn-success">
