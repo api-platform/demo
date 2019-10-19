@@ -76,7 +76,7 @@ class Review
     private $book;
 
     /**
-     * @var string Author the author of the review
+     * @var string The author of the review
      *
      * @ORM\Column(type="text", nullable=true)
      * @Groups("review:read")
@@ -85,7 +85,7 @@ class Review
     public $author;
 
     /**
-     * @var \DateTimeInterface Author the author of the review
+     * @var \DateTimeInterface Publication date of the review
      *
      * @Groups("review:read")
      * @ORM\Column(nullable=true, type="datetime")
