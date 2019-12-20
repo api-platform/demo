@@ -13,6 +13,10 @@ export function loading(loading) {
   return { type: 'BOOK_SHOW_LOADING', loading };
 }
 
+export function loadCover(loadCover) {
+  return { type: 'BOOK_SHOW_LOAD_COVER', loadCover };
+}
+
 export function success(retrieved) {
   return { type: 'BOOK_SHOW_SUCCESS', retrieved };
 }
@@ -38,6 +42,26 @@ export function retrieve(id) {
       .catch(e => {
         dispatch(loading(false));
         dispatch(error(e.message));
+      });
+  };
+}
+
+export function generateCover(id) {
+  return dispatch => {
+    dispatch(loading(true));
+    dispatch(loadCover(true));
+
+    return fetch(`${id}/generate-cover`, {
+      method: 'PUT',
+      headers: new Headers({ 'Content-Type': 'application/ld+json' }),
+      body: JSON.stringify({})
+    })
+      .catch(e => {
+        dispatch(error(e.message));
+        dispatch(loadCover(false));
+      })
+      .finally(() => {
+        dispatch(loading(false));
       });
   };
 }
@@ -71,6 +95,10 @@ export function mercureMessage(retrieved) {
     if (1 === Object.keys(retrieved).length) {
       dispatch({ type: 'BOOK_SHOW_MERCURE_DELETED', retrieved });
       return;
+    }
+
+    if ('undefined' !== typeof retrieved.cover) {
+      dispatch(loadCover(false));
     }
 
     dispatch({ type: 'BOOK_SHOW_MERCURE_MESSAGE', retrieved });

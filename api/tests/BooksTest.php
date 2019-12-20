@@ -120,6 +120,23 @@ publicationDate: This value should not be null.',
         );
     }
 
+    public function testGenerateCover(): void
+    {
+        $client = static::createClient();
+        $book = static::$container->get('doctrine')->getRepository(Book::class)->findOneBy(['isbn' => '9786644879585']);
+        $client->request('PUT', static::$container->get('api_platform.router')->generate('api_books_generate_cover_item', ['id' => $book->getId()]), [
+            'json' => [],
+        ]);
+
+        $this->assertResponseIsSuccessful();
+
+        $this->assertEquals(
+            1,
+            static::$container->get('messenger.receiver_locator')->get('doctrine')->getMessageCount(),
+            'No message has been sent.'
+        );
+    }
+
     private function login(): string
     {
         $response = static::createClient()->request('POST', '/authentication_token', ['json' => [

@@ -33,7 +33,15 @@ const submit = async (selector, waitForNavigation = true) => {
 };
 
 const click = async (selector) => {
-  await scope.context.currentPage.click(selector);
+  if (!selector.match(/^\//)) {
+    await scope.context.currentPage.click(selector);
+  } else {
+    const target = await scope.context.currentPage.$x(selector);
+    if (target.length === 0) {
+      throw new Error(`Element not found: ${selector}`);
+    }
+    await target[0].click();
+  }
 };
 
 module.exports = {

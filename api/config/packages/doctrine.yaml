@@ -10,8 +10,8 @@ doctrine:
         # configure these for your database server
         driver: 'pdo_pgsql'
         server_version: '10'
-
         url: '%env(resolve:DATABASE_URL)%'
+        schema_filter: '~^(?!messenger_messages)~'
     orm:
         auto_generate_proxy_classes: true
         naming_strategy: App\Doctrine\ORM\Mapping\ResourceNamingStrategy

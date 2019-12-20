@@ -1,0 +1,6 @@
+framework:
+    messenger:
+        transports:
+            doctrine: '%env(MESSENGER_TRANSPORT_DSN)%'
+        routing:
+            App\Entity\Book: doctrine

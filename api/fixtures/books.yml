@@ -1,6 +1,6 @@
 'App\Entity\Book':
     book_{1..100}:
-        isbn: <isbn13()>
+        isbn (unique): <isbn13()>
         title: <sentence()>
         description: <paragraph()>
         author: <name()>

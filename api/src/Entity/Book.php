@@ -31,6 +31,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  *         "put",
  *         "patch",
  *         "delete"={"security"="is_granted('ROLE_ADMIN')"},
+ *         "generate_cover"={
+ *             "method"="PUT",
+ *             "path"="/books/{id}/generate-cover",
+ *             "output"=false,
+ *             "messenger"=true,
+ *             "normalizationContext"={"groups"={"book:read", "book:cover"}}
+ *         },
  *     },
  * )
  * @ApiFilter(PropertyFilter::class)
@@ -39,7 +46,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Book
 {
     /**
-     * @var UuidInterface
+     * @var UuidInterface|null
      *
      * @ORM\Column(type="uuid", unique=true)
      * @ORM\Id
@@ -49,7 +56,7 @@ class Book
     private $id;
 
     /**
-     * @var string The ISBN of the book
+     * @var string|null The ISBN of the book
      *
      * @Assert\Isbn
      * @ORM\Column(nullable=true)
@@ -59,7 +66,7 @@ class Book
     public $isbn;
 
     /**
-     * @var string The title of the book
+     * @var string|null The title of the book
      *
      * @ApiFilter(SearchFilter::class, strategy="ipartial")
      * @Assert\NotBlank
@@ -70,7 +77,7 @@ class Book
     public $title;
 
     /**
-     * @var string A description of the item
+     * @var string|null A description of the item
      *
      * @Assert\NotBlank
      * @ORM\Column(type="text")
@@ -80,7 +87,7 @@ class Book
     public $description;
 
     /**
-     * @var string The author of this content or rating. Please note that author is special in that HTML 5 provides a special mechanism for indicating authorship via the rel tag. That is equivalent to this and may be used interchangeably
+     * @var string|null The author of this content or rating. Please note that author is special in that HTML 5 provides a special mechanism for indicating authorship via the rel tag. That is equivalent to this and may be used interchangeably
      *
      * @ApiFilter(SearchFilter::class, strategy="ipartial")
      * @Assert\NotBlank
@@ -91,7 +98,7 @@ class Book
     public $author;
 
     /**
-     * @var \DateTimeInterface The date on which the CreativeWork was created or the item was added to a DataFeed
+     * @var \DateTimeInterface|null The date on which the CreativeWork was created or the item was added to a DataFeed
      *
      * @Assert\Type(\DateTimeInterface::class)
      * @Assert\NotNull
@@ -110,6 +117,13 @@ class Book
      * @ApiSubresource
      */
     private $reviews;
+
+    /**
+     * @var string|null The book's cover base64 encoded
+     *
+     * @Groups("book:cover")
+     */
+    public $cover;
 
     public function __construct()
     {
