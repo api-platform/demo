@@ -1,0 +1,4 @@
+parameters:
+    env(API_ENTRYPOINT_SCHEME): 'http'
+    env(API_ENTRYPOINT_HOST): 'localhost'
+    env(API_ENTRYPOINT_PORT): 443

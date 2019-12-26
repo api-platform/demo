@@ -96,6 +96,21 @@ spec:
                 secretKeyRef:
                   name: {{ template "fullname" . }}
                   key: jwt-passphrase
+            - name: API_ENTRYPOINT_SCHEME
+              valueFrom:
+                  configMapKeyRef:
+                      name: {{ template "fullname" . }}
+                      key: api-entrypoint-scheme
+            - name: API_ENTRYPOINT_HOST
+              valueFrom:
+                  configMapKeyRef:
+                      name: {{ template "fullname" . }}
+                      key: api-entrypoint-host
+            - name: API_ENTRYPOINT_PORT
+              valueFrom:
+                  configMapKeyRef:
+                      name: {{ template "fullname" . }}
+                      key: api-entrypoint-port
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- if .Values.nodeSelector }}

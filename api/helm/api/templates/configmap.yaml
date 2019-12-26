@@ -17,3 +17,6 @@ data:
   trusted-proxies: {{ join "," .Values.php.trustedProxies }}
   mercure-publish-url: {{ .Values.mercure.publishUrl | quote }}
   mercure-subscribe-url: {{ .Values.mercure.subscribeUrl | quote }}
+  api-entrypoint-scheme: {{ .Values.php.apiEntrypointScheme | quote }}
+  api-entrypoint-host: {{ .Values.php.apiEntrypointHost | quote }}
+  api-entrypoint-port: {{ .Values.php.apiEntrypointPort | quote }}
