@@ -1,3 +1,6 @@
+parameters:
+    env(MESSENGER_TRANSPORT_DSN): 'doctrine://default'
+
 framework:
     messenger:
         transports:
