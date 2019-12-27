@@ -5,6 +5,9 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'en'
+    router.request_context.scheme: '%env(API_ENTRYPOINT_SCHEME)%'
+    router.request_context.host: '%env(API_ENTRYPOINT_HOST)%'
+    request_listener.https_port: '%env(API_ENTRYPOINT_PORT)%'
 
 services:
     # default configuration for services in *this* file

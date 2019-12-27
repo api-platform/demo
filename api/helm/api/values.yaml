@@ -36,6 +36,9 @@ php:
     - 10.0.0.0/8
     - 172.16.0.0/12
     - 192.168.0.0/16
+  apiEntrypointScheme: https
+  apiEntrypointHost: demo.api-platform.com
+  apiEntrypointPort: 443
 
 nginx:
   repository: "eu.gcr.io/${PROJECT_ID}/nginx"
@@ -69,8 +72,8 @@ postgresql:
 
 mercure:
   enabled: true
-  publishUrl: http://mercure/hub
-  subscribeUrl: https://demo-mercure.api-platform.com/hub
+  publishUrl: http://mercure/.well-known/mercure
+  subscribeUrl: https://demo-mercure.api-platform.com/.well-known/mercure
   allowAnonymous: "1"
   corsAllowedOrigins: "^https?://.*?\\.api-platform\\.com$"
   heartbeatInterval: "1s"

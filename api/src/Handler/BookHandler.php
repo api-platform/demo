@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Handler;
 
 use ApiPlatform\Core\Api\IriConverterInterface;
+use ApiPlatform\Core\Api\UrlGeneratorInterface;
 use ApiPlatform\Core\JsonLd\Serializer\ItemNormalizer;
 use ApiPlatform\Core\Metadata\Resource\Factory\ResourceMetadataFactoryInterface;
 use App\Entity\Book;
@@ -83,7 +84,7 @@ final class BookHandler implements MessageHandlerInterface
 
         // Send message to Mercure hub
         $update = new Update(
-            $this->iriConverter->getIriFromItem($book),
+            $this->iriConverter->getIriFromItem($book, UrlGeneratorInterface::ABS_URL),
             $this->serializer->serialize(
                 $book,
                 ItemNormalizer::FORMAT,

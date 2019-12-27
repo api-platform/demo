@@ -65,6 +65,7 @@ helm upgrade --install --reset-values --force --namespace=$NAMESPACE --recreate-
     --set php.jwt.secretKey="$JWT_SECRET_KEY" \
     --set php.jwt.publicKey="$JWT_PUBLIC_KEY" \
     --set php.jwt.passphrase="$JWT_PASSPHRASE" \
+    --set php.apiEntrypointHost=$API_ENTRYPOINT \
     --set nginx.repository=$NGINX_REPOSITORY,nginx.tag=$TAG \
     --set varnish.repository=$VARNISH_REPOSITORY,varnish.tag=$TAG \
     --set blackfire.blackfire.server_id=$BLACKFIRE_SERVER_ID \
