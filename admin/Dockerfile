@@ -1,4 +1,4 @@
-FROM node:11.5-alpine
+FROM node:lts-alpine
 
 RUN mkdir -p /usr/src/admin
 
