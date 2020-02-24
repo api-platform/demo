@@ -11,13 +11,12 @@
 *.yaml text eol=lf
 *.yml text eol=lf
 bin/console text eol=lf
+composer.lock text eol=lf merge=ours
 
 *.ico binary
 *.png binary
 
 .github export-ignore
 .travis.yml export-ignore
-LICENSE export-ignore
 README.md export-ignore
 update-deps.sh export-ignore
-ci/bin/* binary

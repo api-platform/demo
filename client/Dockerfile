@@ -1,41 +1,49 @@
-FROM node:11.5-alpine
+# https://docs.docker.com/develop/develop-images/multistage-build/#stop-at-a-specific-build-stage
+# https://docs.docker.com/compose/compose-file/#target
 
-RUN mkdir -p /usr/src/client
 
-ARG PUPPETEER_VERSION=1.10.0
+# https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
+ARG NODE_VERSION=13
+ARG NGINX_VERSION=1.17
+
+
+# "development" stage
+FROM node:${NODE_VERSION}-alpine AS api_platform_client_development
 
 WORKDIR /usr/src/client
 
-RUN apk add --no-cache ca-certificates chromium; \
-    apk add --no-cache --virtual .gyp python bash make g++; \
-    apk add --no-cache --virtual .build-deps openssl; \
-    yarn global add @api-platform/client-generator puppeteer@${PUPPETEER_VERSION}; \
-    yarn cache clean; \
-	apk del .gyp
+RUN yarn global add @api-platform/client-generator
 
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
-ENV NODE_PATH="/usr/local/share/.config/yarn/global/node_modules:${NODE_PATH}"
-ENV CI=true
-
-RUN openssl genrsa -des3 -passout pass:NotSecure -out cert.pass.key 2048; \
-    openssl rsa -passin pass:NotSecure -in cert.pass.key -out cert.key; \
-    openssl req -new -passout pass:NotSecure -key cert.key -out cert.csr -subj '/C=SS/ST=SS/L=Gotham City/O=API Platform Dev/CN=localhost'; \
-    openssl x509 -req -sha256 -days 365 -in cert.csr -signkey cert.key -out cert.crt; \
-    mv cert.key /usr/local/share/cert.key; \
-    mv cert.crt /usr/local/share/cert.crt; \
-    apk del .build-deps
-
-# Prevent the reinstallation of node modules at every changes in the source code
+# prevent the reinstallation of node modules at every changes in the source code
 COPY package.json yarn.lock ./
-RUN yarn install
-
-COPY docker/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
-RUN chmod +x /usr/local/bin/docker-entrypoint
-ENTRYPOINT ["docker-entrypoint"]
+RUN set -eux; \
+	yarn install
 
 COPY . ./
 
-EXPOSE 3000
-EXPOSE 5000
+VOLUME /usr/src/client/node_modules
 
-CMD yarn start
+ENV HTTPS true
+
+CMD ["yarn", "start"]
+
+
+# "build" stage
+# depends on the "development" stage above
+FROM api_platform_client_development AS api_platform_client_build
+
+ARG REACT_APP_API_ENTRYPOINT
+
+RUN set -eux; \
+	yarn build
+
+
+# "nginx" stage
+# depends on the "build" stage above
+FROM nginx:${NGINX_VERSION}-alpine AS api_platform_client_nginx
+
+COPY docker/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
+
+WORKDIR /usr/src/client/build
+
+COPY --from=api_platform_client_build /usr/src/client/build ./

@@ -1,143 +1,140 @@
 version: '3.4'
 
+x-cache-from:
+  - &api-cache-from
+    cache_from:
+      - ${NGINX_IMAGE:-quay.io/api-platform/nginx}
+      - ${PHP_IMAGE:-quay.io/api-platform/php}
+
 services:
   php:
-    image: ${CONTAINER_REGISTRY_BASE}/php
     build:
       context: ./api
       target: api_platform_php
-      cache_from: &api_cache_from
-        - ${CONTAINER_REGISTRY_BASE}/php
-        - ${CONTAINER_REGISTRY_BASE}/nginx
-        - ${CONTAINER_REGISTRY_BASE}/varnish
-    restart: on-failure
+      <<: *api-cache-from
+    image: ${PHP_IMAGE:-quay.io/api-platform/php}
+    healthcheck:
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
     depends_on:
       - db
-    # Comment out these volumes in production
+      - dev-tls
     volumes:
       - ./api:/srv/api:rw,cached
-      # If you develop on Linux, uncomment the following line to use a bind-mounted host directory instead
+      - ./api/docker/php/conf.d/api-platform.dev.ini/:/usr/local/etc/php/conf.d/api-platform.ini
+      # if you develop on Linux, you may use a bind-mounted host directory instead
       # - ./api/var:/srv/api/var:rw
-
-  consumer:
-    image: ${CONTAINER_REGISTRY_BASE}/php
-    build:
-      context: ./api
-      target: api_platform_php
-      cache_from: *api_cache_from
-    command: bin/console messenger:consume
-    restart: on-failure
-    # Comment out these volumes in production
-    volumes:
-      - ./api:/srv/api:rw,cached
-      # If you develop on Linux, uncomment the following line to use a bind-mounted host directory instead
-      # - ./api/var:/srv/api/var:rw
+      - dev-certs:/certs:ro,nocopy
 
   api:
-    image: ${CONTAINER_REGISTRY_BASE}/nginx
     build:
       context: ./api
       target: api_platform_nginx
-      cache_from: *api_cache_from
+      <<: *api-cache-from
+    image: ${NGINX_IMAGE:-quay.io/api-platform/nginx}
     depends_on:
       - php
-    # Comment out this volume in production
     volumes:
       - ./api/public:/srv/api/public:ro
-    ports:
-      - "8080:80"
 
-  cache-proxy:
-    image: ${CONTAINER_REGISTRY_BASE}/varnish
-    build:
-      context: ./api
-      target: api_platform_varnish
-      cache_from: *api_cache_from
+  vulcain:
+    image: dunglas/vulcain
+    environment:
+      - CERT_FILE=/certs/localhost.crt
+      - KEY_FILE=/certs/localhost.key
+      - UPSTREAM=http://api
     depends_on:
       - api
+      - dev-tls
     volumes:
-      - ./api/docker/varnish/conf:/usr/local/etc/varnish:ro
-    tmpfs:
-      - /usr/local/var/varnish:exec
+      - dev-certs:/certs:ro,nocopy
     ports:
-      - "8081:80"
+      - target: 443
+        published: 8443
+        protocol: tcp
 
   db:
-    # In production, you may want to use a managed database service
-    image: bitnami/postgresql:10
+    image: postgres:12-alpine
     environment:
-      - POSTGRESQL_DATABASE=api
-      - POSTGRESQL_USERNAME=api-platform
-      # You should definitely change the password in production
-      - POSTGRESQL_PASSWORD=!ChangeMe!
+      - POSTGRES_DB=api
+      - POSTGRES_PASSWORD=!ChangeMe!
+      - POSTGRES_USER=api-platform
     volumes:
       - db-data:/var/lib/postgresql/data:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
+      # you may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
+      # - ./api/docker/db/data:/var/lib/postgresql/data:rw
     ports:
-      - "5432:5432"
+      - target: 5432
+        published: 5432
+        protocol: tcp
 
   mercure:
-    # In production, you may want to use the managed version of Mercure, https://mercure.rocks
     image: dunglas/mercure
     environment:
-      # You should definitely change all these values in production
-      - JWT_KEY=!InsecureChangeMe! # You have to change MERCURE_JWT_SECRET in api/.env when you change this. You can put the old value of MERCURE_JWT_SECRET into the debugger on https://jwt.io/ and put the new value of JWT_KEY in the "secret" field to obtain the new encoded value for MERCURE_JWT_SECRET
       - ALLOW_ANONYMOUS=1
+      - CERT_FILE=/certs/localhost.crt
       - CORS_ALLOWED_ORIGINS=*
-      - PUBLISH_ALLOWED_ORIGINS=http://localhost:1337,https://localhost:1338
       - DEMO=1
+      - JWT_KEY=!ChangeMe!
+      - KEY_FILE=/certs/localhost.key
+      - PUBLISH_ALLOWED_ORIGINS=https://localhost:1337 # required for publishing from the demo page
+    depends_on:
+      - dev-tls
+    volumes:
+      - dev-certs:/certs:ro,nocopy
     ports:
-      - "1337:80"
+      - target: 443
+        published: 1337
+        protocol: tcp
 
   client:
-    # Use a static website hosting service in production
-    # See https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#deployment
-    image: ${CONTAINER_REGISTRY_BASE}/client
     build:
       context: ./client
+      target: api_platform_client_development
       cache_from:
-        - ${CONTAINER_REGISTRY_BASE}/client
-    env_file:
-      - ./client/.env
+        - ${CLIENT_IMAGE:-quay.io/api-platform/client}
+    image: ${CLIENT_IMAGE:-quay.io/api-platform/client}
+    environment:
+      - API_PLATFORM_CLIENT_GENERATOR_ENTRYPOINT=http://api
+      - API_PLATFORM_CLIENT_GENERATOR_OUTPUT=src
+    depends_on:
+      - dev-tls
     volumes:
       - ./client:/usr/src/client:rw,cached
-      - /usr/src/client/node_modules
+      - dev-certs:/usr/src/client/node_modules/webpack-dev-server/ssl:ro,nocopy
     ports:
-      - "80:3000"
-      - "5000:5000"
+      - target: 3000
+        published: 443
+        protocol: tcp
 
   admin:
-    # Use a static website hosting service in production
-    # See https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#deployment
-    image: ${CONTAINER_REGISTRY_BASE}/admin
     build:
       context: ./admin
+      target: api_platform_admin_development
       cache_from:
-        - ${CONTAINER_REGISTRY_BASE}/admin
-    env_file:
-      - ./admin/.env
+        - ${ADMIN_IMAGE:-quay.io/api-platform/admin}
+    image: ${ADMIN_IMAGE:-quay.io/api-platform/admin}
+    depends_on:
+      - dev-tls
     volumes:
       - ./admin:/usr/src/admin:rw,cached
-      - /usr/src/admin/node_modules
+      - dev-certs:/usr/src/admin/node_modules/webpack-dev-server/ssl:ro,nocopy
     ports:
-      - "81:3000"
+      - target: 3000
+        published: 444
+        protocol: tcp
 
-  h2-proxy:
-    # Don't use this proxy in prod
+  dev-tls:
     build:
-      context: ./h2-proxy
-    depends_on:
-      - client
-      - admin
-      - api
-      - cache-proxy
+      context: ./docker/dev-tls
+    volumes:
+      - dev-certs:/certs:rw
     ports:
-      - "443:443" # client
-      - "444:444" # admin
-      - "8443:8443" # api
-      - "8444:8444" # cache-proxy
-      - "1338:1338" # mercure
+      - target: 80
+        published: 80
+        protocol: tcp
 
   blackfire:
     image: blackfire/blackfire
@@ -149,3 +146,4 @@ services:
 
 volumes:
   db-data: {}
+  dev-certs: {}

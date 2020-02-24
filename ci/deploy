@@ -61,7 +61,7 @@ helm upgrade --install --reset-values --force --namespace=$NAMESPACE --recreate-
     --set php.corsAllowOrigin=$CORS_ALLOW_ORIGIN \
     --set php.trustedHosts=$TRUSTED_HOSTS \
     --set php.repository=$PHP_REPOSITORY,php.tag=$TAG \
-    --set php.mercure.jwtSecret=$MERCURE_JWT_SECRET \
+    --set php.mercure.jwtToken=$MERCURE_JWT_TOKEN \
     --set php.jwt.secretKey="$JWT_SECRET_KEY" \
     --set php.jwt.publicKey="$JWT_PUBLIC_KEY" \
     --set php.jwt.passphrase="$JWT_PASSPHRASE" \

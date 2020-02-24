@@ -2,9 +2,11 @@
 # https://docs.docker.com/develop/develop-images/multistage-build/#stop-at-a-specific-build-stage
 # https://docs.docker.com/compose/compose-file/#target
 
-ARG PHP_VERSION=7.3
-ARG NGINX_VERSION=1.15
-ARG VARNISH_VERSION=6.2
+
+# https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
+ARG PHP_VERSION=7.4
+ARG NGINX_VERSION=1.17
+ARG VARNISH_VERSION=6.3
 
 
 # "php" stage
@@ -13,13 +15,13 @@ FROM php:${PHP_VERSION}-fpm-alpine AS api_platform_php
 # persistent / runtime deps
 RUN apk add --no-cache \
 		acl \
+		fcgi \
 		file \
 		gettext \
 		git \
-		openssl \
 	;
 
-ARG APCU_VERSION=5.1.17
+ARG APCU_VERSION=5.1.18
 RUN set -eux; \
 	apk add --no-cache --virtual .build-deps \
 		$PHPIZE_DEPS \
@@ -29,7 +31,7 @@ RUN set -eux; \
 		zlib-dev \
 	; \
 	\
-	docker-php-ext-configure zip --with-libzip; \
+	docker-php-ext-configure zip; \
 	docker-php-ext-install -j$(nproc) \
 		intl \
 		pdo_pgsql \
@@ -54,16 +56,16 @@ RUN set -eux; \
 	\
 	apk del .build-deps
 
-RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
-    && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/alpine/amd64/$version \
-    && mkdir -p /tmp/blackfire \
-    && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp/blackfire \
-    && mv /tmp/blackfire/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
-    && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8707\n" > $PHP_INI_DIR/conf.d/blackfire.ini \
-    && rm -rf /tmp/blackfire /tmp/blackfire-probe.tar.gz
-
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-COPY docker/php/php.ini /usr/local/etc/php/php.ini
+
+RUN ln -s $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
+COPY docker/php/conf.d/api-platform.prod.ini $PHP_INI_DIR/conf.d/api-platform.ini
+
+RUN set -eux; \
+	{ \
+		echo '[www]'; \
+		echo 'ping.path = /ping'; \
+	} | tee /usr/local/etc/php-fpm.d/docker-healthcheck.conf
 
 # Workaround to allow using PHPUnit 8 with Symfony 4.3
 ENV SYMFONY_PHPUNIT_VERSION=8.3
@@ -82,20 +84,21 @@ WORKDIR /srv/api
 ARG APP_ENV=prod
 
 # prevent the reinstallation of vendors at every changes in the source code
-COPY composer.json composer.lock ./
-# do not use .env files in production
-RUN echo '<?php return [];' > .env.local.php
+COPY composer.json composer.lock symfony.lock ./
 RUN set -eux; \
-	composer install --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress --no-suggest; \
+	composer install --prefer-dist --no-dev --no-scripts --no-progress --no-suggest; \
 	composer clear-cache
+
+# do not use .env files in production
+COPY .env ./
+RUN composer dump-env prod; \
+	rm .env
 
 # copy only specifically what we need
 COPY bin bin/
 COPY config config/
 COPY public public/
 COPY src src/
-# only for demo
-COPY fixtures fixtures/
 
 RUN set -eux; \
 	mkdir -p var/cache var/log; \
@@ -103,6 +106,11 @@ RUN set -eux; \
 	composer run-script --no-dev post-install-cmd; \
 	chmod +x bin/console; sync
 VOLUME /srv/api/var
+
+COPY docker/php/docker-healthcheck.sh /usr/local/bin/docker-healthcheck
+RUN chmod +x /usr/local/bin/docker-healthcheck
+
+HEALTHCHECK --interval=10s --timeout=3s --retries=3 CMD ["docker-healthcheck"]
 
 COPY docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 RUN chmod +x /usr/local/bin/docker-entrypoint
@@ -117,13 +125,15 @@ FROM nginx:${NGINX_VERSION}-alpine AS api_platform_nginx
 
 COPY docker/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
 
-WORKDIR /srv/api
+WORKDIR /srv/api/public
 
-COPY --from=api_platform_php /srv/api/public public/
+COPY --from=api_platform_php /srv/api/public ./
 
 
 # "varnish" stage
 # does not depend on any of the above stages, but placed here to keep everything in one Dockerfile
-FROM cooptilleuls/varnish:${VARNISH_VERSION} AS api_platform_varnish
+FROM varnish:${VARNISH_VERSION} AS api_platform_varnish
 
-COPY docker/varnish/conf/default.vcl /usr/local/etc/varnish/default.vcl
+COPY docker/varnish/conf/default.vcl /etc/varnish/default.vcl
+
+CMD ["varnishd", "-F", "-f", "/etc/varnish/default.vcl", "-p", "http_resp_hdr_len=65536", "-p", "http_resp_size=98304"]
