@@ -2,11 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './welcome.css';
 
-const {
-    REACT_APP_ADMIN_HOST_HTTPS: ADMIN_HOST_HTTPS,
-    REACT_APP_API_CACHED_HOST_HTTPS: API_CACHED_HOST_HTTPS
-} = process.env;
-
 const Welcome = () => (
     <div className="welcome">
         <header className="welcome__top">
@@ -35,14 +30,12 @@ const Welcome = () => (
                     Welcome to the <strong>API Platform demo</strong>!
                 </h1>
                 <div className="main__before-starting">
-                    <p>
-                        This container host a generated <b>Progressive Web App</b>{' '}
-                        ({'http:' === document.location.protocol ? <a href={`https://${document.domain}`}>HTTPS</a> : <a href={`http://${document.domain}`}>HTTP</a>}):
-                        <ul>
+                    <p>This container host a generated <b>Progressive Web App</b>{' '}
+                      ({'http:' === document.location.protocol ? <a href={`https://${document.domain}`}>HTTPS</a> : <a href={`http://${document.domain}`}>HTTP</a>}):</p>
+                      <ul>
                           <li><Link to="books/">Books</Link></li>
                           <li><Link to="reviews/">Reviews</Link></li>
-                        </ul>
-                    </p>
+                      </ul>
                 </div>
                 <div className="main__other">
                     <h2>Related demo containers:</h2>
@@ -55,7 +48,7 @@ const Welcome = () => (
                               <a
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                href={API_CACHED_HOST_HTTPS}
+                                href={process.env.REACT_APP_API_ENTRYPOINT}
                                 className="other__button"
                               >
                                 API
@@ -72,7 +65,7 @@ const Welcome = () => (
                               <a
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                href={ADMIN_HOST_HTTPS}
+                                href={process.env.REACT_APP_ADMIN_HOST}
                                 className="other__button"
                               >
                                 Admin
