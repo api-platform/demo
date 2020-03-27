@@ -1,0 +1,12 @@
+App\Entity\Command:
+    command_{1..400}:
+        reference: <ean8()>
+        date: <dateTimeThisDecade()>
+        customer: '@customer_*'
+        total_ex_taxes: <randomFloat(2, 100, 300)>
+        delivery_fees: <randomFloat(2, 1, 12)>
+        tax_rate: <randomFloat(2, 0, 1)>
+        taxes: <randomFloat(2, 2, 20)>
+        total: <randomFloat(2, 100, 400)>
+        status: <randomElement(['delivered', 'ordered', 'cancelled'])>
+        returned: <boolean(5)>

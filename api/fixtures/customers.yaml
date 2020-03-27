@@ -1,0 +1,16 @@
+App\Entity\Customer:
+    customer_{1..100}:
+        first_name: <firstName()>
+        last_name: <lastName()>
+        email: <email()>
+        address: <streetAddress()>
+        zipcode: <postcode()>
+        city: <city()>
+        avatar: 'https://i.pravatar.cc/150?u=<email()>'
+        birthday: <dateTimeThisCentury()>
+        first_seen: <dateTimeThisDecade()>
+        last_seen: <dateTimeThisMonth()>
+        has_ordered: <boolean(20)>
+        has_newsletter: <boolean(5)>
+        nb_commands: <numberBetween(0,2)>
+        total_spent: <randomFloat(2, 0, 300)>

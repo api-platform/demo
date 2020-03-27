@@ -1,0 +1,5 @@
+App\Entity\Basket:
+    basket_{1..1000}:
+        command: '@command_*'
+        product: '@product_*'
+        quantity: <numberBetween(1, 3)>

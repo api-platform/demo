@@ -1,0 +1,11 @@
+App\Entity\Product:
+    product_{1..40}:
+        reference: <ean8()>
+        width: <randomFloat(2, 30, 120)>
+        height: <randomFloat(2, 30, 120)>
+        price: <randomFloat(2, 0, 300)>
+        thumbnail: 'https://picsum.photos/id/<current()>/40/60'
+        image: 'https://picsum.photos/id/<current()>/200/300'
+        description: <text(200)>
+        stock: <numberBetween(0, 60)>
+
