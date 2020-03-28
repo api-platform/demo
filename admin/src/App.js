@@ -13,7 +13,7 @@ import {
   fetchHydra as baseFetchHydra,
 } from "@api-platform/admin";
 import parseHydraDocumentation from "@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation";
-import { ReferenceInput, AutocompleteInput } from "react-admin";
+import { AutocompleteInput, ReferenceField, ReferenceInput, TextField } from "react-admin";
 import authProvider from "./authProvider";
 import Login from "./layout/Login";
 
@@ -23,6 +23,10 @@ const ReviewsList = (props) => (
   <ListGuesser {...props}>
     <FieldGuesser source="author" />
     <FieldGuesser source="book" />
+    {/* Use react-admin components directly when you want complex fields. */}
+    <ReferenceField label="Book's title" source="book" reference="books">
+      <TextField source="title" />
+    </ReferenceField>
 
     {/* While deprecated fields are hidden by default, using an explicit FieldGuesser component allows to add them back. */}
     <FieldGuesser source="letter" />
@@ -46,6 +50,7 @@ const ReviewsShow = (props) => (
 const ReviewsCreate = (props) => (
   <CreateGuesser {...props}>
     <InputGuesser source="author" />
+    {/* Use react-admin components directly when you want complex inputs. */}
     <ReferenceInput
       source="book"
       reference="books"
@@ -69,6 +74,7 @@ const ReviewsEdit = (props) => (
   <EditGuesser {...props}>
     <InputGuesser source="author" />
 
+    {/* Use react-admin components directly when you want complex inputs. */}
     <ReferenceInput
       source="book"
       reference="books"
