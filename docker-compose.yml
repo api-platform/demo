@@ -111,6 +111,7 @@ services:
     # Use a static website hosting service in production
     # See https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#deployment
     image: ${CONTAINER_REGISTRY_BASE}/admin
+    stdin_open: true # https://github.com/facebook/create-react-app/issues/8688
     build:
       context: ./admin
       cache_from:
