@@ -21,14 +21,10 @@ export default {
   },
   logout: () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("authentication");
     return Promise.resolve();
   },
   checkAuth: () =>
-    !localStorage.getItem("authentication") || localStorage.getItem("token")
-      ? Promise.resolve()
-      : Promise.reject(),
-  checkLogged: () => !!localStorage.getItem("token"),
+    localStorage.getItem("token") ? Promise.resolve() : Promise.reject(),
   checkError: (error) => {
     const status = error.status;
     if (status === 401 || status === 403) {

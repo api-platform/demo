@@ -15,7 +15,6 @@ import {
 import parseHydraDocumentation from "@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation";
 import { ReferenceInput, AutocompleteInput } from "react-admin";
 import authProvider from "./authProvider";
-import Layout from "./layout/Layout";
 import Login from "./layout/Login";
 
 const entrypoint = process.env.REACT_APP_API_ENTRYPOINT;
@@ -114,7 +113,6 @@ const apiDocumentationParser = (entrypoint) =>
       if (result.status === 401) {
         // Prevent infinite loop if the token is expired
         localStorage.removeItem("token");
-        localStorage.setItem("authentication", true);
         return Promise.resolve({
           api: result.api,
           customRoutes: [
@@ -145,7 +143,6 @@ export default () => (
     entrypoint={entrypoint}
     dataProvider={dataProvider}
     authProvider={authProvider}
-    layout={Layout}
     loginPage={Login}
   >
     <ResourceGuesser name="books" />

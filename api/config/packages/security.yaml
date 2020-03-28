@@ -28,3 +28,9 @@ security:
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
+
+    # If the endpoints need to be secured
+    # access_control:
+    #     - { path: ^/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    #     - { path: ^/authentication_token, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    #     - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
