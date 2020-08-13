@@ -12,7 +12,7 @@ use App\Entity\Book;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Mercure\Publisher;
+use Symfony\Component\Mercure\PublisherInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -37,7 +37,7 @@ final class BookHandler implements MessageHandlerInterface
     public function __construct(
         IriConverterInterface $iriConverter,
         SerializerInterface $serializer,
-        Publisher $publisher,
+        PublisherInterface $publisher,
         ResourceMetadataFactoryInterface $resourceMetadataFactory,
         Client $imgflipClient,
         LoggerInterface $logger

@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace App\Doctrine\ORM\Mapping;
 
-use Doctrine\Common\Inflector\Inflector;
+use Doctrine\Inflector\Inflector;
+use Doctrine\Inflector\InflectorFactory;
 use Doctrine\ORM\Mapping\NamingStrategy as NamingStrategyInterface;
 
 class ResourceNamingStrategy implements NamingStrategyInterface
 {
+    private $inflector;
+
     /**
      * {@inheritdoc}
      */
     public function classToTableName($className): string
     {
-        return Inflector::pluralize(Inflector::tableize(self::shortName($className)));
+        return $this->getInflector()->pluralize($this->getInflector()->tableize(self::shortName($className)));
     }
 
     /**
@@ -22,7 +25,7 @@ class ResourceNamingStrategy implements NamingStrategyInterface
      */
     public function propertyToColumnName($propertyName, $className = null): string
     {
-        return Inflector::tableize($propertyName);
+        return $this->getInflector()->tableize($propertyName);
     }
 
     /**
@@ -30,7 +33,7 @@ class ResourceNamingStrategy implements NamingStrategyInterface
      */
     public function embeddedFieldToColumnName($propertyName, $embeddedColumnName, $className = null, $embeddedClassName = null): string
     {
-        return Inflector::tableize($propertyName).'_'.$embeddedColumnName;
+        return $this->getInflector()->tableize($propertyName).'_'.$embeddedColumnName;
     }
 
     /**
@@ -46,7 +49,7 @@ class ResourceNamingStrategy implements NamingStrategyInterface
      */
     public function joinColumnName($propertyName): string
     {
-        return Inflector::tableize($propertyName).'_'.$this->referenceColumnName();
+        return $this->getInflector()->tableize($propertyName).'_'.$this->referenceColumnName();
     }
 
     /**
@@ -62,7 +65,7 @@ class ResourceNamingStrategy implements NamingStrategyInterface
      */
     public function joinKeyColumnName($entityName, $referencedColumnName = null): string
     {
-        return Inflector::tableize(self::shortName($entityName)).'_'.($referencedColumnName ?? $this->referenceColumnName());
+        return $this->getInflector()->tableize(self::shortName($entityName)).'_'.($referencedColumnName ?? $this->referenceColumnName());
     }
 
     private static function shortName(string $className): string
@@ -72,5 +75,14 @@ class ResourceNamingStrategy implements NamingStrategyInterface
         }
 
         return $className;
+    }
+
+    private function getInflector(): Inflector
+    {
+        if (!$this->inflector) {
+            $this->inflector = InflectorFactory::create()->build();
+        }
+
+        return $this->inflector;
     }
 }
