@@ -16,7 +16,7 @@ php:
   env: prod
   debug: '0'
   secret: ""
-  corsAllowOrigin: "^https?://(.*?api-platform\\.com|localhost(?::[0-9]+)?)$"
+  corsAllowOrigin: "^https?://(.*\\.api-platform\\.com|localhost(?::[0-9]+)?)$"
   trustedHosts: "^.*\\.api\\-platform\\.com$"
   trustedProxies:
     - 103.21.244.0/22
