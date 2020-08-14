@@ -1,0 +1,104 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ template "fullname" . }}-cronjob
+spec:
+  schedule: '0 0 * * *'
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: {{ .Chart.Name }}-cronjob
+              image: "{{ .Values.php.repository }}:{{ .Values.php.tag }}"
+              args:
+                - /bin/sh
+                - -c
+                - 'APP_ENV=dev composer install -n && bin/console doctrine:schema:update --force -e prod && bin/console hautelook:fixtures:load -n -e dev && APP_ENV=prod composer --no-dev install --classmap-authoritative && exit 0'
+              env:
+                - name: TRUSTED_HOSTS
+                  valueFrom:
+                    configMapKeyRef:
+                      name: {{ template "fullname" . }}
+                      key: trusted-hosts
+                - name: TRUSTED_PROXIES
+                  valueFrom:
+                    configMapKeyRef:
+                      name: {{ template "fullname" . }}
+                      key: trusted-proxies
+                - name: APP_ENV
+                  valueFrom:
+                    configMapKeyRef:
+                      name: {{ template "fullname" . }}
+                      key: env
+                - name: APP_DEBUG
+                  valueFrom:
+                    configMapKeyRef:
+                      name: {{ template "fullname" . }}
+                      key: debug
+                - name: CORS_ALLOW_ORIGIN
+                  valueFrom:
+                    configMapKeyRef:
+                      name: {{ template "fullname" . }}
+                      key: cors-allow-origin
+                - name: VARNISH_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: {{ template "fullname" . }}
+                      key: varnish-url
+                - name: APP_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ template "fullname" . }}
+                      key: secret
+                - name: DATABASE_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ template "fullname" . }}
+                      key: database-url
+                - name: MERCURE_PUBLISH_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: {{ template "fullname" . }}
+                      key: mercure-publish-url
+                - name: MERCURE_SUBSCRIBE_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: {{ template "fullname" . }}
+                      key: mercure-subscribe-url
+                - name: MERCURE_JWT_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ template "fullname" . }}
+                      key: mercure-jwt-secret
+                - name: JWT_SECRET_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ template "fullname" . }}
+                      key: jwt-secret-key
+                - name: JWT_PUBLIC_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ template "fullname" . }}
+                      key: jwt-public-key
+                - name: JWT_PASSPHRASE
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ template "fullname" . }}
+                      key: jwt-passphrase
+                - name: API_ENTRYPOINT_SCHEME
+                  valueFrom:
+                    configMapKeyRef:
+                      name: {{ template "fullname" . }}
+                      key: api-entrypoint-scheme
+                - name: API_ENTRYPOINT_HOST
+                  valueFrom:
+                    configMapKeyRef:
+                      name: {{ template "fullname" . }}
+                      key: api-entrypoint-host
+                - name: API_ENTRYPOINT_PORT
+                  valueFrom:
+                    configMapKeyRef:
+                      name: {{ template "fullname" . }}
+                      key: api-entrypoint-port
