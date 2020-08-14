@@ -98,10 +98,9 @@ RUN set -eux; \
 	composer install --prefer-dist --no-dev --no-scripts --no-progress --no-suggest; \
 	composer clear-cache
 
-# do not use .env files in production
+# do not use .env files in production (but keep it for reloading fixtures /!\ specific on this project)
 COPY .env ./
-RUN composer dump-env prod; \
-	rm .env
+RUN composer dump-env prod
 
 # copy only specifically what we need
 COPY bin bin/
