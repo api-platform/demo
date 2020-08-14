@@ -80,7 +80,7 @@ helm upgrade --install --reset-values --force --namespace=$NAMESPACE --recreate-
     --set mercure.publishUrl="http://${RELEASE}-mercure/.well-known/mercure" \
     --set mercure.subscribeUrl="https://${MERCURE_ENTRYPOINT}/.well-known/mercure" \
     --set mercure.jwtKey=$MERCURE_JWT_KEY \
-    --set mercure.corsAllowedOrigins="https://${CLIENT_BUCKET}\,https://${ADMIN_BUCKET}" \
+    --set mercure.corsAllowedOrigins="https://${CLIENT_BUCKET} https://${ADMIN_BUCKET}" \
     --set mercure.domainFilters="{$DOMAIN}"
 
 # Reload fixtures: this is specific for this project!

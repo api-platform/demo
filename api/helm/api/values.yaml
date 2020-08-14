@@ -75,7 +75,7 @@ mercure:
   publishUrl: http://mercure/.well-known/mercure
   subscribeUrl: https://demo-mercure.api-platform.com/.well-known/mercure
   allowAnonymous: "1"
-  corsAllowedOrigins: "^https?://.*?\\.api-platform\\.com$"
+  corsAllowedOrigins: "^https?://.*\\.api-platform\\.com$"
   heartbeatInterval: "1s"
   service:
     type: NodePort
