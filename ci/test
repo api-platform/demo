@@ -14,7 +14,9 @@ docker-compose exec php bin/console doctrine:schema:drop --env=test --force
 docker-compose exec php bin/console doctrine:schema:create --env=test
 docker-compose exec php bin/console messenger:setup-transports --env=test
 docker-compose exec php bin/console cache:warmup --env=test
-docker-compose exec php bin/phpunit
+# Run tests one by one because of a bug on fixtures loading
+docker-compose exec php bin/phpunit tests/BooksTest.php
+docker-compose exec php bin/phpunit tests/ReviewsTest.php
 docker-compose exec client yarn install --pure-lockfile
 docker-compose exec client yarn jest --ci --reporters=default --reporters=jest-junit --passWithNoTests
 docker-compose exec client yarn eslint src

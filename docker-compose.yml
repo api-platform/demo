@@ -11,6 +11,11 @@ services:
         - ${CONTAINER_REGISTRY_BASE}/nginx
         - ${CONTAINER_REGISTRY_BASE}/varnish
     restart: on-failure
+    healthcheck:
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
     depends_on:
       - db
     # Comment out these volumes in production
@@ -27,6 +32,8 @@ services:
       cache_from: *api_cache_from
     command: bin/console messenger:consume
     restart: on-failure
+    healthcheck:
+      disable: true
     # Comment out these volumes in production
     volumes:
       - ./api:/srv/api:rw,cached
@@ -98,6 +105,7 @@ services:
       context: ./client
       cache_from:
         - ${CONTAINER_REGISTRY_BASE}/client
+    stdin_open: true # https://github.com/facebook/create-react-app/issues/8688
     env_file:
       - ./client/.env
     volumes:

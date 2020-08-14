@@ -7,7 +7,7 @@ parameters:
     locale: 'en'
     router.request_context.scheme: '%env(API_ENTRYPOINT_SCHEME)%'
     router.request_context.host: '%env(API_ENTRYPOINT_HOST)%'
-    request_listener.https_port: '%env(API_ENTRYPOINT_PORT)%'
+    request_listener.https_port: '%env(int:API_ENTRYPOINT_PORT)%'
 
 services:
     # default configuration for services in *this* file

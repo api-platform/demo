@@ -5,32 +5,33 @@
         "php": "^7.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "ext-json": "*",
+        "ext-openssl": "*",
         "api-platform/api-pack": "^1.2",
-        "csa/guzzle-bundle": "^3.1",
-        "doctrine/doctrine-migrations-bundle": "^2.0",
-        "guzzlehttp/guzzle": "^6.3",
-        "lexik/jwt-authentication-bundle": "^2.6",
-        "ramsey/uuid-doctrine": "^1.5",
-        "sensiolabs/security-checker": "^5.0",
-        "symfony/console": "4.3.*",
-        "symfony/dotenv": "4.3.*",
+        "csa/guzzle-bundle": "^3.2",
+        "doctrine/doctrine-migrations-bundle": "^2.2",
+        "lexik/jwt-authentication-bundle": "^2.8",
+        "ramsey/uuid-doctrine": "^1.6",
+        "sensiolabs/security-checker": "^6.0",
+        "symfony/console": "5.1.*",
+        "symfony/dotenv": "5.1.*",
         "symfony/flex": "^1.1",
-        "symfony/framework-bundle": "4.3.*",
-        "symfony/mercure-bundle": "^0.1.1",
-        "symfony/messenger": "4.3.*",
-        "symfony/translation": "4.3.*",
-        "symfony/yaml": "4.3.*",
-        "webonyx/graphql-php": "^0.13"
+        "symfony/framework-bundle": "5.1.*",
+        "symfony/mercure-bundle": "^0.2.5",
+        "symfony/messenger": "5.1.*",
+        "symfony/translation": "5.1.*",
+        "symfony/yaml": "5.1.*",
+        "webonyx/graphql-php": "^14.1"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.15",
-        "hautelook/alice-bundle": "^2.3",
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "hautelook/alice-bundle": "^2.7",
         "justinrainbow/json-schema": "^5.2",
         "phpunit/php-code-coverage": "^7.0",
-        "symfony/maker-bundle": "^1.11",
+        "symfony/maker-bundle": "^1.20",
         "symfony/profiler-pack": "^1.0",
         "symfony/test-pack": "^1.0",
-        "symfony/var-dumper": "4.3.*"
+        "symfony/var-dumper": "5.1.*"
     },
     "config": {
         "preferred-install": {
@@ -76,7 +77,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "4.3.*"
+            "require": "5.1.*"
         }
     }
 }
