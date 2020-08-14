@@ -13,9 +13,10 @@ spec:
             - name: {{ .Chart.Name }}-cronjob
               image: "{{ .Values.php.repository }}:{{ .Values.php.tag }}"
               args:
-                - /bin/sh
-                - -c
-                - 'APP_ENV=dev composer install -n && bin/console doctrine:schema:update --force -e prod && bin/console hautelook:fixtures:load -n -e dev && APP_ENV=prod composer --no-dev install --classmap-authoritative && exit 0'
+                - bin/console
+                - hautelook:fixtures:load
+                - -n
+                - --purge-with-truncate
               env:
                 - name: TRUSTED_HOSTS
                   valueFrom:
@@ -28,10 +29,7 @@ spec:
                       name: {{ template "fullname" . }}
                       key: trusted-proxies
                 - name: APP_ENV
-                  valueFrom:
-                    configMapKeyRef:
-                      name: {{ template "fullname" . }}
-                      key: env
+                  value: "dev"
                 - name: APP_DEBUG
                   valueFrom:
                     configMapKeyRef:

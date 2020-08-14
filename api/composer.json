@@ -9,6 +9,7 @@
         "ext-openssl": "*",
         "api-platform/api-pack": "^1.2",
         "csa/guzzle-bundle": "^3.2",
+        "doctrine/doctrine-bundle": "^2.0 <2.1",
         "doctrine/doctrine-migrations-bundle": "^2.2",
         "lexik/jwt-authentication-bundle": "^2.8",
         "ramsey/uuid-doctrine": "^1.6",

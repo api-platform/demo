@@ -64,7 +64,7 @@ postgresql:
   # Persistent Volume Storage configuration.
   # ref: https://kubernetes.io/docs/user-guide/persistent-volumes
   persistence:
-    enabled: true
+    enabled: false
   pullPolicy: IfNotPresent
   image:
     repository: bitnami/postgresql

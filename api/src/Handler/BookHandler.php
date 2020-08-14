@@ -89,8 +89,7 @@ final class BookHandler implements MessageHandlerInterface
                 $book,
                 ItemNormalizer::FORMAT,
                 $this->resourceMetadataFactory->create(Book::class)->getItemOperationAttribute('generate_cover', 'normalizationContext', [])
-            ),
-            []
+            )
         );
         ($this->publisher)($update);
     }
