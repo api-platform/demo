@@ -25,6 +25,9 @@ spec:
           imagePullPolicy: {{ .Values.nginx.pullPolicy }}
           ports:
             - containerPort: 80
+          env:
+            - name: UPSTREAM
+              value: {{ template "fullname" . }}-php.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.php.service.port }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- if .Values.nodeSelector }}
