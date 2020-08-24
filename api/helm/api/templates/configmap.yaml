@@ -1,22 +1,15 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "fullname" . }}
+  name: {{ include "api.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "name" . }}
-    app.kubernetes.io/part-of: {{ include "name" . }}
-    helm.sh/chart: {{ include "chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- include "api.labels" . | nindent 4 }}
 data:
   env: {{ .Values.php.env | quote }}
   debug: {{ .Values.php.debug | quote }}
   cors-allow-origin: {{ .Values.php.corsAllowOrigin | quote }}
-  varnish-url: {{ if .Values.varnish.enabled }}http://varnish{{ else }}{{ .Values.varnish.url | quote }}{{ end }}
+  varnish-url: {{ if .Values.varnish.enabled }}{{ if .Values.varnish.url }}{{ .Values.varnish.url | quote }}{{ else }}http://varnish{{ end }}{{ end }}
   trusted-hosts: {{ .Values.php.trustedHosts | quote }}
   trusted-proxies: {{ join "," .Values.php.trustedProxies }}
   mercure-publish-url: {{ .Values.mercure.publishUrl | quote }}
   mercure-subscribe-url: {{ .Values.mercure.subscribeUrl | quote }}
-  api-entrypoint-scheme: {{ .Values.php.apiEntrypointScheme | quote }}
-  api-entrypoint-host: {{ .Values.php.apiEntrypointHost | quote }}
-  api-entrypoint-port: {{ .Values.php.apiEntrypointPort | quote }}

@@ -1,102 +1,163 @@
-apiVersion: batch/v1beta1
-kind: CronJob
+{{- $fullName := include "api.fullname" . -}}
+{{- $name := "php" -}}
+{{- $data := dict "name" $name "Chart" .Chart "Release" .Release "Values" .Values -}}
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: {{ template "fullname" . }}-cronjob
+  name: {{ $fullName }}-{{ $name }}
+  labels:
+    {{- include "api.labels" $data | nindent 4 }}
 spec:
   schedule: '0 0 * * *'
-  jobTemplate:
+  replicas: {{ .Values.php.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "api.selectorLabels" $data | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "api.selectorLabels" $data | nindent 8 }}
     spec:
-      template:
-        spec:
-          restartPolicy: OnFailure
-          containers:
-            - name: {{ .Chart.Name }}-cronjob
-              image: "{{ .Values.php.repository }}:{{ .Values.php.tag }}"
-              args:
-                - bin/console
-                - hautelook:fixtures:load
-                - -n
-                - --purge-with-truncate
-              env:
-                - name: TRUSTED_HOSTS
-                  valueFrom:
-                    configMapKeyRef:
-                      name: {{ template "fullname" . }}
-                      key: trusted-hosts
-                - name: TRUSTED_PROXIES
-                  valueFrom:
-                    configMapKeyRef:
-                      name: {{ template "fullname" . }}
-                      key: trusted-proxies
-                - name: APP_ENV
-                  value: "dev"
-                - name: APP_DEBUG
-                  valueFrom:
-                    configMapKeyRef:
-                      name: {{ template "fullname" . }}
-                      key: debug
-                - name: CORS_ALLOW_ORIGIN
-                  valueFrom:
-                    configMapKeyRef:
-                      name: {{ template "fullname" . }}
-                      key: cors-allow-origin
-                - name: VARNISH_URL
-                  valueFrom:
-                    configMapKeyRef:
-                      name: {{ template "fullname" . }}
-                      key: varnish-url
-                - name: APP_SECRET
-                  valueFrom:
-                    secretKeyRef:
-                      name: {{ template "fullname" . }}
-                      key: secret
-                - name: DATABASE_URL
-                  valueFrom:
-                    secretKeyRef:
-                      name: {{ template "fullname" . }}
-                      key: database-url
-                - name: MERCURE_PUBLISH_URL
-                  valueFrom:
-                    configMapKeyRef:
-                      name: {{ template "fullname" . }}
-                      key: mercure-publish-url
-                - name: MERCURE_SUBSCRIBE_URL
-                  valueFrom:
-                    configMapKeyRef:
-                      name: {{ template "fullname" . }}
-                      key: mercure-subscribe-url
-                - name: MERCURE_JWT_SECRET
-                  valueFrom:
-                    secretKeyRef:
-                      name: {{ template "fullname" . }}
-                      key: mercure-jwt-secret
-                - name: JWT_SECRET_KEY
-                  valueFrom:
-                    secretKeyRef:
-                      name: {{ template "fullname" . }}
-                      key: jwt-secret-key
-                - name: JWT_PUBLIC_KEY
-                  valueFrom:
-                    secretKeyRef:
-                      name: {{ template "fullname" . }}
-                      key: jwt-public-key
-                - name: JWT_PASSPHRASE
-                  valueFrom:
-                    secretKeyRef:
-                      name: {{ template "fullname" . }}
-                      key: jwt-passphrase
-                - name: API_ENTRYPOINT_SCHEME
-                  valueFrom:
-                    configMapKeyRef:
-                      name: {{ template "fullname" . }}
-                      key: api-entrypoint-scheme
-                - name: API_ENTRYPOINT_HOST
-                  valueFrom:
-                    configMapKeyRef:
-                      name: {{ template "fullname" . }}
-                      key: api-entrypoint-host
-                - name: API_ENTRYPOINT_PORT
-                  valueFrom:
-                    configMapKeyRef:
-                      name: {{ template "fullname" . }}
-                      key: api-entrypoint-port
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "api.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: init-php
+          image: "{{ .Values.php.image.repository }}:{{ .Values.php.image.tag | default .Chart.AppVersion }}"
+          command: ['/bin/sh', '-c']
+          args: ['bin/console doctrine:migrations:migrate --no-interaction']
+          env:
+            - name: APP_DEBUG
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $fullName }}
+                  key: debug
+            - name: APP_ENV
+              value: "dev"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $fullName }}
+                  key: database-url
+      containers:
+        - name: {{ .Chart.Name }}-{{ $name }}
+          image: "{{ .Values.php.image.repository }}:{{ .Values.php.image.tag | default .Chart.AppVersion }}"
+          args:
+            - bin/console
+            - hautelook:fixtures:load
+            - -n
+            - --purge-with-truncate
+          imagePullPolicy: {{ .Values.php.image.pullPolicy }}
+          env:
+            - name: TRUSTED_HOSTS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $fullName }}
+                  key: trusted-hosts
+            - name: TRUSTED_PROXIES
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $fullName }}
+                  key: trusted-proxies
+            - name: APP_ENV
+              value: "dev"
+            - name: APP_DEBUG
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $fullName }}
+                  key: debug
+            - name: CORS_ALLOW_ORIGIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $fullName }}
+                  key: cors-allow-origin
+            - name: VARNISH_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $fullName }}
+                  key: varnish-url
+            - name: APP_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $fullName }}
+                  key: secret
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $fullName }}
+                  key: database-url
+            - name: MERCURE_PUBLISH_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $fullName }}
+                  key: mercure-publish-url
+            - name: MERCURE_SUBSCRIBE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $fullName }}
+                  key: mercure-subscribe-url
+            - name: MERCURE_JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $fullName }}
+                  key: mercure-jwt-secret
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $fullName }}
+                  key: jwt-secret-key
+            - name: JWT_PUBLIC_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $fullName }}
+                  key: jwt-public-key
+            - name: JWT_PASSPHRASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $fullName }}
+                  key: jwt-passphrase
+            - name: API_ENTRYPOINT_SCHEME
+              valueFrom:
+                  configMapKeyRef:
+                  name: {{ $fullName }}
+                  key: api-entrypoint-scheme
+            - name: API_ENTRYPOINT_HOST
+              valueFrom:
+                  configMapKeyRef:
+                  name: {{ $fullName }}
+                  key: api-entrypoint-host
+            - name: API_ENTRYPOINT_PORT
+              valueFrom:
+                  configMapKeyRef:
+                  name: {{ $fullName }}
+                  key: api-entrypoint-port
+          ports:
+            - containerPort: 9000
+          readinessProbe:
+            tcpSocket:
+              port: 9000
+            initialDelaySeconds: 120
+            periodSeconds: 3
+          livenessProbe:
+            tcpSocket:
+              port: 9000
+            initialDelaySeconds: 120
+            periodSeconds: 3
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
