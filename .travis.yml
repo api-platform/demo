@@ -1,7 +1,7 @@
 language: php
 
 php:
-  - '7.3'
+  - '7.4'
 
 dist: trusty
 
@@ -32,7 +32,7 @@ before_script:
   - phpenv config-rm xdebug.ini
   - sudo service mysql stop
   - sudo service postgresql stop
-  - curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash -s -- --version v2.11.0;
+  - curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
   - nvm install node
   - npm install -g react-scripts
   - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
@@ -53,57 +53,4 @@ deploy:
     skip_cleanup: true
     on:
       all_branches: true
-      repo: $REPOSITORY
-      condition: "$CURRENT_CI == 'travis' && ($FEATURE_DEPLOY == '1' || $TRAVIS_BRANCH == $DEPLOYMENT_BRANCH)"
-#  - provider: gcs
-#    access_key_id:
-#      secure: eSJfigRfZp7bwMBT61tes4NZZR5UnPSACWuD3seeLyMMflvfEiQBT30kMyQkcIA19cYUWuzCmdaUDGuphj8KrkPOfIqoPaG5ZM/zFbjgtJs3nNmpMt2GW/y5YFSqJR7ha0TYCUpPq9UonxEB/sdcifS7JRS0PmeEotZbcKMGmiCzDnFR8fNbDC1w1XZEfFoV+xtBYJCCDsZpPVjt+GXI+3OX31qnRCMv89aPU2lgmbUaF3oM+Bxc+9jQPEUmMKzOXt1AlIscJgkjyOIPTU9R1TsYtSNGzCxhEj2EtBdbtr2SKLdvJCaxABDtg6c0DOZSRSB5FP2kjLXm2TmtnFyn04R2RS7Cp3F5tueSpiK/51rI6oPc66OYMtWSINMhQzzWTiAdkBx2sekO9InbBgJMJgbcWt5nRvtzS/4mbCiDJxM+H4LuJHaqeCdDqZ51M1mf1HBh0diKIEn0o86fzUlPBtLZBLo/PCqGsJnLF+7VkG0AHExuJCSx8QHXfvP40+D3LtameHopx0lK+L8CMWwRzGJ5SDzzpfqoWZxwyzZjEvLzOdChWRb9jqPQDC1H48SFhsQt/eiwz0ZQq4v8I8DqQ3NkECYBoVgO7ozGN/pnqYK3i8xRnA47dGvSZrxQB32Eq0mkF6s8Rk7Xt6dI5ppNqdzjrCK2ZWijcGjBIQ769gQ=
-#    secret_access_key:
-#      secure: O4nNU4GlxBpnp1lJEEZKm0R3iUhK2V6qpu2JTxI4Vip6E5oAvXWJBc8keT75vbodRG2yYgmCf4HZhDnZRso6B7zY1SbE+oJjS6/jWM/Qkynf4qJ2/5NRvxjTuQsp99eqmclQ9J5CwhU690ZSZgC8eFaGN5Dwa2yJu5kBZHeUiDQgO3o3n1a2YCHBnOwQy7O7h6wj6d3iLThpfpdpLheqLF0DQ/c593Yy5mQgZRZkuqhLGWe94h8WyUtzJCmmYVP+XKNxbNKysCpD6zUulVTQ4XBYf5Z8kI2pAEP8UsTjqLZBjKdpyYqxoigyoL78hgs7KrYUBcCKW9qUsjRdXgNrsVvLYBQ+kau4eoFo4cmwlf3U37+HK1WENiLG6O3hHnu/n8b4AL2NaQPnsFWsWG1nrbfbPZ3j+Xvn6wJJWGkitUjahKFREcHSAFl5+jMqXULpTYP8X4ZkOYZ8M5V+1VhhSzqOH0lqsVYyDZbFIWf9UQJn51cNKBakULVWHvFMIlIMo4vULiXX7r4lWfY5FCYdABiOPADW2xuMg9++etlAcU4fpBl4Kf9GqWIs4XGmrVqJ9P5Jjto3J4bHyfF32v7HWC6vdwp81nvFHabMYj4AS9gmn6/90BQKEkN2OF43oRKsmq+IwFqt2HqMt7CakIYvdj5oQMu0j5lMY7JuYh1k2Ds=
-#    bucket: ${ADMIN_BUCKET}
-#    skip_cleanup: true
-#    acl: public-read
-#    local-dir: admin/build
-#    on:
-#      branch: ${DEPLOYMENT_BRANCH}
-#      repo: ${REPOSITORY}
-#      condition: "$FEATURE_DEPLOY == 0 && $TRAVIS_PULL_REQUEST == 'false' && $CURRENT_CI == 'travis'"
-#  - provider: gcs
-#    access_key_id:
-#      secure: eSJfigRfZp7bwMBT61tes4NZZR5UnPSACWuD3seeLyMMflvfEiQBT30kMyQkcIA19cYUWuzCmdaUDGuphj8KrkPOfIqoPaG5ZM/zFbjgtJs3nNmpMt2GW/y5YFSqJR7ha0TYCUpPq9UonxEB/sdcifS7JRS0PmeEotZbcKMGmiCzDnFR8fNbDC1w1XZEfFoV+xtBYJCCDsZpPVjt+GXI+3OX31qnRCMv89aPU2lgmbUaF3oM+Bxc+9jQPEUmMKzOXt1AlIscJgkjyOIPTU9R1TsYtSNGzCxhEj2EtBdbtr2SKLdvJCaxABDtg6c0DOZSRSB5FP2kjLXm2TmtnFyn04R2RS7Cp3F5tueSpiK/51rI6oPc66OYMtWSINMhQzzWTiAdkBx2sekO9InbBgJMJgbcWt5nRvtzS/4mbCiDJxM+H4LuJHaqeCdDqZ51M1mf1HBh0diKIEn0o86fzUlPBtLZBLo/PCqGsJnLF+7VkG0AHExuJCSx8QHXfvP40+D3LtameHopx0lK+L8CMWwRzGJ5SDzzpfqoWZxwyzZjEvLzOdChWRb9jqPQDC1H48SFhsQt/eiwz0ZQq4v8I8DqQ3NkECYBoVgO7ozGN/pnqYK3i8xRnA47dGvSZrxQB32Eq0mkF6s8Rk7Xt6dI5ppNqdzjrCK2ZWijcGjBIQ769gQ=
-#    secret_access_key:
-#      secure: O4nNU4GlxBpnp1lJEEZKm0R3iUhK2V6qpu2JTxI4Vip6E5oAvXWJBc8keT75vbodRG2yYgmCf4HZhDnZRso6B7zY1SbE+oJjS6/jWM/Qkynf4qJ2/5NRvxjTuQsp99eqmclQ9J5CwhU690ZSZgC8eFaGN5Dwa2yJu5kBZHeUiDQgO3o3n1a2YCHBnOwQy7O7h6wj6d3iLThpfpdpLheqLF0DQ/c593Yy5mQgZRZkuqhLGWe94h8WyUtzJCmmYVP+XKNxbNKysCpD6zUulVTQ4XBYf5Z8kI2pAEP8UsTjqLZBjKdpyYqxoigyoL78hgs7KrYUBcCKW9qUsjRdXgNrsVvLYBQ+kau4eoFo4cmwlf3U37+HK1WENiLG6O3hHnu/n8b4AL2NaQPnsFWsWG1nrbfbPZ3j+Xvn6wJJWGkitUjahKFREcHSAFl5+jMqXULpTYP8X4ZkOYZ8M5V+1VhhSzqOH0lqsVYyDZbFIWf9UQJn51cNKBakULVWHvFMIlIMo4vULiXX7r4lWfY5FCYdABiOPADW2xuMg9++etlAcU4fpBl4Kf9GqWIs4XGmrVqJ9P5Jjto3J4bHyfF32v7HWC6vdwp81nvFHabMYj4AS9gmn6/90BQKEkN2OF43oRKsmq+IwFqt2HqMt7CakIYvdj5oQMu0j5lMY7JuYh1k2Ds=
-#    bucket: ${DEV_ADMIN_BUCKET}
-#    skip_cleanup: true
-#    acl: public-read
-#    local-dir: admin/build
-#    on:
-#      branch: ${TRAVIS_BRANCH}
-#      repo: ${REPOSITORY}
-#      condition: "$FEATURE_DEPLOY == 1 && $CURRENT_CI == 'travis'"
-#  - provider: gcs
-#    access_key_id:
-#      secure: eSJfigRfZp7bwMBT61tes4NZZR5UnPSACWuD3seeLyMMflvfEiQBT30kMyQkcIA19cYUWuzCmdaUDGuphj8KrkPOfIqoPaG5ZM/zFbjgtJs3nNmpMt2GW/y5YFSqJR7ha0TYCUpPq9UonxEB/sdcifS7JRS0PmeEotZbcKMGmiCzDnFR8fNbDC1w1XZEfFoV+xtBYJCCDsZpPVjt+GXI+3OX31qnRCMv89aPU2lgmbUaF3oM+Bxc+9jQPEUmMKzOXt1AlIscJgkjyOIPTU9R1TsYtSNGzCxhEj2EtBdbtr2SKLdvJCaxABDtg6c0DOZSRSB5FP2kjLXm2TmtnFyn04R2RS7Cp3F5tueSpiK/51rI6oPc66OYMtWSINMhQzzWTiAdkBx2sekO9InbBgJMJgbcWt5nRvtzS/4mbCiDJxM+H4LuJHaqeCdDqZ51M1mf1HBh0diKIEn0o86fzUlPBtLZBLo/PCqGsJnLF+7VkG0AHExuJCSx8QHXfvP40+D3LtameHopx0lK+L8CMWwRzGJ5SDzzpfqoWZxwyzZjEvLzOdChWRb9jqPQDC1H48SFhsQt/eiwz0ZQq4v8I8DqQ3NkECYBoVgO7ozGN/pnqYK3i8xRnA47dGvSZrxQB32Eq0mkF6s8Rk7Xt6dI5ppNqdzjrCK2ZWijcGjBIQ769gQ=
-#    secret_access_key:
-#      secure: O4nNU4GlxBpnp1lJEEZKm0R3iUhK2V6qpu2JTxI4Vip6E5oAvXWJBc8keT75vbodRG2yYgmCf4HZhDnZRso6B7zY1SbE+oJjS6/jWM/Qkynf4qJ2/5NRvxjTuQsp99eqmclQ9J5CwhU690ZSZgC8eFaGN5Dwa2yJu5kBZHeUiDQgO3o3n1a2YCHBnOwQy7O7h6wj6d3iLThpfpdpLheqLF0DQ/c593Yy5mQgZRZkuqhLGWe94h8WyUtzJCmmYVP+XKNxbNKysCpD6zUulVTQ4XBYf5Z8kI2pAEP8UsTjqLZBjKdpyYqxoigyoL78hgs7KrYUBcCKW9qUsjRdXgNrsVvLYBQ+kau4eoFo4cmwlf3U37+HK1WENiLG6O3hHnu/n8b4AL2NaQPnsFWsWG1nrbfbPZ3j+Xvn6wJJWGkitUjahKFREcHSAFl5+jMqXULpTYP8X4ZkOYZ8M5V+1VhhSzqOH0lqsVYyDZbFIWf9UQJn51cNKBakULVWHvFMIlIMo4vULiXX7r4lWfY5FCYdABiOPADW2xuMg9++etlAcU4fpBl4Kf9GqWIs4XGmrVqJ9P5Jjto3J4bHyfF32v7HWC6vdwp81nvFHabMYj4AS9gmn6/90BQKEkN2OF43oRKsmq+IwFqt2HqMt7CakIYvdj5oQMu0j5lMY7JuYh1k2Ds=
-#    bucket: ${CLIENT_BUCKET}
-#    skip_cleanup: true
-#    acl: public-read
-#    local-dir: client/build
-#    on:
-#      branch: ${DEPLOYMENT_BRANCH}
-#      repo: ${REPOSITORY}
-#      condition: "$FEATURE_DEPLOY == 0 && $TRAVIS_PULL_REQUEST == 'false' && $CURRENT_CI == 'travis'"
-#  - provider: gcs
-#    access_key_id:
-#      secure: eSJfigRfZp7bwMBT61tes4NZZR5UnPSACWuD3seeLyMMflvfEiQBT30kMyQkcIA19cYUWuzCmdaUDGuphj8KrkPOfIqoPaG5ZM/zFbjgtJs3nNmpMt2GW/y5YFSqJR7ha0TYCUpPq9UonxEB/sdcifS7JRS0PmeEotZbcKMGmiCzDnFR8fNbDC1w1XZEfFoV+xtBYJCCDsZpPVjt+GXI+3OX31qnRCMv89aPU2lgmbUaF3oM+Bxc+9jQPEUmMKzOXt1AlIscJgkjyOIPTU9R1TsYtSNGzCxhEj2EtBdbtr2SKLdvJCaxABDtg6c0DOZSRSB5FP2kjLXm2TmtnFyn04R2RS7Cp3F5tueSpiK/51rI6oPc66OYMtWSINMhQzzWTiAdkBx2sekO9InbBgJMJgbcWt5nRvtzS/4mbCiDJxM+H4LuJHaqeCdDqZ51M1mf1HBh0diKIEn0o86fzUlPBtLZBLo/PCqGsJnLF+7VkG0AHExuJCSx8QHXfvP40+D3LtameHopx0lK+L8CMWwRzGJ5SDzzpfqoWZxwyzZjEvLzOdChWRb9jqPQDC1H48SFhsQt/eiwz0ZQq4v8I8DqQ3NkECYBoVgO7ozGN/pnqYK3i8xRnA47dGvSZrxQB32Eq0mkF6s8Rk7Xt6dI5ppNqdzjrCK2ZWijcGjBIQ769gQ=
-#    secret_access_key:
-#      secure: O4nNU4GlxBpnp1lJEEZKm0R3iUhK2V6qpu2JTxI4Vip6E5oAvXWJBc8keT75vbodRG2yYgmCf4HZhDnZRso6B7zY1SbE+oJjS6/jWM/Qkynf4qJ2/5NRvxjTuQsp99eqmclQ9J5CwhU690ZSZgC8eFaGN5Dwa2yJu5kBZHeUiDQgO3o3n1a2YCHBnOwQy7O7h6wj6d3iLThpfpdpLheqLF0DQ/c593Yy5mQgZRZkuqhLGWe94h8WyUtzJCmmYVP+XKNxbNKysCpD6zUulVTQ4XBYf5Z8kI2pAEP8UsTjqLZBjKdpyYqxoigyoL78hgs7KrYUBcCKW9qUsjRdXgNrsVvLYBQ+kau4eoFo4cmwlf3U37+HK1WENiLG6O3hHnu/n8b4AL2NaQPnsFWsWG1nrbfbPZ3j+Xvn6wJJWGkitUjahKFREcHSAFl5+jMqXULpTYP8X4ZkOYZ8M5V+1VhhSzqOH0lqsVYyDZbFIWf9UQJn51cNKBakULVWHvFMIlIMo4vULiXX7r4lWfY5FCYdABiOPADW2xuMg9++etlAcU4fpBl4Kf9GqWIs4XGmrVqJ9P5Jjto3J4bHyfF32v7HWC6vdwp81nvFHabMYj4AS9gmn6/90BQKEkN2OF43oRKsmq+IwFqt2HqMt7CakIYvdj5oQMu0j5lMY7JuYh1k2Ds=
-#    bucket: ${DEV_CLIENT_BUCKET}
-#    skip_cleanup: true
-#    acl: public-read
-#    local-dir: client/build
-#    on:
-#      branch: ${TRAVIS_BRANCH}
-#      repo: ${REPOSITORY}
-#      condition: "$FEATURE_DEPLOY == 1 && $CURRENT_CI == 'travis'"
+      repo: api-platform/demo
