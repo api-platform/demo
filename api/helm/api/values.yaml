@@ -9,7 +9,7 @@ php:
     pullPolicy: Always
   replicaCount: 1
   mercure:
-    jwtSecret: ""
+    jwtToken: ""
   jwt:
     secretKey: ""
     publicKey: ""
@@ -37,9 +37,6 @@ php:
     - 10.0.0.0/8
     - 172.16.0.0/12
     - 192.168.0.0/16
-  apiEntrypointScheme: https
-  apiEntrypointHost: demo.api-platform.com
-  apiEntrypointPort: 443
   service:
     type: ClusterIP
     port: 9000
@@ -97,7 +94,7 @@ mercure:
   ingress:
     enabled: false
     hosts:
-      - host: demo-mercure.api-platform.com
+      - host: mercure.example.com
         paths:
           - /
     tls: []
@@ -159,7 +156,7 @@ ingress:
 
 blackfire:
   blackfire:
-    enabled: false
+    enabled: true
   image:
     tag: latest
 
@@ -169,11 +166,11 @@ resources: {}
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   # limits:
-  #  cpu: 100m
-  #  memory: 128Mi
+  #   cpu: 100m
+  #   memory: 128Mi
   # requests:
-  #  cpu: 100m
-  #  memory: 128Mi
+  #   cpu: 100m
+  #   memory: 128Mi
 
 nodeSelector: {}
 

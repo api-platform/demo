@@ -28,9 +28,6 @@ spec:
         - name: {{ .Chart.Name }}-{{ $name }}
           image: "{{ .Values.php.image.repository }}:{{ .Values.php.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.php.image.pullPolicy }}
-          # Override entrypoint to fast-start the container
-          # Entrypoint is only used for development in this project
-          command: ['php-fpm']
           env:
             - name: TRUSTED_HOSTS
               valueFrom:
@@ -82,11 +79,11 @@ spec:
                 configMapKeyRef:
                   name: {{ $fullName }}
                   key: mercure-subscribe-url
-            - name: MERCURE_JWT_SECRET
+            - name: MERCURE_JWT_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: {{ $fullName }}
-                  key: mercure-jwt-secret
+                  key: mercure-jwt-token
             - name: JWT_SECRET_KEY
               valueFrom:
                 secretKeyRef:
@@ -103,20 +100,14 @@ spec:
                   name: {{ $fullName }}
                   key: jwt-passphrase
             - name: API_ENTRYPOINT_SCHEME
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ $fullName }}
-                  key: api-entrypoint-scheme
+              value: "https"
             - name: API_ENTRYPOINT_HOST
               valueFrom:
                 configMapKeyRef:
                   name: {{ $fullName }}
                   key: api-entrypoint-host
             - name: API_ENTRYPOINT_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ $fullName }}
-                  key: api-entrypoint-port
+              value: "443"
           ports:
             - containerPort: 9000
           readinessProbe:
