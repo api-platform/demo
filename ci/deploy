@@ -19,9 +19,7 @@ gcloud config set core/project $PROJECT_ID
 gcloud container clusters get-credentials api-platform-demo --zone europe-west1-c --project $PROJECT_ID
 
 # Update dependencies & docker image and push them taking care to separate by repositories and branches.
-helm init --upgrade
-helm repo add blackfire https://tech.sparkfabrik.com/blackfire-chart/
-helm dependencies update ./api/helm/api
+helm dependency update ./api/helm/api
 
 gsutil mb -p $PROJECT_ID -l eu gs://$ADMIN_BUCKET || echo "Admin bucket exists"
 gsutil mb -p $PROJECT_ID -l eu gs://$CLIENT_BUCKET || echo "Client bucket exists"
@@ -34,60 +32,38 @@ gcloud docker -- push $PHP_REPOSITORY:$TAG
 gcloud docker -- push $NGINX_REPOSITORY:$TAG
 gcloud docker -- push $VARNISH_REPOSITORY:$TAG
 
-if [[ $BRANCH != $DEPLOYMENT_BRANCH ]]
-then
-    helm delete --purge $RELEASE || echo "No release to purge"
-    kubectl delete namespace $NAMESPACE --cascade || echo "No namespace to purge"
-
-    # Create namespace with kubernetes to add labels on it
-    cat <<EOF | kubectl create -f -
-{
-  "kind": "Namespace",
-  "apiVersion": "v1",
-  "metadata": {
-	"name": "$NAMESPACE",
-	"labels": {
-		"name": "$NAMESPACE",
-		"project": "$PROJECT_NAME"
-	}
-  }
-}
-EOF
-fi
-
 # Perform a rolling update if a release in the given namespace ever exist, create one otherwise.
 echo "Installing/upgrading release '${RELEASE}' on namespace '${NAMESPACE}'"
-helm upgrade --install --reset-values --force --namespace=$NAMESPACE --recreate-pods $RELEASE ./api/helm/api \
+helm upgrade --install --create-namespace --reset-values --namespace=$NAMESPACE --cleanup-on-fail $RELEASE ./api/helm/api \
     --set php.corsAllowOrigin=$CORS_ALLOW_ORIGIN \
     --set php.trustedHosts=$TRUSTED_HOSTS \
-    --set php.repository=$PHP_REPOSITORY,php.tag=$TAG \
+    --set php.image.repository=$PHP_REPOSITORY,php.image.tag=$TAG \
     --set php.mercure.jwtSecret=$MERCURE_JWT_SECRET \
     --set php.jwt.secretKey="$JWT_SECRET_KEY" \
     --set php.jwt.publicKey="$JWT_PUBLIC_KEY" \
     --set php.jwt.passphrase="$JWT_PASSPHRASE" \
     --set php.apiEntrypointHost=$API_ENTRYPOINT \
-    --set nginx.repository=$NGINX_REPOSITORY,nginx.tag=$TAG \
-    --set varnish.repository=$VARNISH_REPOSITORY,varnish.tag=$TAG \
+    --set nginx.image.repository=$NGINX_REPOSITORY,nginx.image.tag=$TAG \
+    --set varnish.image.repository=$VARNISH_REPOSITORY,varnish.image.tag=$TAG \
     --set blackfire.blackfire.server_id=$BLACKFIRE_SERVER_ID \
     --set blackfire.blackfire.server_token=$BLACKFIRE_SERVER_TOKEN \
     --set blackfire.blackfire.enabled=$BLACKFIRE_ENABLED \
     --set postgresql.postgresqlPassword=$DATABASE_PASSWORD \
-    --set ingress.hosts.api.host=$API_ENTRYPOINT \
-    --set ingress.hosts.mercure.host=$MERCURE_ENTRYPOINT \
-    --set ingress.hosts.mercure.serviceName=${RELEASE}-mercure \
+    --set ingress.hosts[0].host=$API_ENTRYPOINT \
+    --set ingress.hosts[0].paths[0]=/* \
+    --set ingress.hosts[1].host=$MERCURE_ENTRYPOINT \
+    --set ingress.hosts[1].paths[0]=/* \
     --set external-dns.cloudflare.apiKey=$CF_API_KEY \
     --set external-dns.cloudflare.email=$CF_API_EMAIL \
     --set mercure.publishUrl="http://${RELEASE}-mercure/.well-known/mercure" \
     --set mercure.subscribeUrl="https://${MERCURE_ENTRYPOINT}/.well-known/mercure" \
     --set mercure.jwtKey=$MERCURE_JWT_KEY \
-    --set mercure.corsAllowedOrigins="https://${CLIENT_BUCKET} https://${ADMIN_BUCKET}" \
-    --set mercure.domainFilters="{$DOMAIN}"
+    --set mercure.corsAllowedOrigins="https://${CLIENT_BUCKET} https://${ADMIN_BUCKET}"
 
 # Reload fixtures: this is specific for this project!
 echo "Waiting for the PHP container to be up and ready..."
 kubectl rollout status -n "$NAMESPACE" -w "deployment/${RELEASE}-api-php"
 kubectl rollout status -n "$NAMESPACE" -w "statefulset/${RELEASE}-postgresql"
-sleep 60
 kubectl exec --namespace=$NAMESPACE -it $(kubectl --namespace=$NAMESPACE get pods -l app.kubernetes.io/name=api-php -o jsonpath="{.items[0].metadata.name}") \
     -- sh -c 'APP_ENV=dev composer install -n --no-scripts && bin/console doctrine:schema:update --force -e prod && bin/console hautelook:fixtures:load -n -e dev && APP_ENV=prod composer --no-dev install --classmap-authoritative && exit 0'
 echo -e "\033[0;33m\e[1mAPI successfully deployed to https://${API_ENTRYPOINT}\e[8m\033[0m"
@@ -110,6 +86,3 @@ gsutil web set -m index.html -e index.html gs://$CLIENT_BUCKET
 gsutil iam ch allUsers:objectViewer gs://$CLIENT_BUCKET
 $DIR/bin/flarectl dns c --zone=$DOMAIN --name=$CLIENT_BUCKET --type=CNAME --content=c.storage.googleapis.com --proxy
 echo -e "\033[0;33m\e[1mClient successfully deployed to https://${CLIENT_BUCKET}\e[8m\033[0m"
-
-# Clean useless deploys
-$DIR/clean
