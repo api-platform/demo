@@ -99,7 +99,7 @@ mercure:
     hosts:
       - host: demo-mercure.api-platform.com
         paths:
-          - /*
+          - /
     tls: []
     #  - secretName: mercure-example-tls
     #    hosts:
@@ -148,10 +148,10 @@ ingress:
   hosts:
     - host: demo.api-platform.com
       paths:
-        - /*
+        - /
     - host: demo-mercure.api-platform.com
       paths:
-        - /*
+        - /
   tls: []
   #  - secretName: api-example-tls
   #    hosts:
