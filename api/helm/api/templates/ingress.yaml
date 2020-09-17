@@ -35,7 +35,7 @@ spec:
           - path: {{ . }}
             backend:
               {{- if contains "mercure" $host }}
-                serviceName: {{ $.Release.Name }}-mercure
+                serviceName: {{ printf "%s-mercure" $.Release.Name }}
                 servicePort: {{ $.Values.mercure.service.port }}
               {{- else }}{{- if $.Values.varnish.enabled }}
                 serviceName: {{ $fullName }}-varnish

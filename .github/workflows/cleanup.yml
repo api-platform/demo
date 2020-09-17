@@ -1,0 +1,35 @@
+# Check documentation at https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions
+name: Cleanup
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+env:
+  GKE_CLUSTER: api-platform-demo
+  GCE_ZONE: europe-west1-c
+  DEFAULT_NAMESPACE: master
+  MAX_LIFETIME: 4 days # Max lifetime for a namespace before being automatically deleted
+
+jobs:
+  remove-namespaces:
+    name: Remove outdated namespaces
+    runs-on: ubuntu-latest
+    steps:
+      # Setup gcloud CLI
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          version: '290.0.1'
+          service_account_key: ${{ secrets.GKE_SA_KEY }}
+          project_id: ${{ secrets.GKE_PROJECT }}
+
+      # Get the GKE credentials so we can deploy to the cluster
+      - run: gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GCE_ZONE }}
+
+      # Get all namespaces older than MAX_LIFETIME, except for DEFAULT_NAMESPACE
+      - name: Get outdated namespaces
+        run: echo "::set-env name=NAMESPACES::$(kubectl get namespaces -l project=${{ env.GKE_CLUSTER }} --template '{{range .items}}{{.metadata.name}} {{.metadata.creationTimestamp}}{{"\n"}}{{end}}' | awk '$2 <= "'$(date -d 'now-${{ env.MAX_LIFETIME }}' -Ins --utc | sed 's/+0000/Z/')'" { print $1 }' | grep -v ${{ env.DEFAULT_NAMESPACE }})"
+
+      - name: Remove outdated namespaces
+        if: env.NAMESPACES != ''
+        run: echo ${{ env.NAMESPACES }} | xargs --no-run-if-empty kubectl delete namespace

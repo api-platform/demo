@@ -14,8 +14,6 @@ data:
   {{ end }}
   trusted-hosts: {{ .Values.php.trustedHosts | quote }}
   trusted-proxies: {{ join "," .Values.php.trustedProxies }}
-  mercure-publish-url: {{ .Values.mercure.publishUrl | quote }}
-  mercure-subscribe-url: {{ .Values.mercure.subscribeUrl | quote }}
-  api-entrypoint-scheme: {{ .Values.php.apiEntrypointScheme | quote }}
-  api-entrypoint-host: {{ .Values.php.apiEntrypointHost | quote }}
-  api-entrypoint-port: {{ .Values.php.apiEntrypointPort | quote }}
+  mercure-publish-url: {{ printf "http://%s-mercure/.well-known/mercure" .Release.Name | quote }}
+  mercure-subscribe-url: {{ printf "https://%s/.well-known/mercure" (index .Values.ingress.hosts 1).host | quote }}
+  api-entrypoint-host: {{ (index .Values.ingress.hosts 0).host | quote }}
