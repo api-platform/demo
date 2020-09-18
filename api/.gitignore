@@ -1,5 +1,4 @@
 /helm/api/charts
-/helm/api/Chart.lock
 /coverage
 
 ###> symfony/framework-bundle ###

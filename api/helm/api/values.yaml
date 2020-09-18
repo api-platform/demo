@@ -108,8 +108,7 @@ external-dns:
     - api-platform.com
   provider: cloudflare
   cloudflare:
-    apiKey: ""
-    email: ""
+    apiToken: ""
   rbac:
     create: true
 

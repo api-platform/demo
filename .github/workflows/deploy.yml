@@ -114,8 +114,13 @@ jobs:
           }
           EOF
 
+      # todo Waiting for https://github.com/helm/helm/issues/8036
       - name: Build helm dependencies
-        run: helm dependency build ./api/helm/api
+        run: |-
+          helm repo add bitnami https://charts.bitnami.com/bitnami/
+          helm repo add blackfire https://tech.sparkfabrik.com/blackfire-chart/
+          helm repo add kubernetes https://kubernetes-charts.storage.googleapis.com/
+          helm dependency build ./api/helm/api
 
       # Cannot set-env JWT_* because GitHub Actions does not support multiline set-env
       - name: Install API

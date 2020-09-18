@@ -19,6 +19,6 @@ dependencies:
       repository: https://tech.sparkfabrik.com/blackfire-chart/
       condition: blackfire.enabled
     - name: external-dns
-      version: ~3.3.0
+      version: ~3.4.0
       repository: https://charts.bitnami.com/bitnami/
       condition: external-dns.enabled
