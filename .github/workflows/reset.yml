@@ -2,7 +2,7 @@
 name: Deploy
 
 on:
-  # Reset production every night at midnight
+  # Reset production fixtures every night at midnight
   schedule:
     - cron: '0 0 * * *'
 

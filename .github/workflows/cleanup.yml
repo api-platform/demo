@@ -33,3 +33,17 @@ jobs:
       - name: Remove outdated namespaces
         if: env.NAMESPACES != ''
         run: echo ${{ env.NAMESPACES }} | xargs --no-run-if-empty kubectl delete namespace
+
+      - name: Remove outdated buckets
+        if: env.NAMESPACES != ''
+        run: |-
+          echo ${{ env.NAMESPACES }} | xargs --no-run-if-empty -n 1 -I {} gsutil rm -r gs://demo-admin-{}.api-platform.com
+          echo ${{ env.NAMESPACES }} | xargs --no-run-if-empty -n 1 -I {} gsutil rm -r gs://demo-client-{}.api-platform.com
+
+      - name: Remove outdated domains
+        if: env.NAMESPACES != ''
+        run: |-
+          echo ${{ env.NAMESPACES }} | xargs --no-run-if-empty -n 1 -I {} ./flarectl dns delete --zone=api-platform.com --name=demo-admin-{}.api-platform.com
+          echo ${{ env.NAMESPACES }} | xargs --no-run-if-empty -n 1 -I {} ./flarectl dns delete --zone=api-platform.com --name=demo-client-{}.api-platform.com
+          echo ${{ env.NAMESPACES }} | xargs --no-run-if-empty -n 1 -I {} ./flarectl dns delete --zone=api-platform.com --name=demo-mercure-{}.api-platform.com
+          echo ${{ env.NAMESPACES }} | xargs --no-run-if-empty -n 1 -I {} ./flarectl dns delete --zone=api-platform.com --name=demo-{}.api-platform.com
