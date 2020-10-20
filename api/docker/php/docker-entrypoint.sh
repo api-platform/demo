@@ -32,9 +32,8 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'bin/console' ] || { [ "$1" = 'php' ] && [ "
 		sleep 1
 	done
 
-	if [ "$APP_ENV" != 'prod' ]; then
-		bin/console doctrine:schema:update --force --no-interaction
-	fi
+	echo "Running migrations"
+	bin/console doctrine:migrations:migrate --no-interaction
 fi
 
 exec docker-php-entrypoint "$@"
