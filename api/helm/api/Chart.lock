@@ -1,15 +1,15 @@
 dependencies:
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami/
-  version: 9.3.4
+  version: 9.8.4
 - name: mercure
   repository: https://kubernetes-charts.storage.googleapis.com/
-  version: 3.0.1
+  version: 4.0.1
 - name: blackfire
-  repository: https://tech.sparkfabrik.com/blackfire-chart/
-  version: 0.2.0
+  repository: https://ribeiroplinio.github.io/helm-chart/
+  version: 0.3.0
 - name: external-dns
   repository: https://charts.bitnami.com/bitnami/
-  version: 3.4.0
-digest: sha256:b520b14032c06af82870a26f93491a873dc9ce64ac9ab3f21f6f7c868e58f56d
-generated: "2020-09-18T09:44:14.464547062+02:00"
+  version: 3.4.9
+digest: sha256:e2c726c5b19057241eeb2ae383b78a5fdfb1c19a6f5bbddf08000e2f391bc4de
+generated: "2020-10-21T11:19:26.17167156+02:00"
