@@ -20,6 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ApiResource(
  *     iri="http://schema.org/Review",
+ *     denormalizationContext={"groups": {"review:write"}},
  *     normalizationContext={"groups": {"review:read"}}
  * )
  * @ApiFilter(OrderFilter::class, properties={"id", "publicationDate"})
@@ -39,8 +40,9 @@ class Review
     /**
      * @var string The actual body of the review
      *
-     * @ORM\Column(type="text", nullable=true)
-     * @Groups({"book:read", "review:read"})
+     * @Assert\NotBlank
+     * @ORM\Column(type="text")
+     * @Groups({"book:read", "review:read", "review:write"})
      * @ApiProperty(iri="http://schema.org/reviewBody")
      */
     public $body;
@@ -50,7 +52,7 @@ class Review
      *
      * @Assert\Range(min=0, max=5)
      * @ORM\Column(type="smallint")
-     * @Groups("review:read")
+     * @Groups({"review:read", "review:write"})
      */
     public $rating;
 
@@ -59,7 +61,7 @@ class Review
      *
      * @Assert\Choice({"a", "b", "c", "d"})
      * @ORM\Column(type="string", nullable=true)
-     * @Groups("review:read")
+     * @Groups({"review:read", "review:write"})
      * @ApiProperty(deprecationReason="Use the rating property instead")
      */
     public $letter;
@@ -70,7 +72,8 @@ class Review
      * @ApiFilter(SearchFilter::class)
      * @Assert\NotNull
      * @ORM\ManyToOne(targetEntity=Book::class, inversedBy="reviews")
-     * @Groups("review:read")
+     * @ORM\JoinColumn(nullable=false)
+     * @Groups({"review:read", "review:write"})
      * @ApiProperty(iri="http://schema.org/itemReviewed")
      */
     private $book;
@@ -79,7 +82,7 @@ class Review
      * @var string The author of the review
      *
      * @ORM\Column(type="text", nullable=true)
-     * @Groups("review:read")
+     * @Groups({"review:read", "review:write"})
      * @ApiProperty(iri="http://schema.org/author")
      */
     public $author;
@@ -87,7 +90,7 @@ class Review
     /**
      * @var \DateTimeInterface Publication date of the review
      *
-     * @Groups("review:read")
+     * @Groups({"review:read", "review:write"})
      * @ORM\Column(nullable=true, type="datetime")
      */
     public $publicationDate;

@@ -1,22 +1,23 @@
 apiVersion: v2
-appVersion: 0.1.0
+appVersion: 0.16.0
 description: A Helm chart for an API Platform API
 name: api
 version: 0.1.0
+type: application
 home: https://api-platform.com
 icon: https://api-platform.com/logo-250x250.png
 dependencies:
     - name: postgresql
-      version: ~9.3.2
+      version: ~9.8.0
       repository: https://charts.bitnami.com/bitnami/
       condition: postgresql.enabled
     - name: mercure
-      version: ~3.0.0
+      version: ~4.0.0
       repository: https://kubernetes-charts.storage.googleapis.com/
       condition: mercure.enabled
     - name: blackfire
-      version: ~0.2.0
-      repository: https://tech.sparkfabrik.com/blackfire-chart/
+      version: ~0.3.0
+      repository: https://ribeiroplinio.github.io/helm-chart/
       condition: blackfire.enabled
     - name: external-dns
       version: ~3.4.0

@@ -118,7 +118,7 @@ jobs:
       - name: Build helm dependencies
         run: |-
           helm repo add bitnami https://charts.bitnami.com/bitnami/
-          helm repo add blackfire https://tech.sparkfabrik.com/blackfire-chart/
+          helm repo add blackfire https://ribeiroplinio.github.io/helm-chart/
           helm repo add kubernetes https://kubernetes-charts.storage.googleapis.com/
           helm dependency build ./api/helm/api
 
