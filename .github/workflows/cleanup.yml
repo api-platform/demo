@@ -28,7 +28,7 @@ jobs:
 
       # Get all namespaces older than MAX_LIFETIME, except for DEFAULT_NAMESPACE
       - name: Get outdated namespaces
-        run: echo "::set-env name=NAMESPACES::$(kubectl get namespaces -l project=${{ env.GKE_CLUSTER }} --template '{{range .items}}{{.metadata.name}} {{.metadata.creationTimestamp}}{{"\n"}}{{end}}' | awk '$2 <= "'$(date -d 'now-${{ env.MAX_LIFETIME }}' -Ins --utc | sed 's/+0000/Z/')'" { print $1 }' | grep -v ${{ env.DEFAULT_NAMESPACE }})"
+        run: echo "NAMESPACES=$(kubectl get namespaces -l project=${{ env.GKE_CLUSTER }} --template '{{range .items}}{{.metadata.name}} {{.metadata.creationTimestamp}}{{"\n"}}{{end}}' | awk '$2 <= "'$(date -d 'now-${{ env.MAX_LIFETIME }}' -Ins --utc | sed 's/+0000/Z/')'" { print $1 }' | grep -v ${{ env.DEFAULT_NAMESPACE }})" >> $GITHUB_ENV
 
       - name: Remove outdated namespaces
         if: env.NAMESPACES != ''

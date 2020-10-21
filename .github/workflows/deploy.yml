@@ -53,30 +53,30 @@ jobs:
         if: env.GITHUB_REF_SLUG_URL == env.DEFAULT_BRANCH
         run: |-
           NAMESPACE=${{ env.GITHUB_REF_SLUG_URL }}
-          echo "::set-env name=API_HOST::${{ env.SUBDOMAIN }}.${{ env.DOMAIN }}"
-          echo "::set-env name=MERCURE_HOST::${{ env.SUBDOMAIN }}-mercure.${{ env.DOMAIN }}"
-          echo "::set-env name=ADMIN_HOST::${{ env.SUBDOMAIN }}-admin.${{ env.DOMAIN }}"
-          echo "::set-env name=CLIENT_HOST::${{ env.SUBDOMAIN }}-client.${{ env.DOMAIN }}"
-          echo "::set-env name=CONTAINER_REGISTRY_TAG::latest"
-          echo "::set-env name=NAMESPACE::$NAMESPACE"
+          echo "API_HOST=${{ env.SUBDOMAIN }}.${{ env.DOMAIN }}" >> $GITHUB_ENV
+          echo "MERCURE_HOST=${{ env.SUBDOMAIN }}-mercure.${{ env.DOMAIN }}" >> $GITHUB_ENV
+          echo "ADMIN_HOST=${{ env.SUBDOMAIN }}-admin.${{ env.DOMAIN }}" >> $GITHUB_ENV
+          echo "CLIENT_HOST=${{ env.SUBDOMAIN }}-client.${{ env.DOMAIN }}" >> $GITHUB_ENV
+          echo "CONTAINER_REGISTRY_TAG=latest" >> $GITHUB_ENV
+          echo "NAMESPACE=$NAMESPACE" >> $GITHUB_ENV
 
       - name: Generate environment variables for feature deploy
         if: env.GITHUB_REF_SLUG_URL != env.DEFAULT_BRANCH
         run: |-
           NAMESPACE=feature-${{ env.GITHUB_REF_SLUG_URL }}
-          echo "::set-env name=API_HOST::${{ env.SUBDOMAIN }}-$NAMESPACE.${{ env.DOMAIN }}"
-          echo "::set-env name=MERCURE_HOST::${{ env.SUBDOMAIN }}-mercure-$NAMESPACE.${{ env.DOMAIN }}"
-          echo "::set-env name=ADMIN_HOST::${{ env.SUBDOMAIN }}-admin-$NAMESPACE.${{ env.DOMAIN }}"
-          echo "::set-env name=CLIENT_HOST::${{ env.SUBDOMAIN }}-client-$NAMESPACE.${{ env.DOMAIN }}"
-          echo "::set-env name=CONTAINER_REGISTRY_TAG::$NAMESPACE"
-          echo "::set-env name=NAMESPACE::$NAMESPACE"
+          echo "API_HOST=${{ env.SUBDOMAIN }}-$NAMESPACE.${{ env.DOMAIN }}" >> $GITHUB_ENV
+          echo "MERCURE_HOST=${{ env.SUBDOMAIN }}-mercure-$NAMESPACE.${{ env.DOMAIN }}" >> $GITHUB_ENV
+          echo "ADMIN_HOST=${{ env.SUBDOMAIN }}-admin-$NAMESPACE.${{ env.DOMAIN }}" >> $GITHUB_ENV
+          echo "CLIENT_HOST=${{ env.SUBDOMAIN }}-client-$NAMESPACE.${{ env.DOMAIN }}" >> $GITHUB_ENV
+          echo "CONTAINER_REGISTRY_TAG=$NAMESPACE" >> $GITHUB_ENV
+          echo "NAMESPACE=$NAMESPACE" >> $GITHUB_ENV
 
       - name: Check for existing namespace
         run: |-
           if ! kubectl get namespace ${{ env.NAMESPACE }} > /dev/null 2>&1; then
-            echo "::set-env name=CREATE_NAMESPACE::true"
+            echo "CREATE_NAMESPACE=true" >> $GITHUB_ENV
           else
-            echo "::set-env name=CREATE_NAMESPACE::false"
+            echo "CREATE_NAMESPACE=false" >> $GITHUB_ENV
           fi
 
       - name: Build and push the Docker images
@@ -94,8 +94,8 @@ jobs:
           MERCURE_JWT_TOKEN=$(npx jwt sign --noCopy --expiresIn "100 years" '{"mercure": {"publish": ["*"]}}' "$MERCURE_JWT_KEY")
           echo "::add-mask::$MERCURE_JWT_KEY"
           echo "::add-mask::$MERCURE_JWT_TOKEN"
-          echo "::set-env name=MERCURE_JWT_KEY::$MERCURE_JWT_KEY"
-          echo "::set-env name=MERCURE_JWT_TOKEN::$MERCURE_JWT_TOKEN"
+          echo "MERCURE_JWT_KEY=$MERCURE_JWT_KEY" >> $GITHUB_ENV
+          echo "MERCURE_JWT_TOKEN=$MERCURE_JWT_TOKEN" >> $GITHUB_ENV
 
       - name: Create namespace
         if: env.CREATE_NAMESPACE == 'true'
@@ -122,7 +122,6 @@ jobs:
           helm repo add kubernetes https://kubernetes-charts.storage.googleapis.com/
           helm dependency build ./api/helm/api
 
-      # Cannot set-env JWT_* because GitHub Actions does not support multiline set-env
       - name: Install API
         if: env.CREATE_NAMESPACE == 'true'
         run: |-
@@ -196,29 +195,29 @@ jobs:
         run: |-
           NAMESPACE=${{ env.GITHUB_REF_SLUG_URL }}
           ADMIN_HOST=${{ env.SUBDOMAIN }}-admin.${{ env.DOMAIN }}
-          echo "::set-env name=API_HOST::${{ env.SUBDOMAIN }}.${{ env.DOMAIN }}"
-          echo "::set-env name=MERCURE_HOST::${{ env.SUBDOMAIN }}-mercure.${{ env.DOMAIN }}"
-          echo "::set-env name=ADMIN_HOST::$ADMIN_HOST"
-          echo "::set-env name=CLIENT_HOST::${{ env.SUBDOMAIN }}-client.${{ env.DOMAIN }}"
-          echo "::set-env name=NAMESPACE::$NAMESPACE"
+          echo "API_HOST=${{ env.SUBDOMAIN }}.${{ env.DOMAIN }}" >> $GITHUB_ENV
+          echo "MERCURE_HOST=${{ env.SUBDOMAIN }}-mercure.${{ env.DOMAIN }}" >> $GITHUB_ENV
+          echo "ADMIN_HOST=$ADMIN_HOST" >> $GITHUB_ENV
+          echo "CLIENT_HOST=${{ env.SUBDOMAIN }}-client.${{ env.DOMAIN }}" >> $GITHUB_ENV
+          echo "NAMESPACE=$NAMESPACE" >> $GITHUB_ENV
 
       - name: Generate environment variables for feature deploy
         if: env.GITHUB_REF_SLUG_URL != env.DEFAULT_BRANCH
         run: |-
           NAMESPACE=feature-${{ env.GITHUB_REF_SLUG_URL }}
           ADMIN_HOST=${{ env.SUBDOMAIN }}-admin-$NAMESPACE.${{ env.DOMAIN }}
-          echo "::set-env name=API_HOST::${{ env.SUBDOMAIN }}-$NAMESPACE.${{ env.DOMAIN }}"
-          echo "::set-env name=MERCURE_HOST::${{ env.SUBDOMAIN }}-mercure-$NAMESPACE.${{ env.DOMAIN }}"
-          echo "::set-env name=ADMIN_HOST::$ADMIN_HOST"
-          echo "::set-env name=CLIENT_HOST::${{ env.SUBDOMAIN }}-client-$NAMESPACE.${{ env.DOMAIN }}"
-          echo "::set-env name=NAMESPACE::$NAMESPACE"
+          echo "API_HOST=${{ env.SUBDOMAIN }}-$NAMESPACE.${{ env.DOMAIN }}" >> $GITHUB_ENV
+          echo "MERCURE_HOST=${{ env.SUBDOMAIN }}-mercure-$NAMESPACE.${{ env.DOMAIN }}" >> $GITHUB_ENV
+          echo "ADMIN_HOST=$ADMIN_HOST" >> $GITHUB_ENV
+          echo "CLIENT_HOST=${{ env.SUBDOMAIN }}-client-$NAMESPACE.${{ env.DOMAIN }}" >> $GITHUB_ENV
+          echo "NAMESPACE=$NAMESPACE" >> $GITHUB_ENV
 
       - name: Check for existing bucket
         run: |-
           if ! gsutil acl get gs://${{ env.ADMIN_HOST }} > /dev/null 2>&1; then
-            echo "::set-env name=CREATE_BUCKET::true"
+            echo "CREATE_BUCKET=true" >> $GITHUB_ENV
           else
-            echo "::set-env name=CREATE_BUCKET::false"
+            echo "CREATE_BUCKET=false" >> $GITHUB_ENV
           fi
 
       - name: Build admin
@@ -281,29 +280,29 @@ jobs:
         run: |-
           NAMESPACE=${{ env.GITHUB_REF_SLUG_URL }}
           CLIENT_HOST=${{ env.SUBDOMAIN }}-client.${{ env.DOMAIN }}
-          echo "::set-env name=API_HOST::${{ env.SUBDOMAIN }}.${{ env.DOMAIN }}"
-          echo "::set-env name=MERCURE_HOST::${{ env.SUBDOMAIN }}-mercure.${{ env.DOMAIN }}"
-          echo "::set-env name=ADMIN_HOST::${{ env.SUBDOMAIN }}-admin.${{ env.DOMAIN }}"
-          echo "::set-env name=CLIENT_HOST::$CLIENT_HOST"
-          echo "::set-env name=NAMESPACE::$NAMESPACE"
+          echo "API_HOST=${{ env.SUBDOMAIN }}.${{ env.DOMAIN }}" >> $GITHUB_ENV
+          echo "MERCURE_HOST=${{ env.SUBDOMAIN }}-mercure.${{ env.DOMAIN }}" >> $GITHUB_ENV
+          echo "ADMIN_HOST=${{ env.SUBDOMAIN }}-admin.${{ env.DOMAIN }}" >> $GITHUB_ENV
+          echo "CLIENT_HOST=$CLIENT_HOST" >> $GITHUB_ENV
+          echo "NAMESPACE=$NAMESPACE" >> $GITHUB_ENV
 
       - name: Generate environment variables
         if: env.GITHUB_REF_SLUG_URL != env.DEFAULT_BRANCH
         run: |-
           NAMESPACE=feature-${{ env.GITHUB_REF_SLUG_URL }}
           CLIENT_HOST=${{ env.SUBDOMAIN }}-client-$NAMESPACE.${{ env.DOMAIN }}
-          echo "::set-env name=API_HOST::${{ env.SUBDOMAIN }}-$NAMESPACE.${{ env.DOMAIN }}"
-          echo "::set-env name=MERCURE_HOST::${{ env.SUBDOMAIN }}-mercure-$NAMESPACE.${{ env.DOMAIN }}"
-          echo "::set-env name=ADMIN_HOST::${{ env.SUBDOMAIN }}-admin-$NAMESPACE.${{ env.DOMAIN }}"
-          echo "::set-env name=CLIENT_HOST::$CLIENT_HOST"
-          echo "::set-env name=NAMESPACE::$NAMESPACE"
+          echo "API_HOST=${{ env.SUBDOMAIN }}-$NAMESPACE.${{ env.DOMAIN }}" >> $GITHUB_ENV
+          echo "MERCURE_HOST=${{ env.SUBDOMAIN }}-mercure-$NAMESPACE.${{ env.DOMAIN }}" >> $GITHUB_ENV
+          echo "ADMIN_HOST=${{ env.SUBDOMAIN }}-admin-$NAMESPACE.${{ env.DOMAIN }}" >> $GITHUB_ENV
+          echo "CLIENT_HOST=$CLIENT_HOST" >> $GITHUB_ENV
+          echo "NAMESPACE=$NAMESPACE" >> $GITHUB_ENV
 
       - name: Check for existing bucket
         run: |-
           if ! gsutil acl get gs://${{ env.CLIENT_HOST }} > /dev/null 2>&1; then
-            echo "::set-env name=CREATE_BUCKET::true"
+            echo "CREATE_BUCKET=true" >> $GITHUB_ENV
           else
-            echo "::set-env name=CREATE_BUCKET::false"
+            echo "CREATE_BUCKET=false" >> $GITHUB_ENV
           fi
 
       - name: Build client
