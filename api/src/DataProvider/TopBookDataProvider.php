@@ -59,7 +59,7 @@ final class TopBookDataProvider
             if (count($row) !== self::FIELDS_COUNT) {
                 throw new \RuntimeException(sprintf('Invalid data at row: %d', count($row)));
             }
-            $topBooks[] = (new TopBook())
+            $topBooks[$cpt-1] = (new TopBook())
                 ->setId($cpt-1)
                 ->setTitle($this->sanitize($row[0] ?? null))
                 ->setAuthor($this->sanitize($row[1] ?? null))
