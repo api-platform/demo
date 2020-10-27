@@ -1,0 +1,75 @@
+<?php declare(strict_types=1);
+
+namespace App\DataProvider;
+
+use App\Entity\TopBook;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
+
+final class TopBookDataProvider
+{
+    private const MAX_CACHE_TIME = 1; // 1 hour
+    private const DATA_SOURCE = 'top-100-novel-sci-fi-fr.csv';
+    private const FIELDS_COUNT = 5;
+
+    private CacheInterface $cache;
+
+    public function __construct(CacheInterface $cache)
+    {
+        $this->cache = $cache;
+    }
+
+    /**
+     * Local caching is done so the CSV isn't reloded at every call.
+     */
+    public function getTopBooks(): array
+    {
+        return $this->cache->get('books.sci-fi.top.fr', function (ItemInterface $item) {
+            $item->expiresAfter(self::MAX_CACHE_TIME);
+
+            return $this->getTopBooksFromCsv();
+        });
+    }
+
+    /**
+     * Be carful that the file is a simple file without "enclosure". That means
+     * a field can't contain a ";" or this would add an extra column to the row.
+     * Consider using a more robust library like csv reader from the ph pleague.
+     *
+     * @see https://csv.thephpleague.com
+     */
+    public function getTopBooksFromCsv(): array
+    {
+        $csvFileName = __DIR__.'/data/'.self::DATA_SOURCE;
+        if (!is_file($csvFileName)) {
+            throw new \RuntimeException(sprintf("Can't find data source: %s", $csvFileName));
+        }
+        foreach (file($csvFileName) as $line) {
+            $data[] = str_getcsv($line, ';');
+        }
+
+        $cpt = 0;
+        foreach ($data ?? [] as $row) {
+            if (count($row) !== self::FIELDS_COUNT) {
+                throw new \RuntimeException(sprintf('Invalid data at row: %d', count($row)));
+            }
+            $topBooks[] = (new TopBook())
+                ->setId(++$cpt)
+                ->setTitle($this->sanitize($row[0] ?? null))
+                ->setAuthor($this->sanitize($row[1] ?? null))
+                ->setPart($this->sanitize($row[2] ?? null))
+                ->setPlace($this->sanitize($row[3] ?? null))
+                ->setBorrowCount((int) $row[4]);
+        }
+
+        return $topBooks ?? [];
+    }
+
+    /**
+     * It's an ISO-8859-1 encoded file with French accents.
+     */
+    private function sanitize(?string $str): string
+    {
+        return trim(utf8_encode($str));
+    }
+}
