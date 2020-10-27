@@ -23,7 +23,7 @@ final class TopBookDataProvider
     }
 
     /**
-     * Local caching is done so the CSV isn't reloded at every call.
+     * Local caching is done so the CSV isn't reloaded at every call.
      */
     public function getTopBooks(): array
     {
@@ -35,9 +35,9 @@ final class TopBookDataProvider
     }
 
     /**
-     * Be carful that the file is a simple file without "enclosure". That means
+     * Be careful that the file is a simple csv file without "enclosure". That means
      * a field can't contain a ";" or this would add an extra column to the row.
-     * Consider using a more robust library like csv reader from the ph pleague.
+     * Consider using a more robust library like csv reader from the PHP pleague.
      *
      * @see https://csv.thephpleague.com
      */
@@ -72,7 +72,7 @@ final class TopBookDataProvider
     }
 
     /**
-     * It's an ISO-8859-1 encoded file with French accents.
+     * The csv file is a ISO-8859-1 encoded file with French accents.
      */
     private function sanitize(?string $str): string
     {
