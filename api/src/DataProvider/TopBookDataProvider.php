@@ -3,6 +3,7 @@
 namespace App\DataProvider;
 
 use App\Entity\TopBook;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
@@ -13,10 +14,12 @@ final class TopBookDataProvider
     private const FIELDS_COUNT = 5;
 
     private CacheInterface $cache;
+    private KernelInterface $kernel;
 
-    public function __construct(CacheInterface $cache)
+    public function __construct(CacheInterface $cache, KernelInterface $kernel)
     {
         $this->cache = $cache;
+        $this->kernel = $kernel;
     }
 
     /**
@@ -40,7 +43,7 @@ final class TopBookDataProvider
      */
     public function getTopBooksFromCsv(): array
     {
-        $csvFileName = __DIR__.'/data/'.self::DATA_SOURCE;
+        $csvFileName = $this->kernel->getProjectDir().'/data/'.self::DATA_SOURCE;
         if (!is_file($csvFileName)) {
             throw new \RuntimeException(sprintf("Can't find data source: %s", $csvFileName));
         }
@@ -50,11 +53,14 @@ final class TopBookDataProvider
 
         $cpt = 0;
         foreach ($data ?? [] as $row) {
+            if (++$cpt === 1) {
+                continue;
+            }
             if (count($row) !== self::FIELDS_COUNT) {
                 throw new \RuntimeException(sprintf('Invalid data at row: %d', count($row)));
             }
             $topBooks[] = (new TopBook())
-                ->setId(++$cpt)
+                ->setId($cpt-1)
                 ->setTitle($this->sanitize($row[0] ?? null))
                 ->setAuthor($this->sanitize($row[1] ?? null))
                 ->setPart($this->sanitize($row[2] ?? null))

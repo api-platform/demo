@@ -27,7 +27,7 @@ class TestsController extends AbstractController
      */
     public function tests(Request $request): Response
     {
-        $topBooks = $this->topBookDataProvider->getTopBooks();
+        $topBooks = $this->topBookDataProvider->getTopBooksFromCsv();
         dump($topBooks);
         die();
     }
