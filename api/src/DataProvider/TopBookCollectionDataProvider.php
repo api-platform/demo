@@ -10,6 +10,7 @@ final class TopBookCollectionDataProvider implements ContextAwareCollectionDataP
 {
     private TopBookDataProvider $dataProvider;
     private array $collection;
+    private array $context;
 
     public function __construct(TopBookDataProvider $dataProvider)
     {
@@ -23,6 +24,7 @@ final class TopBookCollectionDataProvider implements ContextAwareCollectionDataP
 
     public function getCollection(string $resourceClass, string $operationName = null, array $context = []): iterable
     {
+        $this->context = $context;
         try {
             $this->collection = $this->dataProvider->getTopBooks();
         } catch (\Exception $e) {
@@ -32,12 +34,9 @@ final class TopBookCollectionDataProvider implements ContextAwareCollectionDataP
         return array_slice($this->collection, $this->getOffset(), $this->getItemsPerPage());
     }
 
-    private function getOffset(array $context = []): int
+    private function getOffset(): int
     {
-        $page = (int) ($context['filters']['page'] ?? 1);
-        $page = $page < 1 || $page > $this->getLastPage() ? 1 : $page;
-
-        return ($page - 1) * $this->getItemsPerPage();
+        return (int) (($this->getCurrentPage() - 1) * $this->getItemsPerPage());
     }
 
     public function getLastPage(): float
@@ -56,8 +55,21 @@ final class TopBookCollectionDataProvider implements ContextAwareCollectionDataP
     /**
      * Gets the number of items in the whole collection.
      */
-    public function getItemsPerPage(): int
+    public function getItemsPerPage(): float
     {
         return 30;
+    }
+
+    public function count(): int
+    {
+        return (int) $this->getTotalItems();
+    }
+
+    public function getCurrentPage(): float
+    {
+        $page = (int) ($this->context['filters']['page'] ?? 1);
+        $page = $page < 1 || $page > $this->getLastPage() ? 1 : $page;
+
+        return $page;
     }
 }
