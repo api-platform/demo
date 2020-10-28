@@ -12,7 +12,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *
  * @see https://www.data.gouv.fr/fr/datasets/top-100-romans-adultes-de-science-fiction-et-fantastiques/
  * @see https://www.data.gouv.fr/fr/datasets/r/a2b09081-6cc4-4fdb-bd73-35484014c89c
- * @see DataProvider/data/top-100-novel-sci-fi-fr.csv
+ * @see /data/top-100-novel-sci-fi-fr.csv
  *
  * @ApiResource(
  *   collectionOperations={"get"},
@@ -135,4 +135,3 @@ class TopBook
         return $this;
     }
 }
-
