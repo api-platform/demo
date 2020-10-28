@@ -32,25 +32,25 @@ final class TopBookCollectionDataProvider implements ContextAwareCollectionDataP
             throw new \RuntimeException(sprintf('Unable to retrieve top books from external source: %s', $e->getMessage()));
         }
 
-        return new ArrayPaginator($this->collection, $this->getOffset(), (int) $this->getItemsPerPage());
+        return new ArrayPaginator($this->collection, $this->getOffset(), $this->getItemsPerPage());
     }
 
-    public function getLastPage(): float
+    public function getLastPage(): int
     {
-        return ceil(($this->getTotalItems() / $this->getItemsPerPage()));
+        return (int) ceil(($this->getTotalItems() / $this->getItemsPerPage()));
     }
 
-    public function getTotalItems(): float
+    public function getTotalItems(): int
     {
         return count($this->collection);
     }
 
     private function getOffset(): int
     {
-        return (int) (($this->getCurrentPage() - 1) * $this->getItemsPerPage());
+        return ($this->getCurrentPage() - 1) * $this->getItemsPerPage();
     }
 
-    public function getCurrentPage(): float
+    public function getCurrentPage(): int
     {
         $page = (int) ($this->context['filters']['page'] ?? 1);
         $page = $page < 1 || $page > $this->getLastPage() ? 1 : $page;
@@ -58,7 +58,7 @@ final class TopBookCollectionDataProvider implements ContextAwareCollectionDataP
         return $page;
     }
 
-    public function getItemsPerPage(): float
+    public function getItemsPerPage(): int
     {
         return 30;
     }

@@ -43,11 +43,7 @@ final class TopBookDataProvider
      */
     public function getTopBooksFromCsv(): array
     {
-        $csvFileName = $this->kernel->getProjectDir().'/data/'.self::DATA_SOURCE;
-        if (!is_file($csvFileName)) {
-            throw new \RuntimeException(sprintf("Can't find data source: %s", $csvFileName));
-        }
-        foreach (file($csvFileName) as $line) {
+        foreach ($this->getFileAsArray() as $line) {
             $data[] = str_getcsv($line, ';');
         }
 
@@ -71,11 +67,25 @@ final class TopBookDataProvider
         return $topBooks ?? [];
     }
 
+    private function getFileAsArray(): array
+    {
+        $csvFileName = $this->kernel->getProjectDir().'/data/'.self::DATA_SOURCE;
+        if (!is_file($csvFileName)) {
+            throw new \RuntimeException(sprintf("Can't find data source: %s", $csvFileName));
+        }
+        $file = file($csvFileName);
+        if (!is_array($file)) {
+            throw new \RuntimeException(sprintf("Can't load data source: %s", $csvFileName));
+        }
+
+        return $file;
+    }
+
     /**
      * The CSV file is a "ISO-8859-1" encoded file with French accents.
      */
     private function sanitize(?string $str): string
     {
-        return trim(utf8_encode($str));
+        return trim(utf8_encode((string) $str));
     }
 }

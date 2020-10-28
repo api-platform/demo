@@ -23,6 +23,9 @@ final class TopBookItemDataProvider implements ItemDataProviderInterface, Restri
 
     public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): ?TopBook
     {
+        if (!is_int($id)) {
+            throw new InvalidIdentifierException('Invalid id key type.');
+        }
         $id = $this->checkId($id);
         try {
             $topBooks = $this->dataProvider->getTopBooks();
@@ -37,11 +40,11 @@ final class TopBookItemDataProvider implements ItemDataProviderInterface, Restri
         return $topBooks[$id];
     }
 
-    private function checkId($id): int
+    private function checkId(int $id): int
     {
-        // Non int identifier are casted to int(0)
+        // Non int identifiers are cast to int(0)
         if ($id === 0) {
-            throw new InvalidIdentifierException('Invalid id key type.');
+            throw new InvalidIdentifierException('Invalid id value.');
         }
 
         if ($id < 1 || $id > 100) {
