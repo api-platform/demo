@@ -17,3 +17,18 @@ Loading Fixtures
 ================
 
     $ docker-compose exec php bin/console hautelook:fixtures:load --no-interaction --no-bundles
+
+
+What's included ? 
+=================
+
+This demo application contains several things you may be interested in.   
+
+Custom data provider
+--------------------
+
+Example where a CSV file is exposed like a standard API Platform endpoint.
+It also shows how to make this endpoint paginated.
+
+* [Data providers documentation](https://api-platform.com/docs/core/data-providers/)
+* [Code in src/DataProvider](src/DataProvider)
