@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\DataProvider;
 
@@ -49,14 +51,14 @@ final class TopBookDataProvider
 
         $cpt = 0;
         foreach ($data ?? [] as $row) {
-            if (++$cpt === 1) {
+            if (1 === ++$cpt) {
                 continue;
             }
             if (count($row) !== self::FIELDS_COUNT) {
                 throw new \RuntimeException(sprintf('Invalid data at row: %d', count($row)));
             }
-            $topBooks[$cpt-1] = (new TopBook())
-                ->setId($cpt-1)
+            $topBooks[$cpt - 1] = (new TopBook())
+                ->setId($cpt - 1)
                 ->setTitle($this->sanitize($row[0] ?? null))
                 ->setAuthor($this->sanitize($row[1] ?? null))
                 ->setPart($this->sanitize($row[2] ?? null))

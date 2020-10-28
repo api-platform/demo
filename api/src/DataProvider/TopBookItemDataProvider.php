@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\DataProvider;
 
@@ -30,7 +32,7 @@ final class TopBookItemDataProvider implements ItemDataProviderInterface, Restri
         try {
             $topBooks = $this->dataProvider->getTopBooks();
         } catch (\Exception $e) {
-            throw new \RuntimeException(sprintf("Unable to retrieve top books from external source: %s", $e->getMessage()));
+            throw new \RuntimeException(sprintf('Unable to retrieve top books from external source: %s', $e->getMessage()));
         }
 
         if (!array_key_exists($id, $topBooks)) {
@@ -43,7 +45,7 @@ final class TopBookItemDataProvider implements ItemDataProviderInterface, Restri
     private function checkId(int $id): int
     {
         // Non int identifiers are cast to int(0)
-        if ($id === 0) {
+        if (0 === $id) {
             throw new InvalidIdentifierException('Invalid id value.');
         }
 
