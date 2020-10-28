@@ -2,6 +2,7 @@
 
 namespace App\DataProvider;
 
+use ApiPlatform\Core\DataProvider\ArrayPaginator;
 use ApiPlatform\Core\DataProvider\ContextAwareCollectionDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Entity\TopBook;
@@ -31,12 +32,22 @@ final class TopBookCollectionDataProvider implements ContextAwareCollectionDataP
             throw new \RuntimeException(sprintf('Unable to retrieve top books from external source: %s', $e->getMessage()));
         }
 
-        return array_slice($this->collection, $this->getOffset(), $this->getItemsPerPage());
+        $paginator = new ArrayPaginator($this->collection, $this->getOffset(), (int) $this->getItemsPerPage());
+
+        return $paginator->getIterator();
     }
 
     private function getOffset(): int
     {
         return (int) (($this->getCurrentPage() - 1) * $this->getItemsPerPage());
+    }
+
+    public function getCurrentPage(): float
+    {
+        $page = (int) ($this->context['filters']['page'] ?? 1);
+        $page = $page < 1 || $page > $this->getLastPage() ? 1 : $page;
+
+        return $page;
     }
 
     public function getLastPage(): float
@@ -58,18 +69,5 @@ final class TopBookCollectionDataProvider implements ContextAwareCollectionDataP
     public function getItemsPerPage(): float
     {
         return 30;
-    }
-
-    public function count(): int
-    {
-        return (int) $this->getTotalItems();
-    }
-
-    public function getCurrentPage(): float
-    {
-        $page = (int) ($this->context['filters']['page'] ?? 1);
-        $page = $page < 1 || $page > $this->getLastPage() ? 1 : $page;
-
-        return $page;
     }
 }
