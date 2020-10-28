@@ -1,3 +1,4 @@
 /docker-compose.override.yaml
 /docker-compose.override.yml
 /flarectl*
+/api/src/Controller/TestsController.php

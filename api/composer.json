@@ -2,7 +2,7 @@
     "type": "project",
     "license": "MIT",
     "require": {
-        "php": "^7.4",
+        "php": ">=7.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
@@ -70,7 +70,16 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "symfony": [
+            "php bin/console"
+        ],
+        "load-fixtures": [
+            "@symfony hautelook:fixtures:load --no-interaction --no-bundles"
         ]
+    },
+    "scripts-descriptions": {
+        "load-fixtures": "Load all the fixtures in the database."
     },
     "conflict": {
         "symfony/symfony": "*"
