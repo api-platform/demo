@@ -54,7 +54,7 @@ final class TopBookDataProvider
             if (1 === ++$cpt) {
                 continue;
             }
-            if (count($row) !== self::FIELDS_COUNT) {
+            if (self::FIELDS_COUNT === count($row)) {
                 throw new \RuntimeException(sprintf('Invalid data at row: %d', count($row)));
             }
             $topBooks[$cpt - 1] = (new TopBook())
