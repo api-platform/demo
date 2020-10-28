@@ -9,7 +9,7 @@ use Symfony\Contracts\Cache\ItemInterface;
 
 final class TopBookDataProvider
 {
-    private const MAX_CACHE_TIME = 1; // 1 hour
+    private const MAX_CACHE_TIME = 3600; // 1 hour
     private const DATA_SOURCE = 'top-100-novel-sci-fi-fr.csv';
     private const FIELDS_COUNT = 5;
 
