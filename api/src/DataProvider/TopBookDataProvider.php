@@ -37,7 +37,7 @@ final class TopBookDataProvider
     /**
      * Be careful that the file is a simple csv file without "enclosure". That means
      * a field can't contain a ";" or this would add an extra column to the row.
-     * Consider using a more robust library like csv reader from the PHP pleague.
+     * Consider using a more robust library like csv reader from the PHP league.
      *
      * @see https://csv.thephpleague.com
      */
@@ -65,14 +65,14 @@ final class TopBookDataProvider
                 ->setAuthor($this->sanitize($row[1] ?? null))
                 ->setPart($this->sanitize($row[2] ?? null))
                 ->setPlace($this->sanitize($row[3] ?? null))
-                ->setBorrowCount((int) $row[4]);
+                ->setBorrowCount((int) ($row[4] ?? 0));
         }
 
         return $topBooks ?? [];
     }
 
     /**
-     * The csv file is a ISO-8859-1 encoded file with French accents.
+     * The CSV file is a "ISO-8859-1" encoded file with French accents.
      */
     private function sanitize(?string $str): string
     {

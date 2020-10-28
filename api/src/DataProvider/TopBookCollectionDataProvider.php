@@ -4,17 +4,14 @@ namespace App\DataProvider;
 
 use ApiPlatform\Core\DataProvider\ArrayPaginator;
 use ApiPlatform\Core\DataProvider\ContextAwareCollectionDataProviderInterface;
-use ApiPlatform\Core\DataProvider\PaginatorInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Entity\TopBook;
-use Traversable;
 
-final class TopBookCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface, PaginatorInterface, \IteratorAggregate
+final class TopBookCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {
     private TopBookDataProvider $dataProvider;
     private array $collection;
     private array $context;
-    private PaginatorInterface $paginator;
 
     public function __construct(TopBookDataProvider $dataProvider)
     {
@@ -35,33 +32,17 @@ final class TopBookCollectionDataProvider implements ContextAwareCollectionDataP
             throw new \RuntimeException(sprintf('Unable to retrieve top books from external source: %s', $e->getMessage()));
         }
 
-        $this->paginator = new ArrayPaginator($this->collection, $this->getOffset(), (int) $this->getItemsPerPage());
-
-        return $this->paginator;
+        return new ArrayPaginator($this->collection, $this->getOffset(), (int) $this->getItemsPerPage());
     }
 
-    /**
-     * @see PaginatorInterface
-     */
     public function getLastPage(): float
     {
-        return ceil(($this->getTotalItems() / 30));
+        return ceil(($this->getTotalItems() / $this->getItemsPerPage()));
     }
 
-    /**
-     * @see PaginatorInterface
-     */
     public function getTotalItems(): float
     {
         return count($this->collection);
-    }
-
-    /**
-     * @see IteratorAggregate
-     */
-    public function getIterator(): Traversable
-    {
-        return $this->paginator->getIterator();
     }
 
     private function getOffset(): int
@@ -80,10 +61,5 @@ final class TopBookCollectionDataProvider implements ContextAwareCollectionDataP
     public function getItemsPerPage(): float
     {
         return 30;
-    }
-
-    public function count(): int
-    {
-        return (int) $this->getTotalItems();
     }
 }
