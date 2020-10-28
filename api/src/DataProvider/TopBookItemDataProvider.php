@@ -39,6 +39,7 @@ final class TopBookItemDataProvider implements ItemDataProviderInterface, Restri
 
     private function checkId($id): int
     {
+        // Non int identifier are casted to int(0)
         if ($id === 0) {
             throw new InvalidIdentifierException('Invalid id key type.');
         }
