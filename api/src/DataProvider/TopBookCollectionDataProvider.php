@@ -4,14 +4,17 @@ namespace App\DataProvider;
 
 use ApiPlatform\Core\DataProvider\ArrayPaginator;
 use ApiPlatform\Core\DataProvider\ContextAwareCollectionDataProviderInterface;
+use ApiPlatform\Core\DataProvider\PaginatorInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Entity\TopBook;
+use Traversable;
 
-final class TopBookCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
+final class TopBookCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface, PaginatorInterface, \IteratorAggregate
 {
     private TopBookDataProvider $dataProvider;
     private array $collection;
     private array $context;
+    private PaginatorInterface $paginator;
 
     public function __construct(TopBookDataProvider $dataProvider)
     {
@@ -32,9 +35,33 @@ final class TopBookCollectionDataProvider implements ContextAwareCollectionDataP
             throw new \RuntimeException(sprintf('Unable to retrieve top books from external source: %s', $e->getMessage()));
         }
 
-        $paginator = new ArrayPaginator($this->collection, $this->getOffset(), (int) $this->getItemsPerPage());
+        $this->paginator = new ArrayPaginator($this->collection, $this->getOffset(), (int) $this->getItemsPerPage());
 
-        return $paginator->getIterator();
+        return $this->paginator;
+    }
+
+    /**
+     * @see PaginatorInterface
+     */
+    public function getLastPage(): float
+    {
+        return ceil(($this->getTotalItems() / 30));
+    }
+
+    /**
+     * @see PaginatorInterface
+     */
+    public function getTotalItems(): float
+    {
+        return count($this->collection);
+    }
+
+    /**
+     * @see IteratorAggregate
+     */
+    public function getIterator(): Traversable
+    {
+        return $this->paginator->getIterator();
     }
 
     private function getOffset(): int
@@ -50,24 +77,13 @@ final class TopBookCollectionDataProvider implements ContextAwareCollectionDataP
         return $page;
     }
 
-    public function getLastPage(): float
-    {
-        return ceil(($this->getTotalItems() / 30));
-    }
-
-    /**
-     * Gets the number of items in the whole collection.
-     */
-    public function getTotalItems(): float
-    {
-        return count($this->collection);
-    }
-
-    /**
-     * Gets the number of items in the whole collection.
-     */
     public function getItemsPerPage(): float
     {
         return 30;
+    }
+
+    public function count(): int
+    {
+        return (int) $this->getTotalItems();
     }
 }
