@@ -1,5 +1,7 @@
 /helm/api/charts
 /coverage
+/Makefile
+/phpstan.neon
 
 ###> symfony/framework-bundle ###
 /.env.local
@@ -24,5 +26,3 @@
 /.php_cs
 /.php_cs.cache
 ###< friendsofphp/php-cs-fixer ###
-/Makefile
-/phpstan.neon

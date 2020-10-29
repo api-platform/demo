@@ -12,13 +12,11 @@ Install
     $ docker-compose build
     $ docker-compose up -d
 
-And go to https://localhost
+The load the demo fixtures:
 
-Loading Fixtures
-================
+    $ docker-compose exec php composer run load-fixtures
 
-    $ docker-compose exec php composer load-fixtures
-
+You can now go to https://localhost
 
 What's included ? 
 =================
@@ -43,4 +41,20 @@ It also shows how to make this endpoint paginated.
 
 * [Data providers documentation](https://api-platform.com/docs/core/data-providers/)
 * [Code in src/DataProvider](src/DataProvider)
-* [Unit and functional tests](src/tests/DataProvider)
+
+Contributing 
+============
+
+Seen something that is wrong? A bug? Something that could be improved? Every contributions
+are welcome. 
+
+Prepare the test environment:
+
+    $ docker-compose exec php composer run prepare-test-env
+
+Then run the tests:
+
+    $ docker-compose exec php composer run tests
+
+If tests are green (you may see some deprecations warnings), you are ready to contribute!
+Don't forget to modify the `.github/workflows/test.yml` file if needed.

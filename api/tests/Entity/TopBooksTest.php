@@ -9,6 +9,9 @@ use App\DataProvider\TopBookCollectionDataProvider;
 use App\Entity\TopBook;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * These tests are read only, thus there is not need to use the RefreshDatabaseTrait.
+ */
 class TopBooksTest extends ApiTestCase
 {
     /**

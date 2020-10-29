@@ -94,13 +94,8 @@ jobs:
 
       - name: PHPUnit
         run: |-
-          docker-compose exec -T php bin/console doctrine:schema:drop --env=test --force
-          docker-compose exec -T php bin/console doctrine:schema:create --env=test
-          docker-compose exec -T php bin/console messenger:setup-transports --env=test
-          docker-compose exec -T php bin/console cache:warmup --env=test
-          docker-compose exec -T php bin/phpunit tests/Entity/TopBooksTest.php
-          docker-compose exec -T php bin/phpunit tests/BooksTest.php
-          docker-compose exec -T php bin/phpunit tests/ReviewsTest.php
+          docker-compose exec -T php composer run prepare-test-env
+          docker-compose exec -T php composer run tests
 
   jest:
     name: Jest
