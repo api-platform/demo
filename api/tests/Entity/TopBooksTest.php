@@ -67,7 +67,7 @@ class TopBooksTest extends ApiTestCase
             'author' => 'Werber Bernard',
             'part' => '',
             'place' => 'F WER',
-            'borrowCount' => 9
+            'borrowCount' => 9,
         ]);
 
         self::assertMatchesResourceCollectionJsonSchema(TopBook::class);
