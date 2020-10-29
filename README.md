@@ -12,7 +12,7 @@ Install
     $ docker-compose build
     $ docker-compose up -d
 
-The load the demo fixtures:
+Then load the demo fixtures:
 
     $ docker-compose exec php composer run load-fixtures
 
