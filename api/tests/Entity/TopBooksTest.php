@@ -70,7 +70,7 @@ class TopBooksTest extends ApiTestCase
             'borrowCount' => 9,
         ]);
 
-        self::assertMatchesResourceCollectionJsonSchema(TopBook::class);
+        self::assertMatchesResourceItemJsonSchema(TopBook::class);
     }
 
     /**
@@ -83,11 +83,11 @@ class TopBooksTest extends ApiTestCase
         static::createClient()->request('GET', '/top_books/foo');
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
-        self::assertMatchesResourceCollectionJsonSchema(TopBook::class);
+        self::assertMatchesResourceItemJsonSchema(TopBook::class);
     }
 
     /**
-     * Error case n°2: out of range id.
+     * Error case n°2: out of range identifier.
      *
      * @see TopBookItemDataProvider::checkId()
      */
@@ -96,6 +96,6 @@ class TopBooksTest extends ApiTestCase
         static::createClient()->request('GET', '/top_books/101');
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
-        self::assertMatchesResourceCollectionJsonSchema(TopBook::class);
+        self::assertMatchesResourceItemJsonSchema(TopBook::class);
     }
 }

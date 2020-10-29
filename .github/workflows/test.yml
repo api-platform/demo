@@ -98,8 +98,7 @@ jobs:
           docker-compose exec -T php bin/console doctrine:schema:create --env=test
           docker-compose exec -T php bin/console messenger:setup-transports --env=test
           docker-compose exec -T php bin/console cache:warmup --env=test
-          docker-compose exec -T php bin/phpunit tests/BooksTest.php
-          docker-compose exec -T php bin/phpunit tests/ReviewsTest.php
+          docker-compose exec -T php bin/phpunit tests/
 
   jest:
     name: Jest
