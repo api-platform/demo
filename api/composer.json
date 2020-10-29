@@ -76,6 +76,20 @@
         ],
         "load-fixtures": [
             "@symfony hautelook:fixtures:load --no-interaction --no-bundles"
+        ],
+        "prepare-test-env": [
+            "@symfony doctrine:schema:drop --env=test --force",
+            "@symfony doctrine:schema:create --env=test",
+            "@symfony messenger:setup-transports --env=test",
+            "@symfony cache:warmup --env=test"
+        ],
+        "phpunit": [
+            "php bin/phpunit"
+        ],
+        "tests": [
+            "@phpunit tests/Entity/TopBooksTest.php",
+            "@phpunit tests/BooksTest.php",
+            "@phpunit tests/ReviewsTest.php"
         ]
     },
     "scripts-descriptions": {

@@ -7,15 +7,10 @@ namespace App\Tests\Entity;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\DataProvider\TopBookCollectionDataProvider;
 use App\Entity\TopBook;
-use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
 use Symfony\Component\HttpFoundation\Response;
 
 class TopBooksTest extends ApiTestCase
 {
-    // This trait provided by HautelookAliceBundle will take care of refreshing
-    // the database content to put it in a known state between every tests
-    use RefreshDatabaseTrait;
-
     /**
      * @see TopBookCollectionDataProvider::getCollection()
      */
