@@ -62,12 +62,12 @@ class TopBooksTest extends ApiTestCase
             '@context' => '/contexts/TopBook',
             '@id' => '/top_books/1',
             '@type' => 'TopBook',
-            "id" => 1,
-            "title" => "Depuis l'au-delà",
-            "author" => "Werber Bernard",
-            "part" => "",
-            "place" => "F WER",
-            "borrowCount" => 9
+            'id' => 1,
+            'title' => "Depuis l'au-delà",
+            'author' => 'Werber Bernard',
+            'part' => '',
+            'place' => 'F WER',
+            'borrowCount' => 9
         ]);
 
         self::assertMatchesResourceCollectionJsonSchema(TopBook::class);
@@ -80,7 +80,7 @@ class TopBooksTest extends ApiTestCase
      */
     public function testGetItemErrorIdIsNotAnInteger(): void
     {
-        static::createClient()->request('GET', '/top_books/toto');
+        static::createClient()->request('GET', '/top_books/foo');
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
         self::assertMatchesResourceCollectionJsonSchema(TopBook::class);
@@ -93,7 +93,6 @@ class TopBooksTest extends ApiTestCase
      */
     public function testGetItemErrorIdIsOutOfRange(): void
     {
-        //$this->expectException(InvalidIdentifierException::class);
         static::createClient()->request('GET', '/top_books/101');
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
