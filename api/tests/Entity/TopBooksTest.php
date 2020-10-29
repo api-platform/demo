@@ -8,6 +8,7 @@ use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\DataProvider\TopBookCollectionDataProvider;
 use App\Entity\TopBook;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
+use Symfony\Component\HttpFoundation\Response;
 
 class TopBooksTest extends ApiTestCase
 {
@@ -44,6 +45,58 @@ class TopBooksTest extends ApiTestCase
 
         // Checks that the returned JSON is validated by the JSON Schema generated for this API Resource by API Platform
         // This JSON Schema is also used in the generated OpenAPI spec
+        self::assertMatchesResourceCollectionJsonSchema(TopBook::class);
+    }
+
+    /**
+     * Nominal case.
+     *
+     * @see TopBookItemDataProvider::getItem()
+     */
+    public function testGetItem(): void
+    {
+        static::createClient()->request('GET', '/top_books/1');
+        self::assertResponseIsSuccessful();
+        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertJsonEquals([
+            '@context' => '/contexts/TopBook',
+            '@id' => '/top_books/1',
+            '@type' => 'TopBook',
+            "id" => 1,
+            "title" => "Depuis l'au-delà",
+            "author" => "Werber Bernard",
+            "part" => "",
+            "place" => "F WER",
+            "borrowCount" => 9
+        ]);
+
+        self::assertMatchesResourceCollectionJsonSchema(TopBook::class);
+    }
+
+    /**
+     * Error case n°1: invalid identifier.
+     *
+     * @see TopBookItemDataProvider::checkId()
+     */
+    public function testGetItemErrorIdIsNotAnInteger(): void
+    {
+        static::createClient()->request('GET', '/top_books/toto');
+        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
+        self::assertMatchesResourceCollectionJsonSchema(TopBook::class);
+    }
+
+    /**
+     * Error case n°2: out of range id.
+     *
+     * @see TopBookItemDataProvider::checkId()
+     */
+    public function testGetItemErrorIdIsOutOfRange(): void
+    {
+        //$this->expectException(InvalidIdentifierException::class);
+        static::createClient()->request('GET', '/top_books/101');
+        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
         self::assertMatchesResourceCollectionJsonSchema(TopBook::class);
     }
 }

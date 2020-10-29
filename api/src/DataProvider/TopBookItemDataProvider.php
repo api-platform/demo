@@ -23,6 +23,9 @@ final class TopBookItemDataProvider implements ItemDataProviderInterface, Restri
         return TopBook::class === $resourceClass;
     }
 
+    /**
+     * @throws InvalidIdentifierException
+     */
     public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): ?TopBook
     {
         if (!is_int($id)) {
@@ -42,6 +45,9 @@ final class TopBookItemDataProvider implements ItemDataProviderInterface, Restri
         return $topBooks[$id];
     }
 
+    /**
+     * @throws InvalidIdentifierException
+     */
     private function checkId(int $id): int
     {
         // Non int identifiers are cast to int(0)

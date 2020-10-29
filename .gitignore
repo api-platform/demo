@@ -2,3 +2,4 @@
 /docker-compose.override.yml
 /flarectl*
 /api/src/Controller/TestsController.php
+/Makefile

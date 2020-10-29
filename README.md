@@ -29,18 +29,18 @@ Tests
 -----
 
 All entities used in this project are fully tested. Each test class extends the
-`ApiTestCase` which contains specific assertions for writing your tests. It will
-make your tests much more straightforward than using the standard `WebTestCase`
-provided by Symfony. 
+`ApiTestCase` which contains specific "API" assertions. It will make your tests
+much more straightforward than using the standard `WebTestCase` provided by Symfony. 
 
 * [Tests documentation](https://api-platform.com/docs/core/testing/)
-* [Code in tests/](src/tests)
+* [Code in test/](src/tests)
 
 Custom data provider
 --------------------
 
-Example where a CSV file is exposed like a standard API Platform endpoint.
+This is an example where a CSV file is exposed like a standard API Platform endpoint.
 It also shows how to make this endpoint paginated.
 
 * [Data providers documentation](https://api-platform.com/docs/core/data-providers/)
 * [Code in src/DataProvider](src/DataProvider)
+* [Unit and functional tests](src/tests/DataProvider)

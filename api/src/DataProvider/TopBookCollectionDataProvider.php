@@ -25,6 +25,9 @@ final class TopBookCollectionDataProvider implements ContextAwareCollectionDataP
         return TopBook::class === $resourceClass;
     }
 
+    /**
+     * @throws \RuntimeException
+     */
     public function getCollection(string $resourceClass, string $operationName = null, array $context = []): iterable
     {
         $this->context = $context;
