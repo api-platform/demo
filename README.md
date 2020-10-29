@@ -25,6 +25,17 @@ What's included ?
 
 This demo application contains several things you may be interested in.   
 
+Tests
+-----
+
+All entities used in this project are fully tested. Each test class extends the
+`ApiTestCase` which contains specific assertions for writing your tests. It will
+make your tests much more straightforward than using the standard `WebTestCase`
+provided by Symfony. 
+
+* [Tests documentation](https://api-platform.com/docs/core/testing/)
+* [Code in tests/](src/tests)
+
 Custom data provider
 --------------------
 
