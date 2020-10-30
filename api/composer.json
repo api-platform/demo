@@ -72,7 +72,7 @@
             "@auto-scripts"
         ],
         "symfony": [
-            "php bin/console"
+            "bin/console"
         ],
         "load-fixtures": [
             "@symfony hautelook:fixtures:load --no-interaction --no-bundles"
