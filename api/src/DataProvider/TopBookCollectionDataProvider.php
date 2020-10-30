@@ -12,13 +12,13 @@ use App\Repository\TopBookDataRepository;
 
 final class TopBookCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {
-    private TopBookDataRepository $dataProvider;
+    private TopBookDataRepository $repository;
     private array $collection;
     private array $context;
 
-    public function __construct(TopBookDataRepository $dataProvider)
+    public function __construct(TopBookDataRepository $repository)
     {
-        $this->dataProvider = $dataProvider;
+        $this->repository = $repository;
     }
 
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
@@ -33,7 +33,7 @@ final class TopBookCollectionDataProvider implements ContextAwareCollectionDataP
     {
         $this->context = $context;
         try {
-            $this->collection = $this->dataProvider->getTopBooks();
+            $this->collection = $this->repository->getTopBooks();
         } catch (\Exception $e) {
             throw new \RuntimeException(sprintf('Unable to retrieve top books from external source: %s', $e->getMessage()));
         }

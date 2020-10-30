@@ -12,11 +12,11 @@ use App\Repository\TopBookDataRepository;
 
 final class TopBookItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
-    private TopBookDataRepository $dataProvider;
+    private TopBookDataRepository $repository;
 
-    public function __construct(TopBookDataRepository $dataProvider)
+    public function __construct(TopBookDataRepository $repository)
     {
-        $this->dataProvider = $dataProvider;
+        $this->repository = $repository;
     }
 
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
@@ -34,7 +34,7 @@ final class TopBookItemDataProvider implements ItemDataProviderInterface, Restri
         }
         $id = $this->checkId($id);
         try {
-            $topBooks = $this->dataProvider->getTopBooks();
+            $topBooks = $this->repository->getTopBooks();
         } catch (\Exception $e) {
             throw new \RuntimeException(sprintf('Unable to retrieve top books from external source: %s', $e->getMessage()));
         }
