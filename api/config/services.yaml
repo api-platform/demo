@@ -33,3 +33,5 @@ services:
     App\Handler\BookHandler:
         arguments:
             $imgflipClient: '@csa_guzzle.client.imgflip'
+
+    App\Repository\TopBookDataInterface: '@App\Repository\TopBookCachedDataRepository'

@@ -8,15 +8,15 @@ use ApiPlatform\Core\DataProvider\ArrayPaginator;
 use ApiPlatform\Core\DataProvider\ContextAwareCollectionDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Entity\TopBook;
-use App\Repository\TopBookDataRepository;
+use App\Repository\TopBookDataInterface;
 
 final class TopBookCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {
-    private TopBookDataRepository $repository;
+    private TopBookDataInterface $repository;
     private array $collection;
     private array $context;
 
-    public function __construct(TopBookDataRepository $repository)
+    public function __construct(TopBookDataInterface $repository)
     {
         $this->repository = $repository;
     }

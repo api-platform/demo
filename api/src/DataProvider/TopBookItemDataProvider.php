@@ -8,13 +8,13 @@ use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use ApiPlatform\Core\Exception\InvalidIdentifierException;
 use App\Entity\TopBook;
-use App\Repository\TopBookDataRepository;
+use App\Repository\TopBookDataInterface;
 
 final class TopBookItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
-    private TopBookDataRepository $repository;
+    private TopBookDataInterface $repository;
 
-    public function __construct(TopBookDataRepository $repository)
+    public function __construct(TopBookDataInterface $repository)
     {
         $this->repository = $repository;
     }

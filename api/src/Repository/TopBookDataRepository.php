@@ -6,34 +6,22 @@ namespace App\Repository;
 
 use App\Entity\TopBook;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Contracts\Cache\ItemInterface;
 
-final class TopBookDataRepository
+final class TopBookDataRepository implements TopBookDataInterface
 {
-    private const MAX_CACHE_TIME = 3600; // 1 hour
     private const DATA_SOURCE = 'top-100-novel-sci-fi-fr.csv';
     private const FIELDS_COUNT = 5;
 
-    private CacheInterface $cache;
     private KernelInterface $kernel;
 
-    public function __construct(CacheInterface $cache, KernelInterface $kernel)
+    public function __construct(KernelInterface $kernel)
     {
-        $this->cache = $cache;
         $this->kernel = $kernel;
     }
 
-    /**
-     * Local caching is done so the CSV isn't reloaded at every call.
-     */
     public function getTopBooks(): array
     {
-        return $this->cache->get('books.sci-fi.top.fr', function (ItemInterface $item) {
-            $item->expiresAfter(self::MAX_CACHE_TIME);
-
-            return $this->getTopBooksFromCsv();
-        });
+        return $this->getTopBooksFromCsv();
     }
 
     /**
