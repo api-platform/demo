@@ -31,15 +31,11 @@ class TopBook
     private ?int $id = null;
 
     /**
-     * Title of the book.
-     *
      * @var ?string
      */
     protected ?string $title;
 
     /**
-     * Author of the book.
-     *
      * @var ?string
      */
     protected ?string $author;
