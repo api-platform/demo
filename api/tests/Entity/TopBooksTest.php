@@ -14,7 +14,7 @@ class TopBooksTest extends KernelTestCase
      */
     public function testConstructNomicalCase(): void
     {
-        $topBook = new TopBook(1, 'Title', 'Author','Title & part', 'Place', 10);
+        $topBook = new TopBook(1, 'Title', 'Author', 'Title & part', 'Place', 10);
         self::assertInstanceOf(TopBook::class, $topBook);
     }
 
@@ -24,6 +24,6 @@ class TopBooksTest extends KernelTestCase
     public function testConstructTypeError(): void
     {
         $this->expectException(\TypeError::class);
-        new TopBook(1, 1, 1,1, 1, 10);
+        new TopBook(1, 1, 1, 1, 1, 10);
     }
 }
