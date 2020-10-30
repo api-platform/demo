@@ -51,6 +51,11 @@ class TopBooksTest extends ApiTestCase
         // Checks that the returned JSON is validated by the JSON Schema generated for this API Resource by API Platform
         // This JSON Schema is also used in the generated OpenAPI spec
         self::assertMatchesResourceCollectionJsonSchema(TopBook::class);
+
+        // This 2nd call use the cache @see TopBookCachedDataRepository
+        $response = $this->client->request('GET', '/top_books');
+        self::assertResponseIsSuccessful();
+        self::assertCount(30, $response->toArray()['hydra:member']);
     }
 
     /**

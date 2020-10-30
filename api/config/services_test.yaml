@@ -4,6 +4,3 @@ services:
     # Disable logger to avoid showing errors during tests
     # see https://github.com/symfony/symfony/issues/28023
     logger: '@Psr\Log\NullLogger'
-
-    # No cache for tests
-    App\Repository\TopBook\TopBookDataInterface: '@App\Repository\TopBook\TopBookDataRepository'
