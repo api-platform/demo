@@ -6,13 +6,14 @@ namespace App\Repository\TopBook;
 
 use Symfony\Contracts\Cache\CacheInterface;
 
-final class TopBookCachedDataRepository extends TopBookDataDecorator
+final class TopBookCachedDataRepository implements TopBookDataInterface
 {
+    private TopBookDataRepository $repository;
     private CacheInterface $cache;
 
     public function __construct(TopBookDataRepository $repository, CacheInterface $cache)
     {
-        parent::__construct($repository);
+        $this->repository = $repository;
         $this->cache = $cache;
     }
 

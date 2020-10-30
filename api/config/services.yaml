@@ -36,4 +36,8 @@ services:
         arguments:
             $imgflipClient: '@csa_guzzle.client.imgflip'
 
+    # Custom data provider 
+    App\Repository\TopBook\TopBookCachedDataRepository:
+        decorates: App\Repository\TopBook\TopBookDataRepository
+
     App\Repository\TopBook\TopBookDataInterface: '@App\Repository\TopBook\TopBookCachedDataRepository'
