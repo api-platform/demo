@@ -39,10 +39,6 @@ final class TopBookItemDataProvider implements ItemDataProviderInterface, Restri
             throw new \RuntimeException(sprintf('Unable to retrieve top books from external source: %s', $e->getMessage()));
         }
 
-        if (!array_key_exists($id, $topBooks)) {
-            throw new InvalidIdentifierException(sprintf('Top book ranked n°"%d" not found.', $id));
-        }
-
-        return $topBooks[$id];
+        return $topBooks[$id] ?? null;
     }
 }
