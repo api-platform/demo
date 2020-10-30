@@ -49,7 +49,17 @@ class TopBook
      */
     private int $borrowCount;
 
-    public function getId(): ?int
+    public function __construct(int $id, string $title, string $author, string $part, string $place, int $borrowCount)
+    {
+        $this->id = $id;
+        $this->title = $title;
+        $this->author = $author;
+        $this->part = $part;
+        $this->place = $place;
+        $this->borrowCount = $borrowCount;
+    }
+
+    public function getId(): int
     {
         return $this->id;
     }
@@ -109,7 +119,7 @@ class TopBook
         return $this;
     }
 
-    public function getBorrowCount(): ?int
+    public function getBorrowCount(): int
     {
         return $this->borrowCount;
     }

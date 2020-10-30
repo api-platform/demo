@@ -44,13 +44,16 @@ final class TopBookDataRepository implements TopBookDataInterface
             if (self::FIELDS_COUNT !== count($row)) {
                 throw new \RuntimeException(sprintf('Invalid data at row: %d', count($row)));
             }
-            $topBooks[$cpt - 1] = (new TopBook())
-                ->setId($cpt - 1)
-                ->setTitle($this->sanitize($row[0] ?? ''))
-                ->setAuthor($this->sanitize($row[1] ?? ''))
-                ->setPart($this->sanitize($row[2] ?? ''))
-                ->setPlace($this->sanitize($row[3] ?? ''))
-                ->setBorrowCount((int) ($row[4] ?? 0));
+
+            $topBook = new TopBook(
+                $cpt - 1,
+                $this->sanitize($row[0] ?? ''),
+                $this->sanitize($row[1] ?? ''),
+                $this->sanitize($row[2] ?? ''),
+                $this->sanitize($row[3] ?? ''),
+                (int) ($row[4] ?? 0),
+            );
+            $topBooks[$cpt - 1] = $topBook;
         }
 
         return $topBooks ?? [];
