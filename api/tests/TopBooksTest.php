@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Entity;
+namespace App\Tests;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\Client;

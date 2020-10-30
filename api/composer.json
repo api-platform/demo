@@ -87,7 +87,7 @@
             "bin/phpunit"
         ],
         "tests": [
-            "@phpunit tests/Entity/TopBooksTest.php",
+            "@phpunit tests/TopBooksTest.php",
             "@phpunit tests/BooksTest.php",
             "@phpunit tests/ReviewsTest.php"
         ]
