@@ -84,7 +84,7 @@
             "@symfony cache:warmup --env=test"
         ],
         "phpunit": [
-            "php bin/phpunit"
+            "bin/phpunit"
         ],
         "tests": [
             "@phpunit tests/Entity/TopBooksTest.php",
@@ -93,7 +93,11 @@
         ]
     },
     "scripts-descriptions": {
-        "load-fixtures": "Load all the fixtures in the database."
+        "symfony": "Alias for the Symfony console.",
+        "phpunit": "Alias for the phpunit main script.",
+        "load-fixtures": "Load all the fixtures in the database to be able to play with the application.",
+        "prepare-test-env": "Prepare the test environment to be able to run the tests.",
+        "tests": "Run all tests separately."
     },
     "conflict": {
         "symfony/symfony": "*"
