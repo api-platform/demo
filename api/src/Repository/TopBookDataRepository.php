@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\DataProvider;
+namespace App\Repository;
 
 use App\Entity\TopBook;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
-final class TopBookDataProvider
+final class TopBookDataRepository
 {
     private const MAX_CACHE_TIME = 3600; // 1 hour
     private const DATA_SOURCE = 'top-100-novel-sci-fi-fr.csv';
