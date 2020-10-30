@@ -41,3 +41,8 @@ It also shows how to make this endpoint paginated.
 
 * [Data providers documentation](https://api-platform.com/docs/core/data-providers/)
 * [Code in api/src/DataProvider](api/src/DataProvider)
+
+Contributing
+============
+
+* [Read the contributing guide](.github/CONTRIBUTING.md)
