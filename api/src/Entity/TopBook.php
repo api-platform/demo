@@ -35,7 +35,7 @@ class TopBook
     private string $author;
 
     /**
-     * Tille and part of the book.
+     * Title and part of the book.
      */
     private string $part;
 
