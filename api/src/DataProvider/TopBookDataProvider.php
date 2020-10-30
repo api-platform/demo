@@ -59,10 +59,10 @@ final class TopBookDataProvider
             }
             $topBooks[$cpt - 1] = (new TopBook())
                 ->setId($cpt - 1)
-                ->setTitle($this->sanitize($row[0] ?? null))
-                ->setAuthor($this->sanitize($row[1] ?? null))
-                ->setPart($this->sanitize($row[2] ?? null))
-                ->setPlace($this->sanitize($row[3] ?? null))
+                ->setTitle($this->sanitize($row[0] ?? ''))
+                ->setAuthor($this->sanitize($row[1] ?? ''))
+                ->setPart($this->sanitize($row[2] ?? ''))
+                ->setPlace($this->sanitize($row[3] ?? ''))
                 ->setBorrowCount((int) ($row[4] ?? 0));
         }
 

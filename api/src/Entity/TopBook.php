@@ -24,97 +24,97 @@ use ApiPlatform\Core\Annotation\ApiResource;
 class TopBook
 {
     /**
-     * This is a fake ID so we can test the get "item-by-id" operation.
+     * This ID is the "rank" to the top book, from 1 to 100.
      *
      * @ApiProperty(identifier=true)
      */
-    private ?int $id = null;
+    private int $id;
 
     /**
      * @var ?string
      */
-    protected ?string $title;
+    private string $title;
 
     /**
      * @var ?string
      */
-    protected ?string $author;
+    private string $author;
 
     /**
      * Tille and part of the book.
      *
-     * @var ?string
+     * @var string
      */
-    protected ?string $part;
+    private string $part;
 
     /**
      * Place the book can be found in the library.
      *
-     * @var ?string
+     * @var string
      */
-    protected ?string $place;
+    private string $place;
 
     /**
      * Number of times the book has been borrowed during one year.
      *
-     * @var ?int
+     * @var int
      */
-    protected ?int $borrowCount;
+    private int $borrowCount;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(?int $id): TopBook
+    public function setId(int $id): TopBook
     {
         $this->id = $id;
 
         return $this;
     }
 
-    public function getTitle(): ?string
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    public function setTitle(?string $title): TopBook
+    public function setTitle(string $title): TopBook
     {
         $this->title = $title;
 
         return $this;
     }
 
-    public function getAuthor(): ?string
+    public function getAuthor(): string
     {
         return $this->author;
     }
 
-    public function setAuthor(?string $author): TopBook
+    public function setAuthor(string $author): TopBook
     {
         $this->author = $author;
 
         return $this;
     }
 
-    public function getPart(): ?string
+    public function getPart(): string
     {
         return $this->part;
     }
 
-    public function setPart(?string $part): TopBook
+    public function setPart(string $part): TopBook
     {
         $this->part = $part;
 
         return $this;
     }
 
-    public function getPlace(): ?string
+    public function getPlace(): string
     {
         return $this->place;
     }
 
-    public function setPlace(?string $place): TopBook
+    public function setPlace(string $place): TopBook
     {
         $this->place = $place;
 
@@ -126,7 +126,7 @@ class TopBook
         return $this->borrowCount;
     }
 
-    public function setBorrowCount(?int $borrowCount): TopBook
+    public function setBorrowCount(int $borrowCount): TopBook
     {
         $this->borrowCount = $borrowCount;
 
