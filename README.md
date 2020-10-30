@@ -31,7 +31,7 @@ the `ApiTestCase`, which contains specific API assertions. It will make your tes
 much more straightforward than using the standard `WebTestCase` provided by Symfony. 
 
 * [Tests documentation](https://api-platform.com/docs/core/testing/)
-* [Code in api/src/tests/](api/src/tests)
+* [Code in api/tests/](api/tests)
 
 Custom data provider
 --------------------
