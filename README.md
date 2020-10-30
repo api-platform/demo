@@ -1,7 +1,7 @@
 API Platform Demo
 =================
 
-This a demonstration application for the [API Platform Framework](https://api-platform.com).
+This application is a demonstration for the [API Platform Framework](https://api-platform.com).
 Try it online at <https://demo.api-platform.com>.
 
 Install
@@ -18,16 +18,16 @@ Then load the demo fixtures:
 
 You can now go to https://localhost
 
-What's included ? 
-=================
+What can I find in this demo? 
+=============================
 
 This demo application contains several things you may be interested in.   
 
 Tests
 -----
 
-All entities used in this project are fully tested. Each test class extends the
-`ApiTestCase` which contains specific "API" assertions. It will make your tests
+All entities used in this project are thoroughly tested. Each test class extends
+he `ApiTestCase`, which contains specific "API" assertions. It will make your tests
 much more straightforward than using the standard `WebTestCase` provided by Symfony. 
 
 * [Tests documentation](https://api-platform.com/docs/core/testing/)
@@ -36,7 +36,7 @@ much more straightforward than using the standard `WebTestCase` provided by Symf
 Custom data provider
 --------------------
 
-This is an example where a CSV file is exposed like a standard API Platform endpoint.
+This example shows how to expose a CSV file as a standard API Platform endpoint
 It also shows how to make this endpoint paginated.
 
 * [Data providers documentation](https://api-platform.com/docs/core/data-providers/)
@@ -45,8 +45,8 @@ It also shows how to make this endpoint paginated.
 Contributing 
 ============
 
-Seen something that is wrong? A bug? Something that could be improved? Every contributions
-are welcome. 
+If you see something that is wrong, a bug or something that could be improved, 
+you are welcome to contribute. 
 
 Prepare the test environment:
 
