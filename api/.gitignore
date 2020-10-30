@@ -1,7 +1,5 @@
 /helm/api/charts
 /coverage
-/Makefile
-/phpstan.neon
 
 ###> symfony/framework-bundle ###
 /.env.local
