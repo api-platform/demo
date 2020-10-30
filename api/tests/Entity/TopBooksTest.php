@@ -5,23 +5,30 @@ declare(strict_types=1);
 namespace App\Tests\Entity;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
+use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\Client;
 use App\DataProvider\TopBookCollectionDataProvider;
 use App\Entity\TopBook;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * These tests are read only, thus there is not need to use the RefreshDatabaseTrait.
+ * These tests are read only, thus there is not need to use the RefreshDatabaseTrait
+ * like BooksTests and ReviewsTest.
  */
 class TopBooksTest extends ApiTestCase
 {
+    private Client $client;
+
+    protected function setup(): void
+    {
+        $this->client = static::createClient();
+    }
+
     /**
      * @see TopBookCollectionDataProvider::getCollection()
      */
     public function testGetCollection(): void
     {
-        // The client implements Symfony HttpClient's `HttpClientInterface`, and the response `ResponseInterface`
-        $response = static::createClient()->request('GET', '/top_books');
-
+        $response = $this->client->request('GET', '/top_books');
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertJsonContains([
@@ -53,7 +60,7 @@ class TopBooksTest extends ApiTestCase
      */
     public function testGetItem(): void
     {
-        static::createClient()->request('GET', '/top_books/1');
+        $this->client->request('GET', '/top_books/1');
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertJsonEquals([
@@ -78,7 +85,7 @@ class TopBooksTest extends ApiTestCase
      */
     public function testGetItemErrorIdIsNotAnInteger(): void
     {
-        static::createClient()->request('GET', '/top_books/foo');
+        $this->client->request('GET', '/top_books/foo');
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
         self::assertMatchesResourceItemJsonSchema(TopBook::class);
@@ -91,7 +98,7 @@ class TopBooksTest extends ApiTestCase
      */
     public function testGetItemErrorIdIsOutOfRange(): void
     {
-        static::createClient()->request('GET', '/top_books/101');
+        $this->client->request('GET', '/top_books/101');
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
         self::assertMatchesResourceItemJsonSchema(TopBook::class);
