@@ -30,34 +30,22 @@ class TopBook
      */
     private int $id;
 
-    /**
-     * @var ?string
-     */
     private string $title;
 
-    /**
-     * @var ?string
-     */
     private string $author;
 
     /**
      * Tille and part of the book.
-     *
-     * @var string
      */
     private string $part;
 
     /**
      * Place the book can be found in the library.
-     *
-     * @var string
      */
     private string $place;
 
     /**
      * Number of times the book has been borrowed during one year.
-     *
-     * @var int
      */
     private int $borrowCount;
 
