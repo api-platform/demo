@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace App\Repository\TopBook;
 
 use App\Entity\TopBook;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -21,7 +21,7 @@ final class TopBookDataRepository implements TopBookDataInterface
 
     public function getTopBooks(): array
     {
-        return $this->getTopBooksFromCsv();
+        return $this->getFromCsv();
     }
 
     /**
@@ -31,7 +31,7 @@ final class TopBookDataRepository implements TopBookDataInterface
      *
      * @see https://csv.thephpleague.com
      */
-    public function getTopBooksFromCsv(): array
+    public function getFromCsv(): array
     {
         foreach ($this->getFileAsArray() as $line) {
             $data[] = str_getcsv($line, ';');

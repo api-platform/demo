@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace App\Repository\TopBook;
 
 class TopBookDataDecorator implements TopBookDataInterface
 {

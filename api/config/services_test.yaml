@@ -6,4 +6,4 @@ services:
     logger: '@Psr\Log\NullLogger'
 
     # No cache for tests
-    App\Repository\TopBookDataInterface: '@App\Repository\TopBookDataRepository'
+    App\Repository\TopBook\TopBookDataInterface: '@App\Repository\TopBook\TopBookDataRepository'

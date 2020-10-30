@@ -8,7 +8,7 @@ use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use ApiPlatform\Core\Exception\InvalidIdentifierException;
 use App\Entity\TopBook;
-use App\Repository\TopBookDataInterface;
+use App\Repository\TopBook\TopBookDataInterface;
 
 final class TopBookItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
