@@ -32,7 +32,7 @@ final class TopBookItemDataProvider implements ItemDataProviderInterface, Restri
         if (!is_int($id)) {
             throw new InvalidIdentifierException('Invalid id key type.');
         }
-        $id = $this->checkId($id);
+
         try {
             $topBooks = $this->repository->getTopBooks();
         } catch (\Exception $e) {
@@ -44,22 +44,5 @@ final class TopBookItemDataProvider implements ItemDataProviderInterface, Restri
         }
 
         return $topBooks[$id];
-    }
-
-    /**
-     * @throws InvalidIdentifierException
-     */
-    private function checkId(int $id): int
-    {
-        // Non int identifiers are cast to int(0)
-        if (0 === $id) {
-            throw new InvalidIdentifierException('Invalid id value.');
-        }
-
-        if ($id < 1 || $id > 100) {
-            throw new InvalidIdentifierException('Only first 100 top books are available.');
-        }
-
-        return $id;
     }
 }
