@@ -17,6 +17,10 @@ use ApiPlatform\Core\Annotation\ApiResource;
  * @see /data/top-100-novel-sci-fi-fr.csv
  *
  * @ApiResource(
+ *   attributes={
+ *      "pagination_enabled"=true,
+ *      "pagination_items_per_page"=10
+ *   },
  *   collectionOperations={"get"},
  *   itemOperations={"get"}
  * )

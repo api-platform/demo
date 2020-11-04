@@ -5,11 +5,19 @@ declare(strict_types=1);
 namespace App\DataProvider\Extension;
 
 use ApiPlatform\Core\DataProvider\ArrayPaginator;
+use ApiPlatform\Core\DataProvider\Pagination;
+use App\Entity\TopBook;
 
 final class TopBookPaginationExtension implements TopBookCollectionExtensionInterface
 {
     private array $collection;
     private array $context;
+    private Pagination $pagination;
+
+    public function __construct(Pagination $pagination)
+    {
+        $this->pagination = $pagination;
+    }
 
     /**
      * This extension only paginates.
@@ -49,8 +57,21 @@ final class TopBookPaginationExtension implements TopBookCollectionExtensionInte
         return $page;
     }
 
+    /**
+     * Takes the value set for the "pagination_items_per_page" the TopBook annoation
+     * parameter or take the default parameter otherwise.
+     */
     public function getItemsPerPage(): int
     {
-        return 30;
+        return $this->pagination->getLimit(TopBook::class);
+    }
+
+    /**
+     * Takes the value set for the "pagination_enabled" of the  TopBook annoation
+     * parameter or take the default parameter otherwise.
+     */
+    public function isEnabled(): bool
+    {
+        return $this->pagination->isEnabled(TopBook::class);
     }
 }

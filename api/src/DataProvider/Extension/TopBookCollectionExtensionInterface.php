@@ -19,4 +19,9 @@ interface TopBookCollectionExtensionInterface
      * Returns the final paginator object.
      */
     public function getResult(array $collection, string $resourceClass, string $operationName = null, array $context = []): iterable;
+
+    /**
+     * Tells if pagination is enbaled for the TopBook resource.
+     */
+    public function isEnabled(): bool;
 }
