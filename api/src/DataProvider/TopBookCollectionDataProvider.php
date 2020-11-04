@@ -41,8 +41,6 @@ final class TopBookCollectionDataProvider implements ContextAwareCollectionDataP
             return $collection;
         }
 
-        $this->paginationExtension->applyToCollection($collection, $resourceClass, $operationName, $context);
-
         return $this->paginationExtension->getResult($collection, $resourceClass, $operationName, $context) ;
     }
 }

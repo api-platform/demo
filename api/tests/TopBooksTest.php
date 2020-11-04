@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 class TopBooksTest extends ApiTestCase
 {
     private Client $client;
+    private const PAGINATION_ITEMS_PER_PAGE = 10;
 
     protected function setup(): void
     {
@@ -40,13 +41,13 @@ class TopBooksTest extends ApiTestCase
                 '@id' => '/top_books?page=1',
                 '@type' => 'hydra:PartialCollectionView',
                 'hydra:first' => '/top_books?page=1',
-                'hydra:last' => '/top_books?page=4',
+                'hydra:last' => '/top_books?page=10',
                 'hydra:next' => '/top_books?page=2',
             ],
         ]);
 
-        // 30 is the number returned by TopBookCollectionDataProvider::getItemsPerPage()
-        self::assertCount(30, $response->toArray()['hydra:member']);
+        // 10 is the "pagination_items_per_page" parameters configured in the TopBook ApiResource annotation.
+        self::assertCount(self::PAGINATION_ITEMS_PER_PAGE, $response->toArray()['hydra:member']);
 
         // Checks that the returned JSON is validated by the JSON Schema generated for this API Resource by API Platform
         // This JSON Schema is also used in the generated OpenAPI spec
@@ -55,7 +56,7 @@ class TopBooksTest extends ApiTestCase
         // This 2nd call use the cache @see TopBookCachedDataRepository
         $response = $this->client->request('GET', '/top_books');
         self::assertResponseIsSuccessful();
-        self::assertCount(30, $response->toArray()['hydra:member']);
+        self::assertCount(self::PAGINATION_ITEMS_PER_PAGE, $response->toArray()['hydra:member']);
     }
 
     /**

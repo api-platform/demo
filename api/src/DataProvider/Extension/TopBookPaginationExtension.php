@@ -19,13 +19,6 @@ final class TopBookPaginationExtension implements TopBookCollectionExtensionInte
         $this->pagination = $pagination;
     }
 
-    /**
-     * This extension only paginates.
-     */
-    public function applyToCollection(array $collection, string $resourceClass, string $operationName = null, array $context = []): void
-    {
-    }
-
     public function getResult(array $collection, string $resourceClass, string $operationName = null, array $context = []): iterable
     {
         $this->collection = $collection;
@@ -58,7 +51,7 @@ final class TopBookPaginationExtension implements TopBookCollectionExtensionInte
     }
 
     /**
-     * Takes the value set for the "pagination_items_per_page" the TopBook annoation
+     * Takes the value set for the "pagination_items_per_page" TopBook annotation
      * parameter or take the default parameter otherwise.
      */
     public function getItemsPerPage(): int
@@ -67,8 +60,8 @@ final class TopBookPaginationExtension implements TopBookCollectionExtensionInte
     }
 
     /**
-     * Takes the value set for the "pagination_enabled" of the  TopBook annoation
-     * parameter or take the default parameter otherwise.
+     * Takes the value set for the "pagination_enabled" TopBook annotation parameter
+     * or take the default parameter otherwise.
      */
     public function isEnabled(): bool
     {
