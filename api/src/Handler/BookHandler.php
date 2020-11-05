@@ -22,17 +22,17 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 final class BookHandler implements MessageHandlerInterface
 {
-    private $iriConverter;
+    private IriConverterInterface $iriConverter;
 
-    private $serializer;
+    private SerializerInterface $serializer;
 
-    private $publisher;
+    private PublisherInterface $publisher;
 
-    private $resourceMetadataFactory;
+    private ResourceMetadataFactoryInterface $resourceMetadataFactory;
 
-    private $imgflipClient;
+    private Client $imgflipClient;
 
-    private $logger;
+    private LoggerInterface $logger;
 
     public function __construct(
         IriConverterInterface $iriConverter,
@@ -74,12 +74,13 @@ final class BookHandler implements MessageHandlerInterface
         }
 
         $imageUrl = $contents['data']['memes'][\mt_rand(0, 99)]['url'];
+        $imageContent = (string) \file_get_contents($imageUrl);
 
         // Set Book.cover image in base64
         $book->cover = \sprintf(
             'data:image/%s;base64,%s',
             \pathinfo($imageUrl, PATHINFO_EXTENSION),
-            \base64_encode(\file_get_contents($imageUrl))
+            \base64_encode($imageContent)
         );
 
         // Send message to Mercure hub

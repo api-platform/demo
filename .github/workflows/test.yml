@@ -97,6 +97,27 @@ jobs:
           docker-compose exec -T php composer run prepare-test-env
           docker-compose exec -T php composer run tests
 
+  phpstan:
+    name: PHPStan
+    runs-on: ubuntu-latest
+    env:
+      COMPOSE_INTERACTIVE_NO_CLI: 1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build the Docker Compose stack
+        run: |-
+          docker-compose pull --ignore-pull-failures
+          docker-compose build php
+          docker-compose run php composer install -o -n
+          docker-compose up -d php
+
+      - name: PHPStan
+        run: |-
+          docker-compose exec -T php composer run symfony cache:warmup
+          docker-compose exec -T php composer run phpstan-analyse
+
   jest:
     name: Jest
     runs-on: ubuntu-latest

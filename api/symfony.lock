@@ -235,6 +235,12 @@
     "phpdocumentor/type-resolver": {
         "version": "0.4.0"
     },
+    "phpstan/phpstan": {
+        "version": "0.12.53"
+    },
+    "phpstan/phpstan-symfony": {
+        "version": "0.12.11"
+    },
     "phpunit/php-code-coverage": {
         "version": "7.0.3"
     },
