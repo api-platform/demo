@@ -37,7 +37,7 @@ final class TopBookCollectionDataProvider implements ContextAwareCollectionDataP
             throw new \RuntimeException(sprintf('Unable to retrieve top books from external source: %s', $e->getMessage()));
         }
 
-        if (!$this->paginationExtension->isEnabled()) {
+        if (!$this->paginationExtension->isEnabled($resourceClass, $operationName, $context)) {
             return $collection;
         }
 

@@ -14,5 +14,5 @@ interface TopBookCollectionExtensionInterface
     /**
      * Tells if the extension is enabled or not.
      */
-    public function isEnabled(): bool;
+    public function isEnabled(string $resourceClass = null, string $operationName = null, array $context = []): bool;
 }
