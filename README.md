@@ -9,7 +9,6 @@ Install
 
     $ git clone https://github.com/api-platform/demo.git
     $ cd demo
-    $ docker-compose build
     $ docker-compose up -d
 
 Then load the demo fixtures:

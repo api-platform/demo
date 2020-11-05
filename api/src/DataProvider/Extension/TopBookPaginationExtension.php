@@ -6,12 +6,9 @@ namespace App\DataProvider\Extension;
 
 use ApiPlatform\Core\DataProvider\ArrayPaginator;
 use ApiPlatform\Core\DataProvider\Pagination;
-use App\Entity\TopBook;
 
 final class TopBookPaginationExtension implements TopBookCollectionExtensionInterface
 {
-    private array $collection;
-    private array $context;
     private Pagination $pagination;
 
     public function __construct(Pagination $pagination)
@@ -24,50 +21,17 @@ final class TopBookPaginationExtension implements TopBookCollectionExtensionInte
      */
     public function getResult(array $collection, string $resourceClass, string $operationName = null, array $context = []): iterable
     {
-        $this->collection = $collection;
-        $this->context = $context;
+        [, $offset, $itemPerPage] = $this->pagination->getPagination($resourceClass, $operationName, $context);
 
-        return new ArrayPaginator($this->collection, $this->getOffset(), $this->getItemsPerPage());
+        return new ArrayPaginator($collection, $offset, $itemPerPage);
     }
 
     /**
      * Takes the value set for the "pagination_enabled" TopBook annotation parameter
      * or take the default parameter otherwise.
      */
-    public function isEnabled(): bool
+    public function isEnabled(string $resourceClass = null, string $operationName = null, array $context = []): bool
     {
-        return $this->pagination->isEnabled(TopBook::class);
-    }
-
-    /**
-     * Takes the value set for the "pagination_items_per_page" TopBook annotation
-     * parameter or take the default parameter otherwise.
-     */
-    private function getItemsPerPage(): int
-    {
-        return $this->pagination->getLimit(TopBook::class);
-    }
-
-    private function getLastPage(): int
-    {
-        return (int) ceil(($this->getTotalItems() / $this->getItemsPerPage()));
-    }
-
-    private function getTotalItems(): int
-    {
-        return count($this->collection);
-    }
-
-    private function getOffset(): int
-    {
-        return ($this->getCurrentPage() - 1) * $this->getItemsPerPage();
-    }
-
-    private function getCurrentPage(): int
-    {
-        $page = (int) ($this->context['filters']['page'] ?? 1);
-        $page = $page < 1 || $page > $this->getLastPage() ? 1 : $page;
-
-        return $page;
+        return $this->pagination->isEnabled($resourceClass, $operationName, $context);
     }
 }
