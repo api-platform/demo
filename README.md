@@ -1,7 +1,7 @@
 API Platform Demo
 =================
 
-This a demonstration application for the [API Platform Framework](https://api-platform.com).
+This application is a demonstration for the [API Platform Framework](https://api-platform.com).
 Try it online at <https://demo.api-platform.com>.
 
 Install
@@ -11,9 +11,37 @@ Install
     $ cd demo
     $ docker-compose up -d
 
-And go to https://localhost
+Then load the demo fixtures:
 
-Loading Fixtures
-================
+    $ docker-compose exec php composer run load-fixtures
 
-    $ docker-compose exec php bin/console hautelook:fixtures:load --no-interaction --no-bundles
+You can now go to https://localhost
+
+What can I find in this demo? 
+=============================
+
+This demo application contains several things you may be interested.   
+
+Tests
+-----
+
+All entities used in this project are thoroughly tested. Each test class extends
+the `ApiTestCase`, which contains specific API assertions. It will make your tests
+much more straightforward than using the standard `WebTestCase` provided by Symfony. 
+
+* [Tests documentation](https://api-platform.com/docs/core/testing/)
+* [Code in api/tests/](api/tests)
+
+Custom data provider
+--------------------
+
+This example shows how to expose a CSV file as a standard API Platform endpoint
+It also shows how to make this endpoint paginated.
+
+* [Data providers documentation](https://api-platform.com/docs/core/data-providers/)
+* [Code in api/src/DataProvider](api/src/DataProvider)
+
+Contributing
+============
+
+* [Read the contributing guide](.github/CONTRIBUTING.md)

@@ -2,7 +2,7 @@
     "type": "project",
     "license": "MIT",
     "require": {
-        "php": "^7.2",
+        "php": ">=7.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
@@ -70,7 +70,35 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "symfony": [
+            "bin/console"
+        ],
+        "load-fixtures": [
+            "@symfony hautelook:fixtures:load --no-interaction --no-bundles"
+        ],
+        "prepare-test-env": [
+            "@symfony doctrine:schema:drop --env=test --force",
+            "@symfony doctrine:schema:create --env=test",
+            "@symfony messenger:setup-transports --env=test",
+            "@symfony cache:warmup --env=test"
+        ],
+        "phpunit": [
+            "bin/phpunit"
+        ],
+        "tests": [
+            "@phpunit tests/Entity/TopBooksTest.php",
+            "@phpunit tests/TopBooksTest.php",
+            "@phpunit tests/BooksTest.php",
+            "@phpunit tests/ReviewsTest.php"
         ]
+    },
+    "scripts-descriptions": {
+        "symfony": "Alias for the Symfony console.",
+        "phpunit": "Alias for the phpunit main script.",
+        "load-fixtures": "Load all the fixtures in the database to be able to play with the application.",
+        "prepare-test-env": "Prepare the test environment to be able to run the tests.",
+        "tests": "Run all tests separately."
     },
     "conflict": {
         "symfony/symfony": "*"
