@@ -40,4 +40,4 @@ services:
     App\Repository\TopBook\TopBookCachedDataRepository:
         decorates: App\Repository\TopBook\TopBookDataRepository
 
-    App\Repository\TopBook\TopBookDataInterface: '@App\Repository\TopBook\TopBookCachedDataRepository'
+    App\Repository\TopBook\TopBookDataInterface: '@App\Repository\TopBook\TopBookDataRepository'
