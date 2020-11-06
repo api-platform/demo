@@ -6,8 +6,11 @@ namespace App\Tests;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\Client;
+use ApiPlatform\Core\Bridge\Symfony\Routing\Router;
 use App\Entity\Book;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
+use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineTransport;
+use Symfony\Contracts\Service\ServiceProviderInterface;
 
 class BooksTest extends ApiTestCase
 {
@@ -15,10 +18,16 @@ class BooksTest extends ApiTestCase
     use RefreshDatabaseTrait;
 
     private Client $client;
+    private Router $router;
 
     protected function setup(): void
     {
         $this->client = static::createClient();
+        $router = static::$container->get('api_platform.router');
+        if (!$router instanceof Router) {
+            throw new \RuntimeException('api_platform.router service not found.');
+        }
+        $this->router = $router;
     }
 
     public function testGetCollection(): void
@@ -98,7 +107,7 @@ publicationDate: This value should not be null.',
 
     public function testUpdateBook(): void
     {
-        $iri = $this->findIriBy(Book::class, ['isbn' => '9786644879585']);
+        $iri = (string) $this->findIriBy(Book::class, ['isbn' => '9786644879585']);
         $this->client->request('PUT', $iri, ['json' => [
             'title' => 'updated title',
         ]]);
@@ -115,7 +124,7 @@ publicationDate: This value should not be null.',
     {
         $token = $this->login();
         $client = static::createClient();
-        $iri = $this->findIriBy(Book::class, ['isbn' => '9786644879585']);
+        $iri = (string) $this->findIriBy(Book::class, ['isbn' => '9786644879585']);
         $client->request('DELETE', $iri, ['auth_bearer' => $token]);
 
         self::assertResponseStatusCodeSame(204);
@@ -128,14 +137,31 @@ publicationDate: This value should not be null.',
     public function testGenerateCover(): void
     {
         $book = static::$container->get('doctrine')->getRepository(Book::class)->findOneBy(['isbn' => '9786644879585']);
-        $this->client->request('PUT', static::$container->get('api_platform.router')->generate('api_books_generate_cover_item', ['id' => $book->getId()]), [
+        self::assertInstanceOf(Book::class, $book);
+        if (!$book instanceof Book) {
+            throw new \LogicException('Book not found.');
+        }
+        $this->client->request('PUT', $this->router->generate('api_books_generate_cover_item', ['id' => $book->getId()]), [
             'json' => [],
         ]);
 
+        $messengerReceiverLocator = static::$container->get('messenger.receiver_locator');
+        if (!$messengerReceiverLocator instanceof ServiceProviderInterface) {
+            throw new \RuntimeException('messenger.receiver_locator service not found.');
+        }
+        $doctrine = $messengerReceiverLocator->get('doctrine');
+
+        // Stan (+Symfony plugin) tries to resolve the doctrine service, but it is
+        // wrong as it takes the global container and not the messenger receiver locator.
+        if (!$doctrine instanceof DoctrineTransport) { /** @phpstan-ignore-line */
+            throw new \RuntimeException('doctrine transport service not found.');
+        }
+
+        /** @phpstan-ignore-next-line */ // Because of previous phpstan-ignore-line
         self::assertResponseIsSuccessful();
         self::assertEquals(
             1,
-            static::$container->get('messenger.receiver_locator')->get('doctrine')->getMessageCount(),
+            $doctrine->getMessageCount(),
             'No message has been sent.'
         );
     }
