@@ -112,8 +112,11 @@ jobs:
           docker-compose build php
           docker-compose run php composer install -o -n
           docker-compose up -d php
+      # We run a single test for force the phpunit vendor directory to be retrieved:
+      #- PHPStan need it to analyse the tests/ folder (@see phpstan.neon).   
       - name: PHPStan
         run: |-
+          docker-compose exec -T php bin/phpunit tests/Entity/TopBooksTest.php
           docker-compose exec -T php composer run symfony cache:warmup
           docker-compose exec -T php composer run phpstan-analyse
 
