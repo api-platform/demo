@@ -118,6 +118,9 @@
     "doctrine/reflection": {
         "version": "v1.0.0"
     },
+    "fakerphp/faker": {
+        "version": "v1.10.1"
+    },
     "fig/link-util": {
         "version": "1.0.0"
     },
@@ -132,9 +135,6 @@
         "files": [
             ".php_cs.dist"
         ]
-    },
-    "fzaninotto/faker": {
-        "version": "v1.8.0"
     },
     "guzzlehttp/guzzle": {
         "version": "6.3.3"
@@ -234,6 +234,12 @@
     },
     "phpdocumentor/type-resolver": {
         "version": "0.4.0"
+    },
+    "phpstan/phpstan": {
+        "version": "0.12.54"
+    },
+    "phpstan/phpstan-symfony": {
+        "version": "0.12.11"
     },
     "phpunit/php-code-coverage": {
         "version": "7.0.3"

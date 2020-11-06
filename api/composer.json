@@ -28,6 +28,7 @@
         "friendsofphp/php-cs-fixer": "^2.16",
         "hautelook/alice-bundle": "^2.7",
         "justinrainbow/json-schema": "^5.2",
+        "phpstan/phpstan-symfony": "^0.12.11",
         "phpunit/php-code-coverage": "^7.0",
         "symfony/maker-bundle": "^1.20",
         "symfony/profiler-pack": "^1.0",
@@ -91,6 +92,12 @@
             "@phpunit tests/TopBooksTest.php",
             "@phpunit tests/BooksTest.php",
             "@phpunit tests/ReviewsTest.php"
+        ],
+        "phpstan": [
+            "vendor/bin/phpstan"
+        ],
+        "phpstan-analyse": [
+            "@phpstan analyse -l max -c phpstan.neon --memory-limit 1G src/"
         ]
     },
     "scripts-descriptions": {
@@ -98,7 +105,9 @@
         "phpunit": "Alias for the phpunit main script.",
         "load-fixtures": "Load all the fixtures in the database to be able to play with the application.",
         "prepare-test-env": "Prepare the test environment to be able to run the tests.",
-        "tests": "Run all tests separately."
+        "tests": "Run all tests separately.",
+        "phpstan": "Alias for the PHPStan executable.",
+        "phpstan-analyse": "Run the PHPStan analysis."
     },
     "conflict": {
         "symfony/symfony": "*"
