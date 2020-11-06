@@ -14,8 +14,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface
 {
     /**
-     * @var UuidInterface|null
-     *
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
@@ -24,8 +22,6 @@ class User implements UserInterface
     private ?UuidInterface $id;
 
     /**
-     * @var string|null
-     *
      * @ORM\Column(type="string", length=180, unique=true)
      */
     private ?string $email = null;

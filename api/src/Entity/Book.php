@@ -46,8 +46,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Book
 {
     /**
-     * @var UuidInterface|null
-     *
      * @ORM\Column(type="uuid", unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="CUSTOM")

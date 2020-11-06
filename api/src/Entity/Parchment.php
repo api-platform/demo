@@ -16,8 +16,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Parchment
 {
     /**
-     * @var UuidInterface
-     *
      * @ORM\Column(type="uuid", unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="CUSTOM")

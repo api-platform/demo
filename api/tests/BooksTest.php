@@ -153,11 +153,11 @@ publicationDate: This value should not be null.',
 
         // Stan (+Symfony plugin) tries to resolve the doctrine service, but it is
         // wrong as it takes the global container and not the messenger receiver locator.
-        if (!$doctrine instanceof DoctrineTransport) { /** @phpstan-ignore-line */
+        if (!$doctrine instanceof DoctrineTransport) { /* @phpstan-ignore-line */
             throw new \RuntimeException('doctrine transport service not found.');
         }
 
-        /** @phpstan-ignore-next-line */ // Because of previous phpstan-ignore-line
+        /* @phpstan-ignore-next-line */ // Because of previous phpstan-ignore-line
         self::assertResponseIsSuccessful();
         self::assertEquals(
             1,

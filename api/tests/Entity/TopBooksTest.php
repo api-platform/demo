@@ -24,7 +24,7 @@ class TopBooksTest extends KernelTestCase
     public function testConstructTypeError(): void
     {
         $this->expectException(\TypeError::class);
-        /** @phpstan-ignore-next-line */
+        /* @phpstan-ignore-next-line */
         new TopBook(1, 1, 1, 1, 1, 10);
     }
 }

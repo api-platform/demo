@@ -30,8 +30,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Review
 {
     /**
-     * @var UuidInterface
-     *
      * @ORM\Column(type="uuid", unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="CUSTOM")
@@ -105,7 +103,7 @@ class Review
     public function setBook(?Book $book, bool $updateRelation = true): void
     {
         $this->book = $book;
-        if ($updateRelation && $book !== null) {
+        if ($updateRelation && null !== $book) {
             $book->addReview($this, false);
         }
     }
