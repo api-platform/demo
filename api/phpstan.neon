@@ -8,5 +8,5 @@ parameters:
         container_xml_path: %rootDir%/../../../var/cache/dev/App_KernelDevDebugContainer.xml
     # https://phpstan.org/user-guide/discovering-symbols
     bootstrapFiles:
-        - %rootDir%/../../../vendor/bin/.phpunit/phpunit/vendor/autoload.php
+        - %rootDir%/../../../vendor/bin/.phpunit/phpunit-8.3-0/vendor/autoload.php
     checkMissingIterableValueType: false
