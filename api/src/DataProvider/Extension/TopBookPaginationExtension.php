@@ -17,7 +17,7 @@ final class TopBookPaginationExtension implements TopBookCollectionExtensionInte
     }
 
     /**
-     * Returns the paginator object.
+     * {@inheritdoc}
      */
     public function getResult(array $collection, string $resourceClass, string $operationName = null, array $context = []): iterable
     {
@@ -27,8 +27,7 @@ final class TopBookPaginationExtension implements TopBookCollectionExtensionInte
     }
 
     /**
-     * Takes the value set for the "pagination_enabled" TopBook annotation parameter
-     * or take the default parameter otherwise.
+     * {@inheritdoc}
      */
     public function isEnabled(string $resourceClass = null, string $operationName = null, array $context = []): bool
     {

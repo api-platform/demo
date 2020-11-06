@@ -9,4 +9,3 @@ parameters:
     # https://phpstan.org/user-guide/discovering-symbols
     bootstrapFiles:
         - %rootDir%/../../../vendor/bin/.phpunit/phpunit/vendor/autoload.php
-    checkMissingIterableValueType: false

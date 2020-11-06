@@ -21,13 +21,20 @@ final class TopBookCollectionDataProvider implements ContextAwareCollectionDataP
         $this->paginationExtension = $topBookPaginationExtension;
     }
 
+    /**
+     * @param array<string, mixed> $context
+     */
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
         return TopBook::class === $resourceClass;
     }
 
     /**
+     * @param array<string, mixed> $context
+     *
      * @throws \RuntimeException
+     *
+     * @return iterable<TopBook>
      */
     public function getCollection(string $resourceClass, string $operationName = null, array $context = []): iterable
     {

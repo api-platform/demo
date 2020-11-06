@@ -78,7 +78,7 @@ class User implements UserInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return array<int, string>
      */
     public function getRoles(): array
     {
@@ -89,6 +89,9 @@ class User implements UserInterface
         return \array_unique($roles);
     }
 
+    /**
+     * @param array<int, string> $roles
+     */
     public function setRoles(array $roles): void
     {
         $this->roles = $roles;

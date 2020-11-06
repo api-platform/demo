@@ -19,13 +19,20 @@ final class TopBookItemDataProvider implements ItemDataProviderInterface, Restri
         $this->repository = $repository;
     }
 
+    /**
+     * @param array<string, mixed> $context
+     */
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
         return TopBook::class === $resourceClass;
     }
 
     /**
+     * @param array<string, mixed> $context
+     *
      * @throws InvalidIdentifierException
+     *
+     * @phpstan-ignore-next-line
      */
     public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): ?TopBook
     {
