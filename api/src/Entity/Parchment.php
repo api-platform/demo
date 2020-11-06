@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -21,7 +23,7 @@ class Parchment
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
-    private $id;
+    private UuidInterface $id;
 
     public function getId(): ?UuidInterface
     {
@@ -34,7 +36,7 @@ class Parchment
      * @Assert\NotBlank
      * @ORM\Column
      */
-    public $title;
+    public string $title;
 
     /**
      * @var string A description of the item
@@ -42,5 +44,5 @@ class Parchment
      * @Assert\NotBlank
      * @ORM\Column(type="text")
      */
-    public $description;
+    public string $description;
 }

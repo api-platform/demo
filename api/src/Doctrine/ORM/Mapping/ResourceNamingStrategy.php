@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping\NamingStrategy as NamingStrategyInterface;
 
 class ResourceNamingStrategy implements NamingStrategyInterface
 {
-    private $inflector;
+    private ?Inflector $inflector = null;
 
     /**
      * {@inheritdoc}
@@ -70,7 +70,7 @@ class ResourceNamingStrategy implements NamingStrategyInterface
 
     private static function shortName(string $className): string
     {
-        if (false !== strpos($className, '\\')) {
+        if (\str_contains($className, '\\')) {
             $className = substr($className, strrpos($className, '\\') + 1);
         }
 
