@@ -11,9 +11,9 @@ interface TopBookCollectionExtensionInterface
     /**
      * Returns the final result object.
      *
-     * @param array<int, TopBook> $collection
+     * @param array<int, TopBook>  $collection
      * @param array<string, mixed> $context
-
+     *
      * @return iterable<TopBook>
      */
     public function getResult(array $collection, string $resourceClass, string $operationName = null, array $context = []): iterable;
