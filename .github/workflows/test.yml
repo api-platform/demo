@@ -129,12 +129,12 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
 
       - name: Install PHPUnit
-        run: docker-compose exec -T php vendor/bin/simple-phpunit --version
+        run: vendor/bin/simple-phpunit --version
 
       - name: PHPStan
         run: |-
-          docker-compose exec -T php composer run symfony cache:warmup
-          docker-compose exec -T php composer run phpstan-analyse
+          composer run symfony cache:warmup
+          composer run phpstan-analyse
 
   jest:
     name: Jest
