@@ -68,7 +68,7 @@ final class BookHandler implements MessageHandlerInterface
             return;
         }
 
-        $imageUrl = $contents['data']['memes'][\random_int(0, 99)]['url'];
+        $imageUrl = $contents['data']['memes'][\mt_rand(0, 99)]['url'];
         $imageContent = (string) \file_get_contents($imageUrl);
 
         // Set Book.cover image in base64
