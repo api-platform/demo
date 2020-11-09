@@ -21,7 +21,7 @@ class Parchment
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
-    private UuidInterface $id;
+    private ?UuidInterface $id = null;
 
     public function getId(): ?UuidInterface
     {
