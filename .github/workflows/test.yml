@@ -129,9 +129,11 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
 
       - name: Install PHPUnit
-        run: bin/phpunit --version
+        working-directory: api
+        run: vendor/bin/simple-phpunit --version
 
       - name: PHPStan
+        working-directory: api      
         run: |-
           composer run symfony cache:warmup
           composer run phpstan-analyse
