@@ -105,13 +105,28 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-  
-      - name: Build the Docker Compose stack
-        run: |-
-          docker-compose pull --ignore-pull-failures
-          docker-compose build php
-          docker-compose run php composer install -o -n
-          docker-compose up -d php
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          extensions: curl, dom, iconv, intl, json, libxml, mbstring, phar, tokenizer, xdebug, xml, xmlwriter
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        working-directory: api
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        working-directory: api
+        run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
 
       - name: Install PHPUnit
         run: docker-compose exec -T php vendor/bin/simple-phpunit --version
