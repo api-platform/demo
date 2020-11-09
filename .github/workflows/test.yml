@@ -129,7 +129,7 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
 
       - name: Install PHPUnit
-        run: vendor/bin/simple-phpunit --version
+        run: bin/phpunit --version
 
       - name: PHPStan
         run: |-
