@@ -25,6 +25,7 @@
         "webonyx/graphql-php": "^14.1"
     },
     "require-dev": {
+        "ekino/phpstan-banned-code": "^0.3.1",
         "friendsofphp/php-cs-fixer": "^2.16",
         "hautelook/alice-bundle": "^2.7",
         "justinrainbow/json-schema": "^5.2",

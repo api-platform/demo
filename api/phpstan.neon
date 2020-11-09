@@ -1,4 +1,5 @@
 includes:
+    - vendor/ekino/phpstan-banned-code/extension.neon
     - vendor/phpstan/phpstan-symfony/extension.neon
 parameters:
     level: max
