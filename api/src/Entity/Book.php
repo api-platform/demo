@@ -154,7 +154,7 @@ class Book
     }
 
     /**
-     * @return Collection<int, Review>|Review[]
+     * @return Collection<int, Review>
      */
     public function getReviews(): iterable
     {

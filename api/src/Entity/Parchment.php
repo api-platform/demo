@@ -29,18 +29,18 @@ class Parchment
     }
 
     /**
-     * @var string The title of the book
+     * @var string|null The title of the book
      *
      * @Assert\NotBlank
      * @ORM\Column
      */
-    public string $title;
+    public ?string $title = null;
 
     /**
-     * @var string A description of the item
+     * @var string|null A description of the item
      *
      * @Assert\NotBlank
      * @ORM\Column(type="text")
      */
-    public string $description;
+    public ?string $description = null;
 }
