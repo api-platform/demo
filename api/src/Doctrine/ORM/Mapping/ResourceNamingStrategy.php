@@ -10,7 +10,12 @@ use Doctrine\ORM\Mapping\NamingStrategy as NamingStrategyInterface;
 
 class ResourceNamingStrategy implements NamingStrategyInterface
 {
-    private ?Inflector $inflector = null;
+    private Inflector $inflector;
+
+    public function __construct()
+    {
+        $this->inflector = InflectorFactory::create()->build();
+    }
 
     /**
      * {@inheritdoc}
@@ -79,10 +84,6 @@ class ResourceNamingStrategy implements NamingStrategyInterface
 
     private function getInflector(): Inflector
     {
-        if (!$this->inflector) {
-            $this->inflector = InflectorFactory::create()->build();
-        }
-
         return $this->inflector;
     }
 }
