@@ -19,7 +19,7 @@ class User implements UserInterface
      * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      * @ORM\Column(type="uuid", unique=true)
      */
-    private ?UuidInterface $id;
+    private ?UuidInterface $id = null;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
