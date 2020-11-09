@@ -97,7 +97,7 @@
             "vendor/bin/phpstan"
         ],
         "phpstan-analyse": [
-            "@phpstan analyse -l max -c phpstan.neon --no-progress --no-interaction --memory-limit 1G"
+            "@phpstan analyse -c phpstan.neon --no-progress --no-interaction --memory-limit 1G"
         ]
     },
     "scripts-descriptions": {
