@@ -37,7 +37,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: api
-        run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
+        run: composer install --prefer-dist --no-progress --no-interaction
 
       - name: Security check
         working-directory: api
@@ -126,7 +126,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: api
-        run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
+        run: composer install --prefer-dist --no-progress --no-interaction
 
       - name: Install PHPUnit
         working-directory: api
