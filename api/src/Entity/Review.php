@@ -50,6 +50,7 @@ class Review
     /**
      * @var int|null A rating
      *
+     * @Assert\NotBlank
      * @Assert\Range(min=0, max=5)
      * @ORM\Column(type="smallint")
      * @Groups({"review:read", "review:write"})
