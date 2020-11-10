@@ -37,7 +37,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: api
-        run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
+        run: composer install --prefer-dist --no-progress --no-interaction
 
       - name: Security check
         working-directory: api
@@ -96,6 +96,47 @@ jobs:
         run: |-
           docker-compose exec -T php composer run prepare-test-env
           docker-compose exec -T php composer run tests
+
+  phpstan:
+    name: PHPStan
+    runs-on: ubuntu-latest
+    env:
+      COMPOSE_INTERACTIVE_NO_CLI: 1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          extensions: curl, dom, iconv, intl, json, libxml, mbstring, phar, tokenizer, xdebug, xml, xmlwriter
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        working-directory: api
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        working-directory: api
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Install PHPUnit
+        working-directory: api
+        run: vendor/bin/simple-phpunit --version
+
+      - name: PHPStan
+        working-directory: api      
+        run: |-
+          composer run symfony cache:warmup
+          composer run phpstan-analyse
 
   jest:
     name: Jest

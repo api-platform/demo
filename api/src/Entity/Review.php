@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
@@ -28,46 +30,44 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Review
 {
     /**
-     * @var UuidInterface
-     *
      * @ORM\Column(type="uuid", unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
-    private $id;
+    private ?UuidInterface $id = null;
 
     /**
-     * @var string The actual body of the review
+     * @var string|null The actual body of the review
      *
      * @Assert\NotBlank
      * @ORM\Column(type="text")
      * @Groups({"book:read", "review:read", "review:write"})
      * @ApiProperty(iri="http://schema.org/reviewBody")
      */
-    public $body;
+    public ?string $body = null;
 
     /**
-     * @var int A rating
+     * @var int|null A rating
      *
      * @Assert\Range(min=0, max=5)
      * @ORM\Column(type="smallint")
      * @Groups({"review:read", "review:write"})
      */
-    public $rating;
+    public ?int $rating = null;
 
     /**
-     * @var string DEPRECATED (use rating now): A letter to rate the book
+     * @var string|null DEPRECATED (use rating now): A letter to rate the book
      *
      * @Assert\Choice({"a", "b", "c", "d"})
      * @ORM\Column(type="string", nullable=true)
      * @Groups({"review:read", "review:write"})
      * @ApiProperty(deprecationReason="Use the rating property instead")
      */
-    public $letter;
+    public ?string $letter = null;
 
     /**
-     * @var Book The item that is being reviewed/rated
+     * @var Book|null The item that is being reviewed/rated
      *
      * @ApiFilter(SearchFilter::class)
      * @Assert\NotNull
@@ -76,24 +76,24 @@ class Review
      * @Groups({"review:read", "review:write"})
      * @ApiProperty(iri="http://schema.org/itemReviewed")
      */
-    private $book;
+    private ?Book $book = null;
 
     /**
-     * @var string The author of the review
+     * @var string|null The author of the review
      *
      * @ORM\Column(type="text", nullable=true)
      * @Groups({"review:read", "review:write"})
      * @ApiProperty(iri="http://schema.org/author")
      */
-    public $author;
+    public ?string $author = null;
 
     /**
-     * @var \DateTimeInterface Publication date of the review
+     * @var \DateTimeInterface|null Publication date of the review
      *
      * @Groups({"review:read", "review:write"})
      * @ORM\Column(nullable=true, type="datetime")
      */
-    public $publicationDate;
+    public ?\DateTimeInterface $publicationDate = null;
 
     public function getId(): ?UuidInterface
     {
@@ -103,7 +103,7 @@ class Review
     public function setBook(?Book $book, bool $updateRelation = true): void
     {
         $this->book = $book;
-        if ($updateRelation) {
+        if ($updateRelation && null !== $book) {
             $book->addReview($this, false);
         }
     }

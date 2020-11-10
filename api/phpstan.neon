@@ -1,0 +1,13 @@
+includes:
+    - vendor/ekino/phpstan-banned-code/extension.neon
+    - vendor/phpstan/phpstan-symfony/extension.neon
+    - vendor/phpstan/phpstan-deprecation-rules/rules.neon
+parameters:
+    level: max
+    paths:
+        - src
+        - tests
+    symfony:
+        container_xml_path: %rootDir%/../../../var/cache/dev/App_KernelDevDebugContainer.xml
+    bootstrapFiles:
+        - %rootDir%/../../../vendor/bin/.phpunit/phpunit/vendor/autoload.php

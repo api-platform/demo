@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
@@ -44,14 +46,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Book
 {
     /**
-     * @var UuidInterface|null
-     *
      * @ORM\Column(type="uuid", unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
-    private $id;
+    private ?UuidInterface $id = null;
 
     /**
      * @var string|null The ISBN of the book
@@ -61,7 +61,7 @@ class Book
      * @Groups("book:read")
      * @ApiProperty(iri="http://schema.org/isbn")
      */
-    public $isbn;
+    public ?string $isbn = null;
 
     /**
      * @var string|null The title of the book
@@ -72,7 +72,7 @@ class Book
      * @Groups({"book:read", "review:read"})
      * @ApiProperty(iri="http://schema.org/name")
      */
-    public $title;
+    public ?string $title = null;
 
     /**
      * @var string|null A description of the item
@@ -82,7 +82,7 @@ class Book
      * @Groups("book:read")
      * @ApiProperty(iri="http://schema.org/description")
      */
-    public $description;
+    public ?string $description = null;
 
     /**
      * @var string|null The author of this content or rating. Please note that author is special in that HTML 5 provides a special mechanism for indicating authorship via the rel tag. That is equivalent to this and may be used interchangeably
@@ -93,7 +93,7 @@ class Book
      * @Groups("book:read")
      * @ApiProperty(iri="http://schema.org/author")
      */
-    public $author;
+    public ?string $author = null;
 
     /**
      * @var \DateTimeInterface|null The date on which the CreativeWork was created or the item was added to a DataFeed
@@ -104,24 +104,24 @@ class Book
      * @Groups("book:read")
      * @ApiProperty(iri="http://schema.org/dateCreated")
      */
-    public $publicationDate;
+    public ?\DateTimeInterface $publicationDate = null;
 
     /**
-     * @var Review[] The book's reviews
+     * @var Collection<int, Review> The book's reviews
      *
      * @ORM\OneToMany(targetEntity=Review::class, mappedBy="book", orphanRemoval=true, cascade={"persist", "remove"})
      * @Groups("book:read")
      * @ApiProperty(iri="http://schema.org/reviews")
      * @ApiSubresource
      */
-    private $reviews;
+    private Collection $reviews;
 
     /**
      * @var string|null The book's cover base64 encoded
      *
      * @Groups("book:cover")
      */
-    public $cover;
+    public ?string $cover = null;
 
     public function __construct()
     {
@@ -154,7 +154,7 @@ class Book
     }
 
     /**
-     * @return Collection|Review[]
+     * @return Collection<int, Review>
      */
     public function getReviews(): iterable
     {

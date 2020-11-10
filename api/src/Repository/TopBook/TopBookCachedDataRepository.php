@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository\TopBook;
 
+use App\Entity\TopBook;
 use Symfony\Contracts\Cache\CacheInterface;
 
 final class TopBookCachedDataRepository implements TopBookDataInterface
@@ -19,6 +20,10 @@ final class TopBookCachedDataRepository implements TopBookDataInterface
 
     /**
      * Local caching is done so the CSV isn't reloaded at every call.
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return array<int, TopBook>
      */
     public function getTopBooks(): array
     {

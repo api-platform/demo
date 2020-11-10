@@ -18,6 +18,9 @@ final class TopBookDataRepository implements TopBookDataInterface
         $this->projectDir = $projectDir;
     }
 
+    /**
+     * @return array<int, TopBook>
+     */
     public function getTopBooks(): array
     {
         return $this->getFromCsv();
@@ -29,6 +32,8 @@ final class TopBookDataRepository implements TopBookDataInterface
      * Consider using a more robust library like csv reader from the PHP league.
      *
      * @see https://csv.thephpleague.com
+     *
+     * @return array<int, TopBook>
      */
     public function getFromCsv(): array
     {
@@ -59,6 +64,9 @@ final class TopBookDataRepository implements TopBookDataInterface
         return $topBooks ?? [];
     }
 
+    /**
+     * @return array<int, string>
+     */
     private function getFileAsArray(): array
     {
         $csvFileName = $this->projectDir.'/data/'.self::DATA_SOURCE;

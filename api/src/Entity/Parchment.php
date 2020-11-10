@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -14,14 +16,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Parchment
 {
     /**
-     * @var UuidInterface
-     *
      * @ORM\Column(type="uuid", unique=true)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
-    private $id;
+    private ?UuidInterface $id = null;
 
     public function getId(): ?UuidInterface
     {
@@ -29,18 +29,18 @@ class Parchment
     }
 
     /**
-     * @var string The title of the book
+     * @var string|null The title of the book
      *
      * @Assert\NotBlank
      * @ORM\Column
      */
-    public $title;
+    public ?string $title = null;
 
     /**
-     * @var string A description of the item
+     * @var string|null A description of the item
      *
      * @Assert\NotBlank
      * @ORM\Column(type="text")
      */
-    public $description;
+    public ?string $description = null;
 }
