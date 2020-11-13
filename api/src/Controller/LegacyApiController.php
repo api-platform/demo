@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class LegacyApiController extends AbstractController
+final class LegacyApiController extends AbstractController
 {
     /**
      * @Route("/stats", name="api_book_stats")

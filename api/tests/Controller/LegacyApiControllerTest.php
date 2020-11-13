@@ -11,7 +11,7 @@ use App\Controller\LegacyApiController;
 /**
  * @see LegacyApiController
  */
-class LegacyApiControllerTest extends ApiTestCase
+final class LegacyApiControllerTest extends ApiTestCase
 {
     private Client $client;
 

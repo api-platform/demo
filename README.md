@@ -22,7 +22,7 @@ What can I find in this demo?
 
 This demo application contains several things you may be interested.   
 
-API testing
+API Testing
 -----------
 
 All entities used in this project are thoroughly tested. Each test class extends
@@ -46,7 +46,7 @@ Overriding the OpenAPI Specification
 
 This example shows how to document an API endpoint that isn't handled by API Platform.
 This "legacy" endpoint is listed and testable like the other ones thanks to the
-Swagger interface. 
+Swagger interface.
  
 * [Overriding the OpenAPI Specification documentation](https://api-platform.com/docs/core/swagger/#overriding-the-openapi-specification)
 * [Code in api/src/Swagger/SwaggerDecorator.php](api/src/Swagger/SwaggerDecorator.php)
