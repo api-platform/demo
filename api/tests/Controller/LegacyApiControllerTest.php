@@ -21,7 +21,7 @@ class LegacyApiControllerTest extends ApiTestCase
     }
 
     /**
-     * @covers LegacyApiController::stats()
+     * @see LegacyApiController::stats()
      */
     public function testStats(): void
     {
@@ -29,7 +29,7 @@ class LegacyApiControllerTest extends ApiTestCase
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('content-type', 'application/json');
         self::assertJsonEquals([
-            'books_count'    => 1000,
+            'books_count' => 1000,
             'topbooks_count' => 100,
         ]);
     }
