@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 namespace App\Swagger;
 
+use App\Controller\LegacyApiController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
+/**
+ * Adds the Swagger documentation for the LegacyApiController.
+ *
+ * @see LegacyApiController
+ */
 final class SwaggerDecorator implements NormalizerInterface
 {
     private NormalizerInterface $decorated;
@@ -18,7 +23,7 @@ final class SwaggerDecorator implements NormalizerInterface
     }
 
     /**
-     * @throws ExceptionInterface
+     * {@inheritdoc}
      */
     public function normalize($object, string $format = null, array $context = [])
     {
@@ -54,6 +59,9 @@ final class SwaggerDecorator implements NormalizerInterface
         return $docs;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supportsNormalization($data, string $format = null): bool
     {
         return $this->decorated->supportsNormalization($data, $format);
