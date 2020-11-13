@@ -1,0 +1,26 @@
+default:
+  calls:
+    error_reporting: 16383 # E_ALL & ~E_USER_DREPRECATED
+  autoload:
+    '': '%paths.base%/tests/Behat/Features/Bootstrap'
+  suites:
+    default:
+      paths:
+        features: tests/Behat/Features
+      contexts:
+         - App\Tests\Behat\Features\Bootstrap\FeatureContext
+         - behatch:context:json
+         - Behat\MinkExtension\Context\MinkContext
+  extensions:
+      FriendsOfBehat\SymfonyExtension:
+          bootstrap: tests/Behat/bootstrap.php
+          kernel:
+              class: App\Kernel
+              environment: test
+              debug: ~
+      Behat\MinkExtension:
+          base_url: "http://localhost:8080/"
+          sessions:
+              default:
+                  symfony: ~
+      Behatch\Extension: ~

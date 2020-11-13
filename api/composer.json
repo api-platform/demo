@@ -25,6 +25,12 @@
         "webonyx/graphql-php": "^14.1"
     },
     "require-dev": {
+        "adamquaile/behat-command-runner-extension": "*@dev",
+        "behatch/contexts": "^3.3",
+        "friends-of-behat/mink": "^1.8",
+        "friends-of-behat/mink-browserkit-driver": "^1.4",
+        "friends-of-behat/mink-extension": "^2.4",
+        "friends-of-behat/symfony-extension": "^2.0",
         "ekino/phpstan-banned-code": "^0.3.1",
         "friendsofphp/php-cs-fixer": "^2.16",
         "hautelook/alice-bundle": "^2.7",
