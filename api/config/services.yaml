@@ -45,5 +45,3 @@ services:
     # Swagger doc customisation
     App\Swagger\SwaggerDecorator:
         decorates: 'api_platform.swagger.normalizer.api_gateway'
-        #arguments: ['@api_platform.swagger.normalizer.api_gateway.inner' ]
-        #autoconfigure: false
