@@ -90,6 +90,8 @@
             "bin/phpunit"
         ],
         "tests": [
+            "@phpunit tests/Controller/LegacyApiControllerTest.php",
+            "@phpunit tests/Controller/SwaggerTest.php",
             "@phpunit tests/Entity/TopBooksTest.php",
             "@phpunit tests/TopBooksTest.php",
             "@phpunit tests/BooksTest.php",

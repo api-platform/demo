@@ -41,3 +41,9 @@ services:
         decorates: App\Repository\TopBook\TopBookDataRepository
 
     App\Repository\TopBook\TopBookDataInterface: '@App\Repository\TopBook\TopBookDataRepository'
+
+    # Swagger doc customisation
+    App\Swagger\SwaggerDecorator:
+        decorates: 'api_platform.swagger.normalizer.api_gateway'
+        arguments: ['@api_platform.swagger.normalizer.api_gateway.inner' ]
+        autoconfigure: false
