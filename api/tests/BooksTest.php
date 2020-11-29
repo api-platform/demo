@@ -80,7 +80,7 @@ class BooksTest extends ApiTestCase
             'publicationDate' => '1985-07-31T00:00:00+00:00',
             'reviews' => [],
         ]);
-        self::assertRegExp('~^/books/[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$~', $response->toArray()['@id']);
+        self::assertMatchesRegularExpression('~^/books/[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$~', $response->toArray()['@id']);
         self::assertMatchesResourceItemJsonSchema(Book::class);
     }
 
