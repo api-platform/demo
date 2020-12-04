@@ -2,26 +2,26 @@
 # yarn lockfile v1
 
 
-"@api-platform/admin@^2.0.0":
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/@api-platform/admin/-/admin-2.2.3.tgz#d6d517966a092412b7d0b934a527f4c91fb9c707"
-  integrity sha512-Q1mJ504HaaQO6m8F8Hy9DSHdaPJiy08epZGv3r84aGmB3WTXa/UVRQ8NTCnkD+tsmlrrduBpxa0hA92qyifixQ==
+"@api-platform/admin@^2.5.2":
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/@api-platform/admin/-/admin-2.5.2.tgz#2afd0c31e749882b75a9c99bd4f2755568b469ea"
+  integrity sha512-ptDYZSZaK0jEj7avLEVzn0volMRddbv+gTqj7CNdz2CFnGd8xSM6vwwAzyr6if2jU9cPEnuLR5btQ/dqF/eUmw==
   dependencies:
-    "@api-platform/api-doc-parser" "^0.9.1"
+    "@api-platform/api-doc-parser" "^0.11.0"
     history "^4.7.2"
     jsonld "^1.2.1"
     lodash.isplainobject "^4.0.6"
     prop-types "^15.6.2"
     react-admin "^3.0.0"
 
-"@api-platform/api-doc-parser@^0.9.1":
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/@api-platform/api-doc-parser/-/api-doc-parser-0.9.1.tgz#a0a6fd7c20869b17211c3705191f7b563c519cb3"
-  integrity sha512-A7QHRfYFyu3YjDav1PzilU0wECZOh9V96i0/KfCRylx3SG7zrbS1WOaZkYHAHL4HOn9AzPI3y5uqkUbf0xG74w==
+"@api-platform/api-doc-parser@^0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@api-platform/api-doc-parser/-/api-doc-parser-0.11.0.tgz#67705db1253fb290ed4c32ff095d69779eeddff8"
+  integrity sha512-kI3d1FkVHxCtYkGyW21YZWoFtcUovomhV0vI+1MIHbdiXc+3KUb1iQl8/AFlcsvHwCPml2MVKoNsuZz/x/CxlA==
   dependencies:
+    graphql "^15.0.0"
     jsonld "^1.5.0"
     lodash.get "^4.4.2"
-    lodash.uniq "^4.5.0"
     tslib "^1.10.0"
 
 "@babel/code-frame@7.8.3":
@@ -5113,6 +5113,11 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
   integrity sha512-WjKPNJF79dtJAVniUlGGWHYGz2jWxT6VhN/4m1NdkbZ2nOsEF+cI1Edgql5zCRhs/VsQYRvrXctxktVXZUkixw==
 
+graphql@^15.0.0:
+  version "15.4.0"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-15.4.0.tgz#e459dea1150da5a106486ba7276518b5295a4347"
+  integrity sha512-EB3zgGchcabbsU9cFe1j+yxdzKQKAbGUWRb13DsrsMN1yyfmmIq+2+L5MqVWcDCE4V89R5AyUOi7sMOGxdsYtA==
+
 growly@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/growly/-/growly-1.3.0.tgz#f10748cbe76af964b7c96c93c6bcc28af120c081"
@@ -6687,6 +6692,11 @@ jsx-ast-utils@^2.2.1, jsx-ast-utils@^2.2.3:
   dependencies:
     array-includes "^3.1.1"
     object.assign "^4.1.0"
+
+jwt-decode@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/jwt-decode/-/jwt-decode-3.1.2.tgz#3fb319f3675a2df0c2895c8f5e9fa4b67b04ed59"
+  integrity sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==
 
 killable@^1.0.1:
   version "1.0.1"
