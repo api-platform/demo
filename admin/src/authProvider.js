@@ -41,10 +41,7 @@ export default {
     }
   },
   checkError: (err) => {
-    if (
-      [401, 403].includes(err?.status) ||
-      [401, 403].includes(err?.response?.status)
-    ) {
+    if ([401, 403].includes(err?.status || err?.response?.status)) {
       localStorage.removeItem("token");
       return Promise.reject();
     }
