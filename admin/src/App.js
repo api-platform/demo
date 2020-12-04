@@ -13,7 +13,12 @@ import {
   fetchHydra as baseFetchHydra,
 } from "@api-platform/admin";
 import parseHydraDocumentation from "@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation";
-import { AutocompleteInput, ReferenceField, ReferenceInput, TextField } from "react-admin";
+import {
+  AutocompleteInput,
+  ReferenceField,
+  ReferenceInput,
+  TextField,
+} from "react-admin";
 import authProvider from "./authProvider";
 import Login from "./layout/Login";
 

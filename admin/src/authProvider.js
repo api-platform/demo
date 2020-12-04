@@ -1,3 +1,5 @@
+import jwtDecode from "jwt-decode";
+
 export default {
   login: ({ username, password }) => {
     const request = new Request(
@@ -23,11 +25,26 @@ export default {
     localStorage.removeItem("token");
     return Promise.resolve();
   },
-  checkAuth: () =>
-    localStorage.getItem("token") ? Promise.resolve() : Promise.reject(),
-  checkError: (error) => {
-    const status = error.status;
-    if (status === 401 || status === 403) {
+  checkAuth: () => {
+    try {
+      if (
+        !localStorage.getItem("token") ||
+        new Date().getTime() / 1000 >
+          jwtDecode(localStorage.getItem("token"))?.exp
+      ) {
+        return Promise.reject();
+      }
+      return Promise.resolve();
+    } catch (e) {
+      // override possible jwtDecode error
+      return Promise.reject();
+    }
+  },
+  checkError: (err) => {
+    if (
+      [401, 403].includes(err?.status) ||
+      [401, 403].includes(err?.response?.status)
+    ) {
       localStorage.removeItem("token");
       return Promise.reject();
     }
