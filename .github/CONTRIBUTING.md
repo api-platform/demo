@@ -11,11 +11,11 @@ to run the tests:
 
 Prepare the test environment:
 
-    $ docker-compose exec php composer run prepare-test-env
+    $ docker-compose exec php composer prepare-test-env
 
 Then run the tests:
 
-    $ docker-compose exec php composer run tests
+    $ docker-compose exec php composer tests
 
 If tests are green (you may see some deprecations warnings), you are ready to contribute!
 Don't forget to modify the `.github/workflows/test.yml` file if needed.

@@ -24,7 +24,7 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'bin/console' ] || { [ "$1" = 'php' ] && [ "
 	fi
 
 	if [ "$APP_ENV" != 'prod' ]; then
-		composer install --prefer-dist --no-progress --no-suggest --no-interaction
+		composer install --prefer-dist --no-progress --no-interaction
 	fi
 
 	echo "Waiting for db to be ready..."
@@ -34,6 +34,11 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'bin/console' ] || { [ "$1" = 'php' ] && [ "
 
 	echo "Running migrations"
 	bin/console doctrine:migrations:migrate --no-interaction
+
+	if [ "$APP_ENV" != 'prod' ]; then
+		echo "Load fixtures"
+		bin/console hautelook:fixtures:load --no-interaction
+	fi
 fi
 
 exec docker-php-entrypoint "$@"

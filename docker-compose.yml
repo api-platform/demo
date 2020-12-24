@@ -91,13 +91,14 @@ services:
   mercure:
     # In production, you may want to use the managed version of Mercure, https://mercure.rocks
     image: dunglas/mercure
+    command: caddy run -config /etc/caddy/Caddyfile.dev # Enable demo mode
     environment:
       # You should definitely change all these values in production
-      - JWT_KEY=!ChangeMe! # You have to change MERCURE_JWT_TOKEN in api/.env when you change this. You can put the old value of MERCURE_JWT_TOKEN into the debugger on https://jwt.io/ and put the new value of JWT_KEY in the "secret" field to obtain the new encoded value for MERCURE_JWT_TOKEN
-      - ALLOW_ANONYMOUS=1
-      - CORS_ALLOWED_ORIGINS=*
-      - PUBLISH_ALLOWED_ORIGINS=http://localhost:1337 https://localhost:1338
-      - DEMO=1
+      - MERCURE_PUBLISHER_JWT_KEY=!ChangeMe! # You have to change MERCURE_JWT_TOKEN in api/.env when you change this. You can put the old value of MERCURE_JWT_TOKEN into the debugger on https://jwt.io/ and put the new value of JWT_KEY in the "secret" field to obtain the new encoded value for MERCURE_JWT_TOKEN
+      - MERCURE_SUBSCRIBER_JWT_KEY=!ChangeMe! # You have to change MERCURE_JWT_TOKEN in api/.env when you change this. You can put the old value of MERCURE_JWT_TOKEN into the debugger on https://jwt.io/ and put the new value of JWT_KEY in the "secret" field to obtain the new encoded value for MERCURE_JWT_TOKEN
+      - DEBUG=debug # Enable the debug mode. You should not enable it in production!
+      - SERVER_NAME=:80 # Allow Mercure to run in HTTP, for PHP container to call it. Should not be set in production!
+      - MERCURE_EXTRA_DIRECTIVES=cors_allowed_origins *\npublish_allowed_origins http://localhost:1337 https://localhost:1338
     ports:
       - "1337:80"
 

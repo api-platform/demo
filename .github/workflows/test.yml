@@ -3,8 +3,7 @@ name: Tests
 
 on:
   pull_request: ~
-  schedule:
-    - cron: '0 2 * * *'
+  workflow_dispatch: ~
   push:
     branches:
       - master
@@ -94,8 +93,8 @@ jobs:
 
       - name: PHPUnit
         run: |-
-          docker-compose exec -T php composer run prepare-test-env
-          docker-compose exec -T php composer run tests
+          docker-compose exec -T php composer prepare-test-env
+          docker-compose exec -T php composer tests
 
   phpstan:
     name: PHPStan
@@ -135,8 +134,8 @@ jobs:
       - name: PHPStan
         working-directory: api      
         run: |-
-          composer run symfony cache:warmup
-          composer run phpstan-analyse
+          composer symfony cache:warmup
+          composer phpstan-analyse
 
   jest:
     name: Jest

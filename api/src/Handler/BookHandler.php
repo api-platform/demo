@@ -9,24 +9,22 @@ use ApiPlatform\Core\Api\UrlGeneratorInterface;
 use ApiPlatform\Core\JsonLd\Serializer\ItemNormalizer;
 use ApiPlatform\Core\Metadata\Resource\Factory\ResourceMetadataFactoryInterface;
 use App\Entity\Book;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
+use ProxyManager\Exception\ExceptionInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mercure\PublisherInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-/**
- * @author Vincent Chalamon <vincent@les-tilleuls.coop>
- */
 final class BookHandler implements MessageHandlerInterface
 {
     private IriConverterInterface $iriConverter;
     private SerializerInterface $serializer;
     private PublisherInterface $publisher;
     private ResourceMetadataFactoryInterface $resourceMetadataFactory;
-    private Client $imgflipClient;
+    private HttpClientInterface $client;
     private LoggerInterface $logger;
 
     public function __construct(
@@ -34,22 +32,22 @@ final class BookHandler implements MessageHandlerInterface
         SerializerInterface $serializer,
         PublisherInterface $publisher,
         ResourceMetadataFactoryInterface $resourceMetadataFactory,
-        Client $imgflipClient,
+        HttpClientInterface $client,
         LoggerInterface $logger
     ) {
         $this->iriConverter = $iriConverter;
         $this->serializer = $serializer;
         $this->publisher = $publisher;
         $this->resourceMetadataFactory = $resourceMetadataFactory;
-        $this->imgflipClient = $imgflipClient;
+        $this->client = $client;
         $this->logger = $logger;
     }
 
     public function __invoke(Book $book): void
     {
         try {
-            $response = $this->imgflipClient->get('/get_memes');
-        } catch (ClientException $e) {
+            $response = $this->client->request('https://api.imgflip.com/get_memes');
+        } catch (TransportExceptionInterface $e) {
             $this->logger->error('Cannot call Imgflip API.', [
                 'error' => $e->getMessage(),
             ]);
@@ -57,12 +55,11 @@ final class BookHandler implements MessageHandlerInterface
             return;
         }
 
-        $json = $response->getBody()->getContents();
-        $contents = \json_decode($json, true);
-        if (JSON_ERROR_NONE !== \json_last_error()) {
+        try {
+            $contents = $response->toArray();
+        } catch (ExceptionInterface $e) {
             $this->logger->error('Invalid JSON from Imgflip API.', [
-                'error' => \json_last_error_msg(),
-                'json' => $json,
+                'error' => $e->getMessage(),
             ]);
 
             return;

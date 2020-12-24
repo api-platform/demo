@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/helper-regex": "^7.10.5",
     "bootstrap": "^4.1.3",
     "connected-react-router": "^5.0.1",
     "font-awesome": "^4.7.0",

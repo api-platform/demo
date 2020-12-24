@@ -7,7 +7,6 @@ namespace App\Tests;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\Client;
 use App\Entity\Book;
-use App\Entity\Review;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -54,8 +53,13 @@ final class ReviewsTest extends ApiTestCase
             '@type' => 'ConstraintViolationList',
             'hydra:title' => 'An error occurred',
             'hydra:description' => 'body: This value should not be blank.',
+            'violations' => [
+                [
+                    'propertyPath' => 'body',
+                    'message' => 'This value should not be blank.',
+                ],
+            ],
         ]);
-        self::assertMatchesResourceItemJsonSchema(Review::class);
     }
 
     /**

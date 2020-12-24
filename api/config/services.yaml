@@ -32,10 +32,6 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    App\Handler\BookHandler:
-        arguments:
-            $imgflipClient: '@csa_guzzle.client.imgflip'
-
     # Custom data provider 
     App\Repository\TopBook\TopBookCachedDataRepository:
         decorates: App\Repository\TopBook\TopBookDataRepository
@@ -44,5 +40,4 @@ services:
 
     # Swagger doc customisation
     App\Swagger\SwaggerDecorator:
-        decorates: 'api_platform.swagger.normalizer.api_gateway'
-        autoconfigure: false
+        decorates: api_platform.swagger.normalizer.documentation

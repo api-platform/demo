@@ -28,7 +28,7 @@ final class SwaggerDecorator implements NormalizerInterface
     public function normalize($object, string $format = null, array $context = [])
     {
         $docs = $this->decorated->normalize($object, $format, $context);
-        $statsEndpoint = [
+        $docs['paths']['/stats']['get'] = [
             'summary' => 'Retrieves the number of books and top books (legacy endpoint).',
             'tags' => ['Stats'],
             'responses' => [
@@ -53,8 +53,6 @@ final class SwaggerDecorator implements NormalizerInterface
                 ],
             ],
         ];
-
-        $docs['paths']['/stats']['get'] = $statsEndpoint;
 
         return $docs;
     }
