@@ -7,35 +7,35 @@
         "ext-iconv": "*",
         "ext-json": "*",
         "ext-openssl": "*",
-        "api-platform/api-pack": "^1.2",
+        "api-platform/api-pack": "^1.3",
         "csa/guzzle-bundle": "^3.2",
-        "doctrine/doctrine-bundle": "^2.0 <2.1",
-        "doctrine/doctrine-migrations-bundle": "^2.2",
-        "lexik/jwt-authentication-bundle": "^2.8",
+        "doctrine/doctrine-bundle": "^2.2",
+        "doctrine/doctrine-migrations-bundle": "^3.0",
+        "lexik/jwt-authentication-bundle": "^2.10",
         "ramsey/uuid-doctrine": "^1.6",
         "sensiolabs/security-checker": "^6.0",
-        "symfony/console": "5.1.*",
-        "symfony/dotenv": "5.1.*",
-        "symfony/flex": "^1.1",
-        "symfony/framework-bundle": "5.1.*",
-        "symfony/mercure-bundle": "^0.2.5",
-        "symfony/messenger": "5.1.*",
-        "symfony/translation": "5.1.*",
-        "symfony/yaml": "5.1.*",
-        "webonyx/graphql-php": "^14.1"
+        "symfony/console": "5.2.*",
+        "symfony/dotenv": "5.2.*",
+        "symfony/flex": "^1.11",
+        "symfony/framework-bundle": "5.2.*",
+        "symfony/mercure-bundle": "^0.2",
+        "symfony/messenger": "5.2.*",
+        "symfony/translation": "5.2.*",
+        "symfony/yaml": "5.2.*",
+        "webonyx/graphql-php": "^14.4"
     },
     "require-dev": {
         "ekino/phpstan-banned-code": "^0.3.1",
-        "friendsofphp/php-cs-fixer": "^2.16",
-        "hautelook/alice-bundle": "^2.7",
+        "friendsofphp/php-cs-fixer": "^2.17",
+        "hautelook/alice-bundle": "^2.8",
         "justinrainbow/json-schema": "^5.2",
-        "phpstan/phpstan-deprecation-rules": "^0.12.5",
-        "phpstan/phpstan-symfony": "^0.12.11",
-        "phpunit/php-code-coverage": "^7.0",
-        "symfony/maker-bundle": "^1.20",
+        "phpstan/phpstan-deprecation-rules": "^0.12",
+        "phpstan/phpstan-symfony": "^0.12",
+        "phpunit/php-code-coverage": "^9.2",
+        "symfony/maker-bundle": "^1.26",
         "symfony/profiler-pack": "^1.0",
         "symfony/test-pack": "^1.0",
-        "symfony/var-dumper": "5.1.*"
+        "symfony/var-dumper": "5.2.*"
     },
     "config": {
         "preferred-install": {
@@ -119,7 +119,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "5.1.*"
+            "require": "5.2.*"
         }
     }
 }

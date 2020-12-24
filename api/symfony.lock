@@ -118,6 +118,9 @@
     "doctrine/reflection": {
         "version": "v1.0.0"
     },
+    "doctrine/sql-formatter": {
+        "version": "1.1.1"
+    },
     "ekino/phpstan-banned-code": {
         "version": "v0.3.1"
     },
@@ -138,6 +141,9 @@
         "files": [
             ".php_cs.dist"
         ]
+    },
+    "friendsofphp/proxy-manager-lts": {
+        "version": "v1.0.0"
     },
     "guzzlehttp/guzzle": {
         "version": "6.3.3"
@@ -167,6 +173,9 @@
     },
     "justinrainbow/json-schema": {
         "version": "5.2.8"
+    },
+    "lcobucci/clock": {
+        "version": "2.0.0"
     },
     "lcobucci/jwt": {
         "version": "3.2.5"
@@ -298,6 +307,9 @@
     "sebastian/comparator": {
         "version": "3.0.2"
     },
+    "sebastian/complexity": {
+        "version": "2.0.2"
+    },
     "sebastian/diff": {
         "version": "3.0.2"
     },
@@ -306,6 +318,9 @@
     },
     "sebastian/exporter": {
         "version": "3.1.0"
+    },
+    "sebastian/lines-of-code": {
+        "version": "1.0.3"
     },
     "sebastian/recursion-context": {
         "version": "3.0.0"
@@ -525,6 +540,9 @@
     },
     "symfony/property-info": {
         "version": "v4.2.4"
+    },
+    "symfony/proxy-manager-bridge": {
+        "version": "v5.2.1"
     },
     "symfony/redis-messenger": {
         "version": "v5.1.3"
