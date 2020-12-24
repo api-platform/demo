@@ -94,7 +94,6 @@ class TopBooksTest extends ApiTestCase
         $this->client->request('GET', '/top_books/foo');
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
-        self::assertMatchesResourceItemJsonSchema(TopBook::class);
     }
 
     /**
@@ -107,6 +106,5 @@ class TopBooksTest extends ApiTestCase
         $this->client->request('GET', '/top_books/101');
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
-        self::assertMatchesResourceItemJsonSchema(TopBook::class);
     }
 }

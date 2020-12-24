@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Controller;
+namespace App\Tests;
 
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -18,8 +18,8 @@ final class SwaggerTest extends WebTestCase
 
     public function testStats(): void
     {
-        $this->client->request('GET', '/');
+        $this->client->request('GET', '/docs.json');
         self::assertResponseIsSuccessful();
-        self::assertStringContainsString('Stats', (string) $this->client->getResponse()->getContent());
+        self::assertStringContainsString('/stats', (string) $this->client->getResponse()->getContent());
     }
 }

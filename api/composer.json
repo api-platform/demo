@@ -84,18 +84,19 @@
             "@symfony doctrine:schema:drop --env=test --force",
             "@symfony doctrine:schema:create --env=test",
             "@symfony messenger:setup-transports --env=test",
-            "@symfony cache:warmup --env=test"
-        ],
-        "phpunit": [
-            "bin/phpunit"
+            "@symfony cache:warmup --env=test",
+            "@phpunit --version"
         ],
         "tests": [
             "@phpunit tests/Controller/LegacyApiControllerTest.php",
-            "@phpunit tests/Controller/SwaggerTest.php",
+            "@phpunit tests/SwaggerTest.php",
             "@phpunit tests/Entity/TopBooksTest.php",
             "@phpunit tests/TopBooksTest.php",
             "@phpunit tests/BooksTest.php",
             "@phpunit tests/ReviewsTest.php"
+        ],
+        "phpunit": [
+            "bin/phpunit"
         ],
         "phpstan": [
             "vendor/bin/phpstan"

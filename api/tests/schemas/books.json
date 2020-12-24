@@ -1,0 +1,199 @@
+{
+    "$schema": "http:\/\/json-schema.org\/draft-07\/schema#",
+    "type": "object",
+    "definitions": {
+        "Book:jsonld": {
+            "type": "object",
+            "description": "",
+            "additionalProperties": false,
+            "externalDocs": {
+                "url": "http:\/\/schema.org\/Book"
+            },
+            "properties": {
+                "@id": {
+                    "readOnly": true,
+                    "type": "string"
+                },
+                "@type": {
+                    "readOnly": true,
+                    "type": "string"
+                },
+                "@context": {
+                    "readOnly": true,
+                    "type": "string"
+                },
+                "isbn": {
+                    "description": "The ISBN of the book",
+                    "externalDocs": {
+                        "url": "http:\/\/schema.org\/isbn"
+                    },
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "title": {
+                    "description": "The title of the book",
+                    "externalDocs": {
+                        "url": "http:\/\/schema.org\/name"
+                    },
+                    "type": "string"
+                },
+                "description": {
+                    "description": "A description of the item",
+                    "externalDocs": {
+                        "url": "http:\/\/schema.org\/description"
+                    },
+                    "type": "string"
+                },
+                "author": {
+                    "description": "The author of this content or rating. Please note that author is special in that HTML 5 provides a special mechanism for indicating authorship via the rel tag. That is equivalent to this and may be used interchangeably",
+                    "externalDocs": {
+                        "url": "http:\/\/schema.org\/author"
+                    },
+                    "type": "string"
+                },
+                "publicationDate": {
+                    "description": "The date on which the CreativeWork was created or the item was added to a DataFeed",
+                    "externalDocs": {
+                        "url": "http:\/\/schema.org\/dateCreated"
+                    },
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "cover": {
+                    "writeOnly": true,
+                    "description": "The book's cover base64 encoded",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "reviews": {
+                    "description": "The book's reviews",
+                    "externalDocs": {
+                        "url": "http:\/\/schema.org\/reviews"
+                    },
+                    "type": "array",
+                    "items": {
+                        "$ref": "#\/definitions\/Review:jsonld"
+                    }
+                }
+            },
+            "required": [
+                "title",
+                "description",
+                "author",
+                "publicationDate"
+            ]
+        },
+        "Review:jsonld": {
+            "type": "object",
+            "description": "A review of an item - for example, of a restaurant, movie, or store.",
+            "additionalProperties": false,
+            "externalDocs": {
+                "url": "http:\/\/schema.org\/Review"
+            },
+            "required": [
+                "body"
+            ],
+            "properties": {
+                "@context": {
+                    "readOnly": true,
+                    "type": "string"
+                },
+                "@id": {
+                    "readOnly": true,
+                    "type": "string"
+                },
+                "@type": {
+                    "readOnly": true,
+                    "type": "string"
+                },
+                "body": {
+                    "description": "The actual body of the review",
+                    "externalDocs": {
+                        "url": "http:\/\/schema.org\/reviewBody"
+                    },
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "properties": {
+        "hydra:member": {
+            "type": "array",
+            "items": {
+                "$ref": "#\/definitions\/Book:jsonld"
+            }
+        },
+        "hydra:totalItems": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "hydra:view": {
+            "type": "object",
+            "properties": {
+                "@id": {
+                    "type": "string",
+                    "format": "iri-reference"
+                },
+                "@type": {
+                    "type": "string"
+                },
+                "hydra:first": {
+                    "type": "string",
+                    "format": "iri-reference"
+                },
+                "hydra:last": {
+                    "type": "string",
+                    "format": "iri-reference"
+                },
+                "hydra:next": {
+                    "type": "string",
+                    "format": "iri-reference"
+                }
+            }
+        },
+        "hydra:search": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string"
+                },
+                "hydra:template": {
+                    "type": "string"
+                },
+                "hydra:variableRepresentation": {
+                    "type": "string"
+                },
+                "hydra:mapping": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "@type": {
+                                "type": "string"
+                            },
+                            "variable": {
+                                "type": "string"
+                            },
+                            "property": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "required": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "required": [
+        "hydra:member"
+    ]
+}

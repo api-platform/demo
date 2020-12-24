@@ -5,7 +5,7 @@ use Symfony\Component\Dotenv\Dotenv;
 date_default_timezone_set('UTC');
 
 // PHPUnit's autoloader
-if (!file_exists($phpUnitAutoloaderPath = __DIR__.'/../bin/.phpunit/phpunit/vendor/autoload.php')) {
+if (!file_exists($phpUnitAutoloaderPath = __DIR__.'/../bin/.phpunit/phpunit-9.4-0/vendor/autoload.php')) {
     // @phpstan-ignore-next-line
     exit('PHPUnit is not installed. Please run `bin/phpunit --version` to install it');
 }

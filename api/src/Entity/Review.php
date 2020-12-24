@@ -22,8 +22,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ApiResource(
  *     iri="http://schema.org/Review",
- *     denormalizationContext={"groups": {"review:write"}},
- *     normalizationContext={"groups": {"review:read"}}
+ *     denormalizationContext={"groups"={"review:write"}},
+ *     normalizationContext={"groups"={"review:read"}}
  * )
  * @ApiFilter(OrderFilter::class, properties={"id", "publicationDate"})
  */

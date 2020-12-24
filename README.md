@@ -13,7 +13,7 @@ Install
 
 Then load the demo fixtures:
 
-    $ docker-compose exec php composer run load-fixtures
+    $ docker-compose exec php composer load-fixtures
 
 You can now go to https://localhost
 

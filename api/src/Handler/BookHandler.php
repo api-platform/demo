@@ -17,9 +17,6 @@ use Symfony\Component\Mercure\Update;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
-/**
- * @author Vincent Chalamon <vincent@les-tilleuls.coop>
- */
 final class BookHandler implements MessageHandlerInterface
 {
     private IriConverterInterface $iriConverter;
