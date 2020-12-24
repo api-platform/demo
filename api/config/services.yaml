@@ -32,10 +32,6 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    App\Handler\BookHandler:
-        arguments:
-            $imgflipClient: '@csa_guzzle.client.imgflip'
-
     # Custom data provider 
     App\Repository\TopBook\TopBookCachedDataRepository:
         decorates: App\Repository\TopBook\TopBookDataRepository
