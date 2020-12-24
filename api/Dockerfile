@@ -67,9 +67,6 @@ RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
 
 COPY --from=composer:1 /usr/bin/composer /usr/bin/composer
 
-# Workaround to allow using PHPUnit 8 with Symfony 4.3
-ENV SYMFONY_PHPUNIT_VERSION=8.3
-
 RUN ln -s $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 COPY docker/php/php.ini $PHP_INI_DIR/conf.d/api-platform.ini
 
@@ -104,6 +101,7 @@ RUN composer dump-env prod
 # copy only specifically what we need
 COPY bin bin/
 COPY config config/
+COPY data data/
 COPY public public/
 COPY src src/
 # only for demo
