@@ -51,7 +51,7 @@ Swagger interface.
 * [Overriding the OpenAPI Specification documentation](https://api-platform.com/docs/core/swagger/#overriding-the-openapi-specification)
 * [Code in api/src/Swagger/SwaggerDecorator.php](api/src/Swagger/SwaggerDecorator.php)
 
-Contributing
+Contributing 
 ============
 
 * [Read the contributing guide](.github/CONTRIBUTING.md)
