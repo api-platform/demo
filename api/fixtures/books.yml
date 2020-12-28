@@ -1,12 +1,17 @@
-'App\Entity\Book':
-    book_{1..100}:
+App\Entity\Book (template):
+    book:
         isbn (unique): <isbn13()>
         title: <sentence()>
         description: <paragraph()>
         author: <name()>
         publicationDate: <dateTime()>
 
-'App\Entity\Review':
+App\Entity\Book (extends book):
+    book_{1..100}: ~
+    book_{101}:
+        archivedAt: <date_create('2020-12-27')>
+    
+App\Entity\Review:
     review_{1..500}:
         body: <paragraph()>
         rating: <numberBetween(0, 5)>
