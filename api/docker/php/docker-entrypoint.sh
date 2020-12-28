@@ -33,7 +33,7 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'bin/console' ] || { [ "$1" = 'php' ] && [ "
 	done
 
 	echo "Running migrations"
-	bin/console doctrine:migrations:migrate --no-interaction
+	bin/console doctrine:schema:update --force --no-interaction
 
 	if [ "$APP_ENV" != 'prod' ]; then
 		echo "Load fixtures"
