@@ -14,6 +14,8 @@ spec:
       {{- include "api.selectorLabels" $data | nindent 6 }}
   template:
     metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
       labels:
         {{- include "api.selectorLabels" $data | nindent 8 }}
     spec:

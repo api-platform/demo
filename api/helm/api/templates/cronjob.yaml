@@ -10,6 +10,9 @@ metadata:
 spec:
   schedule: '0 0 * * *'
   jobTemplate:
+    metadata:
+      annotations:
+          rollme: {{ randAlphaNum 5 | quote }}
     spec:
       template:
         spec:
