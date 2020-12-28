@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Filter\ArchivedFilter;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -12,6 +11,7 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
+use App\Filter\ArchivedFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -47,8 +47,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiFilter(PropertyFilter::class)
  * @ApiFilter(OrderFilter::class, properties={"id", "title", "author", "isbn", "publicationDate"})
  */
-class Book
+class Book implements ArchivableInterface
 {
+    use ArchivableTrait;
+
     /**
      * @ORM\Column(type="uuid", unique=true)
      * @ORM\Id
@@ -109,14 +111,6 @@ class Book
      * @ApiProperty(iri="http://schema.org/dateCreated")
      */
     public ?\DateTimeInterface $publicationDate = null;
-
-    /**
-     * @var \DateTimeInterface|null The date on which the book has been archived
-     *
-     * @Assert\Type(\DateTimeInterface::class)
-     * @ORM\Column(type="date", nullable=true)
-     */
-    public ?\DateTimeInterface $archivedAt = null;
 
     /**
      * @var Collection<int, Review> The book's reviews
