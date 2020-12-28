@@ -11,3 +11,5 @@ parameters:
         container_xml_path: %rootDir%/../../../var/cache/dev/App_KernelDevDebugContainer.xml
     bootstrapFiles:
         - %rootDir%/../../../tests/bootstrap.php
+    ignoreErrors:
+        - '#ReflectionClass constructor expects class-string<T of object>|T of object#' # weird: https://phpstan.org/r/cc0b41e0-44f2-4f27-b71b-11746c6bf794
