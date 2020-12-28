@@ -32,7 +32,7 @@ much more straightforward than using the standard `WebTestCase` provided by Symf
 * [Tests documentation](https://api-platform.com/docs/core/testing/)
 * [Code in api/tests/](api/tests)
 
-Custom data provider
+Custom data provider 
 --------------------
 
 This example shows how to expose a CSV file as a standard API Platform endpoint.
