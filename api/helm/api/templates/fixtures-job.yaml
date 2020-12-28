@@ -8,7 +8,7 @@ metadata:
   labels:
     {{- include "api.labels" $data | nindent 4 }}
   annotations:
-    "helm.sh/hook": "post-install,pre-upgrade"
+    "helm.sh/hook": "post-install,post-upgrade"
     "helm.sh/hook-delete-policy": "before-hook-creation"
 spec:
   template:
@@ -31,7 +31,7 @@ spec:
           image: "{{ .Values.php.image.repository }}:{{ .Values.php.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.php.image.pullPolicy }}
           command: ['/bin/sh', '-c']
-          args: ['composer install --prefer-dist --no-progress --no-suggest --no-interaction && bin/console doctrine:schema:drop --force --no-interaction && bin/console doctrine:schema:update --force --no-interaction && bin/console hautelook:fixtures:load --no-interaction']
+          args: ['composer install --prefer-dist --no-progress --no-suggest --no-interaction && bin/console hautelook:fixtures:load --no-interaction']
           env:
             - name: TRUSTED_HOSTS
               valueFrom:
