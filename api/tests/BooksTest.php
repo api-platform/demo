@@ -58,7 +58,7 @@ class BooksTest extends ApiTestCase
         // It works because the API returns test fixtures loaded by Alice
         self::assertCount(self::ITEMS_PER_PAGE, $response->toArray()['hydra:member']);
 
-        static::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/books.json'));
+        static::assertMatchesJsonSchema((string) file_get_contents(__DIR__.'/schemas/books.json'));
 
         // Checks that the returned JSON is validated by the JSON Schema generated for this API Resource by API Platform
         // This JSON Schema is also used in the generated OpenAPI spec
