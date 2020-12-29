@@ -14,6 +14,8 @@ use Symfony\Contracts\Service\ServiceProviderInterface;
 
 class BooksTest extends ApiTestCase
 {
+    public const ISBN = '9786644879585';
+
     // This trait provided by HautelookAliceBundle will take care of refreshing the database content to put it in a known state between every tests
     use RefreshDatabaseTrait;
 
@@ -109,7 +111,7 @@ publicationDate: This value should not be null.',
 
     public function testUpdateBook(): void
     {
-        $iri = (string) $this->findIriBy(Book::class, ['isbn' => '9786644879585']);
+        $iri = (string) $this->findIriBy(Book::class, ['isbn' => self::ISBN]);
         $this->client->request('PUT', $iri, ['json' => [
             'title' => 'updated title',
         ]]);
@@ -117,7 +119,7 @@ publicationDate: This value should not be null.',
         self::assertResponseIsSuccessful();
         self::assertJsonContains([
             '@id' => $iri,
-            'isbn' => '9786644879585',
+            'isbn' => self::ISBN,
             'title' => 'updated title',
         ]);
     }
@@ -126,19 +128,19 @@ publicationDate: This value should not be null.',
     {
         $token = $this->login();
         $client = static::createClient();
-        $iri = (string) $this->findIriBy(Book::class, ['isbn' => '9786644879585']);
+        $iri = (string) $this->findIriBy(Book::class, ['isbn' => self::ISBN]);
         $client->request('DELETE', $iri, ['auth_bearer' => $token]);
 
         self::assertResponseStatusCodeSame(204);
         self::assertNull(
             // Through the container, you can access all your services from the tests, including the ORM, the mailer, remote API clients...
-            static::$container->get('doctrine')->getRepository(Book::class)->findOneBy(['isbn' => '9786644879585'])
+            static::$container->get('doctrine')->getRepository(Book::class)->findOneBy(['isbn' => self::ISBN])
         );
     }
 
     public function testGenerateCover(): void
     {
-        $book = static::$container->get('doctrine')->getRepository(Book::class)->findOneBy(['isbn' => '9786644879585']);
+        $book = static::$container->get('doctrine')->getRepository(Book::class)->findOneBy(['isbn' => self::ISBN]);
         self::assertInstanceOf(Book::class, $book);
         if (!$book instanceof Book) {
             throw new \LogicException('Book not found.');

@@ -51,6 +51,16 @@ Swagger interface.
 * [Overriding the OpenAPI Specification documentation](https://api-platform.com/docs/core/swagger/#overriding-the-openapi-specification)
 * [Code in api/src/Swagger/SwaggerDecorator.php](api/src/Swagger/SwaggerDecorator.php)
 
+Custom Doctrine ORM Filter
+--------------------------
+
+This example shows how to implement a custom Doctrine filter. 
+It's a generic filter that is applied by default when getting a collection
+but it can be disabled with a get parameter.
+
+* [Creating Custom Doctrine ORM Filters documentation](https://api-platform.com/docs/core/filters/#creating-custom-doctrine-orm-filters)
+* [Code in api/src/Filter](api/src/Filter)
+
 Contributing
 ============
 

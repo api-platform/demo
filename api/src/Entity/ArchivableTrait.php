@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait ArchivableTrait
 {
     /**
-     * @var \DateTimeInterface|null The date on which the entity has been archived
+     * @var \DateTimeInterface|null The date when the entity has been archived
      *
      * @Assert\Type(\DateTimeInterface::class)
      * @ORM\Column(type="date", nullable=true)
