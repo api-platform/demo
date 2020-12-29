@@ -40,6 +40,13 @@ jobs:
           echo ${{ env.NAMESPACES }} | xargs --no-run-if-empty -n 1 -I {} gsutil rm -r gs://demo-admin-{}.api-platform.com
           echo ${{ env.NAMESPACES }} | xargs --no-run-if-empty -n 1 -I {} gsutil rm -r gs://demo-client-{}.api-platform.com
 
+      - name: Download flarectl
+        if: env.NAMESPACES != ''
+        run: |-
+          wget --no-check-certificate --content-disposition https://github.com/cloudflare/cloudflare-go/releases/download/v0.13.2/flarectl_0.13.2_linux_amd64.tar.xz
+          tar -xf flarectl_0.13.2_linux_amd64.tar.xz flarectl
+          chmod +x flarectl
+
       - name: Remove outdated domains
         if: env.NAMESPACES != ''
         run: |-
