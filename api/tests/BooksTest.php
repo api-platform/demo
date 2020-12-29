@@ -15,6 +15,7 @@ use Symfony\Contracts\Service\ServiceProviderInterface;
 class BooksTest extends ApiTestCase
 {
     public const ISBN = '9786644879585';
+    public const ITEMS_PER_PAGE = 30;
     public const COUNT = 100;
     public const COUNT_WITH_ARCHIVED = 101;
 
@@ -23,7 +24,6 @@ class BooksTest extends ApiTestCase
 
     private Client $client;
     private Router $router;
-
 
     protected function setup(): void
     {
@@ -56,15 +56,14 @@ class BooksTest extends ApiTestCase
         ]);
 
         // It works because the API returns test fixtures loaded by Alice
-        self::assertCount(30, $response->toArray()['hydra:member']);
+        self::assertCount(self::ITEMS_PER_PAGE, $response->toArray()['hydra:member']);
 
         static::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/books.json'));
+
         // Checks that the returned JSON is validated by the JSON Schema generated for this API Resource by API Platform
         // This JSON Schema is also used in the generated OpenAPI spec
-
         // @todo The following method does not work properly
-        // @see
-
+        // @see https://github.com/api-platform/core/issues/3918
         // self::assertMatchesResourceCollectionJsonSchema(Book::class);
     }
 
@@ -209,6 +208,7 @@ publicationDate: This value should not be null.',
     {
         $this->client->request('GET', '/books?archived=true');
         self::assertResponseIsSuccessful();
+        self::assertIsContentTypeLdJson();
         self::assertJsonContains([
             '@context' => '/contexts/Book',
             '@id' => '/books',
