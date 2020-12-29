@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Filter;
 
-use ApiPlatform\Core\Api\FilterInterface;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\AbstractFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\FilterInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use App\Entity\ArchivableInterface;
 use Doctrine\ORM\QueryBuilder;
 
-final class ArchivedFilter extends AbstractFilter
+final class ArchivedFilter implements FilterInterface
 {
     private const PARAMETER_NAME = 'archived';
 
@@ -30,18 +29,6 @@ final class ArchivedFilter extends AbstractFilter
         }
 
         $queryBuilder->andWhere(sprintf('%s.archivedAt IS NULL', $queryBuilder->getRootAliases()[0] ?? 'o'));
-    }
-
-    /**
-     * @param mixed $value
-     */
-    private function normalizeValue($value): bool
-    {
-        if (\in_array($value, [true, 'true', '1'], true)) {
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -73,12 +60,14 @@ final class ArchivedFilter extends AbstractFilter
     }
 
     /**
-     * This is a generic filter that works on a unique property so we don't have
-     * to filter by property.
-     *
      * @param mixed $value
      */
-    protected function filterProperty(string $property, $value, QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null): void
+    private function normalizeValue($value): bool
     {
+        if (\in_array($value, [true, 'true', '1'], true)) {
+            return true;
+        }
+
+        return false;
     }
 }
