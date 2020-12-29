@@ -14,9 +14,12 @@ env:
 
 jobs:
   remove-namespaces:
-    name: Remove outdated namespaces
+    name: Remove outdated and useless namespaces
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
       # Setup gcloud CLI
       - uses: google-github-actions/setup-gcloud@master
         with:
@@ -27,31 +30,24 @@ jobs:
       # Get the GKE credentials so we can deploy to the cluster
       - run: gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GCE_ZONE }}
 
-      # Get all namespaces older than MAX_LIFETIME, except for DEFAULT_NAMESPACE
+      # Remove all namespaces older than MAX_LIFETIME, except for DEFAULT_NAMESPACE
       - name: Get outdated namespaces
-        run: echo "NAMESPACES=$(kubectl get namespaces -l project=${{ env.GKE_CLUSTER }} --template '{{range .items}}{{.metadata.name}} {{.metadata.creationTimestamp}}{{"\n"}}{{end}}' | awk '$2 <= "'$(date -d 'now-${{ env.MAX_LIFETIME }}' -Ins --utc | sed 's/+0000/Z/')'" { print $1 }' | grep -v ${{ env.DEFAULT_NAMESPACE }})" >> $GITHUB_ENV
+        id: outdated_ns
+        run: echo "::set-output name=namespaces::$(kubectl get namespaces -l project=${{ env.GKE_CLUSTER }} --template '{{range .items}}{{.metadata.name}} {{.metadata.creationTimestamp}}{{"\n"}}{{end}}' | awk '$2 <= "'$(date -d 'now-${{ env.MAX_LIFETIME }}' -Ins --utc | sed 's/+0000/Z/')'" { print $1 }' | grep -v ${{ env.DEFAULT_NAMESPACE }})"
 
-      - name: Remove outdated namespaces
-        if: env.NAMESPACES != ''
-        run: echo ${{ env.NAMESPACES }} | xargs --no-run-if-empty kubectl delete namespace
+      - name: Remove outdated namespaces, buckets and domains
+        uses: ./
+        with: 
+          namespaces: ${{ steps.outdated_ns.outputs.namespaces }}
+          cf_api_token: ${{ secrets.CF_API_TOKEN }}
 
-      - name: Remove outdated buckets
-        if: env.NAMESPACES != ''
-        run: |-
-          echo ${{ env.NAMESPACES }} | xargs --no-run-if-empty -n 1 -I {} gsutil rm -r gs://demo-admin-{}.api-platform.com
-          echo ${{ env.NAMESPACES }} | xargs --no-run-if-empty -n 1 -I {} gsutil rm -r gs://demo-client-{}.api-platform.com
+      # Remove all namespaces which branch don't exist anymore, except for DEFAULT_NAMESPACE
+      - name: Get useless namespaces
+        id: useless_ns
+        run: echo "::set-output name=namespaces::$(diff <(kubectl get namespaces -l project=${{ env.GKE_CLUSTER }} --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' | grep -v ${{ env.DEFAULT_NAMESPACE }}) <(git branch -r | grep -v origin/HEAD | grep -v ${{ env.DEFAULT_NAMESPACE }} | sed 's/^\s*origin\//feature-/' | sed 's/\//-/') | grep '<' | sed 's/< *//')"
 
-      - name: Download flarectl
-        if: env.NAMESPACES != ''
-        run: |-
-          wget --no-check-certificate --content-disposition https://github.com/cloudflare/cloudflare-go/releases/download/v0.13.2/flarectl_0.13.2_linux_amd64.tar.xz
-          tar -xf flarectl_0.13.2_linux_amd64.tar.xz flarectl
-          chmod +x flarectl
-
-      - name: Remove outdated domains
-        if: env.NAMESPACES != ''
-        run: |-
-          echo ${{ env.NAMESPACES }} | xargs --no-run-if-empty -n 1 -I {} ./flarectl dns delete --zone=api-platform.com --name=demo-admin-{}.api-platform.com
-          echo ${{ env.NAMESPACES }} | xargs --no-run-if-empty -n 1 -I {} ./flarectl dns delete --zone=api-platform.com --name=demo-client-{}.api-platform.com
-          echo ${{ env.NAMESPACES }} | xargs --no-run-if-empty -n 1 -I {} ./flarectl dns delete --zone=api-platform.com --name=demo-mercure-{}.api-platform.com
-          echo ${{ env.NAMESPACES }} | xargs --no-run-if-empty -n 1 -I {} ./flarectl dns delete --zone=api-platform.com --name=demo-{}.api-platform.com
+      - name: Remove useless namespaces, buckets and domains
+        uses: ./
+        with:
+          namespaces: ${{ steps.useless_ns.outputs.namespaces }}
+          cf_api_token: ${{ secrets.CF_API_TOKEN }}
