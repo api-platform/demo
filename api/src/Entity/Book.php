@@ -39,13 +39,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  *             "messenger"=true,
  *             "normalizationContext"={"groups"={"book:read", "book:cover"}}
  *         },
- *     },
- *     attributes={
- *         "filters"={ArchivedFilter::class}
  *     }
  * )
  * @ApiFilter(PropertyFilter::class)
  * @ApiFilter(OrderFilter::class, properties={"id", "title", "author", "isbn", "publicationDate"})
+ * @ApiFilter(ArchivedFilter::class)
  */
 class Book implements ArchivableInterface
 {

@@ -11,5 +11,3 @@ parameters:
         container_xml_path: %rootDir%/../../../var/cache/dev/App_KernelDevDebugContainer.xml
     bootstrapFiles:
         - %rootDir%/../../../tests/bootstrap.php
-    ignoreErrors:
-        - '#resourceClass of method App\\Filter\\ArchivedFilter::supports\(\) expects class-string, string given.#'

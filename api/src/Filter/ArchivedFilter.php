@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Filter;
 
+use ApiPlatform\Core\Api\FilterInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\AbstractFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use App\Entity\ArchivableInterface;
 use Doctrine\ORM\QueryBuilder;
 
-final class ArchivedFilter extends AbstractFilter implements GenericFilterInterface
+final class ArchivedFilter extends AbstractFilter
 {
     private const PARAMETER_NAME = 'archived';
 
@@ -20,27 +21,27 @@ final class ArchivedFilter extends AbstractFilter implements GenericFilterInterf
      */
     public function apply(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null, array $context = []): void
     {
-        $archived = $context['filters'][self::PARAMETER_NAME] ?? null;
-        if ('true' !== $archived && $this->supports($resourceClass)) {
-            $queryBuilder->andWhere(sprintf('%s.archivedAt IS NULL', $queryBuilder->getRootAliases()[0] ?? 'o'));
+        if (!is_a($resourceClass, ArchivableInterface::class, true)) {
+            throw new \InvalidArgumentException("Can't apply the Archived filter on a resource ({$resourceClass}) not implementing the ArchivableInterface.");
         }
+
+        if ($this->normalizeValue($context['filters'][self::PARAMETER_NAME] ?? null)) {
+            return;
+        }
+
+        $queryBuilder->andWhere(sprintf('%s.archivedAt IS NULL', $queryBuilder->getRootAliases()[0] ?? 'o'));
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $value
      */
-    public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
+    private function normalizeValue($value): bool
     {
-        try {
-            $reflection = new \ReflectionClass($resourceClass);
-            if (!$reflection->implementsInterface(ArchivableInterface::class)) {
-                throw new \InvalidArgumentException("Can't apply the Archived filter on a resource ({$resourceClass}) not implementing the ArchivableInterface.");
-            }
-        } catch (\ReflectionException $e) {
-            throw new \InvalidArgumentException("Invalid {$resourceClass} resource.");
+        if (\in_array($value, [true, 'true', '1'], true)) {
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     /**
@@ -51,22 +52,21 @@ final class ArchivedFilter extends AbstractFilter implements GenericFilterInterf
     public function getDescription(string $resourceClass): array
     {
         $description = 'Generic filter that automatically filters archived entities. One can disable this behavior by passing "true" to this parameter.';
-        $type = 'string';
 
         return [
             self::PARAMETER_NAME => [
-                'property' => 'hydra:freetextQuery',
-                'type' => $type,
+                'property' => self::PARAMETER_NAME,
+                'type' => 'bool',
                 'required' => false,
                 'swagger' => [
                     'description' => $description,
                     'name' => self::PARAMETER_NAME,
-                    'type' => $type,
+                    'type' => 'bool',
                 ],
                 'openapi' => [
                     'description' => $description,
                     'name' => self::PARAMETER_NAME,
-                    'type' => $type,
+                    'type' => 'bool',
                 ],
             ],
         ];

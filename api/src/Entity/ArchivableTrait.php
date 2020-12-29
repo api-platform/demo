@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 trait ArchivableTrait
 {
     /**
      * @var \DateTimeInterface|null The date when the entity has been archived
      *
-     * @Assert\Type(\DateTimeInterface::class)
      * @ORM\Column(type="date", nullable=true)
      */
     public ?\DateTimeInterface $archivedAt = null;
