@@ -20,7 +20,7 @@ You can now go to https://localhost
 What can I find in this demo? 
 =============================
 
-This demo application contains several things you may be interested.   
+This demo application contains several things you may be interested:
 
 API Testing
 -----------
@@ -54,9 +54,9 @@ Swagger interface.
 Custom Doctrine ORM Filter
 --------------------------
 
-This example shows how to implement a custom Doctrine filter. 
-It's a generic filter that is applied by default when getting a collection
-but it can be disabled with a get parameter.
+This example shows how to implement a custom Doctrine filter. It's a generic filter
+that is applied by default when getting a collection but one can disable it with
+a get parameter.
 
 * [Creating Custom Doctrine ORM Filters documentation](https://api-platform.com/docs/core/filters/#creating-custom-doctrine-orm-filters)
 * [Code in api/src/Filter](api/src/Filter)
