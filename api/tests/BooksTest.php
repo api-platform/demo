@@ -190,7 +190,6 @@ publicationDate: This value should not be null.',
         $this->client->request('GET', '/books');
         self::assertResponseIsSuccessful();
         self::assertJsonContains([
-            '@context' => '/contexts/Book',
             '@id' => '/books',
             '@type' => 'hydra:Collection',
             'hydra:totalItems' => self::COUNT,
@@ -198,7 +197,7 @@ publicationDate: This value should not be null.',
     }
 
     /**
-     * The filter is not applied when passing the arhived parameter with the "true"
+     * The filter is not applied when passing the archived parameter with the "true"
      * value.
      */
     public function testArchivedFilterOff(): void
@@ -207,7 +206,6 @@ publicationDate: This value should not be null.',
         self::assertResponseIsSuccessful();
         self::assertIsContentTypeLdJson();
         self::assertJsonContains([
-            '@context' => '/contexts/Book',
             '@id' => '/books',
             '@type' => 'hydra:Collection',
             'hydra:totalItems' => self::COUNT_WITH_ARCHIVED,
