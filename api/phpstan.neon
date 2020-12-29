@@ -12,4 +12,4 @@ parameters:
     bootstrapFiles:
         - %rootDir%/../../../tests/bootstrap.php
     ignoreErrors:
-        - '#ReflectionClass constructor expects class-string<T of object>|T of object#'
+        - '#resourceClass of method App\\Filter\\ArchivedFilter::supports\(\) expects class-string, string given.#'

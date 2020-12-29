@@ -27,7 +27,8 @@ final class ArchivedFilter extends AbstractFilter implements GenericFilterInterf
     }
 
     /**
-     * {@inheritdoc}
+     * @param class-string         $resourceClass
+     * @param array<string, mixed> $context
      */
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
