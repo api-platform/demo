@@ -45,7 +45,6 @@ final class ReviewsTest extends ApiTestCase
             'author' => null,
             'publicationDate' => null,
         ]]);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
         self::assertJsonContains([
             '@context' => '/contexts/ConstraintViolationList',

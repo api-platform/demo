@@ -78,7 +78,6 @@ class BooksTest extends ApiTestCase
         ]]);
 
         self::assertResponseStatusCodeSame(201);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertJsonContains([
             '@context' => '/contexts/Book',
             '@type' => 'http://schema.org/Book',
@@ -100,8 +99,6 @@ class BooksTest extends ApiTestCase
         ]]);
 
         self::assertResponseStatusCodeSame(400);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
-
         self::assertJsonContains([
             '@context' => '/contexts/ConstraintViolationList',
             '@type' => 'ConstraintViolationList',
