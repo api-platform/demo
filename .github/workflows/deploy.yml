@@ -1,7 +1,9 @@
 # Check documentation at https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions
 name: Deploy
 
-on: [push]
+on:
+  workflow_dispatch: ~
+  push: ~
 
 # In order to use this GitHub Actions file, please define the following secrets:
 #  - GKE_PROJECT: project id of the Google Kubernetes Engine
