@@ -15,12 +15,15 @@ use Symfony\Contracts\Service\ServiceProviderInterface;
 class BooksTest extends ApiTestCase
 {
     public const ISBN = '9786644879585';
+    public const COUNT = 100;
+    public const COUNT_WITH_ARCHIVED = 101;
 
     // This trait provided by HautelookAliceBundle will take care of refreshing the database content to put it in a known state between every tests
     use RefreshDatabaseTrait;
 
     private Client $client;
     private Router $router;
+
 
     protected function setup(): void
     {
@@ -42,7 +45,7 @@ class BooksTest extends ApiTestCase
             '@context' => '/contexts/Book',
             '@id' => '/books',
             '@type' => 'hydra:Collection',
-            'hydra:totalItems' => 100,
+            'hydra:totalItems' => self::COUNT,
             'hydra:view' => [
                 '@id' => '/books?page=1',
                 '@type' => 'hydra:PartialCollectionView',
@@ -56,10 +59,13 @@ class BooksTest extends ApiTestCase
         self::assertCount(30, $response->toArray()['hydra:member']);
 
         static::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/books.json'));
-//        // Checks that the returned JSON is validated by the JSON Schema generated for this API Resource by API Platform
-//        // This JSON Schema is also used in the generated OpenAPI spec
-        // todo The following method does not work properly
-//        self::assertMatchesResourceCollectionJsonSchema(Book::class);
+        // Checks that the returned JSON is validated by the JSON Schema generated for this API Resource by API Platform
+        // This JSON Schema is also used in the generated OpenAPI spec
+
+        // @todo The following method does not work properly
+        // @see
+
+        // self::assertMatchesResourceCollectionJsonSchema(Book::class);
     }
 
     public function testCreateBook(): void
@@ -178,5 +184,36 @@ publicationDate: This value should not be null.',
         ]]);
 
         return $response->toArray()['token'];
+    }
+
+    /**
+     * The filter is applied by default on the Book collections.
+     */
+    public function testArchivedFilterOn(): void
+    {
+        $this->client->request('GET', '/books');
+        self::assertResponseIsSuccessful();
+        self::assertJsonContains([
+            '@context' => '/contexts/Book',
+            '@id' => '/books',
+            '@type' => 'hydra:Collection',
+            'hydra:totalItems' => self::COUNT,
+        ]);
+    }
+
+    /**
+     * The filter is not applied when passing the arhived parameter with the "true"
+     * value.
+     */
+    public function testArchivedFilterOff(): void
+    {
+        $this->client->request('GET', '/books?archived=true');
+        self::assertResponseIsSuccessful();
+        self::assertJsonContains([
+            '@context' => '/contexts/Book',
+            '@id' => '/books',
+            '@type' => 'hydra:Collection',
+            'hydra:totalItems' => self::COUNT_WITH_ARCHIVED,
+        ]);
     }
 }
