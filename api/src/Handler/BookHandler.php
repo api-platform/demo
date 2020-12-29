@@ -46,7 +46,7 @@ final class BookHandler implements MessageHandlerInterface
     public function __invoke(Book $book): void
     {
         try {
-            $response = $this->client->request('https://api.imgflip.com/get_memes');
+            $response = $this->client->request('GET', 'https://api.imgflip.com/get_memes');
         } catch (TransportExceptionInterface $e) {
             $this->logger->error('Cannot call Imgflip API.', [
                 'error' => $e->getMessage(),
