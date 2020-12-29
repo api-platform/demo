@@ -204,7 +204,6 @@ publicationDate: This value should not be null.',
     {
         $this->client->request('GET', '/books?archived=true');
         self::assertResponseIsSuccessful();
-        self::assertIsContentTypeLdJson();
         self::assertJsonContains([
             '@id' => '/books',
             '@type' => 'hydra:Collection',
