@@ -36,7 +36,7 @@ jobs:
         run: echo "::set-output name=namespaces::$(kubectl get namespaces -l project=${{ env.GKE_CLUSTER }} --template '{{range .items}}{{.metadata.name}} {{.metadata.creationTimestamp}}{{"\n"}}{{end}}' | awk '$2 <= "'$(date -d 'now-${{ env.MAX_LIFETIME }}' -Ins --utc | sed 's/+0000/Z/')'" { print $1 }' | grep -v ${{ env.DEFAULT_NAMESPACE }})"
 
       - name: Remove outdated namespaces, buckets and domains
-        uses: ./
+        uses: .github/actions/cleanup/
         with: 
           namespaces: ${{ steps.outdated_ns.outputs.namespaces }}
           cf_api_token: ${{ secrets.CF_API_TOKEN }}
@@ -47,7 +47,7 @@ jobs:
         run: echo "::set-output name=namespaces::$(diff <(kubectl get namespaces -l project=${{ env.GKE_CLUSTER }} --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' | grep -v ${{ env.DEFAULT_NAMESPACE }}) <(git branch -r | grep -v origin/HEAD | grep -v ${{ env.DEFAULT_NAMESPACE }} | sed 's/^\s*origin\//feature-/' | sed 's/\//-/') | grep '<' | sed 's/< *//')"
 
       - name: Remove useless namespaces, buckets and domains
-        uses: ./
+        uses: .github/actions/cleanup/
         with:
           namespaces: ${{ steps.useless_ns.outputs.namespaces }}
           cf_api_token: ${{ secrets.CF_API_TOKEN }}
