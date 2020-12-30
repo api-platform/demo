@@ -203,7 +203,7 @@ publicationDate: This value should not be null.',
         yield ['true',  self::COUNT_ARCHIVED];
         yield ['1', self::COUNT_ARCHIVED];
 
-        // Incorrect value, no filter not applied
+        // Incorrect value, no filter applied
         yield ['',  self::COUNT];
         yield ['true[]',  self::COUNT];
         yield ['foobar',  self::COUNT];
