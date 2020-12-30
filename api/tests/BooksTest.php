@@ -185,7 +185,7 @@ publicationDate: This value should not be null.',
     /**
      * The filter is applied by default on the Book collections.
      */
-    public function testArchivedFilterOn(): void
+    public function testArchivedFilterDefault(): void
     {
         $this->client->request('GET', '/books');
         self::assertResponseIsSuccessful();
@@ -196,18 +196,31 @@ publicationDate: This value should not be null.',
         ]);
     }
 
+    public function archivedParameterProvider(): \iterator
+    {
+        yield ['true',  self::COUNT_WITH_ARCHIVED];
+        yield ['1',  self::COUNT_WITH_ARCHIVED];
+
+        yield ['false',  self::COUNT];
+        yield ['0',  self::COUNT];
+        yield ['true[]',  self::COUNT];
+        yield ['foobar',  self::COUNT];
+    }
+
     /**
      * The filter is not applied when passing the archived parameter with the "true"
      * value.
+     *
+     * @dataProvider archivedParameterProvider
      */
-    public function testArchivedFilterOff(): void
+    public function testArchivedFilterParameter(string $archivedValue, int $count): void
     {
-        $this->client->request('GET', '/books?archived=true');
+        $this->client->request('GET', '/books?archived='.$archivedValue);
         self::assertResponseIsSuccessful();
         self::assertJsonContains([
             '@id' => '/books',
             '@type' => 'hydra:Collection',
-            'hydra:totalItems' => self::COUNT_WITH_ARCHIVED,
+            'hydra:totalItems' => $count,
         ]);
     }
 }

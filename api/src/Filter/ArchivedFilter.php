@@ -64,6 +64,6 @@ final class ArchivedFilter implements FilterInterface
      */
     private function normalizeValue($value): bool
     {
-        return \in_array($value, [true, 'true', '1'], true);
+        return \in_array($value, [true, 'true', '1', 1], true);
     }
 }

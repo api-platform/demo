@@ -20,7 +20,7 @@ You can now go to https://localhost
 What can I find in this demo? 
 =============================
 
-This demo application contains features you may be interested:
+This demo application contains features you may be interested in:
 
 API Testing
 -----------
