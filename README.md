@@ -54,9 +54,8 @@ Swagger interface.
 Custom Doctrine ORM Filter
 --------------------------
 
-This example shows how to implement a custom API filter using Doctrine. It's a generic
-filter that is applied by default when getting a collection but one can disable
-it with a GET parameter.
+This example shows how to implement a custom API filter using Doctrine. It will
+allow us to filter archived items.
 
 * [Creating Custom Doctrine ORM Filters documentation](https://api-platform.com/docs/core/filters/#creating-custom-doctrine-orm-filters)
 * [Code in api/src/Filter](api/src/Filter)

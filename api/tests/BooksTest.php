@@ -16,8 +16,9 @@ class BooksTest extends ApiTestCase
 {
     public const ISBN = '9786644879585';
     public const ITEMS_PER_PAGE = 30;
-    public const COUNT = 100;
-    public const COUNT_WITH_ARCHIVED = 101;
+    public const COUNT_WITHOUT_ARCHIVED = 100;
+    public const COUNT_ARCHIVED = 1;
+    public const COUNT = self::COUNT_WITHOUT_ARCHIVED + self::COUNT_ARCHIVED;
 
     // This trait provided by HautelookAliceBundle will take care of refreshing the database content to put it in a known state between every tests
     use RefreshDatabaseTrait;
@@ -198,19 +199,21 @@ publicationDate: This value should not be null.',
 
     public function archivedParameterProvider(): \iterator
     {
-        yield ['true',  self::COUNT_WITH_ARCHIVED];
-        yield ['1',  self::COUNT_WITH_ARCHIVED];
+        // Only archived are returned
+        yield ['true',  self::COUNT_ARCHIVED];
+        yield ['1', self::COUNT_ARCHIVED];
 
-        yield ['false',  self::COUNT];
-        yield ['0',  self::COUNT];
+        // Incorrect value, no filter not applied
+        yield ['',  self::COUNT];
         yield ['true[]',  self::COUNT];
         yield ['foobar',  self::COUNT];
+
+        // archived items are excluded
+        yield ['false',  self::COUNT_WITHOUT_ARCHIVED];
+        yield ['0',  self::COUNT_WITHOUT_ARCHIVED];
     }
 
     /**
-     * The filter is not applied when passing the archived parameter with the "true"
-     * value.
-     *
      * @dataProvider archivedParameterProvider
      */
     public function testArchivedFilterParameter(string $archivedValue, int $count): void

@@ -14,8 +14,6 @@ final class ArchivedFilter implements FilterInterface
     private const PARAMETER_NAME = 'archived';
 
     /**
-     * Filter entities that have a not null "archivedAt" field value.
-     *
      * @param array<string, mixed> $context
      */
     public function apply(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null, array $context = []): void
@@ -24,11 +22,18 @@ final class ArchivedFilter implements FilterInterface
             throw new \InvalidArgumentException("Can't apply the Archived filter on a resource ({$resourceClass}) not implementing the ArchivableInterface.");
         }
 
-        if ($this->normalizeValue($context['filters'][self::PARAMETER_NAME] ?? null)) {
+        // Parameter not provided or not supported
+        $archivedValue = $this->normalizeValue($context['filters'][self::PARAMETER_NAME] ?? null);
+        if (null === $archivedValue) {
             return;
         }
 
-        $queryBuilder->andWhere(sprintf('%s.archivedAt IS NULL', $queryBuilder->getRootAliases()[0] ?? 'o'));
+        $alias = $queryBuilder->getRootAliases()[0] ?? 'o';
+        if ($archivedValue) {
+            $queryBuilder->andWhere(sprintf('%s.archivedAt IS NOT NULL', $alias));
+        } else {
+            $queryBuilder->andWhere(sprintf('%s.archivedAt IS NULL', $alias));
+        }
     }
 
     /**
@@ -38,7 +43,7 @@ final class ArchivedFilter implements FilterInterface
      */
     public function getDescription(string $resourceClass): array
     {
-        $description = 'Generic filter that automatically filters archived entities. One can disable this behavior by passing "true" to this parameter.';
+        $description = 'Filter archived entities. "true" or "1" returns archived only. "false" or "0" returns not archived only.';
 
         return [
             self::PARAMETER_NAME => [
@@ -62,8 +67,16 @@ final class ArchivedFilter implements FilterInterface
     /**
      * @param mixed $value
      */
-    private function normalizeValue($value): bool
+    private function normalizeValue($value): ?bool
     {
-        return \in_array($value, [true, 'true', '1', 1], true);
+        if (\in_array($value, [false, 'false', '0', 0], true)) {
+            return false;
+        }
+
+        if (\in_array($value, [true, 'true', '1', 1], true)) {
+            return true;
+        }
+
+        return null;
     }
 }
