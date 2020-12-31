@@ -1,5 +1,5 @@
-App\Entity\Book (template):
-    book:
+App\Entity\Book:
+    book (template):
         isbn (unique): <isbn13()>
         title: <sentence()>
         description: <paragraph()>
@@ -8,7 +8,7 @@ App\Entity\Book (template):
 
 App\Entity\Book (extends book):
     book_{1..100}: ~
-    book_{101}:
+    book_101:
         archivedAt: <date_create('2020-12-27')>
     
 App\Entity\Review:
