@@ -14,6 +14,12 @@ use Symfony\Contracts\Service\ServiceProviderInterface;
 
 class BooksTest extends ApiTestCase
 {
+    public const ISBN = '9786644879585';
+    public const ITEMS_PER_PAGE = 30;
+    public const COUNT_WITHOUT_ARCHIVED = 100;
+    public const COUNT_ARCHIVED = 1;
+    public const COUNT = self::COUNT_WITHOUT_ARCHIVED + self::COUNT_ARCHIVED;
+
     // This trait provided by HautelookAliceBundle will take care of refreshing the database content to put it in a known state between every tests
     use RefreshDatabaseTrait;
 
@@ -40,7 +46,7 @@ class BooksTest extends ApiTestCase
             '@context' => '/contexts/Book',
             '@id' => '/books',
             '@type' => 'hydra:Collection',
-            'hydra:totalItems' => 100,
+            'hydra:totalItems' => self::COUNT,
             'hydra:view' => [
                 '@id' => '/books?page=1',
                 '@type' => 'hydra:PartialCollectionView',
@@ -51,13 +57,15 @@ class BooksTest extends ApiTestCase
         ]);
 
         // It works because the API returns test fixtures loaded by Alice
-        self::assertCount(30, $response->toArray()['hydra:member']);
+        self::assertCount(self::ITEMS_PER_PAGE, $response->toArray()['hydra:member']);
 
-        static::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/books.json'));
-//        // Checks that the returned JSON is validated by the JSON Schema generated for this API Resource by API Platform
-//        // This JSON Schema is also used in the generated OpenAPI spec
-        // todo The following method does not work properly
-//        self::assertMatchesResourceCollectionJsonSchema(Book::class);
+        static::assertMatchesJsonSchema((string) file_get_contents(__DIR__.'/schemas/books.json'));
+
+        // Checks that the returned JSON is validated by the JSON Schema generated for this API Resource by API Platform
+        // This JSON Schema is also used in the generated OpenAPI spec
+        // @todo The following method does not work properly
+        // @see https://github.com/api-platform/core/issues/3918
+        // self::assertMatchesResourceCollectionJsonSchema(Book::class);
     }
 
     public function testCreateBook(): void
@@ -71,7 +79,6 @@ class BooksTest extends ApiTestCase
         ]]);
 
         self::assertResponseStatusCodeSame(201);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertJsonContains([
             '@context' => '/contexts/Book',
             '@type' => 'http://schema.org/Book',
@@ -93,8 +100,6 @@ class BooksTest extends ApiTestCase
         ]]);
 
         self::assertResponseStatusCodeSame(400);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
-
         self::assertJsonContains([
             '@context' => '/contexts/ConstraintViolationList',
             '@type' => 'ConstraintViolationList',
@@ -109,7 +114,7 @@ publicationDate: This value should not be null.',
 
     public function testUpdateBook(): void
     {
-        $iri = (string) $this->findIriBy(Book::class, ['isbn' => '9786644879585']);
+        $iri = (string) $this->findIriBy(Book::class, ['isbn' => self::ISBN]);
         $this->client->request('PUT', $iri, ['json' => [
             'title' => 'updated title',
         ]]);
@@ -117,7 +122,7 @@ publicationDate: This value should not be null.',
         self::assertResponseIsSuccessful();
         self::assertJsonContains([
             '@id' => $iri,
-            'isbn' => '9786644879585',
+            'isbn' => self::ISBN,
             'title' => 'updated title',
         ]);
     }
@@ -126,19 +131,19 @@ publicationDate: This value should not be null.',
     {
         $token = $this->login();
         $client = static::createClient();
-        $iri = (string) $this->findIriBy(Book::class, ['isbn' => '9786644879585']);
+        $iri = (string) $this->findIriBy(Book::class, ['isbn' => self::ISBN]);
         $client->request('DELETE', $iri, ['auth_bearer' => $token]);
 
         self::assertResponseStatusCodeSame(204);
         self::assertNull(
             // Through the container, you can access all your services from the tests, including the ORM, the mailer, remote API clients...
-            static::$container->get('doctrine')->getRepository(Book::class)->findOneBy(['isbn' => '9786644879585'])
+            static::$container->get('doctrine')->getRepository(Book::class)->findOneBy(['isbn' => self::ISBN])
         );
     }
 
     public function testGenerateCover(): void
     {
-        $book = static::$container->get('doctrine')->getRepository(Book::class)->findOneBy(['isbn' => '9786644879585']);
+        $book = static::$container->get('doctrine')->getRepository(Book::class)->findOneBy(['isbn' => self::ISBN]);
         self::assertInstanceOf(Book::class, $book);
         if (!$book instanceof Book) {
             throw new \LogicException('Book not found.');
@@ -176,5 +181,49 @@ publicationDate: This value should not be null.',
         ]]);
 
         return $response->toArray()['token'];
+    }
+
+    /**
+     * The filter is applied by default on the Book collections.
+     */
+    public function testArchivedFilterDefault(): void
+    {
+        $this->client->request('GET', '/books');
+        self::assertResponseIsSuccessful();
+        self::assertJsonContains([
+            '@id' => '/books',
+            '@type' => 'hydra:Collection',
+            'hydra:totalItems' => self::COUNT,
+        ]);
+    }
+
+    public function archivedParameterProvider(): \iterator
+    {
+        // Only archived are returned
+        yield ['true',  self::COUNT_ARCHIVED];
+        yield ['1', self::COUNT_ARCHIVED];
+
+        // Incorrect value, no filter applied
+        yield ['',  self::COUNT];
+        yield ['true[]',  self::COUNT];
+        yield ['foobar',  self::COUNT];
+
+        // archived items are excluded
+        yield ['false',  self::COUNT_WITHOUT_ARCHIVED];
+        yield ['0',  self::COUNT_WITHOUT_ARCHIVED];
+    }
+
+    /**
+     * @dataProvider archivedParameterProvider
+     */
+    public function testArchivedFilterParameter(string $archivedValue, int $count): void
+    {
+        $this->client->request('GET', '/books?archived='.$archivedValue);
+        self::assertResponseIsSuccessful();
+        self::assertJsonContains([
+            '@id' => '/books',
+            '@type' => 'hydra:Collection',
+            'hydra:totalItems' => $count,
+        ]);
     }
 }

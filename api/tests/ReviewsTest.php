@@ -15,30 +15,29 @@ final class ReviewsTest extends ApiTestCase
     use RefreshDatabaseTrait;
 
     private Client $client;
-    private const ISBN = '9786644879585';
 
     protected function setup(): void
     {
-        $this->client = static::createClient();
+        $this->client = self::createClient();
     }
 
     public function testFilterReviewsByBook(): void
     {
-        $iri = $this->findIriBy(Book::class, ['isbn' => self::ISBN]);
+        $iri = $this->findIriBy(Book::class, ['isbn' => BooksTest::ISBN]);
         $response = $this->client->request('GET', "/reviews?book=$iri");
-        self::assertCount(2, $response->toArray()['hydra:member']);
+        self::assertCount(5, $response->toArray()['hydra:member']);
     }
 
     public function testBookSubresource(): void
     {
-        $iri = $this->findIriBy(Book::class, ['isbn' => self::ISBN]);
+        $iri = $this->findIriBy(Book::class, ['isbn' => BooksTest::ISBN]);
         $response = $this->client->request('GET', "$iri/reviews");
-        self::assertCount(2, $response->toArray()['hydra:member']);
+        self::assertCount(5, $response->toArray()['hydra:member']);
     }
 
     public function testCreateInvalidReviewWithInvalidBody(): void
     {
-        $iri = $this->findIriBy(Book::class, ['isbn' => self::ISBN]);
+        $iri = $this->findIriBy(Book::class, ['isbn' => BooksTest::ISBN]);
         $this->client->request('POST', '/reviews', ['json' => [
             'body' => '',
             'rating' => 3,
@@ -46,7 +45,6 @@ final class ReviewsTest extends ApiTestCase
             'author' => null,
             'publicationDate' => null,
         ]]);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
         self::assertJsonContains([
             '@context' => '/contexts/ConstraintViolationList',
@@ -67,7 +65,7 @@ final class ReviewsTest extends ApiTestCase
      */
     public function testCreateInvalidReviewWithoutRating(): void
     {
-        $iri = $this->findIriBy(Book::class, ['isbn' => self::ISBN]);
+        $iri = $this->findIriBy(Book::class, ['isbn' => BooksTest::ISBN]);
         $this->client->request('POST', '/reviews', ['json' => [
             'body' => 'bonjour',
             //'rating' => '', // missing rating
@@ -87,7 +85,7 @@ final class ReviewsTest extends ApiTestCase
 
     public function testCreateInvalidReviewWithInvalidRating(): void
     {
-        $iri = $this->findIriBy(Book::class, ['isbn' => self::ISBN]);
+        $iri = $this->findIriBy(Book::class, ['isbn' => BooksTest::ISBN]);
         $this->client->request('POST', '/reviews', ['json' => [
             'body' => 'bonjour',
             'rating' => 6,

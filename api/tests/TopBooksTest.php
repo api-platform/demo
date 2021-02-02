@@ -31,7 +31,6 @@ class TopBooksTest extends ApiTestCase
     {
         $response = $this->client->request('GET', '/top_books');
         self::assertResponseIsSuccessful();
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertJsonContains([
             '@context' => '/contexts/TopBook',
             '@id' => '/top_books',
@@ -68,7 +67,6 @@ class TopBooksTest extends ApiTestCase
     {
         $this->client->request('GET', '/top_books/1');
         self::assertResponseIsSuccessful();
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertJsonEquals([
             '@context' => '/contexts/TopBook',
             '@id' => '/top_books/1',
@@ -80,7 +78,6 @@ class TopBooksTest extends ApiTestCase
             'place' => 'F WER',
             'borrowCount' => 9,
         ]);
-
         self::assertMatchesResourceItemJsonSchema(TopBook::class);
     }
 
@@ -92,7 +89,6 @@ class TopBooksTest extends ApiTestCase
     public function testGetItemErrorIdIsNotAnInteger(): void
     {
         $this->client->request('GET', '/top_books/foo');
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 
@@ -104,7 +100,6 @@ class TopBooksTest extends ApiTestCase
     public function testGetItemErrorIdIsOutOfRange(): void
     {
         $this->client->request('GET', '/top_books/101');
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 }

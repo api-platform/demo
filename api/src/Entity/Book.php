@@ -11,6 +11,7 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
+use App\Filter\ArchivedFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -38,13 +39,16 @@ use Symfony\Component\Validator\Constraints as Assert;
  *             "messenger"=true,
  *             "normalizationContext"={"groups"={"book:read", "book:cover"}}
  *         },
- *     },
+ *     }
  * )
  * @ApiFilter(PropertyFilter::class)
  * @ApiFilter(OrderFilter::class, properties={"id", "title", "author", "isbn", "publicationDate"})
+ * @ApiFilter(ArchivedFilter::class)
  */
-class Book
+class Book implements ArchivableInterface
 {
+    use ArchivableTrait;
+
     /**
      * @ORM\Column(type="uuid", unique=true)
      * @ORM\Id

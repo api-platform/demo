@@ -20,7 +20,7 @@ You can now go to https://localhost
 What can I find in this demo? 
 =============================
 
-This demo application contains several things you may be interested.   
+This demo application contains features you may be interested in:
 
 API Testing
 -----------
@@ -50,6 +50,15 @@ Swagger interface.
  
 * [Overriding the OpenAPI Specification documentation](https://api-platform.com/docs/core/openapi/#overriding-the-openapi-specification)
 * [Code in api/src/Swagger/SwaggerDecorator.php](api/src/Swagger/SwaggerDecorator.php)
+
+Custom Doctrine ORM Filter
+--------------------------
+
+This example shows how to implement a custom API filter using Doctrine. It will
+allow us to filter archived items.
+
+* [Creating Custom Doctrine ORM Filters documentation](https://api-platform.com/docs/core/filters/#creating-custom-doctrine-orm-filters)
+* [Code in api/src/Filter](api/src/Filter)
 
 Contributing
 ============
