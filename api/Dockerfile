@@ -7,6 +7,7 @@
 ARG PHP_VERSION=7.4
 ARG OPENRESTY_VERSION=1.15.8.3
 ARG VARNISH_VERSION=6.4
+ARG PHP_SECURITY_CHECHER_VERSION=1.0.0
 
 
 # "php" stage
@@ -97,6 +98,11 @@ RUN set -eux; \
 
 COPY .env ./
 RUN composer dump-env prod
+
+# The Local PHP Security Checker is a command line tool that checks if your PHP application depends on PHP packages with known security vulnerabilities
+RUN curl -L https://github.com/fabpot/local-php-security-checker/releases/download/v${PHP_SECURITY_CHECHER_VERSION}/local-php-security-checker_${PHP_SECURITY_CHECHER_VERSION}_linux_$(dpkg --print-architecture) --output /usr/local/bin/local-php-security-checker && \
+    chmod +x /usr/local/bin/local-php-security-checker && \
+    mkdir /run/php
 
 # copy only specifically what we need
 COPY bin bin/
