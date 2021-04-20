@@ -102,6 +102,7 @@ RUN composer dump-env prod
 COPY bin bin/
 COPY config config/
 COPY data data/
+COPY migrations migrations/
 COPY public public/
 COPY src src/
 # only for demo
