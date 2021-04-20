@@ -5,7 +5,6 @@ security:
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
             entity:
                 class: App\Entity\User
@@ -13,7 +12,7 @@ security:
 
     firewalls:
         dev:
-            pattern: ^/_(profiler|wdt)
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             stateless: true
@@ -29,8 +28,14 @@ security:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
 
-    # If the endpoints need to be secured
-    # access_control:
-    #     - { path: ^/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-    #     - { path: ^/authentication_token, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-    #     - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#firewalls-authentication
+
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        # - { path: ^/admin, roles: ROLE_ADMIN }
+        # - { path: ^/profile, roles: ROLE_USER }
