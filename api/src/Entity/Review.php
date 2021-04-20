@@ -20,80 +20,80 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @see http://schema.org/Review Documentation on Schema.org
  *
  * @ORM\Entity
- * @ApiResource(
- *     iri="http://schema.org/Review",
- *     denormalizationContext={"groups"={"review:write"}},
- *     normalizationContext={"groups"={"review:read"}}
- * )
- * @ApiFilter(OrderFilter::class, properties={"id", "publicationDate"})
  */
+#[ApiResource(
+    iri: 'http://schema.org/Review',
+    denormalizationContext: ['groups' => ['review:write']],
+    normalizationContext: ['groups' => ['review:read']],
+)]
+#[ApiFilter(OrderFilter::class, properties: ['id', 'publicationDate'])]
 class Review
 {
     /**
-     * @ORM\Column(type="uuid", unique=true)
      * @ORM\Id
+     * @ORM\Column(type="uuid", unique=true)
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
     private ?UuidInterface $id = null;
 
     /**
-     * @var string|null The actual body of the review
+     * The actual body of the review.
      *
-     * @Assert\NotBlank
      * @ORM\Column(type="text")
-     * @Groups({"book:read", "review:read", "review:write"})
-     * @ApiProperty(iri="http://schema.org/reviewBody")
      */
+    #[ApiProperty(iri: 'http://schema.org/reviewBody')]
+    #[Assert\NotBlank]
+    #[Groups(groups: ['book:read', 'review:read', 'review:write'])]
     public ?string $body = null;
 
     /**
-     * @var int|null A rating
+     * A rating.
      *
-     * @Assert\NotBlank
-     * @Assert\Range(min=0, max=5)
      * @ORM\Column(type="smallint")
-     * @Groups({"review:read", "review:write"})
      */
+    #[Assert\NotBlank]
+    #[Assert\Range(min: 0, max: 5)]
+    #[Groups(groups: ['review:read', 'review:write'])]
     public ?int $rating = null;
 
     /**
-     * @var string|null DEPRECATED (use rating now): A letter to rate the book
+     * DEPRECATED (use rating now): A letter to rate the book.
      *
      * @Assert\Choice({"a", "b", "c", "d"})
      * @ORM\Column(type="string", nullable=true)
-     * @Groups({"review:read", "review:write"})
-     * @ApiProperty(deprecationReason="Use the rating property instead")
      */
+    #[ApiProperty(deprecationReason: 'Use the rating property instead')]
+    #[Groups(groups: ['review:read', 'review:write'])]
     public ?string $letter = null;
 
     /**
-     * @var Book|null The item that is being reviewed/rated
+     * The item that is being reviewed/rated.
      *
-     * @ApiFilter(SearchFilter::class)
-     * @Assert\NotNull
      * @ORM\ManyToOne(targetEntity=Book::class, inversedBy="reviews")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"review:read", "review:write"})
-     * @ApiProperty(iri="http://schema.org/itemReviewed")
      */
+    #[ApiFilter(SearchFilter::class)]
+    #[ApiProperty(iri: 'http://schema.org/itemReviewed')]
+    #[Assert\NotNull]
+    #[Groups(groups: ['review:read', 'review:write'])]
     private ?Book $book = null;
 
     /**
-     * @var string|null The author of the review
+     * The author of the review.
      *
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"review:read", "review:write"})
-     * @ApiProperty(iri="http://schema.org/author")
      */
+    #[ApiProperty(iri: 'http://schema.org/author')]
+    #[Groups(groups: ['review:read', 'review:write'])]
     public ?string $author = null;
 
     /**
-     * @var \DateTimeInterface|null Publication date of the review
+     * Publication date of the review.
      *
-     * @Groups({"review:read", "review:write"})
      * @ORM\Column(nullable=true, type="datetime")
      */
+    #[Groups(groups: ['review:read', 'review:write'])]
     public ?\DateTimeInterface $publicationDate = null;
 
     public function getId(): ?UuidInterface

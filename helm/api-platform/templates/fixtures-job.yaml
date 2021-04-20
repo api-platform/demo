@@ -1,0 +1,109 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "api-platform.fullname" . }}-fixtures
+  labels:
+    {{- include "api-platform.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": "post-install,post-upgrade"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+spec:
+  template:
+    metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
+      labels:
+        {{- include "api-platform.selectorLabelsFixtures" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "api-platform.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      restartPolicy: Never
+      containers:
+        - name: {{ .Chart.Name }}-fixtures
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.php.image.repository }}:{{ .Values.php.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.php.image.pullPolicy }}
+          command: ['/bin/sh', '-c']
+          args: ['composer install --prefer-dist --no-progress --no-suggest --no-interaction && bin/console hautelook:fixtures:load --no-interaction']
+          env:
+            - name: API_ENTRYPOINT_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: php-host
+            - name: JWT_PASSPHRASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: php-jwt-passphrase
+            - name: JWT_PUBLIC_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: php-jwt-public-key
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: php-jwt-secret-key
+            - name: TRUSTED_HOSTS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: php-trusted-hosts
+            - name: TRUSTED_PROXIES
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: php-trusted-proxies
+            - name: APP_ENV
+              value: "dev"
+            - name: APP_DEBUG
+              value: "1"
+            - name: APP_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: php-app-secret
+            - name: CORS_ALLOW_ORIGIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: php-cors-allow-origin
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: database-url
+            - name: MERCURE_PUBLISH_URL
+              value: "http://{{ include "api-platform.fullname" . }}/.well-known/mercure"
+            - name: MERCURE_SUBSCRIBE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: mercure-subscribe-url
+            - name: MERCURE_JWT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: mercure-jwt-token
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

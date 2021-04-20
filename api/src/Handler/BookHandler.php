@@ -20,27 +20,14 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final class BookHandler implements MessageHandlerInterface
 {
-    private IriConverterInterface $iriConverter;
-    private SerializerInterface $serializer;
-    private PublisherInterface $publisher;
-    private ResourceMetadataFactoryInterface $resourceMetadataFactory;
-    private HttpClientInterface $client;
-    private LoggerInterface $logger;
-
     public function __construct(
-        IriConverterInterface $iriConverter,
-        SerializerInterface $serializer,
-        PublisherInterface $publisher,
-        ResourceMetadataFactoryInterface $resourceMetadataFactory,
-        HttpClientInterface $client,
-        LoggerInterface $logger
+        private IriConverterInterface $iriConverter,
+        private SerializerInterface $serializer,
+        private PublisherInterface $publisher,
+        private ResourceMetadataFactoryInterface $resourceMetadataFactory,
+        private HttpClientInterface $client,
+        private LoggerInterface $logger
     ) {
-        $this->iriConverter = $iriConverter;
-        $this->serializer = $serializer;
-        $this->publisher = $publisher;
-        $this->resourceMetadataFactory = $resourceMetadataFactory;
-        $this->client = $client;
-        $this->logger = $logger;
     }
 
     public function __invoke(Book $book): void

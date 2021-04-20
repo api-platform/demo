@@ -21,7 +21,7 @@
 .php_cs.cache
 bin/*
 !bin/console
-config/jwt/
+build/
 docker/db/data/
 helm/
 public/bundles/

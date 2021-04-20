@@ -11,13 +11,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ApiResource(deprecationReason="Create a Book instead")
  */
+#[ApiResource(deprecationReason: 'Create a Book instead')]
 class Parchment
 {
     /**
-     * @ORM\Column(type="uuid", unique=true)
      * @ORM\Id
+     * @ORM\Column(type="uuid", unique=true)
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
@@ -29,18 +29,18 @@ class Parchment
     }
 
     /**
-     * @var string|null The title of the book
+     * The title of the book.
      *
-     * @Assert\NotBlank
      * @ORM\Column
      */
+    #[Assert\NotBlank]
     public ?string $title = null;
 
     /**
-     * @var string|null A description of the item
+     * A description of the item.
      *
-     * @Assert\NotBlank
      * @ORM\Column(type="text")
      */
+    #[Assert\NotBlank]
     public ?string $description = null;
 }

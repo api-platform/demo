@@ -12,11 +12,8 @@ use App\Repository\TopBook\TopBookDataInterface;
 
 final class TopBookItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
-    private TopBookDataInterface $repository;
-
-    public function __construct(TopBookDataInterface $repository)
+    public function __construct(private TopBookDataInterface $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

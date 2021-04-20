@@ -1,24 +1,8 @@
 # Contributing to API Platform
 
-First of all, thank you for contributing, you're awesome!
+First, thank you for contributing, you're awesome!
 
 To have your code integrated in the API Platform project, there are some rules to follow, but don't panic, it's easy!
-
-# Preparing the test environment 
-
-To be able to check that everything is OK with your contribution, you must be able
-to run the tests: 
-
-Prepare the test environment:
-
-    $ docker-compose exec php composer prepare-test-env
-
-Then run the tests:
-
-    $ docker-compose exec php composer tests
-
-If tests are green (you may see some deprecations warnings), you are ready to contribute!
-Don't forget to modify the `.github/workflows/test.yml` file if needed.
 
 ## Reporting Bugs
 
@@ -58,7 +42,7 @@ When you send a PR, just make sure that:
 
 * You add valid test cases.
 * Tests are green.
-* You add documentation in the [README.md](README.md).
+* You add documentation in the [README.md](../README.md).
 * You make the PR on the same branch you based your changes on. If you see commits
   that you did not make in your PR, you're doing it wrong.
 * Also don't forget to add a comment when you update a PR with a ping to [the maintainers](https://github.com/orgs/api-platform/people),

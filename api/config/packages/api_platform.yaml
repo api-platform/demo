@@ -1,13 +1,13 @@
 api_platform:
-    mapping:
-        paths: ['%kernel.project_dir%/src/Entity']
     title: API Platform's demo
     version: 1.0.0
     description: |
-      This is a demo application of the [API Platform](https://api-platform.com) framework.
-      [Its source code](https://github.com/api-platform/demo) includes various examples, check it out!
-      You may also be interested by [the GraphQL entrypoint](/graphql).
-      [A PWA](https://demo-client.api-platform.com) and [an admin](https://demo-admin.api-platform.com) are consuming this API.
+        This is a demo application of the [API Platform](https://api-platform.com) framework.
+        [Its source code](https://github.com/api-platform/demo) includes various examples, check it out!
+        You may also be interested by [the GraphQL entrypoint](/graphql).
+        [A PWA](/) and [an admin](/admin) are consuming this API.
+    mapping:
+        paths: ['%kernel.project_dir%/src/Entity']
     formats:
         jsonld: ['application/ld+json']
         jsonhal: ['application/hal+json']
@@ -26,13 +26,12 @@ api_platform:
             apiKey:
                 name: Authorization
                 type: header
-    http_cache:
-        max_age: 0
-        shared_max_age: 3600
-        vary: ['Content-Type', 'Authorization', 'Origin']
-        public: true
-    collection:
-        pagination:
-            items_per_page: 30
+    # Mercure integration, remove if unwanted
     mercure:
         hub_url: '%env(MERCURE_SUBSCRIBE_URL)%'
+    # Good defaults value for REST APIs
+    defaults:
+        stateless: true
+        # Good cache defaults
+        cache_headers:
+            vary: ['Content-Type', 'Authorization', 'Origin']

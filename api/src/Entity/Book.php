@@ -22,105 +22,104 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @see http://schema.org/Book Documentation on Schema.org
  *
  * @ORM\Entity
- * @ApiResource(
- *     iri="http://schema.org/Book",
- *     normalizationContext={"groups"={"book:read"}},
- *     mercure=true,
- *     itemOperations={
- *         "get",
- *         "put",
- *         "patch",
- *         "delete"={"security"="is_granted('ROLE_ADMIN')"},
- *         "generate_cover"={
- *             "method"="PUT",
- *             "path"="/books/{id}/generate-cover",
- *             "output"=false,
- *             "messenger"=true,
- *             "normalizationContext"={"groups"={"book:read", "book:cover"}}
- *         },
- *     },
- * )
- * @ApiFilter(PropertyFilter::class)
- * @ApiFilter(OrderFilter::class, properties={"id", "title", "author", "isbn", "publicationDate"})
  */
+#[ApiResource(
+    iri: 'http://schema.org/Book',
+    itemOperations: [
+        'get',
+        'put',
+        'patch',
+        'delete' => ['security' => 'is_granted("ROLE_ADMIN")'],
+        'generate_cover' => [
+            'method' => 'PUT',
+            'path' => '/books/{id}/generate-cover',
+            'output' => false,
+            'messenger' => true,
+            'normalizationContext' => ['groups' => ['book:read', 'book:cover']],
+        ],
+    ],
+    mercure: true,
+    normalizationContext: ['groups' => ['book:read']],
+)]
+#[ApiFilter(PropertyFilter::class)]
+#[ApiFilter(OrderFilter::class, properties: ['id', 'title', 'author', 'isbn', 'publicationDare'])]
 class Book
 {
     /**
-     * @ORM\Column(type="uuid", unique=true)
      * @ORM\Id
+     * @ORM\Column(type="uuid", unique=true)
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
     private ?UuidInterface $id = null;
 
     /**
-     * @var string|null The ISBN of the book
+     * The ISBN of the book.
      *
-     * @Assert\Isbn
      * @ORM\Column(nullable=true)
-     * @Groups("book:read")
-     * @ApiProperty(iri="http://schema.org/isbn")
      */
+    #[ApiProperty(iri: 'http://schema.org/isbn')]
+    #[Assert\Isbn]
+    #[Groups(groups: ['book:read'])]
     public ?string $isbn = null;
 
     /**
-     * @var string|null The title of the book
+     * The title of the book.
      *
-     * @ApiFilter(SearchFilter::class, strategy="ipartial")
-     * @Assert\NotBlank
      * @ORM\Column
-     * @Groups({"book:read", "review:read"})
-     * @ApiProperty(iri="http://schema.org/name")
      */
+    #[ApiFilter(SearchFilter::class, strategy: 'ipartial')]
+    #[ApiProperty(iri: 'http://schema.org/name')]
+    #[Assert\NotBlank]
+    #[Groups(groups: ['book:read', 'review:read'])]
     public ?string $title = null;
 
     /**
-     * @var string|null A description of the item
+     * A description of the item.
      *
-     * @Assert\NotBlank
      * @ORM\Column(type="text")
-     * @Groups("book:read")
-     * @ApiProperty(iri="http://schema.org/description")
      */
+    #[ApiProperty(iri: 'http://schema.org/description')]
+    #[Assert\NotBlank]
+    #[Groups(groups: ['book:read'])]
     public ?string $description = null;
 
     /**
-     * @var string|null The author of this content or rating. Please note that author is special in that HTML 5 provides a special mechanism for indicating authorship via the rel tag. That is equivalent to this and may be used interchangeably
+     * The author of this content or rating. Please note that author is special in that HTML 5 provides a special mechanism for indicating authorship via the rel tag. That is equivalent to this and may be used interchangeably.
      *
-     * @ApiFilter(SearchFilter::class, strategy="ipartial")
-     * @Assert\NotBlank
      * @ORM\Column
-     * @Groups("book:read")
-     * @ApiProperty(iri="http://schema.org/author")
      */
+    #[ApiFilter(SearchFilter::class, strategy: 'ipartial')]
+    #[ApiProperty(iri: 'http://schema.org/author')]
+    #[Assert\NotBlank]
+    #[Groups(groups: ['book:read'])]
     public ?string $author = null;
 
     /**
-     * @var \DateTimeInterface|null The date on which the CreativeWork was created or the item was added to a DataFeed
+     * The date on which the CreativeWork was created or the item was added to a DataFeed.
      *
-     * @Assert\Type(\DateTimeInterface::class)
-     * @Assert\NotNull
      * @ORM\Column(type="date")
-     * @Groups("book:read")
-     * @ApiProperty(iri="http://schema.org/dateCreated")
      */
+    #[ApiProperty(iri: 'http://schema.org/dateCreated')]
+    #[Assert\NotNull]
+    #[Assert\Type(\DateTimeInterface::class)]
+    #[Groups(groups: ['book:read'])]
     public ?\DateTimeInterface $publicationDate = null;
 
     /**
-     * @var Collection<int, Review> The book's reviews
+     * The book's reviews.
      *
      * @ORM\OneToMany(targetEntity=Review::class, mappedBy="book", orphanRemoval=true, cascade={"persist", "remove"})
-     * @Groups("book:read")
-     * @ApiProperty(iri="http://schema.org/reviews")
-     * @ApiSubresource
      */
+    #[ApiProperty(iri: 'http://schema.org/reviews')]
+    #[ApiSubresource]
+    #[Groups(groups: ['book:read'])]
     private Collection $reviews;
 
     /**
-     * @var string|null The book's cover base64 encoded
-     *
-     * @Groups("book:cover")
+     * The book's cover base64 encoded.
      */
+    #[Groups(groups: ['book:cover'])]
     public ?string $cover = null;
 
     public function __construct()

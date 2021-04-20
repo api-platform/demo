@@ -1,0 +1,9 @@
+dependencies:
+- name: postgresql
+  repository: https://charts.bitnami.com/bitnami/
+  version: 10.1.4
+- name: external-dns
+  repository: https://charts.bitnami.com/bitnami/
+  version: 4.11.0
+digest: sha256:d80fe08e8c382385141b5945734c94b6c8f780fb6e271f8f8e551ae215001804
+generated: "2021-04-21T15:18:49.407645458+02:00"

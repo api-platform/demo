@@ -12,13 +12,18 @@
         <server name="APP_ENV" value="test" force="true" />
         <server name="SHELL_VERBOSITY" value="-1" />
         <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
-        <server name="SYMFONY_PHPUNIT_VERSION" value="9.4" />
+        <server name="SYMFONY_PHPUNIT_VERSION" value="9.5" />
     </php>
 
     <testsuites>
-        <testsuite name="Project Test Suite">
+        <testsuite name="default">
             <directory>tests</directory>
+            <exclude>tests/Api/ReviewsTest.php</exclude>
         </testsuite>
+
+<!--        <testsuite name="reviews">-->
+<!--            <file>tests/Api/ReviewsTest.php</file>-->
+<!--        </testsuite>-->
     </testsuites>
 
     <coverage processUncoveredFiles="true">

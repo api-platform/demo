@@ -4,10 +4,8 @@
 
 
 # https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
-ARG PHP_VERSION=7.4
-ARG OPENRESTY_VERSION=1.15.8.3
-ARG VARNISH_VERSION=6.4
-
+ARG PHP_VERSION=8.0
+ARG CADDY_VERSION=2
 
 # "php" stage
 FROM php:${PHP_VERSION}-fpm-alpine AS api_platform_php
@@ -19,10 +17,14 @@ RUN apk add --no-cache \
 		file \
 		gettext \
 		git \
-		openssl \
+		gnu-libiconv \
 	;
 
-ARG APCU_VERSION=5.1.18
+# install gnu-libiconv and set LD_PRELOAD env to make iconv work fully on Alpine image.
+# see https://github.com/docker-library/php/issues/240#issuecomment-763112749
+ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so
+
+ARG APCU_VERSION=5.1.19
 RUN set -eux; \
 	apk add --no-cache --virtual .build-deps \
 		$PHPIZE_DEPS \
@@ -57,31 +59,20 @@ RUN set -eux; \
 	\
 	apk del .build-deps
 
-RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
-    && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/alpine/amd64/$version \
-    && mkdir -p /tmp/blackfire \
-    && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp/blackfire \
-    && mv /tmp/blackfire/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
-    && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8707\n" > $PHP_INI_DIR/conf.d/blackfire.ini \
-    && rm -rf /tmp/blackfire /tmp/blackfire-probe.tar.gz
+###> recipes ###
+###< recipes ###
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 RUN ln -s $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
-COPY docker/php/php.ini $PHP_INI_DIR/conf.d/api-platform.ini
+COPY docker/php/conf.d/api-platform.prod.ini $PHP_INI_DIR/conf.d/api-platform.ini
 
-RUN set -eux; \
-	{ \
-		echo '[www]'; \
-		echo 'ping.path = /ping'; \
-	} | tee /usr/local/etc/php-fpm.d/docker-healthcheck.conf
+COPY docker/php/php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
+
+VOLUME /var/run/php
 
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
 ENV COMPOSER_ALLOW_SUPERUSER=1
-# install Symfony Flex globally to speed up download of Composer packages (parallelized prefetching)
-RUN set -eux; \
-	composer global require "symfony/flex" --prefer-dist --no-progress --no-suggest --classmap-authoritative; \
-	composer clear-cache
 ENV PATH="${PATH}:/root/.composer/vendor/bin"
 
 WORKDIR /srv/api
@@ -95,69 +86,52 @@ RUN set -eux; \
 	composer install --prefer-dist --no-dev --no-scripts --no-progress; \
 	composer clear-cache
 
-COPY .env ./
-RUN composer dump-env prod
-
 # copy only specifically what we need
+COPY .env ./
 COPY bin bin/
 COPY config config/
-COPY data data/
 COPY migrations migrations/
 COPY public public/
 COPY src src/
+COPY templates templates/
 # only for demo
 COPY fixtures fixtures/
 
 RUN set -eux; \
 	mkdir -p var/cache var/log; \
 	composer dump-autoload --classmap-authoritative --no-dev; \
+	composer dump-env prod; \
 	composer run-script --no-dev post-install-cmd; \
 	chmod +x bin/console; sync
 VOLUME /srv/api/var
 
 COPY docker/php/docker-healthcheck.sh /usr/local/bin/docker-healthcheck
 RUN chmod +x /usr/local/bin/docker-healthcheck
-
 HEALTHCHECK --interval=10s --timeout=3s --retries=3 CMD ["docker-healthcheck"]
 
 COPY docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 RUN chmod +x /usr/local/bin/docker-entrypoint
 
+ENV SYMFONY_PHPUNIT_VERSION=9
+
 ENTRYPOINT ["docker-entrypoint"]
 CMD ["php-fpm"]
 
-
-# "nginx" stage
+# "caddy" stage
 # depends on the "php" stage above
-# The OpenResty distribution of NGINX is only needed for Kubernetes compatiblity (dynamic upstream resolution)
-FROM openresty/openresty:${OPENRESTY_VERSION}-alpine AS api_platform_nginx
+FROM caddy:${CADDY_VERSION}-builder-alpine AS api_platform_caddy_builder
 
-RUN echo -e "env UPSTREAM;\n$(cat /usr/local/openresty/nginx/conf/nginx.conf)" > /usr/local/openresty/nginx/conf/nginx.conf
-COPY docker/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
+RUN xcaddy build \
+    --with github.com/dunglas/mercure \
+    --with github.com/dunglas/mercure/caddy
+    #--with github.com/dunglas/vulcain \
+    #--with github.com/dunglas/vulcain/caddy
 
-WORKDIR /srv/api/public
+FROM caddy:${CADDY_VERSION} AS api_platform_caddy
 
-COPY --from=api_platform_php /srv/api/public ./
+WORKDIR /srv/api
 
-
-# "varnish" stage
-# does not depend on any of the above stages, but placed here to keep everything in one Dockerfile
-FROM varnish:${VARNISH_VERSION} AS api_platform_varnish
-
-ENV BACKEND=api
-ENV UPSTREAM=php
-
-COPY docker/varnish/conf/default.tmpl /usr/local/etc/varnish/default.tmpl
-
-RUN set -eux; \
-	apt-get update; \
-	apt-get install -y gettext-base; \
-	apt-get clean; \
-	rm -rf /var/lib/apt/lists/*
-
-COPY docker/varnish/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
-RUN chmod +x /usr/local/bin/docker-entrypoint
-
-ENTRYPOINT ["docker-entrypoint"]
-
-CMD ["varnishd", "-F", "-f", "/etc/varnish/default.vcl", "-p", "http_resp_hdr_len=65536", "-p", "http_resp_size=98304"]
+COPY --from=dunglas/mercure:v0.11 /srv/public /srv/mercure-assets/
+COPY --from=api_platform_caddy_builder /usr/bin/caddy /usr/bin/caddy
+COPY --from=api_platform_php /srv/api/public public/
+COPY docker/caddy/Caddyfile /etc/caddy/Caddyfile

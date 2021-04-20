@@ -4,18 +4,15 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    locale: 'en'
+    # required for consumer
     router.request_context.scheme: '%env(API_ENTRYPOINT_SCHEME)%'
     router.request_context.host: '%env(API_ENTRYPOINT_HOST)%'
-    request_listener.https_port: '%env(int:API_ENTRYPOINT_PORT)%'
 
 services:
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-        bind:
-            $projectDir: '%kernel.project_dir%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -42,5 +39,5 @@ services:
 
     App\Repository\TopBook\TopBookDataInterface: '@App\Repository\TopBook\TopBookDataRepository'
 
-    App\Core\OpenApi\Factory\OpenApiFactory:
+    App\OpenApi\OpenApiFactory:
         decorates: api_platform.openapi.factory
