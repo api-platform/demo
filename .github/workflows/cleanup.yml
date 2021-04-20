@@ -9,7 +9,7 @@ on:
 env:
   GKE_CLUSTER: api-platform-demo
   GCE_ZONE: europe-west1-c
-  DEFAULT_NAMESPACE: master
+  DEFAULT_NAMESPACE: main
   MAX_LIFETIME: 4 days # Max lifetime for a namespace before being automatically deleted
 
 jobs:

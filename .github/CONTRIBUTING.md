@@ -38,7 +38,7 @@ Then, if it appears that it's a real bug, you may report it using Github by foll
 
 ### Writing a Pull Request
 
-You should base your changes on the `master` branch.
+You should base your changes on the `main` branch.
 
 ### Matching Coding Standards
 

@@ -18,7 +18,7 @@ env:
   CONTAINER_REGISTRY_BASE: eu.gcr.io/${{ secrets.GKE_PROJECT }}
   DOMAIN: api-platform.com
   SUBDOMAIN: demo
-  DEFAULT_BRANCH: master
+  DEFAULT_BRANCH: main
 
 jobs:
   deploy-api:
