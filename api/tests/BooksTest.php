@@ -92,7 +92,7 @@ class BooksTest extends ApiTestCase
             'isbn' => 'invalid',
         ]]);
 
-        self::assertResponseStatusCodeSame(400);
+        self::assertResponseStatusCodeSame(422);
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
 
         self::assertJsonContains([

@@ -47,7 +47,7 @@ final class ReviewsTest extends ApiTestCase
             'publicationDate' => null,
         ]]);
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
-        self::assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
+        self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
         self::assertJsonContains([
             '@context' => '/contexts/ConstraintViolationList',
             '@type' => 'ConstraintViolationList',
@@ -76,7 +76,7 @@ final class ReviewsTest extends ApiTestCase
             'publicationDate' => null,
         ]]);
 
-        self::assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
+        self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
         self::assertJsonContains([
             '@context' => '/contexts/ConstraintViolationList',
             '@type' => 'ConstraintViolationList',
@@ -96,7 +96,7 @@ final class ReviewsTest extends ApiTestCase
             'publicationDate' => null,
         ]]);
 
-        self::assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
+        self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
         self::assertJsonContains([
             '@context' => '/contexts/ConstraintViolationList',
             '@type' => 'ConstraintViolationList',
