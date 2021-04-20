@@ -21,6 +21,7 @@ jobs:
         with:
           php-version: 7.4
           extensions: curl, dom, iconv, intl, json, libxml, mbstring, phar, tokenizer, xdebug, xml, xmlwriter
+          tools: symfony
 
       - name: Get Composer Cache Directory
         id: composer-cache
@@ -40,7 +41,7 @@ jobs:
 
       - name: Security check
         working-directory: api
-        run: bin/console security:check
+        run: symfony security:check
 
   doctrine-schema-validator:
     name: Doctrine Schema Validator
