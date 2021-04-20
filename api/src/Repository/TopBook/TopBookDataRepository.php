@@ -11,13 +11,6 @@ final class TopBookDataRepository implements TopBookDataInterface
     private const DATA_SOURCE = 'top-100-novel-sci-fi-fr.csv';
     private const FIELDS_COUNT = 5;
 
-    private string $projectDir;
-
-    public function __construct(string $projectDir)
-    {
-        $this->projectDir = $projectDir;
-    }
-
     /**
      * @return array<int, TopBook>
      */
@@ -69,7 +62,7 @@ final class TopBookDataRepository implements TopBookDataInterface
      */
     private function getFileAsArray(): array
     {
-        $csvFileName = $this->projectDir.'/data/'.self::DATA_SOURCE;
+        $csvFileName = __DIR__.'/data/'.self::DATA_SOURCE;
         if (!is_file($csvFileName)) {
             throw new \RuntimeException(sprintf("Can't find data source: %s", $csvFileName));
         }

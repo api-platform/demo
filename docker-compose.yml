@@ -1,165 +1,89 @@
-version: '3.4'
+version: "3.4"
 
 services:
   php:
-    image: ${CONTAINER_REGISTRY_BASE:-quay.io/api-platform}/php:${CONTAINER_REGISTRY_TAG:-latest}
     build:
       context: ./api
       target: api_platform_php
-      cache_from: &api_cache_from
-        - ${CONTAINER_REGISTRY_BASE:-quay.io/api-platform}/php
-        - ${CONTAINER_REGISTRY_BASE:-quay.io/api-platform}/nginx
-        - ${CONTAINER_REGISTRY_BASE:-quay.io/api-platform}/varnish
-    restart: on-failure
+    depends_on:
+      - database
+    restart: unless-stopped
+    volumes:
+      - php_socket:/var/run/php
     healthcheck:
       interval: 10s
       timeout: 3s
       retries: 3
       start_period: 30s
-    depends_on:
-      - db
-    # Comment out these volumes in production
-    volumes:
-      - ./api:/srv/api:rw,cached
-      # If you develop on Linux, uncomment the following line to use a bind-mounted host directory instead
-      # - ./api/var:/srv/api/var:rw
 
   consumer:
-    image: ${CONTAINER_REGISTRY_BASE:-quay.io/api-platform}/php:${CONTAINER_REGISTRY_TAG:-latest}
     build:
       context: ./api
       target: api_platform_php
-      cache_from: *api_cache_from
+    entrypoint: docker-php-entrypoint
     command: bin/console messenger:consume
-    restart: on-failure
+    depends_on:
+      - database
+    restart: unless-stopped
     healthcheck:
       test: ['CMD', 'ps', 'aux', '|', 'egrep', '"\d+:\d+ php bin/console messenger:consume"']
-      interval: 3s
+      interval: 10s
       timeout: 3s
       retries: 3
-      start_period: 3s
-    # Comment out these volumes in production
-    volumes:
-      - ./api:/srv/api:rw,cached
-      # If you develop on Linux, uncomment the following line to use a bind-mounted host directory instead
-      # - ./api/var:/srv/api/var:rw
+      start_period: 30s
 
-  api:
-    image: ${CONTAINER_REGISTRY_BASE:-quay.io/api-platform}/nginx:${CONTAINER_REGISTRY_TAG:-latest}
+  pwa:
     build:
-      context: ./api
-      target: api_platform_nginx
-      cache_from: *api_cache_from
+      context: ./pwa
+      target: api_platform_pwa_prod
+    environment:
+      API_PLATFORM_CLIENT_GENERATOR_ENTRYPOINT: http://caddy
+      NEXT_PUBLIC_ENTRYPOINT: http://caddy
+
+  caddy:
+    build:
+      context: api/
+      target: api_platform_caddy
     depends_on:
       - php
-    # Comment out this volume in production
-    volumes:
-      - ./api/public:/srv/api/public:ro
-    ports:
-      - "8080:80"
-
-  cache-proxy:
-    image: ${CONTAINER_REGISTRY_BASE:-quay.io/api-platform}/varnish:${CONTAINER_REGISTRY_TAG:-latest}
-    build:
-      context: ./api
-      target: api_platform_varnish
-      cache_from: *api_cache_from
-    depends_on:
-      - api
-    volumes:
-      - ./api/docker/varnish/conf:/usr/local/etc/varnish:ro
-    tmpfs:
-      - /usr/local/var/varnish:exec
-    ports:
-      - "8081:80"
-
-  db:
-    # In production, you may want to use a managed database service
-    image: bitnami/postgresql:10
+      - pwa
     environment:
-      - POSTGRESQL_DATABASE=api
-      - POSTGRESQL_USERNAME=api-platform
-      # You should definitely change the password in production
-      - POSTGRESQL_PASSWORD=!ChangeMe!
+      PWA_UPSTREAM: pwa:3000
+      SERVER_NAME: ${SERVER_NAME:-localhost, caddy:80}
+      MERCURE_PUBLISHER_JWT_KEY: ${MERCURE_PUBLISHER_JWT_KEY:-!ChangeMe!}
+      MERCURE_SUBSCRIBER_JWT_KEY: ${MERCURE_SUBSCRIBER_JWT_KEY:-!ChangeMe!}
+    restart: unless-stopped
     volumes:
-      - db-data:/var/lib/postgresql/data:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
+      - php_socket:/var/run/php
+      - caddy_data:/data
+      - caddy_config:/config
     ports:
-      - "5432:5432"
+      # HTTP
+      - target: 80
+        published: 80
+        protocol: tcp
+      # HTTPS
+      - target: 443
+        published: 443
+        protocol: tcp
+      # HTTP/3
+      - target: 443
+        published: 443
+        protocol: udp
 
-  mercure:
-    # In production, you may want to use the managed version of Mercure, https://mercure.rocks
-    image: dunglas/mercure
-    command: caddy run -config /etc/caddy/Caddyfile.dev # Enable demo mode
+  database:
+    image: postgres:13-alpine
     environment:
-      # You should definitely change all these values in production
-      - MERCURE_PUBLISHER_JWT_KEY=!ChangeMe! # You have to change MERCURE_JWT_TOKEN in api/.env when you change this. You can put the old value of MERCURE_JWT_TOKEN into the debugger on https://jwt.io/ and put the new value of JWT_KEY in the "secret" field to obtain the new encoded value for MERCURE_JWT_TOKEN
-      - MERCURE_SUBSCRIBER_JWT_KEY=!ChangeMe! # You have to change MERCURE_JWT_TOKEN in api/.env when you change this. You can put the old value of MERCURE_JWT_TOKEN into the debugger on https://jwt.io/ and put the new value of JWT_KEY in the "secret" field to obtain the new encoded value for MERCURE_JWT_TOKEN
-      - DEBUG=debug # Enable the debug mode. You should not enable it in production!
-      - SERVER_NAME=:80 # Allow Mercure to run in HTTP, for PHP container to call it. Should not be set in production!
-      - MERCURE_EXTRA_DIRECTIVES=cors_allowed_origins *\npublish_allowed_origins http://localhost:1337 https://localhost:1338
-    ports:
-      - "1337:80"
-
-  client:
-    # Use a static website hosting service in production
-    # See https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#deployment
-    image: ${CONTAINER_REGISTRY_BASE:-quay.io/api-platform}/client:${CONTAINER_REGISTRY_TAG:-latest}
-    build:
-      context: ./client
-      cache_from:
-        - ${CONTAINER_REGISTRY_BASE:-quay.io/api-platform}/client
-    stdin_open: true # https://github.com/facebook/create-react-app/issues/8688
-    env_file:
-      - ./client/.env
+      - POSTGRES_DB=api
+      - POSTGRES_PASSWORD=!ChangeMe!
+      - POSTGRES_USER=api-platform
     volumes:
-      - ./client:/usr/src/client:rw,cached
-      - /usr/src/client/node_modules
-    ports:
-      - "80:3000"
-      - "5000:5000"
-
-  admin:
-    # Use a static website hosting service in production
-    # See https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#deployment
-    image: ${CONTAINER_REGISTRY_BASE:-quay.io/api-platform}/admin:${CONTAINER_REGISTRY_TAG:-latest}
-    stdin_open: true # https://github.com/facebook/create-react-app/issues/8688
-    build:
-      context: ./admin
-      cache_from:
-        - ${CONTAINER_REGISTRY_BASE:-quay.io/api-platform}/admin
-    env_file:
-      - ./admin/.env
-    volumes:
-      - ./admin:/usr/src/admin:rw,cached
-      - /usr/src/admin/node_modules
-    ports:
-      - "81:3000"
-
-  h2-proxy:
-    # Don't use this proxy in prod
-    build:
-      context: ./h2-proxy
-    depends_on:
-      - client
-      - admin
-      - api
-      - cache-proxy
-    ports:
-      - "443:443" # client
-      - "444:444" # admin
-      - "8443:8443" # api
-      - "8444:8444" # cache-proxy
-      - "1338:1338" # mercure
-
-  blackfire:
-    image: blackfire/blackfire
-    environment:
-      - BLACKFIRE_CLIENT_ID
-      - BLACKFIRE_CLIENT_TOKEN
-      - BLACKFIRE_SERVER_ID
-      - BLACKFIRE_SERVER_TOKEN
+      - db_data:/var/lib/postgresql/data:rw
+      # you may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
+      # - ./api/docker/db/data:/var/lib/postgresql/data:rw
 
 volumes:
-  db-data: {}
+  php_socket:
+  db_data:
+  caddy_data:
+  caddy_config:

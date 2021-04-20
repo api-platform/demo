@@ -1,5 +1,4 @@
-/helm/api/charts
-/coverage
+/docker/db/data
 
 ###> symfony/framework-bundle ###
 /.env.local
@@ -11,9 +10,10 @@
 /vendor/
 ###< symfony/framework-bundle ###
 
-###> lexik/jwt-authentication-bundle ###
-/config/jwt/*.pem
-###< lexik/jwt-authentication-bundle ###
+###> friendsofphp/php-cs-fixer ###
+/.php_cs
+/.php_cs.cache
+###< friendsofphp/php-cs-fixer ###
 
 ###> symfony/phpunit-bridge ###
 .phpunit
@@ -21,7 +21,6 @@
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
 
-###> friendsofphp/php-cs-fixer ###
-/.php_cs
-/.php_cs.cache
-###< friendsofphp/php-cs-fixer ###
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###

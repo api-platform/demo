@@ -9,11 +9,8 @@ use ApiPlatform\Core\DataProvider\Pagination;
 
 final class TopBookPaginationExtension implements TopBookCollectionExtensionInterface
 {
-    private Pagination $pagination;
-
-    public function __construct(Pagination $pagination)
+    public function __construct(private Pagination $pagination)
     {
-        $this->pagination = $pagination;
     }
 
     /**

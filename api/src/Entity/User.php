@@ -10,14 +10,15 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @ORM\Table(name="`user`")
  */
 class User implements UserInterface
 {
     /**
      * @ORM\Id
+     * @ORM\Column(type="uuid", unique=true)
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
-     * @ORM\Column(type="uuid", unique=true)
      */
     private ?UuidInterface $id = null;
 
@@ -27,15 +28,13 @@ class User implements UserInterface
     private ?string $email = null;
 
     /**
-     * @var string|null The hashed password
+     * The hashed password.
      *
      * @ORM\Column(type="string")
      */
     private ?string $password = null;
 
     /**
-     * @var string[]
-     *
      * @ORM\Column(type="json")
      */
     private array $roles = [];

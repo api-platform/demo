@@ -12,13 +12,10 @@ use App\Repository\TopBook\TopBookDataInterface;
 
 final class TopBookCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {
-    private TopBookDataInterface $repository;
-    private TopBookCollectionExtensionInterface $paginationExtension;
-
-    public function __construct(TopBookDataInterface $repository, TopBookCollectionExtensionInterface $topBookPaginationExtension)
-    {
-        $this->repository = $repository;
-        $this->paginationExtension = $topBookPaginationExtension;
+    public function __construct(
+        private TopBookDataInterface $repository,
+        private TopBookCollectionExtensionInterface $paginationExtension
+    ) {
     }
 
     /**
