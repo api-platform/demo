@@ -1,4 +1,4 @@
-import {GetStaticPaths, GetStaticProps, NextComponentType, NextPageContext} from "next";
+import { GetStaticPaths, GetStaticProps, NextComponentType, NextPageContext } from "next";
 import { Show } from "components/review/Show";
 import { Review } from "types/Review";
 import { fetch } from "utils/dataAccess";
@@ -7,13 +7,12 @@ import DefaultErrorPage from "next/error";
 
 interface Props {
   review: Review;
+  hubURL: string;
 }
 
-const Page: NextComponentType<NextPageContext, Props, Props> = ({ review }) => {
+const Page: NextComponentType<NextPageContext, Props, Props> = ({ review, hubURL }) => {
   if (!review) {
-    return <>
-      <DefaultErrorPage statusCode={404} />
-    </>
+    return <DefaultErrorPage statusCode={404} />;
   }
 
   return (
@@ -23,27 +22,39 @@ const Page: NextComponentType<NextPageContext, Props, Props> = ({ review }) => {
           <title>{`Show Review ${review["@id"]}`}</title>
         </Head>
       </div>
-      <Show review={review} />
+      <Show review={review} hubURL={hubURL} />
     </div>
   );
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const review = await fetch(`/reviews/${params.id}`);
+  const response = await fetch(`/reviews/${params.id}`);
 
   return {
     props: {
-      review,
+      review: response.data,
+      hubURL: response.hubURL,
     },
     revalidate: 1,
   }
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  try {
+    const response = await fetch("/reviews");
+
+    return {
+      paths: response.data["hydra:member"].map((review) => review["@id"]),
+      fallback: true,
+    };
+  } catch (e) {
+    console.error(e);
+  }
+
   return {
     paths: [],
     fallback: true,
-  }
+  };
 }
 
 export default Page;

@@ -11,9 +11,7 @@ interface Props {
 
 const Page: NextComponentType<NextPageContext, Props, Props> = ({ book }) => {
   if (!book) {
-    return <>
-      <DefaultErrorPage statusCode={404} />
-    </>
+    return <DefaultErrorPage statusCode={404} />;
   }
 
   return (
@@ -29,23 +27,30 @@ const Page: NextComponentType<NextPageContext, Props, Props> = ({ book }) => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const response = { hubURL: null };
-  const book = await fetch(`/books/${params.id}`, {}, response);
-
   return {
     props: {
-      book,
-      hubURL: response.hubURL,
+      book: (await fetch(`/books/${params.id}`)).data,
     },
     revalidate: 1,
   }
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  try {
+    const response = await fetch("/books");
+
+    return {
+      paths: response.data["hydra:member"].map((book) => `${book["@id"]}/edit`),
+      fallback: true,
+    };
+  } catch (e) {
+    console.error(e);
+  }
+
   return {
     paths: [],
     fallback: true,
-  }
+  };
 }
 
 export default Page;
