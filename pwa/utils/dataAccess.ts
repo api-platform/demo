@@ -13,7 +13,18 @@ interface Violation {
   propertyPath: string;
 }
 
-export const fetch = async (id: string, init: RequestInit = {}, response = {hubURL: null}) => {
+const extractHubURL = function (response) {
+  const linkHeader = response.headers.get('Link');
+  if (!linkHeader) return null;
+
+  const matches = linkHeader.match(
+    /<([^>]+)>;\s+rel=(?:mercure|"[^"]*mercure[^"]*")/
+  );
+
+  return matches && matches[1] ? new URL(matches[1], NEXT_PUBLIC_ENTRYPOINT) : null;
+}
+
+export const fetch = async (id: string, init: RequestInit = {}) => {
   if (typeof init.headers === "undefined") init.headers = {};
   if (!init.headers.hasOwnProperty("Accept"))
     init.headers = { ...init.headers, Accept: MIME_TYPE };
@@ -25,12 +36,15 @@ export const fetch = async (id: string, init: RequestInit = {}, response = {hubU
     init.headers = { ...init.headers, "Content-Type": MIME_TYPE };
 
   const resp = await isomorphicFetch(NEXT_PUBLIC_ENTRYPOINT + id, init);
-  // Retrieve Mercure hubURL from response headers
-  response.hubURL = extractHubURL(resp);
   if (resp.status === 204) return;
 
   const json = await resp.json();
-  if (resp.ok) return normalize(json);
+  if (resp.ok) {
+    return {
+      hubURL: extractHubURL(resp).toString(), // URL cannot be serialized as JSON, must be sent as string
+      data: normalize(json),
+    };
+  }
 
   const defaultErrorMsg = json["hydra:title"];
   const status = json["hydra:description"] || resp.statusText;
@@ -68,15 +82,4 @@ export function mercureSubscribe(url, topics) {
   const EventSource = NativeEventSource || EventSourcePolyfill;
 
   return new EventSource(url.toString());
-}
-
-export function extractHubURL(response) {
-  const linkHeader = response.headers.get('Link');
-  if (!linkHeader) return null;
-
-  const matches = linkHeader.match(
-    /<([^>]+)>;\s+rel=(?:mercure|"[^"]*mercure[^"]*")/
-  );
-
-  return matches && matches[1] ? (new URL(matches[1], NEXT_PUBLIC_ENTRYPOINT)).toString() : null;
 }

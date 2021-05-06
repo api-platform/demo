@@ -1,9 +1,8 @@
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { fetch, mercureSubscribe, normalize } from "utils/dataAccess";
 import { Book } from "types/Book";
-import { NEXT_PUBLIC_ENTRYPOINT } from "config/entrypoint";
 
 interface Props {
   book: Book;
@@ -11,15 +10,22 @@ interface Props {
 }
 
 export const Show: FunctionComponent<Props> = (props) => {
-  const [book, setBook] = useState(props.book);
   const [error, setError] = useState(null);
+  const [book, setBook] = useState(props.book);
   const router = useRouter();
 
-  // Subscribe to Mercure
-  mercureSubscribe(new URL(props.hubURL.toString(), NEXT_PUBLIC_ENTRYPOINT), [book["@id"]])
-    .addEventListener('message', (event) => {
-      setBook(normalize(JSON.parse(event.data)));
+  useEffect(() => {
+    let mounted = true;
+    mercureSubscribe(new URL(props.hubURL, window.origin), [book["@id"]]).addEventListener("message", (event) => {
+      if (mounted) {
+        setBook(normalize(JSON.parse(event.data)));
+      }
     });
+
+    return () => {
+      mounted = false
+    };
+  });
 
   const handleDelete = async () => {
     if (!window.confirm("Are you sure you want to delete this item?")) return;
