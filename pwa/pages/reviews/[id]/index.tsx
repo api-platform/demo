@@ -4,13 +4,16 @@ import { Review } from "types/Review";
 import { fetch } from "utils/dataAccess";
 import Head from "next/head";
 import DefaultErrorPage from "next/error";
+import { useMercure } from "utils/mercure";
 
 interface Props {
   review: Review;
   hubURL: string;
 }
 
-const Page: NextComponentType<NextPageContext, Props, Props> = ({ review, hubURL }) => {
+const Page: NextComponentType<NextPageContext, Props, Props> = (props) => {
+  const review = useMercure(props.review, props.hubURL);
+
   if (!review) {
     return <DefaultErrorPage statusCode={404} />;
   }
@@ -22,7 +25,7 @@ const Page: NextComponentType<NextPageContext, Props, Props> = ({ review, hubURL
           <title>{`Show Review ${review["@id"]}`}</title>
         </Head>
       </div>
-      <Show review={review} hubURL={hubURL} />
+      <Show review={review} />
     </div>
   );
 };

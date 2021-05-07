@@ -23,6 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ApiResource(
     iri: 'http://schema.org/Review',
+    mercure: true,
     denormalizationContext: ['groups' => ['review:write']],
     normalizationContext: ['groups' => ['review:read']],
 )]
