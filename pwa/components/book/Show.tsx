@@ -1,31 +1,16 @@
-import { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { fetch, mercureSubscribe, normalize } from "utils/dataAccess";
+import { fetch } from "utils/dataAccess";
 import { Book } from "types/Book";
 
 interface Props {
   book: Book;
-  hubURL: string;
 }
 
-export const Show: FunctionComponent<Props> = (props) => {
+export const Show: FunctionComponent<Props> = ({ book }) => {
   const [error, setError] = useState(null);
-  const [book, setBook] = useState(props.book);
   const router = useRouter();
-
-  useEffect(() => {
-    let mounted = true;
-    mercureSubscribe(new URL(props.hubURL, window.origin), [book["@id"]]).addEventListener("message", (event) => {
-      if (mounted) {
-        setBook(normalize(JSON.parse(event.data)));
-      }
-    });
-
-    return () => {
-      mounted = false
-    };
-  });
 
   const handleDelete = async () => {
     if (!window.confirm("Are you sure you want to delete this item?")) return;

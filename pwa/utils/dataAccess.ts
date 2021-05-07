@@ -3,8 +3,6 @@ import has from "lodash/has";
 import mapValues from "lodash/mapValues";
 import isomorphicFetch from "isomorphic-unfetch";
 import { NEXT_PUBLIC_ENTRYPOINT } from "config/entrypoint";
-// Firefox doesn't seem to properly support EventSource
-import { NativeEventSource, EventSourcePolyfill } from "event-source-polyfill";
 
 const MIME_TYPE = "application/ld+json";
 
@@ -75,11 +73,3 @@ export const normalize = (data: any) => {
       : get(value, "@id", value)
   );
 };
-
-export function mercureSubscribe(url, topics) {
-  topics.forEach(topic => url.searchParams.append('topic', new URL(topic, NEXT_PUBLIC_ENTRYPOINT)));
-
-  const EventSource = NativeEventSource || EventSourcePolyfill;
-
-  return new EventSource(url.toString());
-}

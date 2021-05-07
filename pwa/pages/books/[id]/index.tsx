@@ -4,13 +4,16 @@ import { Book } from "types/Book";
 import { fetch } from "utils/dataAccess";
 import Head from "next/head";
 import DefaultErrorPage from "next/error";
+import { useMercure } from "utils/mercure";
 
 interface Props {
   book: Book;
   hubURL: string;
 }
 
-const Page: NextComponentType<NextPageContext, Props, Props> = ({ book, hubURL }) => {
+const Page: NextComponentType<NextPageContext, Props, Props> = (props) => {
+  const book = useMercure(props.book, props.hubURL);
+
   if (!book) {
     return <DefaultErrorPage statusCode={404} />;
   }
@@ -22,7 +25,7 @@ const Page: NextComponentType<NextPageContext, Props, Props> = ({ book, hubURL }
           <title>{`Show Book ${book["@id"]}`}</title>
         </Head>
       </div>
-      <Show book={book} hubURL={hubURL} />
+      <Show book={book} />
     </div>
   );
 };
