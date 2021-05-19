@@ -42,7 +42,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     normalizationContext: ['groups' => ['book:read']],
 )]
 #[ApiFilter(PropertyFilter::class)]
-#[ApiFilter(OrderFilter::class, properties: ['id', 'title', 'author', 'isbn', 'publicationDare'])]
+#[ApiFilter(OrderFilter::class, properties: ['id', 'title', 'author', 'isbn', 'publicationDate'])]
 class Book
 {
     /**
