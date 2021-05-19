@@ -24,7 +24,7 @@ final class OpenApiFactory implements OpenApiFactoryInterface
      */
     public function __invoke(array $context = []): OpenApi
     {
-        $openApi = $this->decorated->__invoke($context);
+        $openApi = ($this->decorated)($context);
         $openApi
             ->getPaths()
             ->addPath('/stats', new PathItem(null, null, null, new Operation(
