@@ -186,7 +186,6 @@ jobs:
             helm upgrade $GITHUB_REF_SLUG ./helm/api-platform \
               --install \
               --wait \
-              --atomic \
               --reuse-values \
               --namespace=$GITHUB_REF_SLUG --create-namespace \
               --set=php.image.repository=$CONTAINER_REGISTRY_BASE/php \
