@@ -156,7 +156,6 @@ jobs:
       - run: gcloud container clusters get-credentials $GKE_CLUSTER --zone $GCE_ZONE
       - name: Inject slug/short variables
         uses: rlespinasse/github-slug-action@v3.x
-      - uses: actions/setup-node@v2
       # todo Waiting for https://github.com/helm/helm/issues/8036
       - name: Build helm dependencies
         run: |
@@ -175,9 +174,6 @@ jobs:
             HOST="$SUBDOMAIN.$DOMAIN"
           fi
           echo "HOST=$HOST" >> $GITHUB_ENV
-          npm install --no-package-lock "@clarketm/jwt-cli"
-          MERCURE_JWT_KEY=$(openssl rand -base64 32)
-          MERCURE_JWT_TOKEN=$(npx jwt sign --noCopy --expiresIn "100 years" '{"mercure": {"publish": ["*"]}}' "$MERCURE_JWT_KEY")
           JWT_PASSPHRASE=$(openssl rand -base64 32)
           JWT_SECRET_KEY=$(openssl genpkey -pass file:<(echo "$JWT_PASSPHRASE") -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096)
           JWT_PUBLIC_KEY=$(openssl pkey -in <(echo "$JWT_SECRET_KEY") -passin file:<(echo "$JWT_PASSPHRASE") -pubout)
@@ -187,7 +183,6 @@ jobs:
               --install \
               --wait \
               --atomic \
-              --reuse-values \
               --namespace=$GITHUB_REF_SLUG --create-namespace \
               --set=php.image.repository=$CONTAINER_REGISTRY_BASE/php \
               --set=php.image.tag=$GITHUB_SHA_SHORT \
@@ -206,12 +201,8 @@ jobs:
               --set=php.jwt.passphrase=$JWT_PASSPHRASE \
               --set=php.corsAllowOrigin="^$(printf '%s' "$HOST" | sed 's/[.[\*^$]/\\&/g')$" \
               --set=php.host=$HOST \
-              --set=mercure.jwtToken=$MERCURE_JWT_TOKEN \
-              --set=mercure.publisherJwtKey=$MERCURE_JWT_KEY \
-              --set=mercure.subscriberJwtKey=$MERCURE_JWT_KEY \
-              --set=mercure.subscribeUrl=https://$HOST/.well-known/mercure \
+              --set=mercure.publicUrl=https://$HOST/.well-known/mercure \
               --set=mercure.corsAllowedOrigins=https://$HOST \
-              --set=mercure.dev=true \
               --set=postgresql.postgresqlPassword=$DATABASE_PASSWORD
           else
             helm upgrade $GITHUB_REF_SLUG ./helm/api-platform \
@@ -226,22 +217,9 @@ jobs:
               --set=caddy.image.tag=$GITHUB_SHA_SHORT \
               --set=pwa.image.repository=$CONTAINER_REGISTRY_BASE/pwa \
               --set=pwa.image.tag=$GITHUB_SHA_SHORT \
-              --set=ingress.hosts[0].host=$HOST \
-              --set=ingress.hosts[0].paths[0].path=/* \
-              --set=ingress.hosts[0].paths[0].pathType=ImplementationSpecific \
-              --set=external-dns.cloudflare.apiToken=${{ secrets.CF_API_TOKEN }} \
-              --set=external-dns.domainFilters={"$DOMAIN"} \
-              --set=external-dns.zoneIdFilters={${{ secrets.CF_ZONE_ID }}} \
               --set=php.jwt.secretKey="$JWT_SECRET_KEY" \
               --set=php.jwt.publicKey="$JWT_PUBLIC_KEY" \
-              --set=php.jwt.passphrase=$JWT_PASSPHRASE \
-              --set=php.corsAllowOrigin="^$(printf '%s' "$HOST" | sed 's/[.[\*^$]/\\&/g')$" \
-              --set=php.host=$HOST \
-              --set=mercure.jwtToken=$MERCURE_JWT_TOKEN \
-              --set=mercure.publisherJwtKey=$MERCURE_JWT_KEY \
-              --set=mercure.subscriberJwtKey=$MERCURE_JWT_KEY \
-              --set=mercure.subscribeUrl=https://$HOST/.well-known/mercure \
-              --set=mercure.corsAllowedOrigins=https://$HOST
+              --set=php.jwt.passphrase=$JWT_PASSPHRASE
           fi
       - uses: mshick/add-pr-comment@v1
         with:
