@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
-
 /**
  * This entity represents a "most borrowed book" in a given a given French library.
  * It is loaded from a CSV file. It's purpose it to show how to expose data coming
