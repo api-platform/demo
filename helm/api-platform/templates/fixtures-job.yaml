@@ -81,18 +81,21 @@ spec:
                 secretKeyRef:
                   name: {{ include "api-platform.fullname" . }}
                   key: database-url
-            - name: MERCURE_PUBLISH_URL
-              value: "http://{{ include "api-platform.fullname" . }}/.well-known/mercure"
-            - name: MERCURE_SUBSCRIBE_URL
+            - name: MERCURE_URL
               valueFrom:
                 configMapKeyRef:
                   name: {{ include "api-platform.fullname" . }}
-                  key: mercure-subscribe-url
-            - name: MERCURE_JWT_TOKEN
+                  key: mercure-url
+            - name: MERCURE_PUBLIC_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: mercure-public-url
+            - name: MERCURE_JWT_SECRET
               valueFrom:
                 secretKeyRef:
                   name: {{ include "api-platform.fullname" . }}
-                  key: mercure-jwt-token
+                  key: mercure-jwt-secret
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
