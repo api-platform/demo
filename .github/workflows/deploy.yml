@@ -1,8 +1,11 @@
+# Check documentation at https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions
 name: CD
 
 on:
   workflow_dispatch: ~
-  push: ~
+  push:
+    branches-ignore:
+      - 'dependabot/**'
 
 # In order to use this GitHub Actions file, please define the following secrets:
 #  - GKE_PROJECT: Project id of the Google Kubernetes Engine
