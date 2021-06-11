@@ -26,6 +26,8 @@ ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so
 
 ARG APCU_VERSION=5.1.19
 RUN set -eux; \
+	apk update; \
+	apk upgrade -U -a --purge; \
 	apk add --no-cache --virtual .build-deps \
 		$PHPIZE_DEPS \
 		icu-dev \
