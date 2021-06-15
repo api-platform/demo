@@ -116,7 +116,7 @@ RUN chmod +x /usr/local/bin/docker-entrypoint
 
 ENV SYMFONY_PHPUNIT_VERSION=9
 
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint"]
+ENTRYPOINT ["docker-entrypoint"]
 CMD ["php-fpm"]
 
 # "caddy" stage

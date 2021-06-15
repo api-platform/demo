@@ -11,7 +11,7 @@ use ApiPlatform\Core\Metadata\Resource\Factory\ResourceMetadataFactoryInterface;
 use App\Entity\Book;
 use ProxyManager\Exception\ExceptionInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Mercure\PublisherInterface;
+use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -23,7 +23,7 @@ final class BookHandler implements MessageHandlerInterface
     public function __construct(
         private IriConverterInterface $iriConverter,
         private SerializerInterface $serializer,
-        private PublisherInterface $publisher,
+        private HubInterface $hub,
         private ResourceMetadataFactoryInterface $resourceMetadataFactory,
         private HttpClientInterface $client,
         private LoggerInterface $logger
@@ -71,6 +71,6 @@ final class BookHandler implements MessageHandlerInterface
                 $this->resourceMetadataFactory->create(Book::class)->getItemOperationAttribute('generate_cover', 'normalizationContext', [])
             )
         );
-        ($this->publisher)($update);
+        $this->hub->publish($update);
     }
 }

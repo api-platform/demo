@@ -99,12 +99,12 @@ const Welcome = () => (
         <h2>Need help?</h2>
         <HelpButton
           url="https://stackoverflow.com/questions/tagged/api-platform.com"
-          Image={Sto}
+          Image={<Sto />}
           title="Ask your questions on Stack Overflow!"
         />
         <HelpButton
           url="https://api-platform.com/support"
-          Image={Slack}
+          Image={<Slack />}
           title="Chat with the community on Slack!"
         />
       </div>
@@ -2464,7 +2464,7 @@ const HelpButton = ({Image, url, title}) => (
     className="help__circle"
     title={title}
   >
-    <Image/>
+    {Image}
   </a>
 );
 
