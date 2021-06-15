@@ -14,15 +14,15 @@ use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @see http://schema.org/Book Documentation on Schema.org
- *
- * @ORM\Entity
  */
+#[ORM\Entity]
 #[ApiResource(
     iri: 'http://schema.org/Book',
     itemOperations: [
@@ -45,19 +45,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiFilter(OrderFilter::class, properties: ['id', 'title', 'author', 'isbn', 'publicationDate'])]
 class Book
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid", unique=true)
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
-     */
+    #[ORM\Id, ORM\GeneratedValue(strategy: 'CUSTOM'), ORM\CustomIdGenerator(class: UuidGenerator::class)]
+    #[ORM\Column(type: 'uuid', unique: true)]
     private ?UuidInterface $id = null;
 
     /**
      * The ISBN of the book.
-     *
-     * @ORM\Column(nullable=true)
      */
+    #[ORM\Column(nullable: true)]
     #[ApiProperty(iri: 'http://schema.org/isbn')]
     #[Assert\Isbn]
     #[Groups(groups: ['book:read'])]
@@ -65,9 +60,8 @@ class Book
 
     /**
      * The title of the book.
-     *
-     * @ORM\Column
      */
+    #[ORM\Column]
     #[ApiFilter(SearchFilter::class, strategy: 'ipartial')]
     #[ApiProperty(iri: 'http://schema.org/name')]
     #[Assert\NotBlank]
@@ -76,9 +70,8 @@ class Book
 
     /**
      * A description of the item.
-     *
-     * @ORM\Column(type="text")
      */
+    #[ORM\Column(type: 'text')]
     #[ApiProperty(iri: 'http://schema.org/description')]
     #[Assert\NotBlank]
     #[Groups(groups: ['book:read'])]
@@ -86,9 +79,8 @@ class Book
 
     /**
      * The author of this content or rating. Please note that author is special in that HTML 5 provides a special mechanism for indicating authorship via the rel tag. That is equivalent to this and may be used interchangeably.
-     *
-     * @ORM\Column
      */
+    #[ORM\Column]
     #[ApiFilter(SearchFilter::class, strategy: 'ipartial')]
     #[ApiProperty(iri: 'http://schema.org/author')]
     #[Assert\NotBlank]
@@ -97,9 +89,8 @@ class Book
 
     /**
      * The date on which the CreativeWork was created or the item was added to a DataFeed.
-     *
-     * @ORM\Column(type="date")
      */
+    #[ORM\Column(type: 'date')]
     #[ApiProperty(iri: 'http://schema.org/dateCreated')]
     #[Assert\NotNull]
     #[Assert\Type(\DateTimeInterface::class)]
@@ -108,9 +99,8 @@ class Book
 
     /**
      * The book's reviews.
-     *
-     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="book", orphanRemoval=true, cascade={"persist", "remove"})
      */
+    #[ORM\OneToMany(mappedBy: 'book', targetEntity: Review::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ApiProperty(iri: 'http://schema.org/reviews')]
     #[ApiSubresource]
     #[Groups(groups: ['book:read'])]

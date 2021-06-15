@@ -6,21 +6,16 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 #[ApiResource(deprecationReason: 'Create a Book instead')]
 class Parchment
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid", unique=true)
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
-     */
+    #[ORM\Id, ORM\GeneratedValue(strategy: 'CUSTOM'), ORM\CustomIdGenerator(class: UuidGenerator::class)]
+    #[ORM\Column(type: 'uuid', unique: true)]
     private ?UuidInterface $id = null;
 
     public function getId(): ?UuidInterface
@@ -30,17 +25,15 @@ class Parchment
 
     /**
      * The title of the book.
-     *
-     * @ORM\Column
      */
+    #[ORM\Column]
     #[Assert\NotBlank]
     public ?string $title = null;
 
     /**
      * A description of the item.
-     *
-     * @ORM\Column(type="text")
      */
+    #[ORM\Column(type: 'text')]
     #[Assert\NotBlank]
     public ?string $description = null;
 }
