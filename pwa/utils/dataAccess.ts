@@ -2,7 +2,7 @@ import get from "lodash/get";
 import has from "lodash/has";
 import mapValues from "lodash/mapValues";
 import isomorphicFetch from "isomorphic-unfetch";
-import { NEXT_PUBLIC_ENTRYPOINT } from "config/entrypoint";
+import { ENTRYPOINT } from "config/entrypoint";
 
 const MIME_TYPE = "application/ld+json";
 
@@ -19,7 +19,7 @@ const extractHubURL = function (response) {
     /<([^>]+)>;\s+rel=(?:mercure|"[^"]*mercure[^"]*")/
   );
 
-  return matches && matches[1] ? new URL(matches[1], NEXT_PUBLIC_ENTRYPOINT) : null;
+  return matches && matches[1] ? new URL(matches[1], ENTRYPOINT) : null;
 }
 
 export const fetch = async (id: string, init: RequestInit = {}) => {
@@ -33,7 +33,7 @@ export const fetch = async (id: string, init: RequestInit = {}) => {
   )
     init.headers = { ...init.headers, "Content-Type": MIME_TYPE };
 
-  const resp = await isomorphicFetch(NEXT_PUBLIC_ENTRYPOINT + id, init);
+  const resp = await isomorphicFetch(ENTRYPOINT + id, init);
   if (resp.status === 204) return;
 
   const json = await resp.json();
