@@ -1,10 +1,10 @@
 import jwtDecode from "jwt-decode";
-import { NEXT_PUBLIC_ENTRYPOINT } from "config/entrypoint";
+import { ENTRYPOINT } from "config/entrypoint";
 
 export default {
   login: ({ username, password }) => {
     const request = new Request(
-      `${NEXT_PUBLIC_ENTRYPOINT}/authentication_token`,
+      `${ENTRYPOINT}/authentication_token`,
       {
         method: "POST",
         body: JSON.stringify({ email: username, password }),
