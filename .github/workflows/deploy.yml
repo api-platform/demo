@@ -189,7 +189,6 @@ jobs:
             helm upgrade $GITHUB_REF_SLUG ./helm/api-platform \
               --install \
               --wait \
-              --atomic \
               --namespace=$GITHUB_REF_SLUG --create-namespace \
               --set=php.image.repository=$CONTAINER_REGISTRY_BASE/php \
               --set=php.image.tag=$GITHUB_SHA_SHORT \
@@ -215,7 +214,6 @@ jobs:
             helm upgrade $GITHUB_REF_SLUG ./helm/api-platform \
               --install \
               --wait \
-              --atomic \
               --reuse-values \
               --namespace=$GITHUB_REF_SLUG --create-namespace \
               --set=php.image.repository=$CONTAINER_REGISTRY_BASE/php \
@@ -229,6 +227,7 @@ jobs:
               --set=php.jwt.passphrase=$JWT_PASSPHRASE
           fi
       - uses: mshick/add-pr-comment@v1
+        if: github.ref != 'refs/heads/${{ env.DEFAULT_BRANCH }}'
         with:
           message: |
             🚀 Project successfully deployed at https://${{ env.HOST }}.
