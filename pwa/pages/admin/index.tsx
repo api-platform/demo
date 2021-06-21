@@ -40,7 +40,7 @@ const apiDocumentationParser = async () => {
     return {
       api: result.api,
       customRoutes: [
-        <Route path="/" component={RedirectToLogin} />
+        <Route key="/" path="/" component={RedirectToLogin} />
       ],
     };
   }

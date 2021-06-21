@@ -1,5 +1,6 @@
 import { FunctionComponent, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { fetch } from "utils/dataAccess";
 import { Book } from "types/Book";
@@ -79,7 +80,7 @@ export const Show: FunctionComponent<Props> = ({ book }) => {
             <th scope="row">cover</th>
             <td>
                 {(book["cover"] && (
-                  <img src={book["cover"]} />
+                  <Image alt="Book cover" src={book["cover"]} width={500} height={500} />
                 )) || (
                   <button id="generate-cover" className="btn btn-primary" onClick={handleGenerateCover}>
                     <a>Generate cover</a>

@@ -27,8 +27,7 @@ api_platform:
                 name: Authorization
                 type: header
     # Mercure integration, remove if unwanted
-    mercure:
-        hub_url: '%env(MERCURE_SUBSCRIBE_URL)%'
+    mercure: ~
     # Good defaults value for REST APIs
     defaults:
         stateless: true
