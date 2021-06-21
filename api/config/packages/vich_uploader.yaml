@@ -1,0 +1,8 @@
+vich_uploader:
+    db_driver: orm
+
+    mappings:
+        front_cover:
+            uri_prefix: /front_covers
+            upload_destination: '%kernel.project_dir%/public/front_covers'
+            namer: Vich\UploaderBundle\Naming\OrignameNamer

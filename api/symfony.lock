@@ -179,6 +179,9 @@
             "fixtures/.gitignore"
         ]
     },
+    "jms/metadata": {
+        "version": "2.5.0"
+    },
     "justinrainbow/json-schema": {
         "version": "5.2.10"
     },
@@ -481,6 +484,9 @@
             "config/packages/messenger.yaml"
         ]
     },
+    "symfony/mime": {
+        "version": "v5.3.2"
+    },
     "symfony/monolog-bridge": {
         "version": "v5.3.0"
     },
@@ -521,6 +527,9 @@
         ]
     },
     "symfony/polyfill-intl-grapheme": {
+        "version": "v1.23.0"
+    },
+    "symfony/polyfill-intl-idn": {
         "version": "v1.23.0"
     },
     "symfony/polyfill-intl-normalizer": {
@@ -671,6 +680,18 @@
     },
     "twig/twig": {
         "version": "v3.3.2"
+    },
+    "vich/uploader-bundle": {
+        "version": "1.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "1.5",
+            "ref": "c4f5755b37fb65b9c6a3cbdae91205c15a137ed4"
+        },
+        "files": [
+            "config/packages/vich_uploader.yaml"
+        ]
     },
     "vimeo/psalm": {
         "version": "4.7.3"
