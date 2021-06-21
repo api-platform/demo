@@ -34,6 +34,7 @@
         "symfony/twig-bundle": "5.3.*",
         "symfony/validator": "5.3.*",
         "symfony/yaml": "5.3.*",
+        "vich/uploader-bundle": "^1.18",
         "webonyx/graphql-php": "^14.9"
     },
     "require-dev": {

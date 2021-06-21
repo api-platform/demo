@@ -16,11 +16,15 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @see http://schema.org/Book Documentation on Schema.org
+ *
+ * @Vich\Uploadable
  */
 #[ORM\Entity]
 #[ApiResource(
@@ -38,8 +42,18 @@ use Symfony\Component\Validator\Constraints as Assert;
             'normalizationContext' => ['groups' => ['book:read', 'book:cover']],
         ],
     ],
+    collectionOperations: [
+        'get',
+        'post' => [
+            'input_formats' => [
+                'multipart' => ['multipart/form-data'],
+                'jsonld' => ['application/ld+json'],
+            ],
+        ],
+    ],
     mercure: true,
     normalizationContext: ['groups' => ['book:read']],
+    denormalizationContext: ['groups' => ['book:write']],
 )]
 #[ApiFilter(PropertyFilter::class)]
 #[ApiFilter(OrderFilter::class, properties: ['id', 'title', 'author', 'isbn', 'publicationDate'])]
@@ -55,7 +69,7 @@ class Book
     #[ORM\Column(nullable: true)]
     #[ApiProperty(iri: 'http://schema.org/isbn')]
     #[Assert\Isbn]
-    #[Groups(groups: ['book:read'])]
+    #[Groups(groups: ['book:read', 'book:write'])]
     public ?string $isbn = null;
 
     /**
@@ -65,7 +79,7 @@ class Book
     #[ApiFilter(SearchFilter::class, strategy: 'ipartial')]
     #[ApiProperty(iri: 'http://schema.org/name')]
     #[Assert\NotBlank]
-    #[Groups(groups: ['book:read', 'review:read'])]
+    #[Groups(groups: ['book:read', 'book:write', 'review:read'])]
     public ?string $title = null;
 
     /**
@@ -74,7 +88,7 @@ class Book
     #[ORM\Column(type: 'text')]
     #[ApiProperty(iri: 'http://schema.org/description')]
     #[Assert\NotBlank]
-    #[Groups(groups: ['book:read'])]
+    #[Groups(groups: ['book:read', 'book:write'])]
     public ?string $description = null;
 
     /**
@@ -84,7 +98,7 @@ class Book
     #[ApiFilter(SearchFilter::class, strategy: 'ipartial')]
     #[ApiProperty(iri: 'http://schema.org/author')]
     #[Assert\NotBlank]
-    #[Groups(groups: ['book:read'])]
+    #[Groups(groups: ['book:read', 'book:write'])]
     public ?string $author = null;
 
     /**
@@ -94,7 +108,7 @@ class Book
     #[ApiProperty(iri: 'http://schema.org/dateCreated')]
     #[Assert\NotNull]
     #[Assert\Type(\DateTimeInterface::class)]
-    #[Groups(groups: ['book:read'])]
+    #[Groups(groups: ['book:read', 'book:write'])]
     public ?\DateTimeInterface $publicationDate = null;
 
     /**
@@ -103,7 +117,7 @@ class Book
     #[ORM\OneToMany(mappedBy: 'book', targetEntity: Review::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ApiProperty(iri: 'http://schema.org/reviews')]
     #[ApiSubresource]
-    #[Groups(groups: ['book:read'])]
+    #[Groups(groups: ['book:read', 'book:write'])]
     private Collection $reviews;
 
     /**
@@ -111,6 +125,21 @@ class Book
      */
     #[Groups(groups: ['book:cover'])]
     public ?string $cover = null;
+
+    /**
+     * @Vich\UploadableField(mapping="front_cover", fileNameProperty="frontCoverFilename")
+     */
+    #[Groups(groups: ['book:write'])]
+    public ?File $frontCoverFile = null;
+
+    /**
+     * @ORM\Column(nullable=true)
+     */
+    public ?string $frontCoverFilename = null;
+
+    #[ApiProperty(iri: 'http://schema.org/contentUrl')]
+    #[Groups(groups: ['book:read'])]
+    public ?string $frontCoverUrl = null;
 
     public function __construct()
     {

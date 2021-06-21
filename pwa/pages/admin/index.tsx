@@ -1,11 +1,16 @@
 import Head from "next/head";
 import React from "react";
 import { Redirect, Route } from "react-router-dom";
-import { hydraDataProvider as baseHydraDataProvider, fetchHydra as baseFetchHydra, useIntrospection } from "@api-platform/admin";
+import { hydraDataProvider as baseHydraDataProvider, fetchHydra as baseFetchHydra, ResourceGuesser, useIntrospection } from "@api-platform/admin";
 import parseHydraDocumentation from "@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation";
 import authProvider from "utils/authProvider";
 import { ENTRYPOINT } from "config/entrypoint";
+import BookCreate from "components/admin/BookCreate"
 import Login from "components/admin/Login";
+import ReviewCreate from "components/admin/ReviewCreate"
+import ReviewEdit from "components/admin/ReviewEdit"
+import ReviewList from "components/admin/ReviewList"
+import ReviewShow from "components/admin/ReviewShow"
 
 // todo Waiting for https://github.com/api-platform/admin/issues/372
 const getHeaders = () => localStorage.getItem("token") ? {
@@ -50,7 +55,22 @@ const dataProvider = baseHydraDataProvider(ENTRYPOINT, fetchHydra, apiDocumentat
 const AdminLoader = () => {
   if (typeof window !== "undefined") {
     const { HydraAdmin } = require("@api-platform/admin");
-    return <HydraAdmin dataProvider={dataProvider} authProvider={authProvider} entrypoint={window.origin} loginPage={Login} />;
+    return (
+      <HydraAdmin dataProvider={dataProvider} authProvider={authProvider} entrypoint={window.origin} loginPage={Login}>
+        <ResourceGuesser name="books" create={BookCreate} />
+        <ResourceGuesser name="top_books" />
+        <ResourceGuesser
+          name="reviews"
+          list={ReviewList}
+          show={ReviewShow}
+          create={ReviewCreate}
+          edit={ReviewEdit}
+        />
+
+        {/* While deprecated resources are hidden by default, using an explicit ResourceGuesser component allows to add them back. */}
+        <ResourceGuesser name="parchments" />
+      </HydraAdmin>
+    );
   }
 
   return <></>;
