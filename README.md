@@ -52,7 +52,7 @@ Swagger interface.
 
 ## Contributing
 
-[Read the contributing guide](.github/CONTRIBUTING.md)
+[Read the contributing guide](.github/CONTRIBUTING.md).
 
 ## Credits
 
