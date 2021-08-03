@@ -222,9 +222,19 @@ jobs:
               --set=caddy.image.tag=$GITHUB_SHA_SHORT \
               --set=pwa.image.repository=$CONTAINER_REGISTRY_BASE/pwa \
               --set=pwa.image.tag=$GITHUB_SHA_SHORT \
+              --set=ingress.hosts[0].host=$HOST \
+              --set=ingress.hosts[0].paths[0].path=/* \
+              --set=ingress.hosts[0].paths[0].pathType=ImplementationSpecific \
+              --set=external-dns.cloudflare.apiToken=${{ secrets.CF_API_TOKEN }} \
+              --set=external-dns.domainFilters={"$DOMAIN"} \
+              --set=external-dns.zoneIdFilters={${{ secrets.CF_ZONE_ID }}} \
               --set=php.jwt.secretKey="$JWT_SECRET_KEY" \
               --set=php.jwt.publicKey="$JWT_PUBLIC_KEY" \
-              --set=php.jwt.passphrase=$JWT_PASSPHRASE
+              --set=php.jwt.passphrase=$JWT_PASSPHRASE \
+              --set=php.corsAllowOrigin="^$(printf '%s' "$HOST" | sed 's/[.[\*^$]/\\&/g')$" \
+              --set=php.host=$HOST \
+              --set=mercure.publicUrl=https://$HOST/.well-known/mercure \
+              --set=mercure.corsAllowedOrigins=https://$HOST
           fi
       - uses: mshick/add-pr-comment@v1
         if: github.ref != 'refs/heads/${{ env.DEFAULT_BRANCH }}'
