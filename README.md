@@ -14,10 +14,6 @@ Try it online at <https://demo.api-platform.com>.
     $ cd demo
     $ docker-compose up -d
 
-Then load the demo fixtures:
-
-    $ docker-compose exec php composer load-fixtures
-
 You can now go to https://localhost
 
 ## What can I find in this demo? 
