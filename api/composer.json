@@ -89,6 +89,12 @@
             "@auto-scripts"
         ]
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/theofidry/AliceBundle"
+        }
+    ],
     "conflict": {
         "symfony/symfony": "*"
     },
