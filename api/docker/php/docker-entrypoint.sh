@@ -18,19 +18,12 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 	setfacl -dR -m u:www-data:rwX -m u:"$(whoami)":rwX var
 
 	if [ "$APP_ENV" != 'prod' ]; then
-		if [ ! -f config/jwt/private.pem ]; then
-			jwt_passphrase=$(grep '^JWT_PASSPHRASE=' .env | cut -f 2 -d '=')
-			if ! echo "$jwt_passphrase" | openssl pkey -in config/jwt/private.pem -passin stdin -noout > /dev/null 2>&1; then
-				echo "Generating public / private keys for JWT"
-				mkdir -p config/jwt
-				echo "$jwt_passphrase" | openssl genpkey -out config/jwt/private.pem -pass stdin -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096
-				echo "$jwt_passphrase" | openssl pkey -in config/jwt/private.pem -passin stdin -out config/jwt/public.pem -pubout
-				setfacl -R -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
-				setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
-			fi
-		fi
-
 		composer install --prefer-dist --no-progress --no-interaction
+
+		echo "Making sure public / private keys for JWT exist..."
+		php bin/console lexik:jwt:generate-keypair --skip-if-exists --no-interaction
+		setfacl -R -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
+		setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
 	fi
 
 	if grep -q DATABASE_URL= .env; then
