@@ -18,7 +18,7 @@ final class ReviewsTest extends ApiTestCase
 
     protected function setup(): void
     {
-        $this->client = static::createClient();
+        $this->client = self::createClient();
     }
 
     public function testFilterReviewsByBook(): void
