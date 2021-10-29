@@ -1,5 +1,5 @@
 {
-    "$schema": "http:\/\/json-schema.org\/draft-07\/schema#",
+    "$schema": "https:\/\/json-schema.org\/draft-07\/schema#",
     "type": "object",
     "definitions": {
         "Book:jsonld": {
@@ -7,7 +7,7 @@
             "description": "",
             "additionalProperties": false,
             "externalDocs": {
-                "url": "http:\/\/schema.org\/Book"
+                "url": "https:\/\/schema.org\/Book"
             },
             "properties": {
                 "@id": {
@@ -25,7 +25,7 @@
                 "isbn": {
                     "description": "The ISBN of the book",
                     "externalDocs": {
-                        "url": "http:\/\/schema.org\/isbn"
+                        "url": "https:\/\/schema.org\/isbn"
                     },
                     "type": [
                         "string",
@@ -35,28 +35,28 @@
                 "title": {
                     "description": "The title of the book",
                     "externalDocs": {
-                        "url": "http:\/\/schema.org\/name"
+                        "url": "https:\/\/schema.org\/name"
                     },
                     "type": "string"
                 },
                 "description": {
                     "description": "A description of the item",
                     "externalDocs": {
-                        "url": "http:\/\/schema.org\/description"
+                        "url": "https:\/\/schema.org\/description"
                     },
                     "type": "string"
                 },
                 "author": {
                     "description": "The author of this content or rating. Please note that author is special in that HTML 5 provides a special mechanism for indicating authorship via the rel tag. That is equivalent to this and may be used interchangeably",
                     "externalDocs": {
-                        "url": "http:\/\/schema.org\/author"
+                        "url": "https:\/\/schema.org\/author"
                     },
                     "type": "string"
                 },
                 "publicationDate": {
                     "description": "The date on which the CreativeWork was created or the item was added to a DataFeed",
                     "externalDocs": {
-                        "url": "http:\/\/schema.org\/dateCreated"
+                        "url": "https:\/\/schema.org\/dateCreated"
                     },
                     "type": "string",
                     "format": "date-time"
@@ -72,7 +72,7 @@
                 "reviews": {
                     "description": "The book's reviews",
                     "externalDocs": {
-                        "url": "http:\/\/schema.org\/reviews"
+                        "url": "https:\/\/schema.org\/reviews"
                     },
                     "type": "array",
                     "items": {
@@ -92,7 +92,7 @@
             "description": "A review of an item - for example, of a restaurant, movie, or store.",
             "additionalProperties": false,
             "externalDocs": {
-                "url": "http:\/\/schema.org\/Review"
+                "url": "https:\/\/schema.org\/Review"
             },
             "required": [
                 "body"
@@ -113,7 +113,7 @@
                 "body": {
                     "description": "The actual body of the review",
                     "externalDocs": {
-                        "url": "http:\/\/schema.org\/reviewBody"
+                        "url": "https:\/\/schema.org\/reviewBody"
                     },
                     "type": "string"
                 }

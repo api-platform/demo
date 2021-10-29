@@ -9,7 +9,6 @@ use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\Client;
 use ApiPlatform\Core\Bridge\Symfony\Routing\Router;
 use App\Entity\Book;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineTransport;
 use Symfony\Contracts\Service\ServiceProviderInterface;
 
 class BooksTest extends ApiTestCase
@@ -19,10 +18,16 @@ class BooksTest extends ApiTestCase
     private Client $client;
     private Router $router;
 
+    public const ISBN = '9786644879585';
+    public const ITEMS_PER_PAGE = 30;
+    public const COUNT_WITHOUT_ARCHIVED = 100;
+    public const COUNT_ARCHIVED = 1;
+    public const COUNT = self::COUNT_WITHOUT_ARCHIVED + self::COUNT_ARCHIVED;
+
     protected function setup(): void
     {
         $this->client = static::createClient();
-        $router = static::$container->get('api_platform.router');
+        $router = static::getContainer()->get('api_platform.router');
         if (!$router instanceof Router) {
             throw new \RuntimeException('api_platform.router service not found.');
         }
@@ -39,7 +44,7 @@ class BooksTest extends ApiTestCase
             '@context' => '/contexts/Book',
             '@id' => '/books',
             '@type' => 'hydra:Collection',
-            'hydra:totalItems' => 100,
+            'hydra:totalItems' => self::COUNT,
             'hydra:view' => [
                 '@id' => '/books?page=1',
                 '@type' => 'hydra:PartialCollectionView',
@@ -50,7 +55,7 @@ class BooksTest extends ApiTestCase
         ]);
 
         // It works because the API returns test fixtures loaded by Alice
-        self::assertCount(30, $response->toArray()['hydra:member']);
+        self::assertCount(self::ITEMS_PER_PAGE, $response->toArray()['hydra:member']);
 
         static::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/books.json'));
         // Checks that the returned JSON is validated by the JSON Schema generated for this API Resource by API Platform
@@ -72,7 +77,7 @@ class BooksTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertJsonContains([
             '@context' => '/contexts/Book',
-            '@type' => 'http://schema.org/Book',
+            '@type' => 'https://schema.org/Book',
             'isbn' => '0099740915',
             'title' => 'The Handmaid\'s Tale',
             'description' => 'Brilliantly conceived and executed, this powerful evocation of twenty-first century America gives full rein to Margaret Atwood\'s devastating irony, wit and astute perception.',
@@ -107,7 +112,7 @@ publicationDate: This value should not be null.',
 
     public function testUpdateBook(): void
     {
-        $iri = (string) $this->findIriBy(Book::class, ['isbn' => '9786644879585']);
+        $iri = (string) $this->findIriBy(Book::class, ['isbn' => self::ISBN]);
         $this->client->request('PUT', $iri, ['json' => [
             'title' => 'updated title',
         ]]);
@@ -115,7 +120,7 @@ publicationDate: This value should not be null.',
         self::assertResponseIsSuccessful();
         self::assertJsonContains([
             '@id' => $iri,
-            'isbn' => '9786644879585',
+            'isbn' => self::ISBN,
             'title' => 'updated title',
         ]);
     }
@@ -124,19 +129,19 @@ publicationDate: This value should not be null.',
     {
         $token = $this->login();
         $client = static::createClient();
-        $iri = (string) $this->findIriBy(Book::class, ['isbn' => '9786644879585']);
+        $iri = (string) $this->findIriBy(Book::class, ['isbn' => self::ISBN]);
         $client->request('DELETE', $iri, ['auth_bearer' => $token]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
         self::assertNull(
             // Through the container, you can access all your services from the tests, including the ORM, the mailer, remote API clients...
-            static::$container->get('doctrine')->getRepository(Book::class)->findOneBy(['isbn' => '9786644879585'])
+            static::getContainer()->get('doctrine')->getRepository(Book::class)->findOneBy(['isbn' => self::ISBN])
         );
     }
 
     public function testGenerateCover(): void
     {
-        $book = static::$container->get('doctrine')->getRepository(Book::class)->findOneBy(['isbn' => '9786644879585']);
+        $book = static::getContainer()->get('doctrine')->getRepository(Book::class)->findOneBy(['isbn' => self::ISBN]);
         self::assertInstanceOf(Book::class, $book);
         if (!$book instanceof Book) {
             throw new \LogicException('Book not found.');
@@ -145,25 +150,61 @@ publicationDate: This value should not be null.',
             'json' => [],
         ]);
 
-        $messengerReceiverLocator = static::$container->get('messenger.receiver_locator');
+        $messengerReceiverLocator = static::getContainer()->get('messenger.receiver_locator');
         if (!$messengerReceiverLocator instanceof ServiceProviderInterface) {
             throw new \RuntimeException('messenger.receiver_locator service not found.');
         }
-        $doctrine = $messengerReceiverLocator->get('doctrine');
 
-        // Stan (+Symfony plugin) tries to resolve the doctrine service, but it is
-        // wrong as it takes the global container and not the messenger receiver locator.
-        if (!$doctrine instanceof DoctrineTransport) { /* @phpstan-ignore-line */
-            throw new \RuntimeException('doctrine transport service not found.');
-        }
-
-        /* @phpstan-ignore-next-line */ // Because of previous phpstan-ignore-line
         self::assertResponseIsSuccessful();
         self::assertEquals(
             1,
-            $doctrine->getMessageCount(),
+            $messengerReceiverLocator->get('doctrine')->getMessageCount(),
             'No message has been sent.'
         );
+    }
+
+    /**
+     * The filter is not applied by default on the Book collections.
+     */
+    public function testArchivedFilterDefault(): void
+    {
+        $this->client->request('GET', '/books');
+        self::assertResponseIsSuccessful();
+        self::assertJsonContains([
+            '@id' => '/books',
+            '@type' => 'hydra:Collection',
+            'hydra:totalItems' => self::COUNT,
+        ]);
+    }
+
+    public function archivedParameterProvider(): \iterator
+    {
+        // Only archived are returned
+        yield ['true',  self::COUNT_ARCHIVED];
+        yield ['1', self::COUNT_ARCHIVED];
+
+        // Incorrect value, no filter applied
+        yield ['',  self::COUNT];
+        yield ['true[]',  self::COUNT];
+        yield ['foobar',  self::COUNT];
+
+        // archived items are excluded
+        yield ['false',  self::COUNT_WITHOUT_ARCHIVED];
+        yield ['0',  self::COUNT_WITHOUT_ARCHIVED];
+    }
+
+    /**
+     * @dataProvider archivedParameterProvider
+     */
+    public function testArchivedFilterParameter(string $archivedValue, int $count): void
+    {
+        $this->client->request('GET', '/books?archived='.$archivedValue);
+        self::assertResponseIsSuccessful();
+        self::assertJsonContains([
+            '@id' => '/books',
+            '@type' => 'hydra:Collection',
+            'hydra:totalItems' => $count,
+        ]);
     }
 
     private function login(): string

@@ -46,6 +46,20 @@ Swagger interface.
 * [Overriding the OpenAPI Specification documentation](https://api-platform.com/docs/core/openapi/#overriding-the-openapi-specification)
 * [Code in api/src/OpenApi/OpenApiFactory.php](api/src/OpenApi/OpenApiFactory.php)
 
+### Custom Doctrine ORM Filter
+
+This example shows how to implement a custom API filter using Doctrine. It allows
+to filter archived items with a GET parameter. There are three modes: 
+
+* no filter (default)
+* only archived item (`?archived=1`)
+* exclude archived items (`?archived=0`)
+
+Links:
+
+* [Creating Custom Doctrine ORM Filters documentation](https://api-platform.com/docs/core/filters/#creating-custom-doctrine-orm-filters)
+* [Code in api/src/Filter](api/src/Filter)
+
 ## Contributing
 
 [Read the contributing guide](.github/CONTRIBUTING.md)
