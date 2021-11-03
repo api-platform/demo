@@ -1,4 +1,4 @@
-version: "3.4"
+version: "3.8"
 
 services:
   php:
@@ -10,6 +10,12 @@ services:
     restart: unless-stopped
     volumes:
       - php_socket:/var/run/php
+      - ./api:/srv/api:rw,cached
+      - ./api/docker/php/conf.d/api-platform.dev.ini:/usr/local/etc/php/conf.d/api-platform.ini
+      # if you develop on Linux, you may use a bind-mounted host directory instead
+      # - ./api/var:/srv/api/var:rw
+    environment:
+      APP_ENV: dev
     healthcheck:
       interval: 10s
       timeout: 3s
@@ -25,6 +31,13 @@ services:
     depends_on:
       - database
     restart: unless-stopped
+    volumes:
+      - ./api:/srv/api:rw,cached
+      - ./api/docker/php/conf.d/api-platform.dev.ini:/usr/local/etc/php/conf.d/api-platform.ini
+      # if you develop on Linux, you may use a bind-mounted host directory instead
+      # - ./api/var:/srv/api/var:rw
+    environment:
+      APP_ENV: dev
     healthcheck:
       test: ['CMD', 'ps', 'aux', '|', 'egrep', '"\d+:\d+ php bin/console messenger:consume"']
       interval: 10s
@@ -35,7 +48,9 @@ services:
   pwa:
     build:
       context: ./pwa
-      target: api_platform_pwa_prod
+      target: api_platform_pwa_dev
+    volumes:
+      - ./pwa:/usr/src/pwa:rw,cached
     environment:
       API_PLATFORM_CLIENT_GENERATOR_ENTRYPOINT: http://caddy
       NEXT_PUBLIC_ENTRYPOINT: http://caddy
@@ -52,11 +67,14 @@ services:
       SERVER_NAME: ${SERVER_NAME:-localhost, caddy:80}
       MERCURE_PUBLISHER_JWT_KEY: ${MERCURE_PUBLISHER_JWT_KEY:-!ChangeMe!}
       MERCURE_SUBSCRIBER_JWT_KEY: ${MERCURE_SUBSCRIBER_JWT_KEY:-!ChangeMe!}
+      MERCURE_EXTRA_DIRECTIVES: demo /srv/mercure-assets/
     restart: unless-stopped
     volumes:
       - php_socket:/var/run/php
       - caddy_data:/data
       - caddy_config:/config
+      - ./api/docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./api/public:/srv/api/public:ro
     ports:
       # HTTP
       - target: 80
@@ -81,6 +99,10 @@ services:
       - db_data:/var/lib/postgresql/data:rw
       # you may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
       # - ./api/docker/db/data:/var/lib/postgresql/data:rw
+    ports:
+      - target: 5432
+        published: 5432
+        protocol: tcp
 
 volumes:
   php_socket:

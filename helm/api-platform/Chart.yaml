@@ -26,10 +26,10 @@ appVersion: 0.1.0
 
 dependencies:
   - name: postgresql
-    version: ~10.1.4
+    version: ~10.13.4
     repository: https://charts.bitnami.com/bitnami/
     condition: postgresql.enabled
   - name: external-dns
-    version: ~4.11.0
+    version: ~5.4.15
     repository: https://charts.bitnami.com/bitnami/
     condition: external-dns.enabled
