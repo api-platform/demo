@@ -15,10 +15,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Pull images
-        run: docker-compose pull --ignore-pull-failures || true
       - name: Start services
-        run: docker-compose up --build -d
+        run: docker-compose up --build --detach
       - name: Wait for services
         run: |
           while status="$(docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" "$(docker-compose ps -q php)")"; do
@@ -45,3 +43,7 @@ jobs:
         run: docker-compose exec -T php vendor/bin/psalm
       - name: Jest
         run: docker-compose exec -T pwa yarn test --ci --passWithNoTests
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@master
+      - name: Lint Helm
+        run: helm lint ./helm/api-platform/

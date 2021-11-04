@@ -1,0 +1,38 @@
+# Check documentation at https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions
+# In order to use this GitHub Actions file, please define the following secrets:
+#  - GKE_PROJECT: Project id of the Google Kubernetes Engine
+#  - GKE_SA_KEY: Service Account Key of the Google Kubernetes Engine
+#  - CF_API_TOKEN: Cloudflare API token
+#  - CF_ZONE_ID: Cloudflare Zone id
+name: Cleanup
+
+on:
+  pull_request:
+    types: [ closed ]
+
+env:
+  GKE_CLUSTER: api-platform-demo
+  GCE_ZONE: europe-west1-c
+
+jobs:
+  cleanup:
+    name: Uninstall K8s release for closed Pull Request
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          # https://github.com/google-github-actions/setup-gcloud/issues/128
+          version: '290.0.1'
+          service_account_key: ${{ secrets.GKE_SA_KEY }}
+          project_id: ${{ secrets.GKE_PROJECT }}
+      - name: Configure gcloud
+        run: |
+          gcloud --quiet auth configure-docker
+          gcloud container clusters get-credentials $GKE_CLUSTER --zone $GCE_ZONE
+      - name: Check for existing namespace
+        id: k8s-namespace
+        run: echo "::set-output name=namespace::$(kubectl get namespace pr-${{ github.event.number }} 2> /dev/null)"
+      - name: Uninstall release
+        if: steps.k8s-namespace.outputs.namespace != ''
+        run: kubectl delete namespace pr-${{ github.event.number }}
