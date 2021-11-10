@@ -13,7 +13,7 @@ final class SwaggerTest extends WebTestCase
 
     protected function setup(): void
     {
-        $this->client = static::createClient();
+        $this->client = self::createClient();
     }
 
     public function testStats(): void

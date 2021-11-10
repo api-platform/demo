@@ -11,6 +11,7 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
+use App\Filter\ArchivedFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -20,11 +21,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @see http://schema.org/Book Documentation on Schema.org
+ * @see https://schema.org/Book Documentation on Schema.org
  */
 #[ORM\Entity]
 #[ApiResource(
-    iri: 'http://schema.org/Book',
+    iri: 'https://schema.org/Book',
     itemOperations: [
         'get',
         'put',
@@ -41,10 +42,13 @@ use Symfony\Component\Validator\Constraints as Assert;
     mercure: true,
     normalizationContext: ['groups' => ['book:read']],
 )]
-#[ApiFilter(PropertyFilter::class)]
+#[ApiFilter(ArchivedFilter::class)]
 #[ApiFilter(OrderFilter::class, properties: ['id', 'title', 'author', 'isbn', 'publicationDate'])]
-class Book
+#[ApiFilter(PropertyFilter::class)]
+class Book implements ArchivableInterface
 {
+    use ArchivableTrait;
+
     #[ORM\Id, ORM\GeneratedValue(strategy: 'CUSTOM'), ORM\CustomIdGenerator(class: UuidGenerator::class)]
     #[ORM\Column(type: 'uuid', unique: true)]
     private ?UuidInterface $id = null;
@@ -53,7 +57,7 @@ class Book
      * The ISBN of the book.
      */
     #[ORM\Column(nullable: true)]
-    #[ApiProperty(iri: 'http://schema.org/isbn')]
+    #[ApiProperty(iri: 'https://schema.org/isbn')]
     #[Assert\Isbn]
     #[Groups(groups: ['book:read'])]
     public ?string $isbn = null;
@@ -63,7 +67,7 @@ class Book
      */
     #[ORM\Column]
     #[ApiFilter(SearchFilter::class, strategy: 'ipartial')]
-    #[ApiProperty(iri: 'http://schema.org/name')]
+    #[ApiProperty(iri: 'https://schema.org/name')]
     #[Assert\NotBlank]
     #[Groups(groups: ['book:read', 'review:read'])]
     public ?string $title = null;
@@ -72,7 +76,7 @@ class Book
      * A description of the item.
      */
     #[ORM\Column(type: 'text')]
-    #[ApiProperty(iri: 'http://schema.org/description')]
+    #[ApiProperty(iri: 'https://schema.org/description')]
     #[Assert\NotBlank]
     #[Groups(groups: ['book:read'])]
     public ?string $description = null;
@@ -82,7 +86,7 @@ class Book
      */
     #[ORM\Column]
     #[ApiFilter(SearchFilter::class, strategy: 'ipartial')]
-    #[ApiProperty(iri: 'http://schema.org/author')]
+    #[ApiProperty(iri: 'https://schema.org/author')]
     #[Assert\NotBlank]
     #[Groups(groups: ['book:read'])]
     public ?string $author = null;
@@ -91,7 +95,7 @@ class Book
      * The date on which the CreativeWork was created or the item was added to a DataFeed.
      */
     #[ORM\Column(type: 'date')]
-    #[ApiProperty(iri: 'http://schema.org/dateCreated')]
+    #[ApiProperty(iri: 'https://schema.org/dateCreated')]
     #[Assert\NotNull]
     #[Assert\Type(\DateTimeInterface::class)]
     #[Groups(groups: ['book:read'])]
@@ -101,7 +105,7 @@ class Book
      * The book's reviews.
      */
     #[ORM\OneToMany(mappedBy: 'book', targetEntity: Review::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
-    #[ApiProperty(iri: 'http://schema.org/reviews')]
+    #[ApiProperty(iri: 'https://schema.org/reviews')]
     #[ApiSubresource]
     #[Groups(groups: ['book:read'])]
     private Collection $reviews;

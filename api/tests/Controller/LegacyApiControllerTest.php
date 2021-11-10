@@ -17,11 +17,11 @@ final class LegacyApiControllerTest extends ApiTestCase
 
     protected function setup(): void
     {
-        $this->client = static::createClient();
+        $this->client = self::createClient();
     }
 
     /**
-     * @see LegacyApiController::stats()
+     * @see LegacyApiController::__invoke()
      */
     public function testStats(): void
     {

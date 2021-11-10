@@ -31,17 +31,15 @@ trait RefreshDatabaseTrait
 
     protected static function buildSchema(): void
     {
-        $container = static::$container ?? static::$kernel->getContainer();
-
         /** @var Connection $connection */
-        $connection = $container->get('doctrine')->getConnection(static::$connection);
+        $connection = static::getContainer()->get('doctrine')->getConnection(static::$connection);
         $tmpConnection = DriverManager::getConnection($connection->getParams());
 
         if (!\in_array($connection->getDatabase(), $tmpConnection->getSchemaManager()->listDatabases())) {
             $tmpConnection->getSchemaManager()->createDatabase($connection->getDatabase());
         }
 
-        $em = $container->get('doctrine')->getManager(static::$manager);
+        $em = static::getContainer()->get('doctrine')->getManager(static::$manager);
         $meta = $em->getMetadataFactory()->getAllMetadata();
 
         if (!empty($meta)) {

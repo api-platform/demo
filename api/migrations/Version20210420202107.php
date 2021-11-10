@@ -16,7 +16,7 @@ final class Version20210420202107 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->addSql('CREATE TABLE book (id UUID NOT NULL, isbn VARCHAR(255) DEFAULT NULL, title VARCHAR(255) NOT NULL, description TEXT NOT NULL, author VARCHAR(255) NOT NULL, publication_date DATE NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE book (id UUID NOT NULL, isbn VARCHAR(255) DEFAULT NULL, title VARCHAR(255) NOT NULL, description TEXT NOT NULL, author VARCHAR(255) NOT NULL, publication_date DATE NOT NULL, archived_at DATE, PRIMARY KEY(id))');
         $this->addSql('COMMENT ON COLUMN book.id IS \'(DC2Type:uuid)\'');
         $this->addSql('CREATE TABLE parchment (id UUID NOT NULL, title VARCHAR(255) NOT NULL, description TEXT NOT NULL, PRIMARY KEY(id))');
         $this->addSql('COMMENT ON COLUMN parchment.id IS \'(DC2Type:uuid)\'');
