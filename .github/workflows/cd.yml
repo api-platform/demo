@@ -211,7 +211,7 @@ jobs:
             --set=ingress.hosts[0].paths[0].path=/* \
             --set=ingress.hosts[0].paths[0].pathType=ImplementationSpecific \
             --set=external-dns.cloudflare.apiToken=${{ secrets.CF_API_TOKEN }} \
-            --set=external-dns.domainFilters={${{ steps.prepare.outputs.host }}} \
+            --set=external-dns.domainFilters={"${{ steps.prepare.outputs.host }}"} \
             --set=external-dns.zoneIdFilters={${{ secrets.CF_ZONE_ID }}} \
             --set=php.jwt.secretKey="$JWT_SECRET_KEY" \
             --set=php.jwt.publicKey="$(openssl pkey -in <(echo "$JWT_SECRET_KEY") -passin file:<(echo "$JWT_PASSPHRASE") -pubout)" \
