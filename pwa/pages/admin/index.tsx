@@ -45,7 +45,12 @@ const apiDocumentationParser = async () => {
     };
   }
 };
-const dataProvider = baseHydraDataProvider(ENTRYPOINT, fetchHydra, apiDocumentationParser);
+const dataProvider = baseHydraDataProvider({
+  entrypoint: ENTRYPOINT,
+  httpClient: fetchHydra,
+  apiDocumentationParser,
+  mercure: true,
+});
 
 const AdminLoader = () => {
   if (typeof window !== "undefined") {
