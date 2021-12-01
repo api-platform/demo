@@ -15,6 +15,7 @@ on:
 env:
   GKE_CLUSTER: api-platform-demo
   GCE_ZONE: europe-west1-c
+  PREFIX_NAME: ''
 
 jobs:
   build-php:
@@ -34,12 +35,20 @@ jobs:
         run: |
           gcloud --quiet auth configure-docker
           gcloud container clusters get-credentials $GKE_CLUSTER --zone $GCE_ZONE
+      - name: Set prefix name
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "PREFIX_NAME=pr-${{ github.event.number }}" >> $GITHUB_ENV
+          else
+            echo "PREFIX_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
+          fi
       - name: Docker metadata
         id: docker-metadata
         uses: docker/metadata-action@v3
         with:
           images: eu.gcr.io/${{ secrets.GKE_PROJECT }}/php
           tags: |
+            type=sha,prefix=${{ env.PREFIX_NAME }}-,priority=1100
             type=ref,event=pr,priority=1000
             type=ref,event=branch,priority=900
       - name: Build and push
@@ -77,12 +86,20 @@ jobs:
         run: |
           gcloud --quiet auth configure-docker
           gcloud container clusters get-credentials $GKE_CLUSTER --zone $GCE_ZONE
+      - name: Set prefix name
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "PREFIX_NAME=pr-${{ github.event.number }}" >> $GITHUB_ENV
+          else
+            echo "PREFIX_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
+          fi
       - name: Docker metadata
         id: docker-metadata
         uses: docker/metadata-action@v3
         with:
           images: eu.gcr.io/${{ secrets.GKE_PROJECT }}/caddy
           tags: |
+            type=sha,prefix=${{ env.PREFIX_NAME }}-,priority=1100
             type=ref,event=pr,priority=1000
             type=ref,event=branch,priority=900
       - name: Build and push
@@ -120,12 +137,20 @@ jobs:
         run: |
           gcloud --quiet auth configure-docker
           gcloud container clusters get-credentials $GKE_CLUSTER --zone $GCE_ZONE
+      - name: Set prefix name
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "PREFIX_NAME=pr-${{ github.event.number }}" >> $GITHUB_ENV
+          else
+            echo "PREFIX_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
+          fi
       - name: Docker metadata
         id: docker-metadata
         uses: docker/metadata-action@v3
         with:
           images: eu.gcr.io/${{ secrets.GKE_PROJECT }}/pwa
           tags: |
+            type=sha,prefix=${{ env.PREFIX_NAME }}-,priority=1100
             type=ref,event=pr,priority=1000
             type=ref,event=branch,priority=900
       - name: Build and push
