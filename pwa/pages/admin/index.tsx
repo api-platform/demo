@@ -1,8 +1,12 @@
 import Head from "next/head";
 import React from "react";
 import { Redirect, Route } from "react-router-dom";
-import { hydraDataProvider as baseHydraDataProvider, fetchHydra as baseFetchHydra, useIntrospection } from "@api-platform/admin";
-import parseHydraDocumentation from "@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation";
+import {
+  fetchHydra as baseFetchHydra,
+  hydraDataProvider as baseHydraDataProvider,
+  useIntrospection
+} from "@api-platform/admin";
+import { parseHydraDocumentation } from "@api-platform/api-doc-parser";
 import authProvider from "utils/authProvider";
 import { ENTRYPOINT } from "config/entrypoint";
 import Login from "components/admin/Login";
@@ -27,10 +31,10 @@ const RedirectToLogin = () => {
 };
 const apiDocumentationParser = async () => {
   try {
-    const { api } = await parseHydraDocumentation(ENTRYPOINT, { headers: getHeaders });
-    return { api };
+    return await parseHydraDocumentation(ENTRYPOINT, { headers: getHeaders });
   } catch (result) {
-    if (result.status !== 401) {
+    const { api, response, status } = result;
+    if (status !== 401 || !response) {
       throw result;
     }
 
@@ -38,7 +42,9 @@ const apiDocumentationParser = async () => {
     localStorage.removeItem("token");
 
     return {
-      api: result.api,
+      api,
+      response,
+      status,
       customRoutes: [
         <Route key="/" path="/" component={RedirectToLogin} />
       ],
