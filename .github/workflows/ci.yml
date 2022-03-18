@@ -44,6 +44,6 @@ jobs:
       - name: Jest
         run: docker-compose exec -T pwa yarn test --ci --passWithNoTests
       - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@master
+        uses: google-github-actions/setup-gcloud@v0
       - name: Lint Helm
         run: helm lint ./helm/api-platform/

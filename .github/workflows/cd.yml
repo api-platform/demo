@@ -25,7 +25,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@master
+        uses: google-github-actions/setup-gcloud@v0
         with:
           # https://github.com/google-github-actions/setup-gcloud/issues/128
           version: '290.0.1'
@@ -76,7 +76,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@master
+        uses: google-github-actions/setup-gcloud@v0
         with:
           # https://github.com/google-github-actions/setup-gcloud/issues/128
           version: '290.0.1'
@@ -127,7 +127,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@master
+        uses: google-github-actions/setup-gcloud@v0
         with:
           # https://github.com/google-github-actions/setup-gcloud/issues/128
           version: '290.0.1'
@@ -177,7 +177,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@master
+        uses: google-github-actions/setup-gcloud@v0
         with:
           # https://github.com/google-github-actions/setup-gcloud/issues/128
           version: '290.0.1'
