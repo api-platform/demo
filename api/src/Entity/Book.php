@@ -17,7 +17,6 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Serializer\Filter\PropertyFilter;
 use App\Filter\ArchivedFilter;
-use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -38,10 +37,11 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Get(),
         new Put(),
         new Patch(),
-        new Delete(),
+        new Delete(security: 'is_granted("ROLE_ADMIN")'),
         new Put(
             uriTemplate: '/books/{id}/generate-cover{._format}',
             normalizationContext: ['groups' => ['book:read', 'book:cover']],
+            security: 'is_granted("ROLE_USER")',
             input: false,
             output: false,
             messenger: true,

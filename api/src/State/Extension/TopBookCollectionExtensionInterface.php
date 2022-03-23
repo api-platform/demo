@@ -17,12 +17,12 @@ interface TopBookCollectionExtensionInterface
      *
      * @return iterable<TopBook>
      */
-    public function getResult(array $collection, string $resourceClass, ?Operation $operation = null, array $context = []): iterable;
+    public function getResult(array $collection, string $resourceClass, Operation $operation = null, array $context = []): iterable;
 
     /**
      * Tells if the extension is enabled or not.
      *
      * @param array<string, mixed> $context
      */
-    public function isEnabled(string $resourceClass = null, ?Operation $operation = null, array $context = []): bool;
+    public function isEnabled(string $resourceClass = null, Operation $operation = null, array $context = []): bool;
 }

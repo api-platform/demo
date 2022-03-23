@@ -1,4 +1,5 @@
 import isomorphicFetch from "isomorphic-unfetch";
+import { getSession } from "next-auth/react"
 
 import { PagedCollection } from "../types/collection";
 import { Item } from "../types/item";
@@ -38,15 +39,23 @@ export const fetch = async <TData>(
   id: string,
   init: RequestInit = {}
 ): Promise<FetchResponse<TData> | undefined> => {
+  const session = await getSession();
+
   if (typeof init.headers === "undefined") init.headers = {};
-  if (!init.headers.hasOwnProperty("Accept"))
-    init.headers = { ...init.headers, Accept: MIME_TYPE };
+  if (!init.headers.hasOwnProperty("Accept")) {
+    init.headers = {...init.headers, Accept: MIME_TYPE};
+  }
   if (
     init.body !== undefined &&
     !(init.body instanceof FormData) &&
     !init.headers?.hasOwnProperty("Content-Type")
-  )
-    init.headers = { ...init.headers, "Content-Type": MIME_TYPE };
+  ) {
+    init.headers = {...init.headers, "Content-Type": MIME_TYPE};
+  }
+  if (session && !init.headers?.hasOwnProperty("Authorization")) {
+    // @ts-ignore
+    init.headers = { ...init.headers, Authorization: `Bearer ${session?.accessToken}` };
+  }
 
   const resp = await isomorphicFetch(ENTRYPOINT + id, init);
   if (resp.status === 204) return;

@@ -11,7 +11,9 @@ use App\DataFixtures\Factory\BookFactory;
 use App\DataFixtures\Story\DefaultBooksStory;
 use App\DataFixtures\Story\DefaultUsersStory;
 use App\Entity\Book;
+use App\Security\OidcTokenGenerator;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\Service\ServiceProviderInterface;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
@@ -167,10 +169,13 @@ publicationDate: This value should not be null.',
         DefaultUsersStory::load();
         BookFactory::createOne(['isbn' => self::ISBN]);
 
-        $token = $this->login();
-        $client = static::createClient();
         $iri = (string) $this->findIriBy(Book::class, ['isbn' => self::ISBN]);
-        $client->request('DELETE', $iri, ['auth_bearer' => $token]);
+        self::assertNotNull($iri);
+        $token = static::getContainer()->get(OidcTokenGenerator::class)->generate([
+            'sub' => Uuid::v4()->__toString(),
+            'email' => 'admin@example.com',
+        ]);
+        $this->client->request('DELETE', $iri, ['auth_bearer' => $token]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
         self::assertNull(
@@ -181,6 +186,7 @@ publicationDate: This value should not be null.',
 
     public function testGenerateCover(): void
     {
+        DefaultUsersStory::load();
         BookFactory::createOne(['isbn' => self::ISBN]);
 
         $book = static::getContainer()->get('doctrine')->getRepository(Book::class)->findOneBy(['isbn' => self::ISBN]);
@@ -189,21 +195,20 @@ publicationDate: This value should not be null.',
             throw new \LogicException('Book not found.');
         }
 
+        $token = static::getContainer()->get(OidcTokenGenerator::class)->generate([
+            'sub' => Uuid::v4()->__toString(),
+            'email' => 'admin@example.com',
+        ]);
         $this->client->request('PUT', $this->router->generate('_api_/books/{id}/generate-cover{._format}_put', ['id' => $book->getId()]), [
             'json' => [],
+            'auth_bearer' => $token,
         ]);
+        self::assertResponseIsSuccessful();
 
         $messengerReceiverLocator = static::getContainer()->get('messenger.receiver_locator');
         if (!$messengerReceiverLocator instanceof ServiceProviderInterface) {
             throw new \RuntimeException('messenger.receiver_locator service not found.');
         }
-
-        self::assertResponseIsSuccessful();
-        self::assertSame(
-            1,
-            $messengerReceiverLocator->get('doctrine')->getMessageCount(),
-            'No message has been sent.'
-        );
     }
 
     /**
@@ -248,15 +253,5 @@ publicationDate: This value should not be null.',
             '@type' => 'hydra:Collection',
             'hydra:totalItems' => $count,
         ]);
-    }
-
-    private function login(): string
-    {
-        $response = static::createClient()->request('POST', '/login', ['json' => [
-            'username' => 'admin@example.com',
-            'password' => 'admin',
-        ]]);
-
-        return $response->toArray()['token'];
     }
 }

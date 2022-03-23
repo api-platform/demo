@@ -75,7 +75,6 @@ RUN set -eux; \
 	composer dump-env prod; \
 	composer run-script --no-dev post-install-cmd; \
 	chmod +x bin/console; sync
-VOLUME /srv/app/config/jwt/
 
 # Dev image
 FROM app_php AS app_php_dev

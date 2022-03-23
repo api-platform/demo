@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import { useSession, signIn } from "next-auth/react";
 
 import ReferenceLinks from "../common/ReferenceLinks";
 import { fetch, getItemPath } from "../../utils/dataAccess";
@@ -16,6 +17,7 @@ interface Props {
 export const Show: FunctionComponent<Props> = ({ book, text }) => {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const { data: session } = useSession();
 
   const handleDelete = async () => {
     if (!book["@id"]) return;
@@ -91,12 +93,14 @@ export const Show: FunctionComponent<Props> = ({ book, text }) => {
           <tr>
             <th scope="row">reviews</th>
             <td>
-              <ReferenceLinks
-                items={book["reviews"].map((emb: any) => ({
-                  href: getItemPath(emb["@id"], "/reviews/[id]"),
-                  name: emb["@id"],
-                }))}
-              />
+              {book["reviews"] && (
+                <ReferenceLinks
+                  items={book["reviews"].map((emb: any) => ({
+                    href: getItemPath(emb["@id"], "/reviews/[id]"),
+                    name: emb["@id"],
+                  }))}
+                />
+              )}
             </td>
           </tr>
           <tr>
@@ -114,16 +118,25 @@ export const Show: FunctionComponent<Props> = ({ book, text }) => {
                     className="inline-block mt-2 border-2 border-blue-500 bg-blue-500 hover:border-blue-700 hover:bg-blue-700 text-xs text-white font-bold py-2 px-4 rounded"
                     onClick={handleGenerateCover}
                   >
-                    Re-generate
+                    Re-generate book cover
                   </button>
                 </>
               ) || (
-                <button
-                  className="inline-block mt-2 border-2 border-blue-500 bg-blue-500 hover:border-blue-700 hover:bg-blue-700 text-xs text-white font-bold py-2 px-4 rounded"
-                  onClick={handleGenerateCover}
-                >
-                  Generate
-                </button>
+                session && (
+                  <button
+                    className="bg-blue-500 hover:bg-blue-700 text-xs text-white font-bold py-2 px-4 rounded"
+                    onClick={handleGenerateCover}
+                  >
+                    Generate book cover
+                  </button>
+                ) || (
+                  <button
+                    className="bg-blue-500 hover:bg-blue-700 text-xs text-white font-bold py-2 px-4 rounded"
+                    onClick={() => signIn('keycloak')}
+                  >
+                    Sign in to generate the book cover
+                  </button>
+                )
               ))}
             </td>
           </tr>
@@ -144,12 +157,21 @@ export const Show: FunctionComponent<Props> = ({ book, text }) => {
         >
           Edit
         </Link>
-        <button
-          className="inline-block mt-2 border-2 border-red-400 hover:border-red-700 hover:text-red-700 text-xs text-red-400 font-bold py-2 px-4 rounded"
-          onClick={handleDelete}
-        >
-          Delete
-        </button>
+        {session && (
+          <button
+            className="inline-block mt-2 border-2 border-red-400 hover:border-red-700 hover:text-red-700 text-xs text-red-400 font-bold py-2 px-4 rounded"
+            onClick={handleDelete}
+          >
+            Delete
+          </button>
+        ) || (
+          <button
+            className="inline-block mt-2 border-2 border-red-400 hover:border-red-700 hover:text-red-700 text-xs text-red-400 font-bold py-2 px-4 rounded"
+            onClick={() => signIn('keycloak')}
+          >
+            Sign in to delete the book
+          </button>
+        )}
       </div>
     </div>
   );

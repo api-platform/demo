@@ -21,6 +21,10 @@ use App\State\TopBookItemProvider;
  * @see /data/top-100-novel-sci-fi-fr.csv
  */
 #[ApiResource(
+    operations: [
+        new Get(provider: TopBookItemProvider::class),
+        new GetCollection(provider: TopBookCollectionProvider::class),
+    ],
     paginationEnabled: true,
     paginationItemsPerPage: 10,
 )]

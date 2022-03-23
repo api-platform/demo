@@ -63,9 +63,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: eu.gcr.io/${{ secrets.gke-project }}/php
-          tags: |
-            type=raw,value=${{ github.sha }},priority=9999
-            ${{ inputs.tags }}
+          tags: ${{ inputs.tags }}
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
@@ -78,11 +76,7 @@ jobs:
           cache-from: |
             type=registry,ref=eu.gcr.io/${{ secrets.gke-project }}/caddy:latest
             type=registry,ref=eu.gcr.io/${{ secrets.gke-project }}/php:latest
-            type=registry,ref=eu.gcr.io/${{ secrets.gke-project }}/caddy:${{ github.sha }}
-            type=registry,ref=eu.gcr.io/${{ secrets.gke-project }}/php:${{ github.sha }}
           cache-to: type=inline
-    outputs:
-      version: ${{ github.sha }}
 
   caddy:
     name: Caddy
@@ -114,9 +108,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: eu.gcr.io/${{ secrets.gke-project }}/caddy
-          tags: |
-            type=raw,value=${{ github.sha }},priority=9999
-            ${{ inputs.tags }}
+          tags: ${{ inputs.tags }}
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
@@ -129,11 +121,7 @@ jobs:
           cache-from: |
             type=registry,ref=eu.gcr.io/${{ secrets.gke-project }}/caddy:latest
             type=registry,ref=eu.gcr.io/${{ secrets.gke-project }}/php:latest
-            type=registry,ref=eu.gcr.io/${{ secrets.gke-project }}/caddy:${{ github.sha }}
-            type=registry,ref=eu.gcr.io/${{ secrets.gke-project }}/php:${{ github.sha }}
           cache-to: type=inline
-    outputs:
-      version: ${{ github.sha }}
 
   pwa:
     name: PWA
@@ -165,9 +153,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: eu.gcr.io/${{ secrets.gke-project }}/pwa
-          tags: |
-            type=raw,value=${{ github.sha }},priority=9999
-            ${{ inputs.tags }}
+          tags: ${{ inputs.tags }}
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
@@ -179,7 +165,4 @@ jobs:
           labels: ${{ steps.docker-metadata.outputs.labels }}
           cache-from: |
             type=registry,ref=eu.gcr.io/${{ secrets.gke-project }}/pwa:latest
-            type=registry,ref=eu.gcr.io/${{ secrets.gke-project }}/pwa:${{ github.sha }}
           cache-to: type=inline
-    outputs:
-      version: ${{ github.sha }}

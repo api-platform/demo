@@ -22,9 +22,6 @@ final class OpenApiFactory implements OpenApiFactoryInterface
     {
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __invoke(array $context = []): OpenApi
     {
         $openApi = ($this->decorated)($context);

@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Repository\TopBook;
 
 use App\Entity\TopBook;
+use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 
+#[AsAlias(id: TopBookDataInterface::class)]
 final class TopBookDataRepository implements TopBookDataInterface
 {
     /**
@@ -89,6 +91,6 @@ final class TopBookDataRepository implements TopBookDataInterface
      */
     private function sanitize(?string $str): string
     {
-        return trim(utf8_encode((string) $str));
+        return trim((string) $str);
     }
 }

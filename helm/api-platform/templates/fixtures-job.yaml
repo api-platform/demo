@@ -36,22 +36,17 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: {{ include "api-platform.fullname" . }}
-                  key: php-host
-            - name: JWT_PASSPHRASE
+                  key: host
+            - name: OIDC_SERVER_URL
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                   name: {{ include "api-platform.fullname" . }}
-                  key: php-jwt-passphrase
-            - name: JWT_PUBLIC_KEY
+                  key: oidc-server-url
+            - name: OIDC_SERVER_URL_INTERNAL
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                   name: {{ include "api-platform.fullname" . }}
-                  key: php-jwt-public-key
-            - name: JWT_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "api-platform.fullname" . }}
-                  key: php-jwt-secret-key
+                  key: oidc-server-url-internal
             - name: TRUSTED_HOSTS
               valueFrom:
                 configMapKeyRef:
@@ -102,19 +97,16 @@ spec:
                 command: ["/bin/sh", "-c", "/bin/sleep 1; kill -QUIT 1"]
           startupProbe:
             exec:
-              command:
-                - docker-healthcheck
+              command: ['pgrep', '-f', '"composer|bin/console"']
             failureThreshold: 40
             periodSeconds: 3
           readinessProbe:
             exec:
-              command:
-                - docker-healthcheck
+              command: ['pgrep', '-f', '"composer|bin/console"']
             periodSeconds: 3
           livenessProbe:
             exec:
-              command:
-                - docker-healthcheck
+              command: ['pgrep', '-f', '"composer|bin/console"']
             periodSeconds: 3
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

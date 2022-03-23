@@ -14,20 +14,14 @@ final class TopBookPaginationExtension implements TopBookCollectionExtensionInte
     {
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getResult(array $collection, string $resourceClass, ?Operation $operation = null, array $context = []): iterable
+    public function getResult(array $collection, string $resourceClass, Operation $operation = null, array $context = []): iterable
     {
         [, $offset, $itemPerPage] = $this->pagination->getPagination($operation, $context);
 
         return new ArrayPaginator($collection, $offset, $itemPerPage);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function isEnabled(string $resourceClass = null, ?Operation $operation = null, array $context = []): bool
+    public function isEnabled(string $resourceClass = null, Operation $operation = null, array $context = []): bool
     {
         return $this->pagination->isEnabled($operation, $context);
     }

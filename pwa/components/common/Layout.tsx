@@ -5,6 +5,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "react-query";
+import Header from "./Header";
 
 const Layout = ({
   children,
@@ -16,9 +17,12 @@ const Layout = ({
   const [queryClient] = useState(() => new QueryClient());
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Hydrate state={dehydratedState}>{children}</Hydrate>
-    </QueryClientProvider>
+    <>
+      <Header />
+      <QueryClientProvider client={queryClient}>
+        <Hydrate state={dehydratedState}>{children}</Hydrate>
+      </QueryClientProvider>
+    </>
   );
 };
 

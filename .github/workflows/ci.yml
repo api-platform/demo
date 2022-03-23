@@ -106,11 +106,3 @@ jobs:
         run: docker compose exec -T php bin/console doctrine:schema:validate
       - name: Psalm
         run: docker compose exec -T php vendor/bin/psalm
-      # gcloud does not work with Python 3.10 because collections. Mappings were removed in Python 3.10.
-      - uses: actions/setup-python@v4
-        with:
-          python-version: 3.9.15
-      - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v1
-      - name: Lint Helm
-        run: helm lint ./helm/api-platform/

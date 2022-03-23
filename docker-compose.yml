@@ -17,13 +17,17 @@ services:
       timeout: 3s
       retries: 3
       start_period: 30s
-    environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-!ChangeMe!}@database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-14}
+    environment: &php-env
+      API_ENTRYPOINT_SCHEME: https
+      API_ENTRYPOINT_HOST: ${SERVER_NAME:-localhost}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-!ChangeMe!}@database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-15}
       TRUSTED_PROXIES: ${TRUSTED_PROXIES:-127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
       TRUSTED_HOSTS: ^${SERVER_NAME:-example\.com|localhost}|caddy$$
       MERCURE_URL: ${CADDY_MERCURE_URL:-http://caddy/.well-known/mercure}
       MERCURE_PUBLIC_URL: https://${SERVER_NAME:-localhost}/.well-known/mercure
       MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
+      OIDC_SERVER_URL: ${OIDC_SERVER_URL:-https://localhost/oidc/realms/demo}
+      OIDC_SERVER_URL_INTERNAL: ${OIDC_SERVER_URL_INTERNAL:-http://caddy/oidc/realms/demo}
 
   consumer:
     build:
@@ -43,12 +47,7 @@ services:
       retries: 3
       start_period: 30s
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-!ChangeMe!}@database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-14}
-      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
-      TRUSTED_HOSTS: ^${SERVER_NAME:-example\.com|localhost}|caddy$$
-      MERCURE_URL: ${CADDY_MERCURE_URL:-http://caddy/.well-known/mercure}
-      MERCURE_PUBLIC_URL: https://${SERVER_NAME:-localhost}/.well-known/mercure
-      MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
+      <<: *php-env
 
   pwa:
     build:
@@ -58,6 +57,11 @@ services:
         - ${PWA_DOCKER_IMAGE:-api-platform/pwa:latest}
     environment:
       NEXT_PUBLIC_ENTRYPOINT: http://caddy
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-!ChangeThisNextAuthSecret!}
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-https://localhost/api/auth}
+      NEXTAUTH_URL_INTERNAL: http://127.0.0.1:3000/api/auth
+      OIDC_CLIENT_ID: ${OIDC_CLIENT_ID:-api-platform-pwa}
+      OIDC_SERVER_URL: ${OIDC_SERVER_URL_INTERNAL:-http://caddy/oidc/realms/demo}
 
   caddy:
     build:
@@ -71,6 +75,7 @@ services:
       - pwa
     environment:
       PWA_UPSTREAM: pwa:3000
+      OIDC_UPSTREAM: keycloak:8080
       SERVER_NAME: ${SERVER_NAME:-localhost}, caddy:80
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
       MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
@@ -96,7 +101,7 @@ services:
 
 ###> doctrine/doctrine-bundle ###
   database:
-    image: postgres:${POSTGRES_VERSION:-14}-alpine
+    image: postgres:${POSTGRES_VERSION:-15}-alpine
     environment:
       - POSTGRES_DB=${POSTGRES_DB:-app}
       # You should definitely change the password in production
@@ -112,6 +117,50 @@ services:
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
 
+  keycloak-database:
+    image: postgres:${KEYCLOAK_POSTGRES_VERSION:-15}-alpine
+    environment:
+      - POSTGRES_DB=${KEYCLOAK_POSTGRES_DB:-keycloak}
+      # You should definitely change the password in production
+      - POSTGRES_PASSWORD=${KEYCLOAK_POSTGRES_PASSWORD:-!ChangeMe!}
+      - POSTGRES_USER=${KEYCLOAK_POSTGRES_USER:-keycloak}
+    volumes:
+      - keycloak_db_data:/var/lib/postgresql/data
+
+  keycloak:
+    image: bitnami/keycloak:${KEYCLOAK_VERSION:-21-debian-11}
+    environment:
+      KEYCLOAK_DATABASE_HOST: keycloak-database
+      KEYCLOAK_DATABASE_NAME: ${KEYCLOAK_POSTGRES_DB:-keycloak}
+      KEYCLOAK_DATABASE_USER: ${KEYCLOAK_POSTGRES_USER:-keycloak}
+      KEYCLOAK_DATABASE_PASSWORD: ${KEYCLOAK_POSTGRES_PASSWORD:-!ChangeMe!}
+      KEYCLOAK_ADMIN_USER: ${KEYCLOAK_ADMIN_USER:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-!ChangeMe!}
+      # Must finish with a trailing slash (https://github.com/bitnami/charts/issues/10885#issuecomment-1414279144)
+      KEYCLOAK_HTTP_RELATIVE_PATH: /oidc/
+      # https://www.keycloak.org/server/hostname
+      KC_HOSTNAME_URL: https://${SERVER_NAME:-localhost}/oidc/
+    depends_on:
+      - keycloak-database
+    ports:
+      - target: 8080
+        published: 8080
+        protocol: tcp
+
+  keycloak-config-cli:
+    image: bitnami/keycloak-config-cli:5-debian-11
+    environment:
+      KEYCLOAK_URL: http://caddy/oidc/
+      KEYCLOAK_USER: ${KEYCLOAK_USER:-admin}
+      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD:-!ChangeMe!}
+      KEYCLOAK_AVAILABILITYCHECK_ENABLED: true
+      KEYCLOAK_AVAILABILITYCHECK_TIMEOUT: 120s
+      IMPORT_FILES_LOCATIONS: '/config/*'
+    depends_on:
+      - keycloak
+    volumes:
+      - ./helm/api-platform/keycloak/config:/config
+
 volumes:
   php_socket:
   caddy_data:
@@ -121,3 +170,4 @@ volumes:
 ###< doctrine/doctrine-bundle ###
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
+  keycloak_db_data:

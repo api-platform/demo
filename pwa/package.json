@@ -11,6 +11,7 @@
   "dependencies": {
     "@api-platform/admin": "^3.4.3",
     "@api-platform/api-doc-parser": "^0.16.1",
+    "@auth/core": "^0.8.4",
     "@fontsource/poppins": "^4.5.10",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.6",
@@ -19,6 +20,7 @@
     "isomorphic-unfetch": "^3.1.0",
     "jwt-decode": "^3.1.2",
     "next": "^13.4.7",
+    "next-auth": "^4.22.1",
     "postcss": "^8.4.24",
     "prop-types": "^15.8.1",
     "ra-i18n-polyglot": "^4.11.4",
