@@ -21,15 +21,21 @@ jobs:
   build-php:
     name: Build PHP
     runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+      - name: Auth gcloud
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: ${{ secrets.GKE_SA_KEY }}
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v0
         with:
           # https://github.com/google-github-actions/setup-gcloud/issues/128
           version: '290.0.1'
-          service_account_key: ${{ secrets.GKE_SA_KEY }}
           project_id: ${{ secrets.GKE_PROJECT }}
       - name: Configure gcloud
         run: |
@@ -74,13 +80,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+      - name: Auth gcloud
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: ${{ secrets.GKE_SA_KEY }}
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v0
         with:
           # https://github.com/google-github-actions/setup-gcloud/issues/128
           version: '290.0.1'
-          service_account_key: ${{ secrets.GKE_SA_KEY }}
           project_id: ${{ secrets.GKE_PROJECT }}
       - name: Configure gcloud
         run: |
@@ -125,13 +134,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+      - name: Auth gcloud
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: ${{ secrets.GKE_SA_KEY }}
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v0
         with:
           # https://github.com/google-github-actions/setup-gcloud/issues/128
           version: '290.0.1'
-          service_account_key: ${{ secrets.GKE_SA_KEY }}
           project_id: ${{ secrets.GKE_PROJECT }}
       - name: Configure gcloud
         run: |
@@ -175,13 +187,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+      - name: Auth gcloud
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: ${{ secrets.GKE_SA_KEY }}
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v0
         with:
           # https://github.com/google-github-actions/setup-gcloud/issues/128
           version: '290.0.1'
-          service_account_key: ${{ secrets.GKE_SA_KEY }}
           project_id: ${{ secrets.GKE_PROJECT }}
       - name: Configure gcloud
         run: |
