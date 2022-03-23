@@ -30,12 +30,13 @@ final class TopBookDataRepository implements TopBookDataInterface
      */
     public function getFromCsv(): array
     {
+        $data = [];
         foreach ($this->getFileAsArray() as $line) {
             $data[] = str_getcsv($line, ';');
         }
 
         $cpt = 0;
-        foreach ($data ?? [] as $row) {
+        foreach ($data as $row) {
             if (1 === ++$cpt) {
                 continue;
             }

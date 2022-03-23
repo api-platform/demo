@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Api;
 
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\ToolsException;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait as HautelookRefreshDatabaseTrait;
@@ -31,14 +29,6 @@ trait RefreshDatabaseTrait
 
     protected static function buildSchema(): void
     {
-        /** @var Connection $connection */
-        $connection = static::getContainer()->get('doctrine')->getConnection(static::$connection);
-        $tmpConnection = DriverManager::getConnection($connection->getParams());
-
-        if (!\in_array($connection->getDatabase(), $tmpConnection->getSchemaManager()->listDatabases())) {
-            $tmpConnection->getSchemaManager()->createDatabase($connection->getDatabase());
-        }
-
         $em = static::getContainer()->get('doctrine')->getManager(static::$manager);
         $meta = $em->getMetadataFactory()->getAllMetadata();
 

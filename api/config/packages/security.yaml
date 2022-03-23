@@ -25,9 +25,7 @@ security:
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
-            guard:
-                authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
+            jwt: ~
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -38,5 +36,5 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+         - { path: ^/authentication_token, roles: PUBLIC_ACCESS }
+         - { path: ^/profile, roles: IS_AUTHENTICATED_FULLY }
