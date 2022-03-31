@@ -1,9 +1,12 @@
 import { GetStaticPaths, GetStaticProps, NextComponentType, NextPageContext } from "next";
+import Head from "next/head";
+import DefaultErrorPage from "next/error";
 import { Form } from "components/review/Form";
 import { Review } from "types/Review";
 import { fetch } from "utils/dataAccess";
-import Head from "next/head";
-import DefaultErrorPage from "next/error";
+
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 interface Props {
   review: Review;

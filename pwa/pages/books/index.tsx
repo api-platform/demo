@@ -7,6 +7,9 @@ import Head from "next/head";
 import Pagination from "components/common/Pagination";
 import { useMercure } from "utils/mercure";
 
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
+
 interface Props {
   collection: PagedCollection<Book>;
   hubURL: string;
