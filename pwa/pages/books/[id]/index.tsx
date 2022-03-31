@@ -1,10 +1,13 @@
 import { GetStaticPaths, GetStaticProps, NextComponentType, NextPageContext } from "next";
+import Head from "next/head";
+import DefaultErrorPage from "next/error";
 import { Show } from "components/book/Show";
 import { Book } from "types/Book";
 import { fetch } from "utils/dataAccess";
-import Head from "next/head";
-import DefaultErrorPage from "next/error";
 import { useMercure } from "utils/mercure";
+
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 interface Props {
   book: Book;

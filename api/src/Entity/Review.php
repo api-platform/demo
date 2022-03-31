@@ -26,6 +26,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     mercure: true,
     denormalizationContext: ['groups' => ['review:write']],
     normalizationContext: ['groups' => ['review:read']],
+    paginationClientItemsPerPage: true,
 )]
 #[ApiFilter(OrderFilter::class, properties: ['id', 'publicationDate'])]
 class Review

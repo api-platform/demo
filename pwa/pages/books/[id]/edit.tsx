@@ -1,9 +1,12 @@
 import { GetStaticPaths, GetStaticProps, NextComponentType, NextPageContext } from "next";
+import Head from "next/head";
+import DefaultErrorPage from "next/error";
 import { Form } from "components/book/Form";
 import { Book } from "types/Book";
 import { fetch } from "utils/dataAccess";
-import Head from "next/head";
-import DefaultErrorPage from "next/error";
+
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 interface Props {
   book: Book;

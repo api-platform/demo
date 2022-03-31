@@ -41,6 +41,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     ],
     mercure: true,
     normalizationContext: ['groups' => ['book:read']],
+    paginationClientItemsPerPage: true,
 )]
 #[ApiFilter(ArchivedFilter::class)]
 #[ApiFilter(OrderFilter::class, properties: ['id', 'title', 'author', 'isbn', 'publicationDate'])]
