@@ -24,14 +24,14 @@ export const LoginForm = (props: LoginFormProps) => {
       .then(() => {
         setLoading(false);
       })
-      .catch(error => {
+      .catch((error) => {
         setLoading(false);
         notify(
           typeof error === 'string'
             ? error
             : typeof error === 'undefined' || !error.message
-              ? 'ra.auth.sign_in_error'
-              : error.message,
+            ? 'ra.auth.sign_in_error'
+            : error.message,
           {
             type: 'warning',
             messageArgs: {
@@ -39,10 +39,10 @@ export const LoginForm = (props: LoginFormProps) => {
                 typeof error === 'string'
                   ? error
                   : error && error.message
-                    ? error.message
-                    : undefined,
+                  ? error.message
+                  : undefined,
             },
-          }
+          },
         );
       });
   };
@@ -53,10 +53,11 @@ export const LoginForm = (props: LoginFormProps) => {
       mode="onChange"
       noValidate
       className={className}
-      defaultValues={{ username: "admin@example.com", password: "admin" }}
-    >
+      defaultValues={{ username: 'admin@example.com', password: 'admin' }}>
       <CardContent className={LoginFormClasses.content}>
-        <Box className={LoginFormClasses.hint}>Hint: admin@example.com / admin</Box>
+        <Box className={LoginFormClasses.hint}>
+          Hint: admin@example.com / admin
+        </Box>
         <TextInput
           autoFocus
           source="username"
@@ -79,8 +80,7 @@ export const LoginForm = (props: LoginFormProps) => {
           color="primary"
           disabled={loading}
           fullWidth
-          className={LoginFormClasses.button}
-        >
+          className={LoginFormClasses.button}>
           {loading ? (
             <CircularProgress
               className={LoginFormClasses.icon}
@@ -120,8 +120,8 @@ const StyledForm = styled(Form, {
   },
   [`& .${LoginFormClasses.hint}`]: {
     marginBottom: theme.spacing(1),
-    display: "flex",
-    justifyContent: "center",
+    display: 'flex',
+    justifyContent: 'center',
     color: theme.palette.grey[500],
   },
 }));

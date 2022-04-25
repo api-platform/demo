@@ -52,6 +52,7 @@ class Book implements ArchivableInterface
 
     #[ORM\Id, ORM\GeneratedValue(strategy: 'CUSTOM'), ORM\CustomIdGenerator(class: UuidGenerator::class)]
     #[ORM\Column(type: 'uuid', unique: true)]
+    #[Groups(groups: ['book:read'])]
     private ?UuidInterface $id = null;
 
     /**
