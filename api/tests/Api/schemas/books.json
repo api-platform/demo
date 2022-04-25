@@ -22,6 +22,14 @@
                     "readOnly": true,
                     "type": "string"
                 },
+                "id": {
+                    "readOnly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "uuid"
+                },
                 "isbn": {
                     "description": "The ISBN of the book",
                     "externalDocs": {
@@ -109,6 +117,14 @@
                 "@type": {
                     "readOnly": true,
                     "type": "string"
+                },
+                "id": {
+                    "readOnly": true,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "uuid"
                 },
                 "body": {
                     "description": "The actual body of the review",
