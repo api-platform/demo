@@ -1,6 +1,6 @@
-import Link from "next/link";
-import { FunctionComponent } from "react";
-import { PagedCollection } from "types/Collection";
+import Link from 'next/link';
+import { FunctionComponent } from 'react';
+import { PagedCollection } from 'types/Collection';
 
 interface Props {
   collection: PagedCollection<any>;
@@ -14,7 +14,7 @@ const Pagination: FunctionComponent<Props> = ({ collection }) => {
     'hydra:first': first,
     'hydra:previous': previous,
     'hydra:next': next,
-    'hydra:last': last
+    'hydra:last': last,
   } = view;
 
   return (

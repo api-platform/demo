@@ -1,5 +1,5 @@
 export class Book {
-  public "@id"?: string;
+  public '@id'?: string;
 
   constructor(
     _id?: string,
@@ -12,6 +12,6 @@ export class Book {
     public reviews?: any,
     public cover?: string,
   ) {
-    this["@id"] = _id;
+    this['@id'] = _id;
   }
 }

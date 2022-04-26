@@ -1,13 +1,18 @@
-import { GetStaticPaths, GetStaticProps, NextComponentType, NextPageContext } from "next";
-import Head from "next/head";
-import DefaultErrorPage from "next/error";
-import { Show } from "components/book/Show";
-import { Book } from "types/Book";
-import { fetch } from "utils/dataAccess";
-import { useMercure } from "utils/mercure";
+import {
+  GetStaticPaths,
+  GetStaticProps,
+  NextComponentType,
+  NextPageContext,
+} from 'next';
+import Head from 'next/head';
+import DefaultErrorPage from 'next/error';
+import { Show } from 'components/book/Show';
+import { Book } from 'types/Book';
+import { fetch } from 'utils/dataAccess';
+import { useMercure } from 'utils/mercure';
 
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap-icons/font/bootstrap-icons.css";
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 interface Props {
   book: Book;
@@ -25,7 +30,7 @@ const Page: NextComponentType<NextPageContext, Props, Props> = (props) => {
     <div>
       <div>
         <Head>
-          <title>{`Show Book ${book["@id"]}`}</title>
+          <title>{`Show Book ${book['@id']}`}</title>
         </Head>
       </div>
       <Show book={book} />
@@ -42,15 +47,15 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       hubURL: response.hubURL,
     },
     revalidate: 1,
-  }
-}
+  };
+};
 
 export const getStaticPaths: GetStaticPaths = async () => {
   try {
-    const response = await fetch("/books");
+    const response = await fetch('/books');
 
     return {
-      paths: response.data["hydra:member"].map((book) => book["@id"]),
+      paths: response.data['hydra:member'].map((book) => book['@id']),
       fallback: true,
     };
   } catch (e) {
@@ -61,6 +66,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
     paths: [],
     fallback: true,
   };
-}
+};
 
 export default Page;

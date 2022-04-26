@@ -1,9 +1,9 @@
-import { FunctionComponent, useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { ErrorMessage, Formik } from "formik";
-import { fetch } from "utils/dataAccess";
-import { Review } from "types/Review";
+import { FunctionComponent, useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { ErrorMessage, Formik } from 'formik';
+import { fetch } from 'utils/dataAccess';
+import { Review } from 'types/Review';
 
 interface Props {
   review?: Review;
@@ -14,11 +14,11 @@ export const Form: FunctionComponent<Props> = ({ review }) => {
   const router = useRouter();
 
   const handleDelete = async () => {
-    if (!window.confirm("Are you sure you want to delete this item?")) return;
+    if (!window.confirm('Are you sure you want to delete this item?')) return;
 
     try {
-      await fetch(review["@id"], { method: "DELETE" });
-      router.push("/reviews");
+      await fetch(review['@id'], { method: 'DELETE' });
+      router.push('/reviews');
     } catch (error) {
       setError(`Error when deleting the resource: ${error}`);
       console.error(error);
@@ -27,7 +27,7 @@ export const Form: FunctionComponent<Props> = ({ review }) => {
 
   return (
     <div>
-      <h1>{review ? `Edit Review ${review["@id"]}` : `Create Review`}</h1>
+      <h1>{review ? `Edit Review ${review['@id']}` : `Create Review`}</h1>
       <Formik
         initialValues={review ? { ...review } : new Review()}
         validate={(values) => {
@@ -36,17 +36,17 @@ export const Form: FunctionComponent<Props> = ({ review }) => {
           return errors;
         }}
         onSubmit={async (values, { setSubmitting, setStatus, setErrors }) => {
-          const isCreation = !values["@id"];
+          const isCreation = !values['@id'];
           try {
-            await fetch(isCreation ? "/reviews" : values["@id"], {
-              method: isCreation ? "POST" : "PUT",
+            await fetch(isCreation ? '/reviews' : values['@id'], {
+              method: isCreation ? 'POST' : 'PUT',
               body: JSON.stringify(values),
             });
             setStatus({
               isValid: true,
-              msg: `Element ${isCreation ? "created" : "updated"}.`,
+              msg: `Element ${isCreation ? 'created' : 'updated'}.`,
             });
-            router.push("/reviews");
+            router.push('/reviews');
           } catch (error) {
             setStatus({
               isValid: false,
@@ -55,8 +55,7 @@ export const Form: FunctionComponent<Props> = ({ review }) => {
             setErrors(error.fields);
           }
           setSubmitting(false);
-        }}
-      >
+        }}>
         {({
           values,
           status,
@@ -75,11 +74,11 @@ export const Form: FunctionComponent<Props> = ({ review }) => {
               <input
                 name="body"
                 id="_body"
-                value={values.body ?? ""}
+                value={values.body ?? ''}
                 type="text"
                 placeholder="The actual body of the review"
                 className={`form-control${
-                  errors.body && touched.body ? " is-invalid" : ""
+                  errors.body && touched.body ? ' is-invalid' : ''
                 }`}
                 aria-invalid={!!(errors.body && touched.body)}
                 onChange={handleChange}
@@ -94,11 +93,11 @@ export const Form: FunctionComponent<Props> = ({ review }) => {
               <input
                 name="rating"
                 id="_rating"
-                value={values.rating ?? ""}
+                value={values.rating ?? ''}
                 type="text"
                 placeholder="A rating"
                 className={`form-control${
-                  errors.rating && touched.rating ? " is-invalid" : ""
+                  errors.rating && touched.rating ? ' is-invalid' : ''
                 }`}
                 aria-invalid={!!(errors.rating && touched.rating)}
                 onChange={handleChange}
@@ -117,11 +116,11 @@ export const Form: FunctionComponent<Props> = ({ review }) => {
               <input
                 name="book"
                 id="_book"
-                value={values.book ?? ""}
+                value={values.book ?? ''}
                 type="text"
                 placeholder="The item that is being reviewed/rated"
                 className={`form-control${
-                  errors.book && touched.book ? " is-invalid" : ""
+                  errors.book && touched.book ? ' is-invalid' : ''
                 }`}
                 aria-invalid={!!(errors.book && touched.book)}
                 onChange={handleChange}
@@ -136,11 +135,11 @@ export const Form: FunctionComponent<Props> = ({ review }) => {
               <input
                 name="author"
                 id="_author"
-                value={values.author ?? ""}
+                value={values.author ?? ''}
                 type="text"
                 placeholder="The author of the review"
                 className={`form-control${
-                  errors.author && touched.author ? " is-invalid" : ""
+                  errors.author && touched.author ? ' is-invalid' : ''
                 }`}
                 aria-invalid={!!(errors.author && touched.author)}
                 onChange={handleChange}
@@ -159,15 +158,17 @@ export const Form: FunctionComponent<Props> = ({ review }) => {
               <input
                 name="publicationDate"
                 id="_publicationDate"
-                value={values.publicationDate ?? ""}
+                value={values.publicationDate ?? ''}
                 type="text"
                 placeholder="Publication date of the review"
                 className={`form-control${
                   errors.publicationDate && touched.publicationDate
-                    ? " is-invalid"
-                    : ""
+                    ? ' is-invalid'
+                    : ''
                 }`}
-                aria-invalid={!!(errors.publicationDate && touched.publicationDate)}
+                aria-invalid={
+                  !!(errors.publicationDate && touched.publicationDate)
+                }
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -181,10 +182,9 @@ export const Form: FunctionComponent<Props> = ({ review }) => {
             {status && status.msg && (
               <div
                 className={`alert ${
-                  status.isValid ? "alert-success" : "alert-danger"
+                  status.isValid ? 'alert-success' : 'alert-danger'
                 }`}
-                role="alert"
-              >
+                role="alert">
                 {status.msg}
               </div>
             )}
@@ -192,8 +192,7 @@ export const Form: FunctionComponent<Props> = ({ review }) => {
             <button
               type="submit"
               className="btn btn-success"
-              disabled={isSubmitting}
-            >
+              disabled={isSubmitting}>
               Submit
             </button>
           </form>
