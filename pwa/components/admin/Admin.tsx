@@ -103,8 +103,7 @@ const LoginPage = () => (
 const MyLayout = (props) => <Layout {...props} appBar={AppBar} />;
 
 const AdminUI = () => {
-  const { docType, openApiEntrypoint, openApiDocEntrypoint } =
-    useContext(DocContext);
+  const { docType } = useContext(DocContext);
   const [redirectToLogin, setRedirectToLogin] = useState(false);
 
   return docType === 'hydra' ? (
@@ -124,8 +123,8 @@ const AdminUI = () => {
   ) : (
     <OpenApiAdmin
       authProvider={authProvider}
-      entrypoint={openApiEntrypoint}
-      docEntrypoint={openApiDocEntrypoint}
+      entrypoint={window.origin}
+      docEntrypoint={`${window.origin}/docs.json`}
       i18nProvider={i18nProvider}
       layout={MyLayout}
       loginPage={LoginPage}
@@ -136,21 +135,15 @@ const AdminUI = () => {
 const store = localStorageStore();
 
 const AdminWithContext = () => {
-  const [docType, setDocType] = useState(store.getItem<string>('docType', 'hydra'));
-  const [openApiEntrypoint, setOpenApiEntrypoint] = useState(window.origin);
-  const [openApiDocEntrypoint, setOpenApiDocEntrypoint] = useState(
-    `${window.origin}/docs.json`,
+  const [docType, setDocType] = useState(
+    store.getItem<string>('docType', 'hydra'),
   );
 
   return (
     <DocContext.Provider
       value={{
         docType,
-        openApiEntrypoint,
-        openApiDocEntrypoint,
         setDocType,
-        setOpenApiEntrypoint,
-        setOpenApiDocEntrypoint,
       }}>
       <AdminUI />
     </DocContext.Provider>

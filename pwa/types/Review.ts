@@ -1,5 +1,5 @@
 export class Review {
-  public "@id"?: string;
+  public '@id'?: string;
 
   constructor(
     _id?: string,
@@ -8,8 +8,8 @@ export class Review {
     public rating?: number,
     public book?: any,
     public author?: string,
-    public publicationDate?: string
+    public publicationDate?: string,
   ) {
-    this["@id"] = _id;
+    this['@id'] = _id;
   }
 }

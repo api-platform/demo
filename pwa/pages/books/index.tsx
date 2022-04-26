@@ -1,14 +1,14 @@
-import { GetServerSideProps, NextComponentType, NextPageContext } from "next";
-import { List } from "components/book/List";
-import { PagedCollection } from "types/Collection";
-import { Book } from "types/Book";
-import { fetch } from "utils/dataAccess";
-import Head from "next/head";
-import Pagination from "components/common/Pagination";
-import { useMercure } from "utils/mercure";
+import { GetServerSideProps, NextComponentType, NextPageContext } from 'next';
+import { List } from 'components/book/List';
+import { PagedCollection } from 'types/Collection';
+import { Book } from 'types/Book';
+import { fetch } from 'utils/dataAccess';
+import Head from 'next/head';
+import Pagination from 'components/common/Pagination';
+import { useMercure } from 'utils/mercure';
 
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap-icons/font/bootstrap-icons.css";
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 interface Props {
   collection: PagedCollection<Book>;
@@ -25,13 +25,15 @@ const Page: NextComponentType<NextPageContext, Props, Props> = (props) => {
           <title>Book List</title>
         </Head>
       </div>
-      <List books={collection["hydra:member"]} />
+      <List books={collection['hydra:member']} />
       <Pagination collection={collection} />
     </div>
   );
-}
+};
 
-export const getServerSideProps: GetServerSideProps = async ({ resolvedUrl }) => {
+export const getServerSideProps: GetServerSideProps = async ({
+  resolvedUrl,
+}) => {
   const response = await fetch(resolvedUrl);
 
   return {
@@ -39,7 +41,7 @@ export const getServerSideProps: GetServerSideProps = async ({ resolvedUrl }) =>
       collection: response.data,
       hubURL: response.hubURL,
     },
-  }
-}
+  };
+};
 
 export default Page;
