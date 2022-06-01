@@ -8,8 +8,8 @@ use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * This entity represents a "most borrowed book" in a given a given French library.
- * It is loaded from a CSV file. It's purpose it to show how to expose data coming
+ * This entity represents a "most borrowed book" in a given French library.
+ * It is loaded from a CSV file. Its purpose is to show how to expose data coming
  * from external data sources through API Platform.
  *
  * @see https://www.data.gouv.fr/fr/datasets/top-100-romans-adultes-de-science-fiction-et-fantastiques/
