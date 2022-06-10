@@ -25,11 +25,12 @@ version: 0.1.0
 appVersion: 0.1.0
 
 dependencies:
+  # bitnami chart are using the workaround from https://github.com/bitnami/charts/issues/10539
   - name: postgresql
     version: ~10.13.4
-    repository: https://charts.bitnami.com/bitnami/
+    repository: https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami
     condition: postgresql.enabled
   - name: external-dns
     version: ~5.4.15
-    repository: https://charts.bitnami.com/bitnami/
+    repository: https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami
     condition: external-dns.enabled
