@@ -1,9 +1,3 @@
-# Check documentation at https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions
-# In order to use this GitHub Actions file, please define the following secrets:
-#  - GKE_PROJECT: Project id of the Google Kubernetes Engine
-#  - GKE_SA_KEY: Service Account Key of the Google Kubernetes Engine
-#  - CF_API_TOKEN: Cloudflare API token
-#  - CF_ZONE_ID: Cloudflare Zone id
 name: CD
 
 on:
@@ -15,276 +9,59 @@ on:
 env:
   GKE_CLUSTER: api-platform-demo
   GCE_ZONE: europe-west1-c
-  PREFIX_NAME: ''
 
 jobs:
-  build-php:
-    name: Build PHP
-    runs-on: ubuntu-latest
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Auth gcloud
-        uses: google-github-actions/auth@v0
-        with:
-          credentials_json: ${{ secrets.GKE_SA_KEY }}
-      - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v0
-        with:
-          # https://github.com/google-github-actions/setup-gcloud/issues/128
-          version: '290.0.1'
-          project_id: ${{ secrets.GKE_PROJECT }}
-      - name: Configure gcloud
-        run: |
-          gcloud --quiet auth configure-docker
-          gcloud container clusters get-credentials $GKE_CLUSTER --zone $GCE_ZONE
-      - name: Set prefix name
-        run: |
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
-            echo "PREFIX_NAME=pr-${{ github.event.number }}" >> $GITHUB_ENV
-          else
-            echo "PREFIX_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
-          fi
-      - name: Docker metadata
-        id: docker-metadata
-        uses: docker/metadata-action@v3
-        with:
-          images: eu.gcr.io/${{ secrets.GKE_PROJECT }}/php
-          tags: |
-            type=sha,prefix=${{ env.PREFIX_NAME }}-,priority=1100
-            type=ref,event=pr,priority=1000
-            type=ref,event=branch,priority=900
-      - name: Build and push
-        uses: docker/build-push-action@v2
-        with:
-          context: ./api
-          target: api_platform_php
-          pull: true
-          push: true
-          tags: ${{ steps.docker-metadata.outputs.tags }}
-          labels: ${{ steps.docker-metadata.outputs.labels }}
-          cache-from: |
-            type=registry,ref=eu.gcr.io/${{ secrets.GKE_PROJECT }}/caddy:latest
-            type=registry,ref=eu.gcr.io/${{ secrets.GKE_PROJECT }}/php:latest
-            type=registry,ref=eu.gcr.io/${{ secrets.GKE_PROJECT }}/caddy:${{ steps.docker-metadata.outputs.version }}
-            type=registry,ref=eu.gcr.io/${{ secrets.GKE_PROJECT }}/php:${{ steps.docker-metadata.outputs.version }}
-          cache-to: type=inline
-    outputs:
-      version: ${{ steps.docker-metadata.outputs.version }}
-
-  build-caddy:
-    name: Build Caddy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Auth gcloud
-        uses: google-github-actions/auth@v0
-        with:
-          credentials_json: ${{ secrets.GKE_SA_KEY }}
-      - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v0
-        with:
-          # https://github.com/google-github-actions/setup-gcloud/issues/128
-          version: '290.0.1'
-          project_id: ${{ secrets.GKE_PROJECT }}
-      - name: Configure gcloud
-        run: |
-          gcloud --quiet auth configure-docker
-          gcloud container clusters get-credentials $GKE_CLUSTER --zone $GCE_ZONE
-      - name: Set prefix name
-        run: |
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
-            echo "PREFIX_NAME=pr-${{ github.event.number }}" >> $GITHUB_ENV
-          else
-            echo "PREFIX_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
-          fi
-      - name: Docker metadata
-        id: docker-metadata
-        uses: docker/metadata-action@v3
-        with:
-          images: eu.gcr.io/${{ secrets.GKE_PROJECT }}/caddy
-          tags: |
-            type=sha,prefix=${{ env.PREFIX_NAME }}-,priority=1100
-            type=ref,event=pr,priority=1000
-            type=ref,event=branch,priority=900
-      - name: Build and push
-        uses: docker/build-push-action@v2
-        with:
-          context: ./api
-          target: api_platform_caddy
-          pull: true
-          push: true
-          tags: ${{ steps.docker-metadata.outputs.tags }}
-          labels: ${{ steps.docker-metadata.outputs.labels }}
-          cache-from: |
-            type=registry,ref=eu.gcr.io/${{ secrets.GKE_PROJECT }}/caddy:latest
-            type=registry,ref=eu.gcr.io/${{ secrets.GKE_PROJECT }}/php:latest
-            type=registry,ref=eu.gcr.io/${{ secrets.GKE_PROJECT }}/caddy:${{ steps.docker-metadata.outputs.version }}
-            type=registry,ref=eu.gcr.io/${{ secrets.GKE_PROJECT }}/php:${{ steps.docker-metadata.outputs.version }}
-          cache-to: type=inline
-    outputs:
-      version: ${{ steps.docker-metadata.outputs.version }}
-
-  build-pwa:
-    name: Build PWA
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Auth gcloud
-        uses: google-github-actions/auth@v0
-        with:
-          credentials_json: ${{ secrets.GKE_SA_KEY }}
-      - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v0
-        with:
-          # https://github.com/google-github-actions/setup-gcloud/issues/128
-          version: '290.0.1'
-          project_id: ${{ secrets.GKE_PROJECT }}
-      - name: Configure gcloud
-        run: |
-          gcloud --quiet auth configure-docker
-          gcloud container clusters get-credentials $GKE_CLUSTER --zone $GCE_ZONE
-      - name: Set prefix name
-        run: |
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
-            echo "PREFIX_NAME=pr-${{ github.event.number }}" >> $GITHUB_ENV
-          else
-            echo "PREFIX_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
-          fi
-      - name: Docker metadata
-        id: docker-metadata
-        uses: docker/metadata-action@v3
-        with:
-          images: eu.gcr.io/${{ secrets.GKE_PROJECT }}/pwa
-          tags: |
-            type=sha,prefix=${{ env.PREFIX_NAME }}-,priority=1100
-            type=ref,event=pr,priority=1000
-            type=ref,event=branch,priority=900
-      - name: Build and push
-        uses: docker/build-push-action@v2
-        with:
-          context: ./pwa
-          target: api_platform_pwa_prod
-          pull: true
-          push: true
-          tags: ${{ steps.docker-metadata.outputs.tags }}
-          labels: ${{ steps.docker-metadata.outputs.labels }}
-          cache-from: |
-            type=registry,ref=eu.gcr.io/${{ secrets.GKE_PROJECT }}/pwa:latest
-            type=registry,ref=eu.gcr.io/${{ secrets.GKE_PROJECT }}/pwa:${{ steps.docker-metadata.outputs.version }}
-          cache-to: type=inline
-    outputs:
-      version: ${{ steps.docker-metadata.outputs.version }}
+  build:
+    name: Build
+    if: github.repository == 'api-platform/demo'
+    uses: ./.github/workflows/build.yml
+    with:
+      tags: |
+        type=ref,event=pr,prefix=pr-,priority=1000
+        type=ref,event=branch,priority=900
+      push: true
+      gke-cluster: $GKE_CLUSTER
+      gke-zone: $GCE_ZONE
+    secrets:
+      gke-credentials: ${{ secrets.GKE_SA_KEY }}
+      gke-project: ${{ secrets.GKE_PROJECT }}
 
   deploy:
     name: Deploy
-    needs: [ build-php, build-caddy, build-pwa ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Auth gcloud
-        uses: google-github-actions/auth@v0
-        with:
-          credentials_json: ${{ secrets.GKE_SA_KEY }}
-      - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v0
-        with:
-          # https://github.com/google-github-actions/setup-gcloud/issues/128
-          version: '290.0.1'
-          project_id: ${{ secrets.GKE_PROJECT }}
-      - name: Configure gcloud
-        run: |
-          gcloud --quiet auth configure-docker
-          gcloud container clusters get-credentials $GKE_CLUSTER --zone $GCE_ZONE
-      # https://github.com/helm/helm/issues/8036
-      - name: Build helm dependencies
-        run: |
-          helm repo add bitnami https://charts.bitnami.com/bitnami/
-          helm repo add bitnami-pre-2022 https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami
-          helm repo add stable https://charts.helm.sh/stable/
-          helm dependency build ./helm/api-platform
-      - name: Prepare deployment variables
-        id: prepare
-        run: |
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
-            echo "::set-output name=host::pr-${{ github.event.number }}-demo.api-platform.com"
-            echo "::set-output name=cors::^https?://pr-${{ github.event.number }}-demo\\.api-platform\\.com$"
-            echo "::set-output name=release::pr-${{ github.event.number }}"
-            echo "::set-output name=namespace::pr-${{ github.event.number }}"
-          else
-            echo "::set-output name=host::demo.api-platform.com"
-            echo "::set-output name=cors::^https?://demo\\.api-platform\\.com$"
-            echo "::set-output name=release::main"
-            echo "::set-output name=namespace::main"
-          fi
-      - name: Check for existing namespace
-        id: k8s-namespace
-        run: echo "::set-output name=namespace::$(kubectl get namespace ${{ steps.prepare.outputs.namespace }} 2> /dev/null)"
-      # Release name MUST start with a letter
-      # GitHub doesn't support multilines environment variables (JWT_*_KEY)
-      - name: Deploy in new namespace
-        if: steps.k8s-namespace.outputs.namespace == ''
-        run: |
-          JWT_PASSPHRASE=$(openssl rand -base64 32)
-          JWT_SECRET_KEY=$(openssl genpkey -pass file:<(echo "$JWT_PASSPHRASE") -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096)
-          helm upgrade ${{ steps.prepare.outputs.release }} ./helm/api-platform \
-            --reuse-values \
-            --install \
-            --create-namespace \
-            --namespace=${{ steps.prepare.outputs.namespace }} \
-            --set=app.version=${{ github.sha }} \
-            --set=php.image.repository=eu.gcr.io/${{ secrets.GKE_PROJECT }}/php \
-            --set=php.image.tag=${{ needs.build-php.outputs.version }} \
-            --set=php.image.pullPolicy=Always \
-            --set=caddy.image.repository=eu.gcr.io/${{ secrets.GKE_PROJECT }}/caddy \
-            --set=caddy.image.tag=${{ needs.build-caddy.outputs.version }} \
-            --set=caddy.image.pullPolicy=Always \
-            --set=pwa.image.repository=eu.gcr.io/${{ secrets.GKE_PROJECT }}/pwa \
-            --set=pwa.image.tag=${{ needs.build-pwa.outputs.version }} \
-            --set=pwa.image.pullPolicy=Always \
-            --set=ingress.hosts[0].host=${{ steps.prepare.outputs.host }} \
-            --set=ingress.hosts[0].paths[0].path=/* \
-            --set=ingress.hosts[0].paths[0].pathType=ImplementationSpecific \
-            --set=external-dns.cloudflare.apiToken=${{ secrets.CF_API_TOKEN }} \
-            --set=external-dns.domainFilters={"${{ steps.prepare.outputs.host }}"} \
-            --set=external-dns.zoneIdFilters={${{ secrets.CF_ZONE_ID }}} \
-            --set=php.jwt.secretKey="$JWT_SECRET_KEY" \
-            --set=php.jwt.publicKey="$(openssl pkey -in <(echo "$JWT_SECRET_KEY") -passin file:<(echo "$JWT_PASSPHRASE") -pubout)" \
-            --set=php.jwt.passphrase=$JWT_PASSPHRASE \
-            --set=php.corsAllowOrigin="${{ steps.prepare.outputs.cors }}" \
-            --set=php.host=${{ steps.prepare.outputs.host }} \
-            --set=mercure.publicUrl=https://${{ steps.prepare.outputs.host }}/.well-known/mercure \
-            --set=mercure.corsAllowedOrigins="${{ steps.prepare.outputs.cors }}" \
-            --set=postgresql.postgresqlPassword=$(openssl rand -base64 32 | tr -d "=+/")
-      - name: Upgrade namespace
-        if: steps.k8s-namespace.outputs.namespace != ''
-        run: |
-          helm upgrade ${{ steps.prepare.outputs.release }} ./helm/api-platform \
-            --reuse-values \
-            --install \
-            --create-namespace \
-            --namespace=${{ steps.prepare.outputs.namespace }} \
-            --set=app.version=${{ github.sha }} \
-            --set=php.image.repository=eu.gcr.io/${{ secrets.GKE_PROJECT }}/php \
-            --set=php.image.tag=${{ needs.build-php.outputs.version }} \
-            --set=php.image.pullPolicy=Always \
-            --set=caddy.image.repository=eu.gcr.io/${{ secrets.GKE_PROJECT }}/caddy \
-            --set=caddy.image.tag=${{ needs.build-caddy.outputs.version }} \
-            --set=caddy.image.pullPolicy=Always \
-            --set=pwa.image.repository=eu.gcr.io/${{ secrets.GKE_PROJECT }}/pwa \
-            --set=pwa.image.tag=${{ needs.build-pwa.outputs.version }} \
-            --set=pwa.image.pullPolicy=Always
-      - uses: mshick/add-pr-comment@v1
-        if: github.event_name == 'pull_request'
-        with:
-          message: |
-            🚀 Project successfully deployed at https://${{ steps.prepare.outputs.host }}.
-            ⏳ It may take a few minutes to be available.
-          repo-token: ${{ github.token }}
-          repo-token-user-login: github-actions[bot]
+    needs: [ build ]
+    if: github.event_name == 'push'
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: prod
+      url: demo.api-platform.com
+      docker-images-version: main
+      cors: ^https?://demo\\.api-platform\\.com$
+      release: main
+      namespace: main
+      gke-cluster: $GKE_CLUSTER
+      gke-zone: $GCE_ZONE
+    secrets:
+      gke-credentials: ${{ secrets.GKE_SA_KEY }}
+      gke-project: ${{ secrets.GKE_PROJECT }}
+      cloudflare-api-token: ${{ secrets.CF_API_TOKEN }}
+      cloudflare-zone-id: ${{ secrets.CF_ZONE_ID }}
+
+  feature-deploy:
+    name: Deploy
+    needs: [ build ]
+    if: github.event_name == 'pull_request'
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: ${{ needs.build.outputs.version }}
+      url: ${{ needs.build.outputs.version }}-demo.api-platform.com
+      docker-images-version: latest
+      cors: ^https?://${{ needs.build.outputs.version }}-demo\\.api-platform\\.com$
+      release: ${{ needs.build.outputs.version }}
+      namespace: ${{ needs.build.outputs.version }}
+      gke-cluster: $GKE_CLUSTER
+      gke-zone: $GCE_ZONE
+    secrets:
+      gke-credentials: ${{ secrets.GKE_SA_KEY }}
+      gke-project: ${{ secrets.GKE_PROJECT }}
+      cloudflare-api-token: ${{ secrets.CF_API_TOKEN }}
+      cloudflare-zone-id: ${{ secrets.CF_ZONE_ID }}

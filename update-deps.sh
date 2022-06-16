@@ -1,12 +1,12 @@
 #!/bin/sh
 
 # Update Docker images
-docker-compose pull
-docker-compose build
+docker compose pull
+docker compose build
 
 # Update deps
-docker-compose run php composer update
-docker-compose run pwa /bin/sh -c 'yarn install && yarn upgrade'
+docker compose run php composer update
+docker compose run pwa /bin/sh -c 'yarn install && yarn upgrade'
 
 # Update the Symfony skeleton
 cd api
@@ -21,4 +21,4 @@ sed -i.bak 's;^MERCURE_PUBLIC_URL=https://127.0.0.1:8000/.well-known/mercure$;ME
 
 rm .env.bak
 
-echo 'Run `docker-compose up --build --force-recreate` now and check that everything is fine!'
+echo 'Run `docker compose up --build --force-recreate` now and check that everything is fine!'

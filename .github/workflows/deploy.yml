@@ -1,0 +1,140 @@
+name: Deploy
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        description: GitHub Environment Name
+        default: prod
+        required: false
+      url:
+        type: string
+        description: GitHub Environment Url (without scheme)
+        required: true
+      docker-images-version:
+        type: string
+        description: Docker Images Version
+        required: true
+      cors:
+        type: string
+        description: CORS
+        required: true
+      release:
+        type: string
+        description: Release Name
+        required: true
+      namespace:
+        type: string
+        description: Namespace Name
+        required: true
+      gke-cluster:
+        type: string
+        description: Google Kubernetes Engine Cluster
+        required: true
+      gke-zone:
+        type: string
+        description: Google Kubernetes Engine Zone
+        required: true
+    secrets:
+      gke-credentials:
+        description: Google Kubernetes Engine Credentials as JSON
+        required: true
+      gke-project:
+        description: Google Kubernetes Engine Project
+        required: true
+      cloudflare-api-token:
+        description: Cloudflare API Token
+        required: true
+      cloudflare-zone-id:
+        description: Cloudflare Zone Id
+        required: true
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.environment }}
+      url: https://${{ inputs.url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Auth gcloud
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: ${{ secrets.gke-credentials }}
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          # https://github.com/google-github-actions/setup-gcloud/issues/128
+          version: '290.0.1'
+          project_id: ${{ secrets.gke-project }}
+      - name: Configure gcloud
+        run: |
+          gcloud --quiet auth configure-docker
+          gcloud container clusters get-credentials ${{ inputs.gke-cluster }} --zone ${{ inputs.gke-zone }}
+      # https://github.com/helm/helm/issues/8036
+      - name: Build helm dependencies
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami/
+          helm repo add bitnami-pre-2022 https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami
+          helm repo add stable https://charts.helm.sh/stable/
+          helm dependency build ./helm/api-platform
+      - name: Check for existing namespace
+        id: k8s-namespace
+        run: echo "::set-output name=namespace::$(kubectl get namespace ${{ inputs.namespace }} 2> /dev/null)"
+      # Release name MUST start with a letter
+      # GitHub doesn't support multilines environment variables (JWT_*_KEY)
+      - name: Deploy in new namespace
+        if: steps.k8s-namespace.outputs.namespace == ''
+        run: |
+          JWT_PASSPHRASE=$(openssl rand -base64 32)
+          JWT_SECRET_KEY=$(openssl genpkey -pass file:<(echo "$JWT_PASSPHRASE") -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096)
+          helm upgrade ${{ inputs.release }} ./helm/api-platform \
+            --reuse-values \
+            --install \
+            --create-namespace \
+            --namespace=${{ inputs.namespace }} \
+            --set=app.version=${{ github.sha }} \
+            --set=php.image.repository=eu.gcr.io/${{ secrets.gke-project }}/php \
+            --set=php.image.tag=${{ docker-images-version }} \
+            --set=php.image.pullPolicy=Always \
+            --set=caddy.image.repository=eu.gcr.io/${{ secrets.gke-project }}/caddy \
+            --set=caddy.image.tag=${{ docker-images-version }} \
+            --set=caddy.image.pullPolicy=Always \
+            --set=pwa.image.repository=eu.gcr.io/${{ secrets.gke-project }}/pwa \
+            --set=pwa.image.tag=${{ docker-images-version }} \
+            --set=pwa.image.pullPolicy=Always \
+            --set=ingress.hosts[0].host=${{ inputs.url }} \
+            --set=ingress.hosts[0].paths[0].path=/* \
+            --set=ingress.hosts[0].paths[0].pathType=ImplementationSpecific \
+            --set=external-dns.cloudflare.apiToken=${{ secrets.cloudflare-api-token }} \
+            --set=external-dns.domainFilters={"${{ inputs.url }}"} \
+            --set=external-dns.zoneIdFilters={${{ secrets.cloudflare-zone-id }}} \
+            --set=php.jwt.secretKey="$JWT_SECRET_KEY" \
+            --set=php.jwt.publicKey="$(openssl pkey -in <(echo "$JWT_SECRET_KEY") -passin file:<(echo "$JWT_PASSPHRASE") -pubout)" \
+            --set=php.jwt.passphrase=$JWT_PASSPHRASE \
+            --set=php.corsAllowOrigin="${{ inputs.cors }}" \
+            --set=php.host=${{ inputs.url }} \
+            --set=mercure.publicUrl=https://${{ inputs.url }}/.well-known/mercure \
+            --set=mercure.corsAllowedOrigins="${{ inputs.cors }}" \
+            --set=postgresql.postgresqlPassword=$(openssl rand -base64 32 | tr -d "=+/")
+      - name: Upgrade namespace
+        if: steps.k8s-namespace.outputs.namespace != ''
+        run: |
+          helm upgrade ${{ inputs.release }} ./helm/api-platform \
+            --reuse-values \
+            --install \
+            --create-namespace \
+            --namespace=${{ inputs.namespace }} \
+            --set=app.version=${{ github.sha }} \
+            --set=php.image.repository=eu.gcr.io/${{ secrets.GKE_PROJECT }}/php \
+            --set=php.image.tag=${{ docker-images-version }} \
+            --set=php.image.pullPolicy=Always \
+            --set=caddy.image.repository=eu.gcr.io/${{ secrets.GKE_PROJECT }}/caddy \
+            --set=caddy.image.tag=${{ docker-images-version }} \
+            --set=caddy.image.pullPolicy=Always \
+            --set=pwa.image.repository=eu.gcr.io/${{ secrets.GKE_PROJECT }}/pwa \
+            --set=pwa.image.tag=${{ docker-images-version }} \
+            --set=pwa.image.pullPolicy=Always

@@ -12,7 +12,7 @@ Try it online at <https://demo.api-platform.com>.
 
     $ git clone https://github.com/api-platform/demo.git
     $ cd demo
-    $ docker-compose up -d
+    $ docker compose up -d
 
 You can now go to https://localhost
 
