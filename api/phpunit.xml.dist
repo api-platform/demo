@@ -9,6 +9,7 @@
          convertDeprecationsToExceptions="false"
 >
     <php>
+        <ini name="display_errors" value="1" />
         <ini name="error_reporting" value="-1" />
         <server name="APP_ENV" value="test" force="true" />
         <server name="SHELL_VERBOSITY" value="-1" />
@@ -17,14 +18,10 @@
     </php>
 
     <testsuites>
-        <testsuite name="default">
+        <testsuite name="Project Test Suite">
             <directory>tests</directory>
             <exclude>tests/Api/ReviewsTest.php</exclude>
         </testsuite>
-
-<!--        <testsuite name="reviews">-->
-<!--            <file>tests/Api/ReviewsTest.php</file>-->
-<!--        </testsuite>-->
     </testsuites>
 
     <coverage processUncoveredFiles="true">
