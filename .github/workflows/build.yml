@@ -1,0 +1,173 @@
+name: Build
+
+on:
+  workflow_call:
+    inputs:
+      tags:
+        type: string
+        description: The Docker Tags (see docker/metadata-action@v4 for available values)
+        required: true
+      push:
+        default: true
+        type: boolean
+        description: Push the Docker Images?
+        required: false
+      gke-cluster:
+        type: string
+        description: Google Kubernetes Engine Cluster
+        required: true
+      gke-zone:
+        type: string
+        description: Google Kubernetes Engine Zone
+        required: true
+    secrets:
+      gke-credentials:
+        description: Google Kubernetes Engine Credentials as JSON
+        required: true
+      gke-project:
+        description: Google Kubernetes Engine Project
+        required: true
+    outputs:
+      version:
+        description: The Docker Image Version
+        value: ${{ jobs.php.outputs.version }}
+
+jobs:
+  php:
+    name: PHP
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Auth gcloud
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: ${{ secrets.gke-credentials }}
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          # https://github.com/google-github-actions/setup-gcloud/issues/128
+          version: '290.0.1'
+          project_id: ${{ secrets.gke-project }}
+      - name: Configure gcloud
+        run: |
+          gcloud --quiet auth configure-docker
+          gcloud container clusters get-credentials ${{ inputs.gke-cluster }} --zone ${{ inputs.gke-zone }}
+      - name: Docker metadata
+        id: docker-metadata
+        uses: docker/metadata-action@v4
+        with:
+          images: eu.gcr.io/${{ secrets.gke-project }}/php
+          tags: ${{ inputs.tags }}
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: ./api
+          target: api_platform_php
+          pull: true
+          push: ${{ inputs.push }}
+          tags: ${{ steps.docker-metadata.outputs.tags }}
+          labels: ${{ steps.docker-metadata.outputs.labels }}
+          cache-from: |
+            type=registry,ref=eu.gcr.io/${{ secrets.gke-project }}/caddy:latest
+            type=registry,ref=eu.gcr.io/${{ secrets.gke-project }}/php:latest
+            type=registry,ref=eu.gcr.io/${{ secrets.gke-project }}/caddy:${{ steps.docker-metadata.outputs.version }}
+            type=registry,ref=eu.gcr.io/${{ secrets.gke-project }}/php:${{ steps.docker-metadata.outputs.version }}
+          cache-to: type=inline
+    outputs:
+      version: ${{ steps.docker-metadata.outputs.version }}
+
+  caddy:
+    name: Caddy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Auth gcloud
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: ${{ secrets.gke-credentials }}
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          # https://github.com/google-github-actions/setup-gcloud/issues/128
+          version: '290.0.1'
+          project_id: ${{ secrets.gke-project }}
+      - name: Configure gcloud
+        run: |
+          gcloud --quiet auth configure-docker
+          gcloud container clusters get-credentials ${{ inputs.gke-cluster }} --zone ${{ inputs.gke-zone }}
+      - name: Docker metadata
+        id: docker-metadata
+        uses: docker/metadata-action@v4
+        with:
+          images: eu.gcr.io/${{ secrets.gke-project }}/caddy
+          tags: ${{ inputs.tags }}
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: ./api
+          target: api_platform_caddy
+          pull: true
+          push: ${{ inputs.push }}
+          tags: ${{ steps.docker-metadata.outputs.tags }}
+          labels: ${{ steps.docker-metadata.outputs.labels }}
+          cache-from: |
+            type=registry,ref=eu.gcr.io/${{ secrets.gke-project }}/caddy:latest
+            type=registry,ref=eu.gcr.io/${{ secrets.gke-project }}/php:latest
+            type=registry,ref=eu.gcr.io/${{ secrets.gke-project }}/caddy:${{ steps.docker-metadata.outputs.version }}
+            type=registry,ref=eu.gcr.io/${{ secrets.gke-project }}/php:${{ steps.docker-metadata.outputs.version }}
+          cache-to: type=inline
+    outputs:
+      version: ${{ steps.docker-metadata.outputs.version }}
+
+  pwa:
+    name: PWA
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Auth gcloud
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: ${{ secrets.gke-credentials }}
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          # https://github.com/google-github-actions/setup-gcloud/issues/128
+          version: '290.0.1'
+          project_id: ${{ secrets.gke-project }}
+      - name: Configure gcloud
+        run: |
+          gcloud --quiet auth configure-docker
+          gcloud container clusters get-credentials ${{ inputs.gke-cluster }} --zone ${{ inputs.gke-zone }}
+      - name: Docker metadata
+        id: docker-metadata
+        uses: docker/metadata-action@v4
+        with:
+          images: eu.gcr.io/${{ secrets.gke-project }}/pwa
+          tags: ${{ inputs.tags }}
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: ./pwa
+          target: api_platform_pwa_prod
+          pull: true
+          push: ${{ inputs.push }}
+          tags: ${{ steps.docker-metadata.outputs.tags }}
+          labels: ${{ steps.docker-metadata.outputs.labels }}
+          cache-from: |
+            type=registry,ref=eu.gcr.io/${{ secrets.gke-project }}/pwa:latest
+            type=registry,ref=eu.gcr.io/${{ secrets.gke-project }}/pwa:${{ steps.docker-metadata.outputs.version }}
+          cache-to: type=inline
+    outputs:
+      version: ${{ steps.docker-metadata.outputs.version }}

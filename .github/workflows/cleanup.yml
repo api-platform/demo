@@ -1,9 +1,3 @@
-# Check documentation at https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions
-# In order to use this GitHub Actions file, please define the following secrets:
-#  - GKE_PROJECT: Project id of the Google Kubernetes Engine
-#  - GKE_SA_KEY: Service Account Key of the Google Kubernetes Engine
-#  - CF_API_TOKEN: Cloudflare API token
-#  - CF_ZONE_ID: Cloudflare Zone id
 name: Cleanup
 
 on:
@@ -16,7 +10,7 @@ env:
 
 jobs:
   cleanup:
-    name: Uninstall K8s release for closed Pull Request
+    name: Uninstall K8s Release for Closed Pull Request
     runs-on: ubuntu-latest
     steps:
       - name: Auth gcloud

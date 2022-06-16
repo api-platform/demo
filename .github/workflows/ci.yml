@@ -1,4 +1,3 @@
-# Check documentation at https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions
 name: CI
 
 on:
@@ -16,16 +15,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Start services
-        run: docker-compose up --build --detach
+        run: docker compose up --build --detach
       - name: Wait for services
         run: |
-          while status="$(docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" "$(docker-compose ps -q php)")"; do
+          while status="$(docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" "$(docker compose ps -q php)")"; do
             case $status in
               starting) sleep 1;;
               healthy) exit 0;;
               unhealthy)
-                docker-compose ps
-                docker-compose logs
+                docker compose ps
+                docker compose logs
                 exit 1
               ;;
             esac
@@ -36,13 +35,13 @@ jobs:
       - name: Check HTTPS reachability
         run: curl  -vk -o /dev/null https://localhost
       - name: PHPUnit
-        run: docker-compose exec -T php bin/phpunit
+        run: docker compose exec -T php bin/phpunit
       - name: Doctrine Schema Validator
-        run: docker-compose exec -T php bin/console doctrine:schema:validate --skip-sync
+        run: docker compose exec -T php bin/console doctrine:schema:validate --skip-sync
       - name: Psalm
-        run: docker-compose exec -T php vendor/bin/psalm
+        run: docker compose exec -T php vendor/bin/psalm
       - name: Jest
-        run: docker-compose exec -T pwa yarn test --ci --passWithNoTests
+        run: docker compose exec -T pwa yarn test --ci --passWithNoTests
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v0
       - name: Lint Helm

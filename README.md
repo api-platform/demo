@@ -3,8 +3,8 @@
 This application is a demonstration for the [API Platform Framework](https://api-platform.com).
 Try it online at <https://demo.api-platform.com>.
 
-[![GitHub Actions](https://github.com/api-platform/api-platform/workflows/CI/badge.svg)](https://github.com/api-platform/api-platform/actions?workflow=CI)
-[![GitHub Actions](https://github.com/api-platform/api-platform/workflows/CD/badge.svg)](https://github.com/api-platform/api-platform/actions?workflow=CD)
+[![GitHub Actions](https://github.com/api-platform/demo/workflows/CI/badge.svg)](https://github.com/api-platform/demo/actions?workflow=CI)
+[![GitHub Actions](https://github.com/api-platform/demo/workflows/CD/badge.svg)](https://github.com/api-platform/demo/actions?workflow=CD)
 
 ## Install
 
@@ -12,11 +12,11 @@ Try it online at <https://demo.api-platform.com>.
 
     $ git clone https://github.com/api-platform/demo.git
     $ cd demo
-    $ docker-compose up -d
+    $ docker compose up -d
 
 You can now go to https://localhost
 
-## What can I find in this demo? 
+## What Can I Find In This Demo? 
 
 This demo application contains several things you may be interested.   
 
@@ -29,7 +29,7 @@ much more straightforward than using the standard `WebTestCase` provided by Symf
 * [Tests documentation](https://api-platform.com/docs/core/testing/)
 * [Code in api/tests/](api/tests)
 
-### Custom data provider
+### Custom Data Provider
 
 This example shows how to expose a CSV file as a standard API Platform endpoint.
 It also shows how to make this endpoint paginated with an extension.
