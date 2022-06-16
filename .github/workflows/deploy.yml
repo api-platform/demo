@@ -130,12 +130,12 @@ jobs:
             --create-namespace \
             --namespace=${{ inputs.namespace }} \
             --set=app.version=${{ github.sha }} \
-            --set=php.image.repository=eu.gcr.io/${{ secrets.GKE_PROJECT }}/php \
+            --set=php.image.repository=eu.gcr.io/${{ secrets.gke-project }}/php \
             --set=php.image.tag=${{ inputs.docker-images-version }} \
             --set=php.image.pullPolicy=Always \
-            --set=caddy.image.repository=eu.gcr.io/${{ secrets.GKE_PROJECT }}/caddy \
+            --set=caddy.image.repository=eu.gcr.io/${{ secrets.gke-project }}/caddy \
             --set=caddy.image.tag=${{ inputs.docker-images-version }} \
             --set=caddy.image.pullPolicy=Always \
-            --set=pwa.image.repository=eu.gcr.io/${{ secrets.GKE_PROJECT }}/pwa \
+            --set=pwa.image.repository=eu.gcr.io/${{ secrets.gke-project }}/pwa \
             --set=pwa.image.tag=${{ inputs.docker-images-version }} \
             --set=pwa.image.pullPolicy=Always
