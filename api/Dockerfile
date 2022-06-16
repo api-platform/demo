@@ -4,7 +4,7 @@
 
 
 # https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
-ARG PHP_VERSION=8.0
+ARG PHP_VERSION=8.1
 ARG CADDY_VERSION=2
 
 # "php" stage
@@ -24,7 +24,6 @@ RUN apk add --no-cache \
 # see https://github.com/docker-library/php/issues/240#issuecomment-763112749
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so
 
-ARG APCU_VERSION=5.1.19
 RUN set -eux; \
 	apk update; \
 	apk upgrade -U -a --purge; \
@@ -43,7 +42,7 @@ RUN set -eux; \
 		zip \
 	; \
 	pecl install \
-		apcu-${APCU_VERSION} \
+		apcu \
 	; \
 	pecl clear-cache; \
 	docker-php-ext-enable \
