@@ -1,0 +1,57 @@
+name: Docker Scan
+
+on:
+  schedule:
+    # Every sunday at 02:00
+    - cron: 0 2 * * 0
+  workflow_dispatch: ~
+
+env:
+  GKE_CLUSTER: api-platform-demo
+  GCE_ZONE: europe-west1-c
+
+jobs:
+  scan:
+    name: Docker Vulnerability Scan
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image:
+          - php
+          - caddy
+          - pwa
+      fail-fast: false
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    steps:
+      - name: Auth gcloud
+        uses: google-github-actions/auth@v0
+        id: gcloud-auth
+        with:
+          token_format: access_token
+          credentials_json: ${{ secrets.GKE_SA_KEY }}
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: gcr.io
+          username: oauth2accesstoken
+          password: ${{ steps.gcloud-auth.outputs.access_token }}
+      - name: Pull Docker Image
+        run: docker pull eu.gcr.io/${{ secrets.GKE_PROJECT }}/${{ matrix.image }}:main
+      - name: Cache Trivy
+        uses: actions/cache@v3
+        with:
+          path: .trivy
+          key: ${{ runner.os }}-trivy-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-trivy-
+      - name: Run Trivy Vulnerability Scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'eu.gcr.io/${{ secrets.GKE_PROJECT }}/${{ matrix.image }}:main'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os'
+          cache-dir: .trivy
