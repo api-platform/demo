@@ -5,7 +5,7 @@ on:
     inputs:
       tags:
         type: string
-        description: The Docker Tags (see docker/metadata-action@v3 for available values)
+        description: The Docker Tags (see docker/metadata-action@v4 for available values)
         required: true
       push:
         default: true
@@ -58,12 +58,12 @@ jobs:
           gcloud container clusters get-credentials ${{ inputs.gke-cluster }} --zone ${{ inputs.gke-zone }}
       - name: Docker metadata
         id: docker-metadata
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v4
         with:
           images: eu.gcr.io/${{ secrets.gke-project }}/php
           tags: ${{ inputs.tags }}
       - name: Build and push
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./api
           target: api_platform_php
@@ -105,12 +105,12 @@ jobs:
           gcloud container clusters get-credentials ${{ inputs.gke-cluster }} --zone ${{ inputs.gke-zone }}
       - name: Docker metadata
         id: docker-metadata
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v4
         with:
           images: eu.gcr.io/${{ secrets.gke-project }}/caddy
           tags: ${{ inputs.tags }}
       - name: Build and push
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./api
           target: api_platform_caddy
@@ -152,12 +152,12 @@ jobs:
           gcloud container clusters get-credentials ${{ inputs.gke-cluster }} --zone ${{ inputs.gke-zone }}
       - name: Docker metadata
         id: docker-metadata
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v4
         with:
           images: eu.gcr.io/${{ secrets.gke-project }}/pwa
           tags: ${{ inputs.tags }}
       - name: Build and push
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./pwa
           target: api_platform_pwa_prod
