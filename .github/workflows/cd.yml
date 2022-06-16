@@ -6,10 +6,6 @@ on:
       - main
   pull_request: ~
 
-env:
-  GKE_CLUSTER: api-platform-demo
-  GCE_ZONE: europe-west1-c
-
 jobs:
   build:
     name: Build
@@ -18,10 +14,11 @@ jobs:
     with:
       tags: |
         type=ref,event=pr,prefix=pr-,priority=1000
-        type=ref,event=branch,priority=900
+        type=edge,branch=$repo.default_branch,priority=900
+        type=raw,value=latest,enable={{is_default_branch}},priority=900
       push: true
-      gke-cluster: $GKE_CLUSTER
-      gke-zone: $GCE_ZONE
+      gke-cluster: api-platform-demo
+      gke-zone: europe-west1-c
     secrets:
       gke-credentials: ${{ secrets.GKE_SA_KEY }}
       gke-project: ${{ secrets.GKE_PROJECT }}
@@ -38,8 +35,8 @@ jobs:
       cors: ^https?://demo\\.api-platform\\.com$
       release: main
       namespace: main
-      gke-cluster: $GKE_CLUSTER
-      gke-zone: $GCE_ZONE
+      gke-cluster: api-platform-demo
+      gke-zone: europe-west1-c
     secrets:
       gke-credentials: ${{ secrets.GKE_SA_KEY }}
       gke-project: ${{ secrets.GKE_PROJECT }}
@@ -47,19 +44,19 @@ jobs:
       cloudflare-zone-id: ${{ secrets.CF_ZONE_ID }}
 
   feature-deploy:
-    name: Deploy
+    name: Feature Deploy
     needs: [ build ]
     if: github.event_name == 'pull_request'
     uses: ./.github/workflows/deploy.yml
     with:
       environment: ${{ needs.build.outputs.version }}
       url: ${{ needs.build.outputs.version }}-demo.api-platform.com
-      docker-images-version: latest
+      docker-images-version: ${{ needs.build.outputs.version }}
       cors: ^https?://${{ needs.build.outputs.version }}-demo\\.api-platform\\.com$
       release: ${{ needs.build.outputs.version }}
       namespace: ${{ needs.build.outputs.version }}
-      gke-cluster: $GKE_CLUSTER
-      gke-zone: $GCE_ZONE
+      gke-cluster: api-platform-demo
+      gke-zone: europe-west1-c
     secrets:
       gke-credentials: ${{ secrets.GKE_SA_KEY }}
       gke-project: ${{ secrets.GKE_PROJECT }}
