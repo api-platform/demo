@@ -18,6 +18,10 @@ use Symfony\Component\HttpFoundation\Response;
 class TopBooksTest extends ApiTestCase
 {
     private Client $client;
+
+    /**
+     * @var int
+     */
     private const PAGINATION_ITEMS_PER_PAGE = 10;
 
     protected function setup(): void

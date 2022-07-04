@@ -18,7 +18,7 @@ final class TopBookPaginationExtension implements TopBookCollectionExtensionInte
      */
     public function getResult(array $collection, string $resourceClass, string $operationName = null, array $context = []): iterable
     {
-        [, $offset, $itemPerPage] = $this->pagination->getPagination($resourceClass, $operationName, $context);
+        [, $offset, $itemPerPage] = $this->pagination->getPagination($resourceClass, $operationName);
 
         return new ArrayPaginator($collection, $offset, $itemPerPage);
     }
@@ -28,6 +28,6 @@ final class TopBookPaginationExtension implements TopBookCollectionExtensionInte
      */
     public function isEnabled(string $resourceClass = null, string $operationName = null, array $context = []): bool
     {
-        return $this->pagination->isEnabled($resourceClass, $operationName, $context);
+        return $this->pagination->isEnabled($resourceClass, $operationName);
     }
 }

@@ -14,6 +14,10 @@ final class ReviewsTest extends ApiTestCase
     use RefreshDatabaseTrait;
 
     private Client $client;
+
+    /**
+     * @var string
+     */
     private const ISBN = '9786644879585';
 
     protected function setup(): void
@@ -24,14 +28,14 @@ final class ReviewsTest extends ApiTestCase
     public function testFilterReviewsByBook(): void
     {
         $iri = $this->findIriBy(Book::class, ['isbn' => self::ISBN]);
-        $response = $this->client->request('GET', "/reviews?book=$iri");
+        $response = $this->client->request('GET', sprintf('/reviews?book=%s', $iri));
         self::assertCount(2, $response->toArray()['hydra:member']);
     }
 
     public function testBookSubresource(): void
     {
         $iri = $this->findIriBy(Book::class, ['isbn' => self::ISBN]);
-        $response = $this->client->request('GET', "$iri/reviews");
+        $response = $this->client->request('GET', sprintf('%s/reviews', $iri));
         self::assertCount(2, $response->toArray()['hydra:member']);
     }
 

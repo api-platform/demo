@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use DateTimeInterface;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
@@ -104,9 +105,9 @@ class Book implements ArchivableInterface
     #[ORM\Column(type: 'date')]
     #[ApiProperty(types: ['https://schema.org/dateCreated'])]
     #[Assert\NotNull]
-    #[Assert\Type(\DateTimeInterface::class)]
+    #[Assert\Type(DateTimeInterface::class)]
     #[Groups(groups: ['book:read'])]
-    public ?\DateTimeInterface $publicationDate = null;
+    public ?DateTimeInterface $publicationDate = null;
 
     /**
      * The book's reviews.

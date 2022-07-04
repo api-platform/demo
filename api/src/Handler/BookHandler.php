@@ -21,12 +21,12 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 final class BookHandler implements MessageHandlerInterface
 {
     public function __construct(
-        private IriConverterInterface $iriConverter,
-        private SerializerInterface $serializer,
-        private HubInterface $hub,
-        private ResourceMetadataCollectionFactoryInterface $resourceMetadataCollectionFactory,
-        private HttpClientInterface $client,
-        private LoggerInterface $logger
+        private readonly IriConverterInterface $iriConverter,
+        private readonly SerializerInterface $serializer,
+        private readonly HubInterface $hub,
+        private readonly ResourceMetadataCollectionFactoryInterface $resourceMetadataCollectionFactory,
+        private readonly HttpClientInterface $client,
+        private readonly LoggerInterface $logger
     ) {
     }
 
@@ -34,9 +34,9 @@ final class BookHandler implements MessageHandlerInterface
     {
         try {
             $response = $this->client->request('GET', 'https://api.imgflip.com/get_memes');
-        } catch (TransportExceptionInterface $e) {
+        } catch (TransportExceptionInterface $transportException) {
             $this->logger->error('Cannot call Imgflip API.', [
-                'error' => $e->getMessage(),
+                'error' => $transportException->getMessage(),
             ]);
 
             return;
@@ -44,9 +44,9 @@ final class BookHandler implements MessageHandlerInterface
 
         try {
             $contents = $response->toArray();
-        } catch (ExceptionInterface $e) {
+        } catch (ExceptionInterface $exception) {
             $this->logger->error('Invalid JSON from Imgflip API.', [
-                'error' => $e->getMessage(),
+                'error' => $exception->getMessage(),
             ]);
 
             return;
@@ -58,7 +58,7 @@ final class BookHandler implements MessageHandlerInterface
         // Set Book.cover image in base64
         $book->cover = \sprintf(
             'data:image/%s;base64,%s',
-            \pathinfo($imageUrl, PATHINFO_EXTENSION),
+            \pathinfo((string) $imageUrl, PATHINFO_EXTENSION),
             \base64_encode($imageContent)
         );
 

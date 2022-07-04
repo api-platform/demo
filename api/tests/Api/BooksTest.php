@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Api;
 
+use RuntimeException;
+use LogicException;
+use iterator;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use ApiPlatform\Symfony\Routing\Router;
@@ -16,21 +19,42 @@ class BooksTest extends ApiTestCase
     use RefreshDatabaseTrait;
 
     private Client $client;
+
     private Router $router;
 
-    public const ISBN = '9786644879585';
-    public const ITEMS_PER_PAGE = 30;
-    public const COUNT_WITHOUT_ARCHIVED = 100;
-    public const COUNT_ARCHIVED = 1;
-    public const COUNT = self::COUNT_WITHOUT_ARCHIVED + self::COUNT_ARCHIVED;
+    /**
+     * @var string
+     */
+    final public const ISBN = '9786644879585';
+
+    /**
+     * @var int
+     */
+    final public const ITEMS_PER_PAGE = 30;
+
+    /**
+     * @var int
+     */
+    final public const COUNT_WITHOUT_ARCHIVED = 100;
+
+    /**
+     * @var int
+     */
+    final public const COUNT_ARCHIVED = 1;
+
+    /**
+     * @var int
+     */
+    final public const COUNT = self::COUNT_WITHOUT_ARCHIVED + self::COUNT_ARCHIVED;
 
     protected function setup(): void
     {
         $this->client = static::createClient();
         $router = static::getContainer()->get('api_platform.router');
         if (!$router instanceof Router) {
-            throw new \RuntimeException('api_platform.router service not found.');
+            throw new RuntimeException('api_platform.router service not found.');
         }
+
         $this->router = $router;
     }
 
@@ -67,8 +91,8 @@ class BooksTest extends ApiTestCase
     {
         $response = $this->client->request('POST', '/books', ['json' => [
             'isbn' => '0099740915',
-            'title' => 'The Handmaid\'s Tale',
-            'description' => 'Brilliantly conceived and executed, this powerful evocation of twenty-first century America gives full rein to Margaret Atwood\'s devastating irony, wit and astute perception.',
+            'title' => "The Handmaid's Tale",
+            'description' => "Brilliantly conceived and executed, this powerful evocation of twenty-first century America gives full rein to Margaret Atwood's devastating irony, wit and astute perception.",
             'author' => 'Margaret Atwood',
             'publicationDate' => '1985-07-31T00:00:00+00:00',
         ]]);
@@ -79,8 +103,8 @@ class BooksTest extends ApiTestCase
             '@context' => '/contexts/Book',
             '@type' => 'https://schema.org/Book',
             'isbn' => '0099740915',
-            'title' => 'The Handmaid\'s Tale',
-            'description' => 'Brilliantly conceived and executed, this powerful evocation of twenty-first century America gives full rein to Margaret Atwood\'s devastating irony, wit and astute perception.',
+            'title' => "The Handmaid's Tale",
+            'description' => "Brilliantly conceived and executed, this powerful evocation of twenty-first century America gives full rein to Margaret Atwood's devastating irony, wit and astute perception.",
             'author' => 'Margaret Atwood',
             'publicationDate' => '1985-07-31T00:00:00+00:00',
             'reviews' => [],
@@ -144,19 +168,20 @@ publicationDate: This value should not be null.',
         $book = static::getContainer()->get('doctrine')->getRepository(Book::class)->findOneBy(['isbn' => self::ISBN]);
         self::assertInstanceOf(Book::class, $book);
         if (!$book instanceof Book) {
-            throw new \LogicException('Book not found.');
+            throw new LogicException('Book not found.');
         }
+
         $this->client->request('PUT', $this->router->generate('api_books_generate_cover_item', ['id' => $book->getId()]), [
             'json' => [],
         ]);
 
         $messengerReceiverLocator = static::getContainer()->get('messenger.receiver_locator');
         if (!$messengerReceiverLocator instanceof ServiceProviderInterface) {
-            throw new \RuntimeException('messenger.receiver_locator service not found.');
+            throw new RuntimeException('messenger.receiver_locator service not found.');
         }
 
         self::assertResponseIsSuccessful();
-        self::assertEquals(
+        self::assertSame(
             1,
             $messengerReceiverLocator->get('doctrine')->getMessageCount(),
             'No message has been sent.'
@@ -177,7 +202,7 @@ publicationDate: This value should not be null.',
         ]);
     }
 
-    public function archivedParameterProvider(): \iterator
+    public function archivedParameterProvider(): iterator
     {
         // Only archived are returned
         yield ['true',  self::COUNT_ARCHIVED];
