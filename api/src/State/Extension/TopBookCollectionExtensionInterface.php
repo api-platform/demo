@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\DataProvider\Extension;
+namespace App\State\Extension;
 
 use App\Entity\TopBook;
 

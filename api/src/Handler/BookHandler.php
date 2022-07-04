@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
-use ApiPlatform\Core\Api\IriConverterInterface;
-use ApiPlatform\Core\Api\UrlGeneratorInterface;
-use ApiPlatform\Core\JsonLd\Serializer\ItemNormalizer;
-use ApiPlatform\Core\Metadata\Resource\Factory\ResourceMetadataFactoryInterface;
+use ApiPlatform\Api\IriConverterInterface;
+use ApiPlatform\Api\UrlGeneratorInterface;
+use ApiPlatform\JsonLd\Serializer\ItemNormalizer;
+use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use App\Entity\Book;
 use ProxyManager\Exception\ExceptionInterface;
 use Psr\Log\LoggerInterface;
@@ -24,7 +24,7 @@ final class BookHandler implements MessageHandlerInterface
         private IriConverterInterface $iriConverter,
         private SerializerInterface $serializer,
         private HubInterface $hub,
-        private ResourceMetadataFactoryInterface $resourceMetadataFactory,
+        private ResourceMetadataCollectionFactoryInterface $resourceMetadataCollectionFactory,
         private HttpClientInterface $client,
         private LoggerInterface $logger
     ) {
@@ -64,11 +64,13 @@ final class BookHandler implements MessageHandlerInterface
 
         // Send message to Mercure hub
         $update = new Update(
-            $this->iriConverter->getIriFromItem($book, UrlGeneratorInterface::ABS_URL),
+            $this->iriConverter->getIriFromResource($book, UrlGeneratorInterface::ABS_URL),
             $this->serializer->serialize(
                 $book,
                 ItemNormalizer::FORMAT,
-                $this->resourceMetadataFactory->create(Book::class)->getItemOperationAttribute('generate_cover', 'normalizationContext', [])
+                $this->resourceMetadataCollectionFactory->create(Book::class)
+                    ->getOperation('_api_/books/{id}/generate-cover.{_format}_get')
+                    ->getNormalizationContext()
             )
         );
         $this->hub->publish($update);

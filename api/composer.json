@@ -2,10 +2,10 @@
     "type": "project",
     "license": "MIT",
     "require": {
-        "php": ">=8.0",
+        "php": ">=8.1",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "api-platform/core": "^2.6",
+        "api-platform/core": "^3.0@beta",
         "composer/package-versions-deprecated": "^1.11",
         "doctrine/annotations": "^1.13",
         "doctrine/doctrine-bundle": "^2.3",

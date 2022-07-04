@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Api;
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\Client;
-use ApiPlatform\Core\Bridge\Symfony\Routing\Router;
+use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+use ApiPlatform\Symfony\Bundle\Test\Client;
+use ApiPlatform\Symfony\Routing\Router;
 use App\Entity\Book;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Service\ServiceProviderInterface;

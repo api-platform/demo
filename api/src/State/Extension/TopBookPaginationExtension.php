@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\DataProvider\Extension;
+namespace App\State\Extension;
 
-use ApiPlatform\Core\DataProvider\ArrayPaginator;
-use ApiPlatform\Core\DataProvider\Pagination;
+use ApiPlatform\State\Pagination\ArrayPaginator;
+use ApiPlatform\State\Pagination\Pagination;
 
 final class TopBookPaginationExtension implements TopBookCollectionExtensionInterface
 {
-    public function __construct(private Pagination $pagination)
+    public function __construct(private readonly Pagination $pagination)
     {
     }
 
