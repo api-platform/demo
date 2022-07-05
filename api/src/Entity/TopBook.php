@@ -8,6 +8,8 @@ use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use App\State\TopBookCollectionProvider;
+use App\State\TopBookItemProvider;
 
 /**
  * This entity represents a "most borrowed book" in a given French library.
@@ -19,13 +21,11 @@ use ApiPlatform\Metadata\GetCollection;
  * @see /data/top-100-novel-sci-fi-fr.csv
  */
 #[ApiResource(
-    operations: [
-        new GetCollection(),
-        new Get(),
-    ],
     paginationEnabled: true,
     paginationItemsPerPage: 10,
 )]
+#[GetCollection(provider: TopBookCollectionProvider::class)]
+#[Get(provider: TopBookItemProvider::class)]
 class TopBook
 {
     public function __construct(

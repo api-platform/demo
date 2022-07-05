@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\GetCollection;
 use DateTimeInterface;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
@@ -30,16 +31,17 @@ use Symfony\Component\Validator\Constraints as Assert;
     mercure: true,
     paginationClientItemsPerPage: true,
 )]
+#[ApiFilter(OrderFilter::class, properties: ['id', 'publicationDate'])]
 #[ApiResource(
     uriTemplate: '/books/{bookId}/reviews.{_format}',
     types: ['https://schema.org/Review'],
     uriVariables: [
-        'bookId' => new Link(fromClass: Book::class, identifiers: ['id']),
+        'bookId' => new Link(toProperty: 'book', fromClass: Book::class),
     ],
     normalizationContext: ['groups' => ['review:read']],
     denormalizationContext: ['groups' => ['review:write']]
 )]
-#[ApiFilter(OrderFilter::class, properties: ['id', 'publicationDate'])]
+#[GetCollection]
 class Review
 {
     #[ORM\Id, ORM\GeneratedValue(strategy: 'CUSTOM'), ORM\CustomIdGenerator(class: UuidGenerator::class)]

@@ -6,9 +6,9 @@ namespace App\Tests\Api;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Entity\TopBook;
 use App\State\TopBookCollectionProvider;
 use App\State\TopBookItemProvider;
-use App\Entity\TopBook;
 use Symfony\Component\HttpFoundation\Response;
 
 /**

@@ -171,7 +171,7 @@ publicationDate: This value should not be null.',
             throw new LogicException('Book not found.');
         }
 
-        $this->client->request('PUT', $this->router->generate('api_books_generate_cover_item', ['id' => $book->getId()]), [
+        $this->client->request('PUT', $this->router->generate('_api_/books/{id}/generate-cover.{_format}_put', ['id' => $book->getId()]), [
             'json' => [],
         ]);
 

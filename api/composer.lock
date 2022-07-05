@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "api-platform/core",
-            "version": "v3.0.0-beta.1",
+            "version": "v3.0.0-beta.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/core.git",
-                "reference": "bd24fdf6510868f946b81e4a765fb8429f982e9c"
+                "reference": "e7417cb8152fa35e850dfbdb4df3018fb4c6bd8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/core/zipball/bd24fdf6510868f946b81e4a765fb8429f982e9c",
-                "reference": "bd24fdf6510868f946b81e4a765fb8429f982e9c",
+                "url": "https://api.github.com/repos/api-platform/core/zipball/e7417cb8152fa35e850dfbdb4df3018fb4c6bd8d",
+                "reference": "e7417cb8152fa35e850dfbdb4df3018fb4c6bd8d",
                 "shasum": ""
             },
             "require": {
@@ -95,6 +95,7 @@
                 "symfony/security-bundle": "^3.4 || ^4.4 || ^5.1 || ^6.0",
                 "symfony/security-core": "^4.4 || ^5.1 || ^6.0",
                 "symfony/twig-bundle": "^3.4 || ^4.4 || ^5.1 || ^6.0",
+                "symfony/uid": "^5.1 || ^6.0",
                 "symfony/validator": "^3.4 || ^4.4 || ^5.1 || ^6.0",
                 "symfony/web-profiler-bundle": "^4.4 || ^5.1 || ^6.0",
                 "symfony/yaml": "^3.4 || ^4.4 || ^5.1 || ^6.0",
@@ -159,7 +160,7 @@
             ],
             "support": {
                 "issues": "https://github.com/api-platform/core/issues",
-                "source": "https://github.com/api-platform/core/tree/v3.0.0-beta.1"
+                "source": "https://github.com/api-platform/core/tree/v3.0.0-beta.2"
             },
             "funding": [
                 {
@@ -167,7 +168,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-07-01T14:49:55+00:00"
+            "time": "2022-07-18T15:34:01+00:00"
         },
         {
             "name": "brick/math",

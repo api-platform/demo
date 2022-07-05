@@ -26,7 +26,6 @@ final class TopBookCollectionProvider implements ProviderInterface
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): iterable
     {
         $resourceClass = $operation->getClass();
-        $operationName = $operation->getName();
 
         try {
             $collection = $this->repository->getTopBooks();
@@ -34,10 +33,10 @@ final class TopBookCollectionProvider implements ProviderInterface
             throw new RuntimeException(sprintf('Unable to retrieve top books from external source: %s', $exception->getMessage()));
         }
 
-        if (!$this->paginationExtension->isEnabled($resourceClass, $operationName, $context)) {
+        if (!$this->paginationExtension->isEnabled($resourceClass, $operation, $context)) {
             return $collection;
         }
 
-        return $this->paginationExtension->getResult($collection, $resourceClass, $operationName, $context);
+        return $this->paginationExtension->getResult($collection, $resourceClass, $operation, $context);
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\State\Extension;
 
+use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\Pagination\ArrayPaginator;
 use ApiPlatform\State\Pagination\Pagination;
 
@@ -16,9 +17,9 @@ final class TopBookPaginationExtension implements TopBookCollectionExtensionInte
     /**
      * {@inheritdoc}
      */
-    public function getResult(array $collection, string $resourceClass, string $operationName = null, array $context = []): iterable
+    public function getResult(array $collection, string $resourceClass, ?Operation $operation = null, array $context = []): iterable
     {
-        [, $offset, $itemPerPage] = $this->pagination->getPagination($resourceClass, $operationName);
+        [, $offset, $itemPerPage] = $this->pagination->getPagination($operation, $context);
 
         return new ArrayPaginator($collection, $offset, $itemPerPage);
     }
@@ -26,8 +27,8 @@ final class TopBookPaginationExtension implements TopBookCollectionExtensionInte
     /**
      * {@inheritdoc}
      */
-    public function isEnabled(string $resourceClass = null, string $operationName = null, array $context = []): bool
+    public function isEnabled(string $resourceClass = null, ?Operation $operation = null, array $context = []): bool
     {
-        return $this->pagination->isEnabled($resourceClass, $operationName);
+        return $this->pagination->isEnabled($operation, $context);
     }
 }

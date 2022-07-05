@@ -69,7 +69,7 @@ final class BookHandler implements MessageHandlerInterface
                 $book,
                 ItemNormalizer::FORMAT,
                 $this->resourceMetadataCollectionFactory->create(Book::class)
-                    ->getOperation('_api_/books/{id}/generate-cover.{_format}_get')
+                    ->getOperation('_api_/books/{id}/generate-cover.{_format}_put')
                     ->getNormalizationContext()
             )
         );

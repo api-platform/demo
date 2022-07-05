@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\Link;
 use DateTimeInterface;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
@@ -32,22 +33,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity]
 #[ApiResource(
     types: ['https://schema.org/Book'],
-    operations: [
-        new GetCollection(),
-        new Post(),
-        new Get(),
-        new Put(),
-        new Patch(),
-        new Delete(security: 'is_granted("ROLE_ADMIN")'),
-        new Put(
-            uriTemplate: '/books/{id}/generate-cover.{_format}',
-            normalizationContext: ['groups' => ['book:read', 'book:cover']],
-            output: false,
-        ),
-    ],
     normalizationContext: ['groups' => ['book:read']],
     mercure: true,
     paginationClientItemsPerPage: true,
+)]
+#[GetCollection]
+#[Post]
+#[Get]
+#[Put]
+#[Patch]
+#[Delete]
+#[Put(
+    uriTemplate: '/books/{id}/generate-cover.{_format}',
+    normalizationContext: ['groups' => ['book:read', 'book:cover']],
+    output: false,
+    messenger: true,
 )]
 #[ApiFilter(ArchivedFilter::class)]
 #[ApiFilter(OrderFilter::class, properties: ['id', 'title', 'author', 'isbn', 'publicationDate'])]
