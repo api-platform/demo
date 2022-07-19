@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Api;
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\Client;
-use App\DataProvider\TopBookCollectionDataProvider;
+use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Entity\TopBook;
+use App\State\TopBookCollectionProvider;
+use App\State\TopBookItemProvider;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -17,6 +18,10 @@ use Symfony\Component\HttpFoundation\Response;
 class TopBooksTest extends ApiTestCase
 {
     private Client $client;
+
+    /**
+     * @var int
+     */
     private const PAGINATION_ITEMS_PER_PAGE = 10;
 
     protected function setup(): void
@@ -25,7 +30,7 @@ class TopBooksTest extends ApiTestCase
     }
 
     /**
-     * @see TopBookCollectionDataProvider::getCollection()
+     * @see TopBookCollectionProvider::provide()
      */
     public function testGetCollection(): void
     {
@@ -62,7 +67,7 @@ class TopBooksTest extends ApiTestCase
     /**
      * Nominal case.
      *
-     * @see TopBookItemDataProvider::getItem()
+     * @see TopBookItemProvider::provide()
      */
     public function testGetItem(): void
     {
@@ -87,7 +92,7 @@ class TopBooksTest extends ApiTestCase
     /**
      * Error case n°1: invalid identifier.
      *
-     * @see TopBookItemDataProvider::checkId()
+     * @see TopBookItemProvider::provide()
      */
     public function testGetItemErrorIdIsNotAnInteger(): void
     {
@@ -99,7 +104,7 @@ class TopBooksTest extends ApiTestCase
     /**
      * Error case n°2: out of range identifier.
      *
-     * @see TopBookItemDataProvider::checkId()
+     * @see TopBookItemProvider::provide()
      */
     public function testGetItemErrorIdIsOutOfRange(): void
     {

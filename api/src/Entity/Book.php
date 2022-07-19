@@ -4,13 +4,20 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Annotation\ApiSubresource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
+use ApiPlatform\Metadata\Link;
+use DateTimeInterface;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Serializer\Filter\PropertyFilter;
 use App\Filter\ArchivedFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -25,23 +32,22 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ORM\Entity]
 #[ApiResource(
-    iri: 'https://schema.org/Book',
-    itemOperations: [
-        'get',
-        'put',
-        'patch',
-        'delete' => ['security' => 'is_granted("ROLE_ADMIN")'],
-        'generate_cover' => [
-            'method' => 'PUT',
-            'path' => '/books/{id}/generate-cover',
-            'output' => false,
-            'messenger' => true,
-            'normalizationContext' => ['groups' => ['book:read', 'book:cover']],
-        ],
-    ],
-    mercure: true,
+    types: ['https://schema.org/Book'],
     normalizationContext: ['groups' => ['book:read']],
+    mercure: true,
     paginationClientItemsPerPage: true,
+)]
+#[GetCollection]
+#[Post]
+#[Get]
+#[Put]
+#[Patch]
+#[Delete]
+#[Put(
+    uriTemplate: '/books/{id}/generate-cover.{_format}',
+    normalizationContext: ['groups' => ['book:read', 'book:cover']],
+    output: false,
+    messenger: true,
 )]
 #[ApiFilter(ArchivedFilter::class)]
 #[ApiFilter(OrderFilter::class, properties: ['id', 'title', 'author', 'isbn', 'publicationDate'])]
@@ -59,7 +65,7 @@ class Book implements ArchivableInterface
      * The ISBN of the book.
      */
     #[ORM\Column(nullable: true)]
-    #[ApiProperty(iri: 'https://schema.org/isbn')]
+    #[ApiProperty(types: ['https://schema.org/isbn'])]
     #[Assert\Isbn]
     #[Groups(groups: ['book:read'])]
     public ?string $isbn = null;
@@ -69,7 +75,7 @@ class Book implements ArchivableInterface
      */
     #[ORM\Column]
     #[ApiFilter(SearchFilter::class, strategy: 'ipartial')]
-    #[ApiProperty(iri: 'https://schema.org/name')]
+    #[ApiProperty(types: ['https://schema.org/name'])]
     #[Assert\NotBlank]
     #[Groups(groups: ['book:read', 'review:read'])]
     public ?string $title = null;
@@ -78,7 +84,7 @@ class Book implements ArchivableInterface
      * A description of the item.
      */
     #[ORM\Column(type: 'text')]
-    #[ApiProperty(iri: 'https://schema.org/description')]
+    #[ApiProperty(types: ['https://schema.org/description'])]
     #[Assert\NotBlank]
     #[Groups(groups: ['book:read'])]
     public ?string $description = null;
@@ -88,7 +94,7 @@ class Book implements ArchivableInterface
      */
     #[ORM\Column]
     #[ApiFilter(SearchFilter::class, strategy: 'ipartial')]
-    #[ApiProperty(iri: 'https://schema.org/author')]
+    #[ApiProperty(types: ['https://schema.org/author'])]
     #[Assert\NotBlank]
     #[Groups(groups: ['book:read'])]
     public ?string $author = null;
@@ -97,18 +103,17 @@ class Book implements ArchivableInterface
      * The date on which the CreativeWork was created or the item was added to a DataFeed.
      */
     #[ORM\Column(type: 'date')]
-    #[ApiProperty(iri: 'https://schema.org/dateCreated')]
+    #[ApiProperty(types: ['https://schema.org/dateCreated'])]
     #[Assert\NotNull]
-    #[Assert\Type(\DateTimeInterface::class)]
+    #[Assert\Type(DateTimeInterface::class)]
     #[Groups(groups: ['book:read'])]
-    public ?\DateTimeInterface $publicationDate = null;
+    public ?DateTimeInterface $publicationDate = null;
 
     /**
      * The book's reviews.
      */
     #[ORM\OneToMany(mappedBy: 'book', targetEntity: Review::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
-    #[ApiProperty(iri: 'https://schema.org/reviews')]
-    #[ApiSubresource]
+    #[ApiProperty(types: ['https://schema.org/reviews'])]
     #[Groups(groups: ['book:read'])]
     private Collection $reviews;
 
