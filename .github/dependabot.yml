@@ -1,11 +1,5 @@
 version: 2
 
-registries:
-  composer-packagist:
-    type: composer-repository
-  npm-github:
-    type: npm-registry
-
 updates:
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: github-actions
@@ -16,8 +10,6 @@ updates:
     directory: /api
     schedule:
       interval: daily
-    registries:
-      - composer-packagist
     labels:
       - dependencies
     open-pull-requests-limit: 0 # open Pull Requests for security updates only
@@ -25,8 +17,6 @@ updates:
     directory: /pwa
     schedule:
       interval: daily
-    registries:
-      - npm-github
     labels:
       - dependencies
     open-pull-requests-limit: 0 # open Pull Requests for security updates only
