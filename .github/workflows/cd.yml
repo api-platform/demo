@@ -4,12 +4,14 @@ on:
   push:
     branches:
       - main
-  pull_request: ~
+  # Deploy if "deploy" label exists
+  pull_request:
+    types: [ reopened, synchronize, labeled ]
 
 jobs:
   build:
     name: Build
-    if: github.repository == 'api-platform/demo'
+    if: ${{ github.repository == 'api-platform/demo' && contains(github.event.pull_request.labels.*.name, 'deploy') }}
     uses: ./.github/workflows/build.yml
     with:
       tags: |
