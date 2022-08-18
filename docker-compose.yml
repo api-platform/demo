@@ -67,7 +67,7 @@ services:
       SERVER_NAME: ${SERVER_NAME:-localhost}, caddy:80
       MERCURE_PUBLISHER_JWT_KEY: ${MERCURE_PUBLISHER_JWT_KEY:-!ChangeMe!}
       MERCURE_SUBSCRIBER_JWT_KEY: ${MERCURE_SUBSCRIBER_JWT_KEY:-!ChangeMe!}
-      MERCURE_EXTRA_DIRECTIVES: demo /srv/mercure-assets/
+      MERCURE_EXTRA_DIRECTIVES: demo
     restart: unless-stopped
     volumes:
       - php_socket:/var/run/php

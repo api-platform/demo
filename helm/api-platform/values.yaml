@@ -12,7 +12,7 @@ php:
   appEnv: prod
   appDebug: "0"
   appSecret: ""
-  corsAllowOrigin: "^https?://.*?\\.chart-example\\.local$"
+  corsAllowOrigins: "^http://chart-example\\.local|https://chart-example\\.local$"
   trustedHosts: "^127\\.0\\.0\\.1|localhost|.*\\.chart-example\\.local$"
   trustedProxies:
     - "127.0.0.1"
@@ -46,7 +46,7 @@ mercure:
   publicUrl: https://chart-example.local/.well-known/mercure
   # Change me!
   jwtSecret: "!ChangeMe!"
-  corsAllowedOrigins: "^https?://.*?\\.chart-example\\.local$"
+  corsAllowOrigins: "http://chart-example.local https://chart-example.local"
 
 # Full configuration: https://github.com/bitnami/charts/tree/master/bitnami/postgresql
 postgresql:

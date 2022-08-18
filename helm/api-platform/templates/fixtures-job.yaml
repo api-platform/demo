@@ -75,7 +75,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: {{ include "api-platform.fullname" . }}
-                  key: php-cors-allow-origin
+                  key: php-cors-allow-origins
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:

@@ -34,7 +34,7 @@ jobs:
       environment: prod
       url: demo.api-platform.com
       docker-images-version: main
-      cors: ^https?://(demo\\.api-platform\\.com|(localhost|127\\.0\\.0\\.1)(?::[0-9]+)?)$
+      cors: '["https://demo.api-platform.com", "http://localhost", "https://localhost", "http://localhost:3000"]'
       release: main
       namespace: main
       gke-cluster: api-platform-demo
@@ -54,7 +54,7 @@ jobs:
       environment: ${{ needs.build.outputs.version }}
       url: ${{ needs.build.outputs.version }}-demo.api-platform.com
       docker-images-version: ${{ needs.build.outputs.version }}
-      cors: ^https?://(${{ needs.build.outputs.version }}-demo\\.api-platform\\.com|(localhost|127\\.0\\.0\\.1)(?::[0-9]+)?)$
+      cors: '["https://${{ needs.build.outputs.version }}-demo.api-platform.com", "http://localhost", "https://localhost", "http://localhost:3000"]'
       release: ${{ needs.build.outputs.version }}
       namespace: ${{ needs.build.outputs.version }}
       gke-cluster: api-platform-demo
