@@ -116,10 +116,10 @@ jobs:
             --set=php.jwt.secretKey="$JWT_SECRET_KEY" \
             --set=php.jwt.publicKey="$(openssl pkey -in <(echo "$JWT_SECRET_KEY") -passin file:<(echo "$JWT_PASSPHRASE") -pubout)" \
             --set=php.jwt.passphrase=$JWT_PASSPHRASE \
-            --set=php.corsAllowOrigin="${{ inputs.cors }}" \
+            --set=php.corsAllowOrigins="^$(echo ${{ join(fromJSON(inputs.cors), '|') }} | sed 's/\./\\./g')$" \
             --set=php.host=${{ inputs.url }} \
             --set=mercure.publicUrl=https://${{ inputs.url }}/.well-known/mercure \
-            --set=mercure.corsAllowedOrigins="${{ inputs.cors }}" \
+            --set=mercure.corsAllowOrigins="${{ inputs.cors }}" \
             --set=postgresql.postgresqlPassword=$(openssl rand -base64 32 | tr -d "=+/")
       - name: Upgrade namespace
         if: steps.k8s-namespace.outputs.namespace != ''

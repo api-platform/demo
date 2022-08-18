@@ -50,6 +50,11 @@ spec:
                 secretKeyRef:
                   name: {{ include "api-platform.fullname" . }}
                   key: mercure-jwt-secret
+            - name: MERCURE_CORS_ALLOW_ORIGINS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: mercure-cors-allow-origins
           ports:
             - name: http
               containerPort: 80
@@ -131,7 +136,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: {{ include "api-platform.fullname" . }}
-                  key: php-cors-allow-origin
+                  key: php-cors-allow-origins
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
@@ -229,7 +234,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: {{ include "api-platform.fullname" . }}
-                  key: php-cors-allow-origin
+                  key: php-cors-allow-origins
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
