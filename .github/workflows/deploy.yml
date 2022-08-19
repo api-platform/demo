@@ -138,4 +138,6 @@ jobs:
             --set=caddy.image.pullPolicy=Always \
             --set=pwa.image.repository=eu.gcr.io/${{ secrets.gke-project }}/pwa \
             --set=pwa.image.tag=${{ inputs.docker-images-version }} \
-            --set=pwa.image.pullPolicy=Always
+            --set=pwa.image.pullPolicy=Always \
+            --set=php.corsAllowOrigins="^$(echo "${{ join(fromJSON(inputs.cors), '|') }}" | sed 's/\./\\./g')$" \
+            --set=mercure.corsAllowOrigins="${{ join(fromJSON(inputs.cors), ' ') }}"
