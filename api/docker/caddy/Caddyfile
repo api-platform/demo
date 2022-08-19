@@ -1,6 +1,5 @@
 {
-    # Debug
-    {$DEBUG}
+    {$GLOBAL_OPTIONS}
     # HTTP/3 support
     servers {
         protocol {
@@ -38,6 +37,8 @@ route {
         anonymous
         # Enable the subscription API (double-check that it's what you want)
         subscriptions
+        # CORS
+        cors_origins {$MERCURE_CORS_ALLOW_ORIGINS:''}
         # Extra directives
         {$MERCURE_EXTRA_DIRECTIVES}
     }
