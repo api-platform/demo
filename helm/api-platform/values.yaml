@@ -69,7 +69,7 @@ postgresql:
   resources:
     requests:
       memory: 50Mi
-      cpu: 50m
+      cpu: 1m
 
 external-dns:
   enabled: true
@@ -131,11 +131,11 @@ resources:
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
-  #   cpu: 100m
+    #cpu: 100m
     memory: 200Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+  requests:
+    cpu: 1m
+    memory: 50Mi
 
 autoscaling:
   enabled: false
