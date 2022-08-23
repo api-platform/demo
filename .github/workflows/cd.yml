@@ -33,7 +33,7 @@ jobs:
     with:
       environment: prod
       url: demo.api-platform.com
-      docker-images-version: main
+      docker-images-version: latest
       cors: '["https://demo.api-platform.com", "http://localhost", "https://localhost", "http://localhost:3000"]'
       release: main
       namespace: main
