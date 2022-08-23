@@ -164,17 +164,21 @@ spec:
             preStop:
               exec:
                 command: ["/bin/sh", "-c", "/bin/sleep 1; kill -QUIT 1"]
+          startupProbe:
+            exec:
+              command:
+                - docker-healthcheck
+            failureThreshold: 40
+            periodSeconds: 3
           readinessProbe:
             exec:
               command:
                 - docker-healthcheck
-            initialDelaySeconds: 120
             periodSeconds: 3
           livenessProbe:
             exec:
               command:
                 - docker-healthcheck
-            initialDelaySeconds: 120
             periodSeconds: 3
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
@@ -255,15 +259,18 @@ spec:
                 secretKeyRef:
                   name: {{ include "api-platform.fullname" . }}
                   key: mercure-jwt-secret
+          startupProbe:
+            exec:
+              command: ['ps', 'aux', '|', 'egrep', '"\d+:\d+ php bin/console messenger:consume"']
+            failureThreshold: 40
+            periodSeconds: 3
           readinessProbe:
             exec:
               command: ['ps', 'aux', '|', 'egrep', '"\d+:\d+ php bin/console messenger:consume"']
-            initialDelaySeconds: 120
             periodSeconds: 3
           livenessProbe:
             exec:
               command: ['ps', 'aux', '|', 'egrep', '"\d+:\d+ php bin/console messenger:consume"']
-            initialDelaySeconds: 120
             periodSeconds: 3
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
