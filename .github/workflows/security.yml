@@ -21,25 +21,25 @@ jobs:
           - caddy
           - pwa
       fail-fast: false
-    permissions:
-      security-events: write
-      actions: read
-      contents: read
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Auth gcloud
         uses: google-github-actions/auth@v0
-        id: gcloud-auth
         with:
-          token_format: access_token
           credentials_json: ${{ secrets.GKE_SA_KEY }}
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v0
         with:
-          registry: gcr.io
-          username: oauth2accesstoken
-          password: ${{ steps.gcloud-auth.outputs.access_token }}
+          # https://github.com/google-github-actions/setup-gcloud/issues/128
+          version: '290.0.1'
+          project_id: ${{ secrets.gke-project }}
+      - name: Configure gcloud
+        run: |
+          gcloud --quiet auth configure-docker
+          gcloud container clusters get-credentials api-platform-demo --zone europe-west1-c
       - name: Pull Docker Image
-        run: docker pull eu.gcr.io/${{ secrets.GKE_PROJECT }}/${{ matrix.image }}:main
+        run: docker pull eu.gcr.io/${{ secrets.GKE_PROJECT }}/${{ matrix.image }}:latest
       - name: Cache Trivy
         uses: actions/cache@v3
         with:
@@ -50,7 +50,7 @@ jobs:
       - name: Run Trivy Vulnerability Scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'eu.gcr.io/${{ secrets.GKE_PROJECT }}/${{ matrix.image }}:main'
+          image-ref: 'eu.gcr.io/${{ secrets.GKE_PROJECT }}/${{ matrix.image }}:latest'
           exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os'
