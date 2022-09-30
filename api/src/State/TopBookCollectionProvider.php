@@ -23,7 +23,7 @@ final class TopBookCollectionProvider implements ProviderInterface
     /**
      * @return iterable<TopBook>
      */
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): iterable
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array
     {
         $resourceClass = $operation->getClass();
 

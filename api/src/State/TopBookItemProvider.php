@@ -7,6 +7,7 @@ namespace App\State;
 use ApiPlatform\Exception\InvalidIdentifierException;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
+use App\Entity\TopBook;
 use App\Repository\TopBook\TopBookDataInterface;
 use Exception;
 use RuntimeException;
@@ -17,7 +18,7 @@ final class TopBookItemProvider implements ProviderInterface
     {
     }
 
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): ?object
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): ?TopBook
     {
         $id = $uriVariables['id'] ?? null;
 
