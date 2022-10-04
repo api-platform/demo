@@ -5,29 +5,29 @@
         "php": ">=8.1",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "api-platform/core": "^3.0@beta",
-        "composer/package-versions-deprecated": "^1.11",
+        "api-platform/core": "^3.0",
+        "composer/package-versions-deprecated": "1.11.99.5",
         "doctrine/annotations": "^1.13",
-        "doctrine/doctrine-bundle": "^2.3",
-        "doctrine/doctrine-migrations-bundle": "^3.1",
-        "doctrine/orm": "^2.8",
-        "guzzlehttp/guzzle": "^7.3",
-        "lcobucci/jwt": "<4.2",
+        "doctrine/doctrine-bundle": "^2.7",
+        "doctrine/doctrine-migrations-bundle": "^3.2",
+        "doctrine/orm": "^2.12",
+        "guzzlehttp/guzzle": "^7.4",
+        "lcobucci/jwt": "^4.2",
         "lexik/jwt-authentication-bundle": "^2.11",
-        "nelmio/cors-bundle": "^2.1",
-        "phpdocumentor/reflection-docblock": "^5.2",
+        "nelmio/cors-bundle": "^2.2",
+        "phpdocumentor/reflection-docblock": "^5.3",
         "ramsey/uuid-doctrine": "^1.6",
         "symfony/asset": "6.1.*",
         "symfony/console": "6.1.*",
         "symfony/doctrine-messenger": "6.1.*",
         "symfony/dotenv": "6.1.*",
         "symfony/expression-language": "6.1.*",
-        "symfony/flex": "^2.1",
+        "symfony/flex": "^2.2",
         "symfony/framework-bundle": "6.1.*",
         "symfony/http-client": "6.1.*",
-        "symfony/mercure-bundle": "^0.3",
+        "symfony/mercure-bundle": "^0.3.5",
         "symfony/messenger": "6.1.*",
-        "symfony/monolog-bundle": "^3.7",
+        "symfony/monolog-bundle": "^3.8",
         "symfony/property-access": "6.1.*",
         "symfony/property-info": "6.1.*",
         "symfony/runtime": "6.1.*",
@@ -39,13 +39,13 @@
         "webonyx/graphql-php": "^14.9"
     },
     "require-dev": {
-        "api-platform/schema-generator": "^4.0",
+        "api-platform/schema-generator": "^5.0",
         "hautelook/alice-bundle": "^2.9",
         "justinrainbow/json-schema": "^5.2",
         "symfony/browser-kit": "6.1.*",
         "symfony/css-selector": "6.1.*",
         "symfony/debug-bundle": "6.1.*",
-        "symfony/maker-bundle": "^1.31",
+        "symfony/maker-bundle": "^1.44",
         "symfony/phpunit-bridge": "6.1.*",
         "symfony/stopwatch": "6.1.*",
         "symfony/var-dumper": "6.1.*",
@@ -59,6 +59,7 @@
         },
         "sort-packages": true,
         "allow-plugins": {
+            "composer/package-versions-deprecated": true,
             "symfony/flex": true,
             "symfony/runtime": true
         }
@@ -101,7 +102,8 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "6.1.*"
+            "require": "6.1.*",
+            "docker": false
         }
     }
 }

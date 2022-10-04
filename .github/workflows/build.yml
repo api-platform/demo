@@ -66,7 +66,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ./api
-          target: api_platform_php
+          target: app_php
           pull: true
           push: ${{ inputs.push }}
           tags: ${{ steps.docker-metadata.outputs.tags }}
@@ -113,7 +113,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ./api
-          target: api_platform_caddy
+          target: app_caddy
           pull: true
           push: ${{ inputs.push }}
           tags: ${{ steps.docker-metadata.outputs.tags }}
@@ -160,7 +160,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ./pwa
-          target: api_platform_pwa_prod
+          target: prod
           pull: true
           push: ${{ inputs.push }}
           tags: ${{ steps.docker-metadata.outputs.tags }}

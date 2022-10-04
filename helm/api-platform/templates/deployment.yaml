@@ -37,9 +37,12 @@ spec:
             - name: SERVER_NAME
               value: :80
             - name: PWA_UPSTREAM
-              value: '{{ include "api-platform.fullname" . }}-pwa:3000'
+              value: {{ include "api-platform.fullname" . }}-pwa:3000
             - name: MERCURE_EXTRA_DIRECTIVES
-              value: demo
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: mercure-extra-directives
             - name: MERCURE_PUBLISHER_JWT_KEY
               valueFrom:
                 secretKeyRef:
@@ -50,11 +53,6 @@ spec:
                 secretKeyRef:
                   name: {{ include "api-platform.fullname" . }}
                   key: mercure-jwt-secret
-            - name: MERCURE_CORS_ALLOW_ORIGINS
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "api-platform.fullname" . }}
-                  key: mercure-cors-allow-origins
           ports:
             - name: http
               containerPort: 80
@@ -136,7 +134,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: {{ include "api-platform.fullname" . }}
-                  key: php-cors-allow-origins
+                  key: php-cors-allow-origin
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
@@ -238,7 +236,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: {{ include "api-platform.fullname" . }}
-                  key: php-cors-allow-origins
+                  key: php-cors-allow-origin
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
