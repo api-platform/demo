@@ -71,7 +71,7 @@ spec:
                   valueFrom:
                     configMapKeyRef:
                       name: {{ include "api-platform.fullname" . }}
-                      key: php-cors-allow-origins
+                      key: php-cors-allow-origin
                 - name: DATABASE_URL
                   valueFrom:
                     secretKeyRef:
@@ -92,3 +92,23 @@ spec:
                     secretKeyRef:
                       name: {{ include "api-platform.fullname" . }}
                       key: mercure-jwt-secret
+              lifecycle:
+                preStop:
+                  exec:
+                    command: ["/bin/sh", "-c", "/bin/sleep 1; kill -QUIT 1"]
+              startupProbe:
+                exec:
+                  command:
+                    - docker-healthcheck
+                failureThreshold: 40
+                periodSeconds: 3
+              readinessProbe:
+                exec:
+                  command:
+                    - docker-healthcheck
+                periodSeconds: 3
+              livenessProbe:
+                exec:
+                  command:
+                    - docker-healthcheck
+                periodSeconds: 3

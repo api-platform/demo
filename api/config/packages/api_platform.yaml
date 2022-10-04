@@ -28,9 +28,8 @@ api_platform:
                 type: header
     # Mercure integration, remove if unwanted
     mercure: ~
-    # Good defaults value for REST APIs
+    # Good cache defaults for REST APIs
     defaults:
         stateless: true
-        # Good cache defaults
         cache_headers:
             vary: ['Content-Type', 'Authorization', 'Origin']

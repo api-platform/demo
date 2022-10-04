@@ -6,20 +6,11 @@ docker compose build
 
 # Update deps
 docker compose run php composer update
-docker compose run pwa /bin/sh -c 'yarn install && yarn upgrade'
+docker compose run pwa /bin/sh -c 'yarn install; yarn upgrade'
 
 # Update the Symfony skeleton
 cd api
 composer sync-recipes --force
 
-# Hint the user to change APP_SECRET
-sed -i.bak 's/^APP_SECRET=.*$/APP_SECRET=!ChangeMe!/' .env
-# Compatibility with our Docker and Kubernetes setup
-sed -i.bak 's;^DATABASE_URL="postgresql://symfony:ChangeMe@127.0.0.1:5432/app?serverVersion=13\&charset=utf8"$;DATABASE_URL="postgresql://api-platform:!ChangeMe!@database:5432/api?serverVersion=13&charset=utf8";' .env
-sed -i.bak 's;^MERCURE_URL=https://example.com/.well-known/mercure$;MERCURE_URL=http://caddy/.well-known/mercure;' .env
-sed -i.bak 's;^MERCURE_PUBLIC_URL=https://example.com/.well-known/mercure$;MERCURE_PUBLIC_URL=https://127.0.0.1/.well-known/mercure;' .env
-rm docker-compose.yml docker-compose.override.yml
-
-rm .env.bak
-
+echo 'Run `git diff` and carefully inspect the changes made by the recipes.'
 echo 'Run `docker compose up --build --force-recreate` now and check that everything is fine!'

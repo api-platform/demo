@@ -1,9 +1,9 @@
 dependencies:
 - name: postgresql
-  repository: https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami
-  version: 10.13.15
+  repository: https://charts.bitnami.com/bitnami/
+  version: 10.16.2
 - name: external-dns
   repository: https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami
   version: 5.4.16
-digest: sha256:98ea94fc3b50465eda8bca3711cb3ac7cd1e91409ed85acbb4522a93c915b782
-generated: "2022-06-10T15:45:02.957508394+02:00"
+digest: sha256:3b2971c03d683e26f307294256635ded353a5d9b6a09194b297a08d75ce3bc3f
+generated: "2022-10-04T10:53:02.485928915+02:00"
