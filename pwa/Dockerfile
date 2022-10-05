@@ -48,8 +48,6 @@ FROM node:18-alpine AS prod
 WORKDIR /srv/app
 
 ENV NODE_ENV production
-ARG NEXT_PUBLIC_ENTRYPOINT=https://demo.api-platform.com
-ENV NEXT_PUBLIC_ENTRYPOINT=${NEXT_PUBLIC_ENTRYPOINT}
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
 

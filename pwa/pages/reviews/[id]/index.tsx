@@ -14,6 +14,7 @@ import { PagedCollection } from "../../../types/collection";
 import { Review } from "../../../types/Review";
 import { fetch, FetchResponse, getPaths } from "../../../utils/dataAccess";
 import { useMercure } from "../../../utils/mercure";
+import {ENTRYPOINT} from "../../../config/entrypoint";
 
 const getReview = async (id: string | string[] | undefined) =>
   id ? await fetch<Review>(`/reviews/${id}`) : Promise.resolve(undefined);
@@ -47,6 +48,12 @@ const Page: NextComponentType<NextPageContext> = () => {
 export const getStaticProps: GetStaticProps = async ({
   params: { id } = {},
 }) => {
+  if (!ENTRYPOINT) {
+    return {
+      props: {},
+    };
+  }
+
   if (!id) throw new Error("id not in query param");
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(["review", id], () => getReview(id));
@@ -60,6 +67,13 @@ export const getStaticProps: GetStaticProps = async ({
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  if (!ENTRYPOINT) {
+    return {
+      paths: [],
+      fallback: true,
+    };
+  }
+
   const response = await fetch<PagedCollection<Review>>("/reviews");
   const paths = await getPaths(response, "reviews", "/reviews/[id]");
 
