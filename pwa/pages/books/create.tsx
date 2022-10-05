@@ -1,15 +1,13 @@
-import { NextComponentType, NextPageContext } from 'next';
-import Head from 'next/head';
-import { Form } from 'components/book/Form';
+import { NextComponentType, NextPageContext } from "next";
+import Head from "next/head";
 
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
+import { Form } from "../../components/book/Form";
 
 const Page: NextComponentType<NextPageContext> = () => (
   <div>
     <div>
       <Head>
-        <title>Create Book </title>
+        <title>Create Book</title>
       </Head>
     </div>
     <Form />

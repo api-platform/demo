@@ -3,21 +3,28 @@ import {
   GetStaticProps,
   NextComponentType,
   NextPageContext,
-} from 'next';
-import Head from 'next/head';
-import DefaultErrorPage from 'next/error';
-import { Form } from 'components/book/Form';
-import { Book } from 'types/Book';
-import { fetch } from 'utils/dataAccess';
+} from "next";
+import DefaultErrorPage from "next/error";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { dehydrate, QueryClient, useQuery } from "react-query";
 
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
+import { Form } from "../../../components/book/Form";
+import { PagedCollection } from "../../../types/collection";
+import { Book } from "../../../types/Book";
+import { fetch, FetchResponse, getPaths } from "../../../utils/dataAccess";
 
-interface Props {
-  book: Book;
-}
+const getBook = async (id: string | string[] | undefined) =>
+  id ? await fetch<Book>(`/books/${id}`) : Promise.resolve(undefined);
 
-const Page: NextComponentType<NextPageContext, Props, Props> = ({ book }) => {
+const Page: NextComponentType<NextPageContext> = () => {
+  const router = useRouter();
+  const { id } = router.query;
+
+  const { data: { data: book } = {} } = useQuery<
+    FetchResponse<Book> | undefined
+  >(["book", id], () => getBook(id));
+
   if (!book) {
     return <DefaultErrorPage statusCode={404} />;
   }
@@ -26,7 +33,7 @@ const Page: NextComponentType<NextPageContext, Props, Props> = ({ book }) => {
     <div>
       <div>
         <Head>
-          <title>{book && `Edit Book ${book['@id']}`}</title>
+          <title>{book && `Edit Book ${book["@id"]}`}</title>
         </Head>
       </div>
       <Form book={book} />
@@ -34,29 +41,27 @@ const Page: NextComponentType<NextPageContext, Props, Props> = ({ book }) => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps = async ({
+  params: { id } = {},
+}) => {
+  if (!id) throw new Error("id not in query param");
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(["book", id], () => getBook(id));
+
   return {
     props: {
-      book: (await fetch(`/books/${params.id}`)).data,
+      dehydratedState: dehydrate(queryClient),
     },
     revalidate: 1,
   };
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  try {
-    const response = await fetch('/books');
-
-    return {
-      paths: response.data['hydra:member'].map((book) => `${book['@id']}/edit`),
-      fallback: true,
-    };
-  } catch (e) {
-    console.error(e);
-  }
+  const response = await fetch<PagedCollection<Book>>("/books");
+  const paths = await getPaths(response, "books", "/books/[id]/edit");
 
   return {
-    paths: [],
+    paths,
     fallback: true,
   };
 };

@@ -1,7 +1,9 @@
-import { FunctionComponent } from 'react';
-import Link from 'next/link';
-import ReferenceLinks from 'components/common/ReferenceLinks';
-import { Review } from 'types/Review';
+import { FunctionComponent } from "react";
+import Link from "next/link";
+
+import ReferenceLinks from "../common/ReferenceLinks";
+import { getPath } from "../../utils/dataAccess";
+import { Review } from "../../types/Review";
 
 interface Props {
   reviews: Review[];
@@ -28,36 +30,49 @@ export const List: FunctionComponent<Props> = ({ reviews }) => (
       <tbody>
         {reviews &&
           reviews.length !== 0 &&
-          reviews.map((review) => (
-            <tr key={review['@id']}>
-              <th scope="row">
-                <ReferenceLinks items={review['@id']} type="review" />
-              </th>
-              <td>{review['body']}</td>
-              <td>{review['rating']}</td>
-              <td>
-                <Link href={review['book']}>{review['book']}</Link>
-              </td>
-              <td>{review['author']}</td>
-              <td>{review['publicationDate']}</td>
-              <td>
-                <ReferenceLinks
-                  items={review['@id']}
-                  type="review"
-                  useIcon={true}
-                />
-              </td>
-              <td>
-                <Link href={`${review['@id']}/edit`}>
-                  <a>
-                    <i className="bi bi-pen" aria-hidden="true" />
-                    <span className="sr-only">Edit</span>
-                  </a>
-                </Link>
-              </td>
-            </tr>
-          ))}
-        {/* todo Add pagination */}
+          reviews.map(
+            (review) =>
+              review["@id"] && (
+                <tr key={review["@id"]}>
+                  <th scope="row">
+                    <ReferenceLinks
+                      items={{
+                        href: getPath(review["@id"], "/reviews/[id]"),
+                        name: review["@id"],
+                      }}
+                    />
+                  </th>
+                  <td>{review["body"]}</td>
+                  <td>{review["rating"]}</td>
+                  <td>
+                    <ReferenceLinks
+                      items={{
+                        href: getPath(review["book"]["@id"], "/books/[id]"),
+                        name: review["book"]["@id"],
+                      }}
+                    />
+                  </td>
+                  <td>{review["author"]}</td>
+                  <td>{review["publicationDate"]?.toLocaleString()}</td>
+                  <td>
+                    <Link href={getPath(review["@id"], "/reviews/[id]")}>
+                      <a>
+                        <i className="bi bi-search" aria-hidden="true"></i>
+                        <span className="sr-only">Show</span>
+                      </a>
+                    </Link>
+                  </td>
+                  <td>
+                    <Link href={getPath(review["@id"], "/reviews/[id]/edit")}>
+                      <a>
+                        <i className="bi bi-pen" aria-hidden="true" />
+                        <span className="sr-only">Edit</span>
+                      </a>
+                    </Link>
+                  </td>
+                </tr>
+              )
+          )}
       </tbody>
     </table>
   </div>

@@ -1,7 +1,9 @@
-import { FunctionComponent } from 'react';
-import Link from 'next/link';
-import ReferenceLinks from 'components/common/ReferenceLinks';
-import { Book } from 'types/Book';
+import { FunctionComponent } from "react";
+import Link from "next/link";
+
+import ReferenceLinks from "../common/ReferenceLinks";
+import { getPath } from "../../utils/dataAccess";
+import { Book } from "../../types/Book";
 
 interface Props {
   books: Book[];
@@ -29,42 +31,50 @@ export const List: FunctionComponent<Props> = ({ books }) => (
       <tbody>
         {books &&
           books.length !== 0 &&
-          books.map((book) => (
-            <tr key={book['@id']}>
-              <th scope="row">
-                <ReferenceLinks items={book['@id']} type="book" />
-              </th>
-              <td>{book['isbn']}</td>
-              <td>{book['title']}</td>
-              <td>{book['description']}</td>
-              <td>{book['author']}</td>
-              <td>{book['publicationDate']}</td>
-              <td>
-                {book['reviews'] &&
-                  book['reviews'].length !== 0 &&
-                  book['reviews'].map((review: string) => (
-                    <div key={review}>
-                      <Link href={review}>{review}</Link>
-                    </div>
-                  ))}
-              </td>
-              <td>
-                <ReferenceLinks
-                  items={book['@id']}
-                  type="book"
-                  useIcon={true}
-                />
-              </td>
-              <td>
-                <Link href={`${book['@id']}/edit`}>
-                  <a>
-                    <i className="bi bi-pen" aria-hidden="true" />
-                    <span className="sr-only">Edit</span>
-                  </a>
-                </Link>
-              </td>
-            </tr>
-          ))}
+          books.map(
+            (book) =>
+              book["@id"] && (
+                <tr key={book["@id"]}>
+                  <th scope="row">
+                    <ReferenceLinks
+                      items={{
+                        href: getPath(book["@id"], "/books/[id]"),
+                        name: book["@id"],
+                      }}
+                    />
+                  </th>
+                  <td>{book["isbn"]}</td>
+                  <td>{book["title"]}</td>
+                  <td>{book["description"]}</td>
+                  <td>{book["author"]}</td>
+                  <td>{book["publicationDate"]?.toLocaleString()}</td>
+                  <td>
+                    <ReferenceLinks
+                      items={book["reviews"].map((emb: any) => ({
+                        href: getPath(emb["@id"], "/reviews/[id]"),
+                        name: emb["@id"],
+                      }))}
+                    />
+                  </td>
+                  <td>
+                    <Link href={getPath(book["@id"], "/books/[id]")}>
+                      <a>
+                        <i className="bi bi-search" aria-hidden="true"></i>
+                        <span className="sr-only">Show</span>
+                      </a>
+                    </Link>
+                  </td>
+                  <td>
+                    <Link href={getPath(book["@id"], "/books/[id]/edit")}>
+                      <a>
+                        <i className="bi bi-pen" aria-hidden="true" />
+                        <span className="sr-only">Edit</span>
+                      </a>
+                    </Link>
+                  </td>
+                </tr>
+              )
+          )}
       </tbody>
     </table>
   </div>

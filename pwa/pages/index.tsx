@@ -1,5 +1,6 @@
-import Head from 'next/head';
-import Link from 'next/link';
+import Head from "next/head";
+import Link from "next/link";
+import React from "react";
 
 const Welcome = () => (
   <>
@@ -12,31 +13,33 @@ const Welcome = () => (
         <a
           target="_blank"
           rel="noopener noreferrer"
-          href="https://api-platform.com">
-          <Logo />
+          href="https://api-platform.com"
+        >
+          <Logo/>
         </a>
         <a
           target="_blank"
           rel="noopener noreferrer"
-          href="https://les-tilleuls.coop">
-          <Flag />
+          href="https://les-tilleuls.coop"
+        >
+          <Flag/>
         </a>
       </header>
       <section className="welcome__main">
         <div className="main__aside">
-          <div className="aside__circle" />
-          <WebbyWelcome />
+          <div className="aside__circle"/>
+          <WebbyWelcome/>
         </div>
         <div className="main__content">
           <h1>
-            Welcome to the <strong>API Platform demo</strong>!
+            Welcome to <strong>API Platform</strong>!
           </h1>
           <div className="main__before-starting">
             <p>
-              This container host a generated{' '}
+              This container host a generated{" "}
               <a href="https://nextjs.org/">
                 <b>Next.js</b>
-              </a>{' '}
+              </a>{" "}
               application:
             </p>
             <ul>
@@ -51,41 +54,6 @@ const Welcome = () => (
                 </Link>
               </li>
             </ul>
-          </div>
-          <div className="main__other">
-            <h2>Related demo containers:</h2>
-            <div className="other__bloc other__bloc__api">
-              <div className="other__circle">
-                <Api />
-              </div>
-              <div className="other__content">
-                <h3>
-                  <a href="/docs">API</a>
-                </h3>
-              </div>
-            </div>
-            <div className="other__bloc other__bloc__admin">
-              <div className="other__circle">
-                <Admin />
-              </div>
-              <div className="other__content">
-                <h3>
-                  <Link href="/admin">
-                    <a>Admin</a>
-                  </Link>
-                </h3>
-              </div>
-            </div>
-            <div className="other__bloc other__bloc__mercure">
-              <div className="other__circle">
-                <Mercure />
-              </div>
-              <div className="other__content">
-                <h3>
-                  <a href="/.well-known/mercure/ui/">Mercure Debugger</a>
-                </h3>
-              </div>
-            </div>
             <div>Learn how to create your own project:</div>
             <a
               target="_blank"
@@ -96,345 +64,373 @@ const Welcome = () => (
               <Arrow />
             </a>
           </div>
+          <div className="main__other">
+            <h2>Available services:</h2>
+            <div className="other__bloc">
+              <div className="other__circle">
+                <Api/>
+              </div>
+              <div className="other__content">
+                <h3>
+                  <a href="/docs">API</a>
+                </h3>
+              </div>
+            </div>
+            <div className="other__bloc">
+              <div className="other__circle">
+                <Admin/>
+              </div>
+              <div className="other__content">
+                <h3>
+                  <Link href="/admin">
+                    <a>Admin</a>
+                  </Link>
+                </h3>
+              </div>
+            </div>
+            <div className="other__bloc">
+              <div className="other__circle">
+                <Mercure/>
+              </div>
+              <div className="other__content">
+                <h3>
+                  <a href="/.well-known/mercure/ui/">
+                    Mercure Debugger
+                  </a>
+                </h3>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
       <div className="welcome__help">
         <h2>Need help?</h2>
         <HelpButton
           url="https://stackoverflow.com/questions/tagged/api-platform.com"
-          Image={<Sto />}
+          Image={Sto}
           title="Ask your questions on Stack Overflow!"
         />
         <HelpButton
           url="https://api-platform.com/support"
-          Image={<Slack />}
+          Image={Slack}
           title="Chat with the community on Slack!"
         />
       </div>
 
       <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700|Roboto+Slab:300,700');
+                @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,700|Roboto+Slab:300,700");
 
-        body {
-          margin: 0;
-        }
+                body {
+                    margin: 0;
+                }
 
-        .welcome {
-          height: 100vh;
-          width: 100vw;
-          text-align: center;
-          color: #1d1e1c;
-          font-family: 'Open Sans', sans-serif;
-          font-size: 14px;
-          overflow: auto;
-          background-color: #ececec;
-        }
+                .welcome {
+                    height: 100vh;
+                    width: 100vw;
+                    text-align: center;
+                    color: #1d1e1c;
+                    font-family: "Open Sans", sans-serif;
+                    font-size: 14px;
+                    overflow: auto;
+                    background-color: #ececec;
+                }
 
-        .welcome a {
-          text-decoration: none;
-          color: #38a9b4;
-          font-weight: bold;
-        }
+                .welcome a {
+                    text-decoration: none;
+                    color: #38a9b4;
+                    font-weight: bold;
+                }
 
-        .welcome h1 {
-          font-family: 'Roboto Slab', serif;
-          font-weight: 300;
-          font-size: 36px;
-          margin: 0 0 10px;
-          line-height: 30px;
-        }
+                .welcome h1 {
+                    font-family: "Roboto Slab", serif;
+                    font-weight: 300;
+                    font-size: 36px;
+                    margin: 0 0 10px;
+                    line-height: 30px;
+                }
 
-        .welcome h1 strong {
-          font-weight: 700;
-          color: #38a9b4;
-        }
+                .welcome h1 strong {
+                    font-weight: 700;
+                    color: #38a9b4;
+                }
 
-        .welcome h2 {
-          text-transform: uppercase;
-          font-size: 18px;
-          font-weight: bold;
-          margin: 25px 0 5px;
-        }
+                .welcome h2 {
+                    text-transform: uppercase;
+                    font-size: 18px;
+                    font-weight: bold;
+                    margin: 25px 0 5px;
+                }
 
-        .welcome h3 {
-          text-transform: uppercase;
-          font-weight: 500;
-          color: #38a9b4;
-          font-size: 16px;
-          margin: 0 0 5px;
-          display: block;
-        }
+                .welcome h3 {
+                    text-transform: uppercase;
+                    font-weight: 500;
+                    color: #38a9b4;
+                    font-size: 16px;
+                    margin: 0 0 5px;
+                    display: block;
+                }
 
-        /***** TOP *****/
+                /***** TOP *****/
 
-        .welcome__top {
-          background-color: #67cece;
-          padding-bottom: 40px;
-        }
+                .welcome__top {
+                    background-color: #67cece;
+                    padding-bottom: 40px;
+                }
 
-        .welcome__flag {
-          transform: rotate(30deg);
-          position: fixed;
-          right: -190px;
-          top: 65px;
-          box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
-          z-index: 5;
-        }
+                .welcome__flag {
+                    transform: rotate(30deg);
+                    position: fixed;
+                    right: -190px;
+                    top: 65px;
+                    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+                    z-index: 5;
+                }
 
-        /***** MAIN *****/
+                /***** MAIN *****/
 
-        .welcome__main {
-          box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14),
-            0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.3);
-          width: 80%;
-          max-width: 1100px;
-          margin-left: auto;
-          margin-right: auto;
-          transform: translateY(-50px);
-          background-color: white;
-          display: flex;
-        }
+                .welcome__main {
+                    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14),
+                        0 1px 18px 0 rgba(0, 0, 0, 0.12),
+                        0 3px 5px -1px rgba(0, 0, 0, 0.3);
+                    width: 80%;
+                    max-width: 1100px;
+                    margin-left: auto;
+                    margin-right: auto;
+                    transform: translateY(-50px);
+                    background-color: white;
+                    display: flex;
+                }
 
-        .main__aside {
-          background-color: #afe5e5;
-          width: 30%;
-          position: relative;
-          overflow: hidden;
-        }
+                .main__aside {
+                    background-color: #afe5e5;
+                    width: 30%;
+                    position: relative;
+                    overflow: hidden;
+                }
 
-        .aside__circle,
-        .main__aside svg {
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          transform: translate(-50%, -50%);
-        }
+                .aside__circle,
+                .main__aside svg {
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%, -50%);
+                }
 
-        .aside__circle {
-          background-color: white;
-          border-radius: 50%;
-          width: 90%;
-          height: 0;
-          padding-bottom: 90%;
-        }
+                .aside__circle {
+                    background-color: white;
+                    border-radius: 50%;
+                    width: 90%;
+                    height: 0;
+                    padding-bottom: 90%;
+                }
 
-        .aside__circle:after {
-          content: '';
-          width: 4px;
-          left: calc(50% - 5px);
-          top: -50%;
-          position: absolute;
-          height: 100%;
-          background-color: #1d1e1c;
-        }
+                .aside__circle:after {
+                    content: "";
+                    width: 4px;
+                    left: calc(50% - 5px);
+                    top: -50%;
+                    position: absolute;
+                    height: 100%;
+                    background-color: #1d1e1c;
+                }
 
-        .main__aside svg {
-          width: 100%;
-        }
+                .main__aside svg {
+                    width: 100%;
+                }
 
-        .main__content {
-          padding: 30px;
-          text-align: left;
-          flex: auto;
-        }
-        .other__bloc {
-          display: inline-flex;
-          align-items: center;
-          border: 4px solid #afe5e5;
-          padding: 10px 20px;
-          margin: 10px 0;
-          height: 170px;
-          box-sizing: border-box;
-          text-align: left;
-          width: 40%;
-        }
-        .other__bloc.other__bloc__api {
-          width: 28%;
-        }
-        .other__bloc.other__bloc__admin {
-          width: 31%;
-        }
-        .other__bloc.other__bloc__mercure {
-          width: 36%;
-          padding-top: 0px;
-        }
+                .main__content {
+                    padding: 30px;
+                    text-align: left;
+                    flex: auto;
+                }
+                .other__bloc {
+                    display: inline-flex;
+                    align-items: center;
+                    border: 4px solid #afe5e5;
+                    padding: 10px 20px;
+                    margin: 10px 0;
+                    height: 170px;
+                    box-sizing: border-box;
+                    text-align: left;
+                    width: 40%;
+                }
 
-        .other__bloc:not(:last-of-type) {
-          margin-right: 10px;
-        }
+                .other__bloc:not(:last-of-type) {
+                    margin-right: 10px;
+                }
 
-        .other__bloc h3:not(:first-child) {
-          margin-top: 15px;
-          padding-top: 5px;
-        }
+                .other__bloc h3:not(:first-child) {
+                    margin-top: 15px;
+                    padding-top: 5px;
+                }
 
-        .other__circle {
-          width: 110px;
-          height: 110px;
-          background-color: #afe5e5;
-          border-radius: 50%;
-          margin-right: 20px;
-        }
+                .other__circle {
+                    width: 110px;
+                    height: 110px;
+                    background-color: #afe5e5;
+                    border-radius: 50%;
+                    margin-right: 20px;
+                }
 
-        .other__circle svg {
-          width: 110px;
-        }
+                .other__circle svg {
+                    width: 110px;
+                }
 
-        .buttons__group {
-          display: inline-flex;
-          vertical-align: center;
-        }
+                .buttons__group {
+                    display: inline-flex;
+                    vertical-align: center;
+                }
 
-        .buttons__group .buttons__or {
-          width: 4px;
-          position: relative;
-          text-align: center;
-        }
+                .buttons__group .buttons__or {
+                    width: 4px;
+                    position: relative;
+                    text-align: center;
+                }
 
-        .buttons__group .buttons__or:before {
-          content: 'or';
-          font-size: 12px;
-          color: #aaa;
-          line-height: 18px;
-          position: absolute;
-          border-radius: 50%;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          background-color: white;
-          width: 18px;
-          height: 18px;
-        }
+                .buttons__group .buttons__or:before {
+                    content: "or";
+                    font-size: 12px;
+                    color: #aaa;
+                    line-height: 18px;
+                    position: absolute;
+                    border-radius: 50%;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background-color: white;
+                    width: 18px;
+                    height: 18px;
+                }
 
-        .buttons__group .other__button:first-child {
-          border-radius: 5px 0 0 5px;
-          padding-right: 15px;
-        }
+                .buttons__group .other__button:first-child {
+                    border-radius: 5px 0 0 5px;
+                    padding-right: 15px;
+                }
 
-        .buttons__group .other__button:last-child {
-          border-radius: 0 5px 5px 0;
-          padding-left: 15px;
-        }
+                .buttons__group .other__button:last-child {
+                    border-radius: 0 5px 5px 0;
+                    padding-left: 15px;
+                }
 
-        a.other__button {
-          background-color: #e0e1e2;
-          font-size: 11px;
-          color: #686e63;
-          cursor: pointer;
-          padding: 5px 10px;
-          display: inline-block;
-          transition: all ease 0.2s;
-          text-transform: uppercase;
-        }
+                a.other__button {
+                    background-color: #e0e1e2;
+                    font-size: 11px;
+                    color: #686e63;
+                    cursor: pointer;
+                    padding: 5px 10px;
+                    display: inline-block;
+                    transition: all ease 0.2s;
+                    text-transform: uppercase;
+                }
 
-        .other__button:hover {
-          background-color: #afe5e5;
-          color: #339ba5;
-        }
+                .other__button:hover {
+                    background-color: #afe5e5;
+                    color: #339ba5;
+                }
 
-        .main__button {
-          display: inline-block;
-          padding: 10px 50px 10px 10px;
-          border: 3px solid #339ba5;
-          font-size: 22px;
-          color: #339ba5;
-          text-transform: uppercase;
-          margin: 15px 0;
-          overflow: hidden;
-          transition: all ease 0.3s;
-          cursor: pointer;
-          position: relative;
-        }
+                .main__button {
+                    display: inline-block;
+                    padding: 10px 50px 10px 10px;
+                    border: 3px solid #339ba5;
+                    font-size: 22px;
+                    color: #339ba5;
+                    text-transform: uppercase;
+                    margin: 15px 0;
+                    overflow: hidden;
+                    transition: all ease 0.3s;
+                    cursor: pointer;
+                    position: relative;
+                }
 
-        .main__button svg {
-          position: absolute;
-          right: 10px;
-          top: 50%;
-          transform: translateY(-50%);
-          transition: transform ease 0.2s;
-        }
+                .main__button svg {
+                    position: absolute;
+                    right: 10px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    transition: transform ease 0.2s;
+                }
 
-        .main__button:hover {
-          background-color: #afe5e5;
-        }
+                .main__button:hover {
+                    background-color: #afe5e5;
+                }
 
-        .main__button:hover svg {
-          transform: translateY(-50%) rotate(35deg);
-        }
+                .main__button:hover svg {
+                    transform: translateY(-50%) rotate(35deg);
+                }
 
-        /***** HELP *****/
+                /***** HELP *****/
 
-        .welcome__help {
-          background-color: white;
-          box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
-          padding: 10px;
-          position: fixed;
-          right: -5px;
-          top: 50%;
-          transform: translateY(-50%);
-          border-radius: 5px;
-          text-align: center;
-        }
+                .welcome__help {
+                    background-color: white;
+                    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+                    padding: 10px;
+                    position: fixed;
+                    right: -5px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    border-radius: 5px;
+                    text-align: center;
+                }
 
-        .welcome__help h2 {
-          color: #aaa;
-          font-size: 12px;
-          margin: 10px 0;
-        }
+                .welcome__help h2 {
+                    color: #aaa;
+                    font-size: 12px;
+                    margin: 10px 0;
+                }
 
-        .help__circle {
-          width: 36px;
-          height: 36px;
-          border-radius: 50%;
-          border: 2px solid #ccc;
-          display: block;
-          margin: 10px auto;
-          transition: all ease 0.2s;
-          position: relative;
-        }
+                .help__circle {
+                    width: 36px;
+                    height: 36px;
+                    border-radius: 50%;
+                    border: 2px solid #ccc;
+                    display: block;
+                    margin: 10px auto;
+                    transition: all ease 0.2s;
+                    position: relative;
+                }
 
-        .help__circle svg {
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          transform: translate(-50%, -50%);
-        }
+                .help__circle svg {
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%, -50%);
+                }
 
-        .help__circle:hover {
-          border-color: #67cece;
-          background-color: #afe5e5;
-        }
+                .help__circle:hover {
+                    border-color: #67cece;
+                    background-color: #afe5e5;
+                }
 
-        /***** MEDIAS *****/
+                /***** MEDIAS *****/
 
-        @media (max-width: 1200px) {
-          .main__aside,
-          .welcome__help {
-            display: none;
-          }
-          .main__content {
-            width: 100%;
-            text-align: center;
-            padding: 20px;
-          }
-        }
+                @media (max-width: 1200px) {
+                    .main__aside,
+                    .welcome__help {
+                        display: none;
+                    }
+                    .main__content {
+                        width: 100%;
+                        text-align: center;
+                        padding: 20px;
+                    }
+                }
 
-        @media (max-width: 600px) {
-          .welcome__main {
-            width: calc(100% - 40px);
-          }
-          .welcome h1 {
-            display: none;
-          }
-          .welcome__flag,
-          .main__other {
-            display: none;
-          }
-          .main__content {
-            padding: 10px;
-          }
-        }
-      `}</style>
+                @media (max-width: 600px) {
+                    .welcome__main {
+                        width: calc(100% - 40px);
+                    }
+                    .welcome h1 {
+                        display: none;
+                    }
+                    .welcome__flag,
+                    .main__other {
+                        display: none;
+                    }
+                    .main__content {
+                        padding: 10px;
+                    }
+                }
+            `}</style>
     </div>
   </>
 );
@@ -445,199 +441,200 @@ const Admin = () => (
     xmlns="http://www.w3.org/2000/svg"
     width={100}
     height={100}
-    viewBox="0 0 646 646">
+    viewBox="0 0 646 646"
+  >
     <style jsx>
       {`
-        .adminst0 {
-          fill: #273942;
-        }
-        .adminst1 {
-          fill: #b7cdd8;
-        }
-        .adminst2 {
-          fill: #e2e2f7;
-        }
-        .adminst3 {
-          fill: #52677a;
-        }
-        .adminst4 {
-          fill: #354f5c;
-        }
-        .adminst5 {
-          fill: #ce521f;
-        }
-        .adminst6 {
-          fill: #ebebeb;
-        }
-        .adminst7 {
-          fill: #8e96a3;
-        }
-        .adminst8 {
-          fill: #3d4d5c;
-        }
-        .adminst9 {
-          fill: #3e9697;
-        }
-        .adminst10 {
-          fill: #68b7ce;
-        }
-        .adminst11 {
-          fill: #e8e8e8;
-        }
-        .adminst12 {
-          fill: #ffffff;
-        }
-        .adminst13 {
-          fill: #828282;
-        }
-        .adminst14 {
-          fill: #cccccc;
-        }
-        .adminst15 {
-          fill: #606060;
-        }
-        .adminst16 {
-          fill: #c6c6c6;
-        }
-        .adminst17 {
-          opacity: 0.15;
-        }
-        .adminst18 {
-          fill: #1d1e1c;
-        }
-        .adminst19 {
-          fill: #ffd700;
-        }
-        .adminst20 {
-          fill: #ff9700;
-        }
-        .adminst21 {
-          fill: #ffffe8;
-        }
-        .adminst22 {
-          fill: #f2dab8;
-        }
-        .adminst23 {
-          fill: #d44d41;
-        }
-        .adminst24 {
-          opacity: 0.3;
-        }
-        .adminst25 {
-          opacity: 0.3;
-          fill: #ffffff;
-        }
-        .adminst26 {
-          fill: #f01c01;
-        }
-        .adminst27 {
-          fill: #dbdad9;
-        }
-        .adminst28 {
-          opacity: 0.4;
-          fill: #ffffff;
-        }
-        .adminst29 {
-          opacity: 0.2;
-        }
-        .adminst30 {
-          opacity: 0.2;
-          fill: #020202;
-        }
-        .adminst31 {
-          fill: #f3554b;
-        }
-        .adminst32 {
-          fill: #bf2c28;
-        }
-        .adminst33 {
-          fill: #1f6a7b;
-        }
-        .adminst34 {
-          fill: #0594af;
-        }
-        .adminst35 {
-          fill: #38a9b4;
-        }
-        .adminst36 {
-          opacity: 0.2;
-          fill: #1d1e1c;
-        }
-        .adminst37 {
-          opacity: 0.64;
-          fill: #a6d9ed;
-        }
-        .adminst38 {
-          fill-rule: evenodd;
-          clip-rule: evenodd;
-          fill: #f0f0f0;
-        }
-        .adminst39 {
-          fill-rule: evenodd;
-          clip-rule: evenodd;
-          fill: #e1dddd;
-        }
-        .adminst40 {
-          fill-rule: evenodd;
-          clip-rule: evenodd;
-          fill: #ffffff;
-        }
-        .adminst41 {
-          fill-rule: evenodd;
-          clip-rule: evenodd;
-          fill: #af3737;
-        }
-        .adminst42 {
-          fill-rule: evenodd;
-          clip-rule: evenodd;
-          fill: #990000;
-        }
-        .adminst43 {
-          fill: #990000;
-        }
-        .adminst44 {
-          fill: #510000;
-        }
-        .adminst45 {
-          opacity: 0.5;
-          fill-rule: evenodd;
-          clip-rule: evenodd;
-          fill: #8e2525;
-        }
-        .adminst46 {
-          fill: #2ba2b2;
-        }
-        .adminst47 {
-          fill: #34aac0;
-        }
-        .adminst48 {
-          fill: #f69f00;
-        }
-        .adminst49 {
-          fill: #f59e00;
-        }
-        .adminst50 {
-          opacity: 0.1;
-        }
-        .adminst51 {
-          fill: #ed9406;
-        }
-        .adminst52 {
-          fill: #c6006d;
-        }
-        .adminst53 {
-          fill: #a50263;
-        }
-        .adminst54 {
-          fill: #6ac700;
-        }
-        .adminst55 {
-          fill: #5b9904;
-        }
-        .adminst56 {
-          fill: #070707;
-        }
-      `}
+                .adminst0 {
+                    fill: #273942;
+                }
+                .adminst1 {
+                    fill: #b7cdd8;
+                }
+                .adminst2 {
+                    fill: #e2e2f7;
+                }
+                .adminst3 {
+                    fill: #52677a;
+                }
+                .adminst4 {
+                    fill: #354f5c;
+                }
+                .adminst5 {
+                    fill: #ce521f;
+                }
+                .adminst6 {
+                    fill: #ebebeb;
+                }
+                .adminst7 {
+                    fill: #8e96a3;
+                }
+                .adminst8 {
+                    fill: #3d4d5c;
+                }
+                .adminst9 {
+                    fill: #3e9697;
+                }
+                .adminst10 {
+                    fill: #68b7ce;
+                }
+                .adminst11 {
+                    fill: #e8e8e8;
+                }
+                .adminst12 {
+                    fill: #ffffff;
+                }
+                .adminst13 {
+                    fill: #828282;
+                }
+                .adminst14 {
+                    fill: #cccccc;
+                }
+                .adminst15 {
+                    fill: #606060;
+                }
+                .adminst16 {
+                    fill: #c6c6c6;
+                }
+                .adminst17 {
+                    opacity: 0.15;
+                }
+                .adminst18 {
+                    fill: #1d1e1c;
+                }
+                .adminst19 {
+                    fill: #ffd700;
+                }
+                .adminst20 {
+                    fill: #ff9700;
+                }
+                .adminst21 {
+                    fill: #ffffe8;
+                }
+                .adminst22 {
+                    fill: #f2dab8;
+                }
+                .adminst23 {
+                    fill: #d44d41;
+                }
+                .adminst24 {
+                    opacity: 0.3;
+                }
+                .adminst25 {
+                    opacity: 0.3;
+                    fill: #ffffff;
+                }
+                .adminst26 {
+                    fill: #f01c01;
+                }
+                .adminst27 {
+                    fill: #dbdad9;
+                }
+                .adminst28 {
+                    opacity: 0.4;
+                    fill: #ffffff;
+                }
+                .adminst29 {
+                    opacity: 0.2;
+                }
+                .adminst30 {
+                    opacity: 0.2;
+                    fill: #020202;
+                }
+                .adminst31 {
+                    fill: #f3554b;
+                }
+                .adminst32 {
+                    fill: #bf2c28;
+                }
+                .adminst33 {
+                    fill: #1f6a7b;
+                }
+                .adminst34 {
+                    fill: #0594af;
+                }
+                .adminst35 {
+                    fill: #38a9b4;
+                }
+                .adminst36 {
+                    opacity: 0.2;
+                    fill: #1d1e1c;
+                }
+                .adminst37 {
+                    opacity: 0.64;
+                    fill: #a6d9ed;
+                }
+                .adminst38 {
+                    fill-rule: evenodd;
+                    clip-rule: evenodd;
+                    fill: #f0f0f0;
+                }
+                .adminst39 {
+                    fill-rule: evenodd;
+                    clip-rule: evenodd;
+                    fill: #e1dddd;
+                }
+                .adminst40 {
+                    fill-rule: evenodd;
+                    clip-rule: evenodd;
+                    fill: #ffffff;
+                }
+                .adminst41 {
+                    fill-rule: evenodd;
+                    clip-rule: evenodd;
+                    fill: #af3737;
+                }
+                .adminst42 {
+                    fill-rule: evenodd;
+                    clip-rule: evenodd;
+                    fill: #990000;
+                }
+                .adminst43 {
+                    fill: #990000;
+                }
+                .adminst44 {
+                    fill: #510000;
+                }
+                .adminst45 {
+                    opacity: 0.5;
+                    fill-rule: evenodd;
+                    clip-rule: evenodd;
+                    fill: #8e2525;
+                }
+                .adminst46 {
+                    fill: #2ba2b2;
+                }
+                .adminst47 {
+                    fill: #34aac0;
+                }
+                .adminst48 {
+                    fill: #f69f00;
+                }
+                .adminst49 {
+                    fill: #f59e00;
+                }
+                .adminst50 {
+                    opacity: 0.1;
+                }
+                .adminst51 {
+                    fill: #ed9406;
+                }
+                .adminst52 {
+                    fill: #c6006d;
+                }
+                .adminst53 {
+                    fill: #a50263;
+                }
+                .adminst54 {
+                    fill: #6ac700;
+                }
+                .adminst55 {
+                    fill: #5b9904;
+                }
+                .adminst56 {
+                    fill: #070707;
+                }
+            `}
     </style>
     <path
       className="adminst0"
@@ -822,9 +819,27 @@ const Admin = () => (
       width="424.9"
       height="268.5"
     />
-    <rect x="130.5" y={117} className="adminst9" width="392.1" height="232.6" />
-    <rect x="142.9" y="370.9" className="adminst3" width="63.1" height="11.1" />
-    <rect x="446.5" y="370.7" className="adminst3" width="63.1" height="11.3" />
+    <rect
+      x="130.5"
+      y={117}
+      className="adminst9"
+      width="392.1"
+      height="232.6"
+    />
+    <rect
+      x="142.9"
+      y="370.9"
+      className="adminst3"
+      width="63.1"
+      height="11.1"
+    />
+    <rect
+      x="446.5"
+      y="370.7"
+      className="adminst3"
+      width="63.1"
+      height="11.3"
+    />
     <rect
       x="128.3"
       y="116.9"
@@ -839,7 +854,13 @@ const Admin = () => (
       width="394.2"
       height="210.4"
     />
-    <rect x="138.7" y="124.9" className="adminst12" width="94.1" height="9.6" />
+    <rect
+      x="138.7"
+      y="124.9"
+      className="adminst12"
+      width="94.1"
+      height="9.6"
+    />
     <rect
       x="128.3"
       y="142.2"
@@ -847,18 +868,90 @@ const Admin = () => (
       width="86.5"
       height="210.4"
     />
-    <rect x="132.3" y="152.8" className="adminst13" width="12.6" height={7} />
-    <rect x="149.5" y="152.8" className="adminst13" width="57.2" height={7} />
-    <rect x="132.3" y="169.7" className="adminst13" width="12.6" height={7} />
-    <rect x="149.5" y="169.7" className="adminst13" width="50.6" height={7} />
-    <rect x="132.3" y="187.6" className="adminst13" width="12.6" height={7} />
-    <rect x="149.5" y="187.6" className="adminst13" width="53.2" height={7} />
-    <rect x="132.3" y="205.5" className="adminst13" width="12.6" height={7} />
-    <rect x="149.5" y="205.5" className="adminst13" width="50.6" height={7} />
-    <rect x="132.3" y="222.6" className="adminst13" width="12.6" height={7} />
-    <rect x="149.5" y="222.6" className="adminst13" width="38.7" height={7} />
-    <rect x="132.3" y="239.5" className="adminst13" width="12.6" height={7} />
-    <rect x="149.5" y="239.5" className="adminst13" width="53.2" height={7} />
+    <rect
+      x="132.3"
+      y="152.8"
+      className="adminst13"
+      width="12.6"
+      height={7}
+    />
+    <rect
+      x="149.5"
+      y="152.8"
+      className="adminst13"
+      width="57.2"
+      height={7}
+    />
+    <rect
+      x="132.3"
+      y="169.7"
+      className="adminst13"
+      width="12.6"
+      height={7}
+    />
+    <rect
+      x="149.5"
+      y="169.7"
+      className="adminst13"
+      width="50.6"
+      height={7}
+    />
+    <rect
+      x="132.3"
+      y="187.6"
+      className="adminst13"
+      width="12.6"
+      height={7}
+    />
+    <rect
+      x="149.5"
+      y="187.6"
+      className="adminst13"
+      width="53.2"
+      height={7}
+    />
+    <rect
+      x="132.3"
+      y="205.5"
+      className="adminst13"
+      width="12.6"
+      height={7}
+    />
+    <rect
+      x="149.5"
+      y="205.5"
+      className="adminst13"
+      width="50.6"
+      height={7}
+    />
+    <rect
+      x="132.3"
+      y="222.6"
+      className="adminst13"
+      width="12.6"
+      height={7}
+    />
+    <rect
+      x="149.5"
+      y="222.6"
+      className="adminst13"
+      width="38.7"
+      height={7}
+    />
+    <rect
+      x="132.3"
+      y="239.5"
+      className="adminst13"
+      width="12.6"
+      height={7}
+    />
+    <rect
+      x="149.5"
+      y="239.5"
+      className="adminst13"
+      width="53.2"
+      height={7}
+    />
     <rect
       x="224.5"
       y="153.4"
@@ -881,10 +974,34 @@ const Admin = () => (
       className="adminst14"
       d="M513.9 345H224.5v-25.5h289.4V345zM225 344.6h288.4v-24.7H225V344.6z"
     />
-    <rect x="235.5" y="161.1" className="adminst15" width="75.5" height="8.6" />
-    <rect x="469.4" y={162} className="adminst10" width="35.4" height="8.6" />
-    <rect x="426.5" y="161.8" className="adminst10" width="35.4" height="8.6" />
-    <rect x={385} y="161.8" className="adminst10" width="35.4" height="8.6" />
+    <rect
+      x="235.5"
+      y="161.1"
+      className="adminst15"
+      width="75.5"
+      height="8.6"
+    />
+    <rect
+      x="469.4"
+      y={162}
+      className="adminst10"
+      width="35.4"
+      height="8.6"
+    />
+    <rect
+      x="426.5"
+      y="161.8"
+      className="adminst10"
+      width="35.4"
+      height="8.6"
+    />
+    <rect
+      x={385}
+      y="161.8"
+      className="adminst10"
+      width="35.4"
+      height="8.6"
+    />
     <rect
       x="224.5"
       y="319.2"
@@ -934,61 +1051,307 @@ const Admin = () => (
       width="288.9"
       height="0.2"
     />
-    <rect x="224.5" y={199} className="adminst16" width="288.9" height="0.2" />
-    <rect x="229.6" y="205.2" className="adminst13" width="61.4" height="6.1" />
-    <rect x="331.3" y="205.2" className="adminst13" width="36.9" height="6.1" />
-    <rect x="426.6" y="205.2" className="adminst13" width={10} height="6.1" />
-    <rect x="229.6" y={222} className="adminst13" width="74.4" height="6.1" />
-    <rect x="331.3" y={222} className="adminst13" width="36.9" height="6.1" />
-    <rect x="426.6" y={222} className="adminst13" width={10} height="6.1" />
-    <rect x="229.6" y="237.9" className="adminst13" width="52.8" height="6.1" />
-    <rect x="331.3" y="237.9" className="adminst13" width="36.9" height="6.1" />
-    <rect x="426.6" y="237.9" className="adminst13" width={10} height="6.1" />
-    <rect x="229.6" y="255.1" className="adminst13" width="74.4" height="6.1" />
-    <rect x="331.3" y="255.1" className="adminst13" width="36.9" height="6.1" />
-    <rect x="426.6" y="255.1" className="adminst13" width={10} height="6.1" />
-    <rect x="229.6" y="271.8" className="adminst13" width="61.4" height="6.1" />
-    <rect x="331.3" y="271.8" className="adminst13" width="36.9" height="6.1" />
-    <rect x="426.6" y="271.8" className="adminst13" width={10} height="6.1" />
-    <rect x="229.6" y="289.6" className="adminst13" width="69.7" height="6.1" />
-    <rect x="331.3" y="289.6" className="adminst13" width="36.9" height="6.1" />
-    <rect x="426.6" y="289.6" className="adminst13" width={10} height="6.1" />
-    <rect x="229.6" y="307.7" className="adminst13" width="74.4" height="6.1" />
-    <rect x="331.3" y="307.7" className="adminst13" width="36.9" height="6.1" />
-    <rect x="426.6" y="307.7" className="adminst13" width={10} height="6.1" />
-    <rect x="403.1" y="205.2" className="adminst13" width={10} height="6.1" />
-    <rect x="403.1" y={222} className="adminst13" width={10} height="6.1" />
-    <rect x="403.1" y="237.9" className="adminst13" width={10} height="6.1" />
-    <rect x="403.1" y="255.1" className="adminst13" width={10} height="6.1" />
-    <rect x="403.1" y="271.8" className="adminst13" width={10} height="6.1" />
-    <rect x="403.1" y="289.6" className="adminst13" width={10} height="6.1" />
-    <rect x="403.1" y="307.7" className="adminst13" width={10} height="6.1" />
-    <rect x="490.9" y="205.2" className="adminst10" width="13.5" height="6.1" />
-    <rect x="467.1" y="205.2" className="adminst10" width="13.5" height="6.1" />
-    <rect x="490.9" y={222} className="adminst10" width="13.5" height="6.1" />
-    <rect x="467.1" y={222} className="adminst10" width="13.5" height="6.1" />
-    <rect x="490.9" y="237.9" className="adminst10" width="13.5" height="6.1" />
-    <rect x="467.1" y="237.9" className="adminst10" width="13.5" height="6.1" />
-    <rect x="490.9" y="255.1" className="adminst10" width="13.5" height="6.1" />
-    <rect x="467.1" y="255.1" className="adminst10" width="13.5" height="6.1" />
-    <rect x="490.9" y="271.8" className="adminst10" width="13.5" height="6.1" />
-    <rect x="467.1" y="271.8" className="adminst10" width="13.5" height="6.1" />
-    <rect x="490.9" y="289.6" className="adminst10" width="13.5" height="6.1" />
-    <rect x="467.1" y="289.6" className="adminst10" width="13.5" height="6.1" />
-    <rect x="490.9" y="307.7" className="adminst10" width="13.5" height="6.1" />
-    <rect x="467.1" y="307.7" className="adminst10" width="13.5" height="6.1" />
-    <circle className="adminst10" cx="349.7" cy="332.5" r={6} />
-    <circle className="adminst12" cx="365.5" cy="332.5" r={6} />
+    <rect
+      x="224.5"
+      y={199}
+      className="adminst16"
+      width="288.9"
+      height="0.2"
+    />
+    <rect
+      x="229.6"
+      y="205.2"
+      className="adminst13"
+      width="61.4"
+      height="6.1"
+    />
+    <rect
+      x="331.3"
+      y="205.2"
+      className="adminst13"
+      width="36.9"
+      height="6.1"
+    />
+    <rect
+      x="426.6"
+      y="205.2"
+      className="adminst13"
+      width={10}
+      height="6.1"
+    />
+    <rect
+      x="229.6"
+      y={222}
+      className="adminst13"
+      width="74.4"
+      height="6.1"
+    />
+    <rect
+      x="331.3"
+      y={222}
+      className="adminst13"
+      width="36.9"
+      height="6.1"
+    />
+    <rect x="426.6" y={222} className="adminst13" width={10} height="6.1"/>
+    <rect
+      x="229.6"
+      y="237.9"
+      className="adminst13"
+      width="52.8"
+      height="6.1"
+    />
+    <rect
+      x="331.3"
+      y="237.9"
+      className="adminst13"
+      width="36.9"
+      height="6.1"
+    />
+    <rect
+      x="426.6"
+      y="237.9"
+      className="adminst13"
+      width={10}
+      height="6.1"
+    />
+    <rect
+      x="229.6"
+      y="255.1"
+      className="adminst13"
+      width="74.4"
+      height="6.1"
+    />
+    <rect
+      x="331.3"
+      y="255.1"
+      className="adminst13"
+      width="36.9"
+      height="6.1"
+    />
+    <rect
+      x="426.6"
+      y="255.1"
+      className="adminst13"
+      width={10}
+      height="6.1"
+    />
+    <rect
+      x="229.6"
+      y="271.8"
+      className="adminst13"
+      width="61.4"
+      height="6.1"
+    />
+    <rect
+      x="331.3"
+      y="271.8"
+      className="adminst13"
+      width="36.9"
+      height="6.1"
+    />
+    <rect
+      x="426.6"
+      y="271.8"
+      className="adminst13"
+      width={10}
+      height="6.1"
+    />
+    <rect
+      x="229.6"
+      y="289.6"
+      className="adminst13"
+      width="69.7"
+      height="6.1"
+    />
+    <rect
+      x="331.3"
+      y="289.6"
+      className="adminst13"
+      width="36.9"
+      height="6.1"
+    />
+    <rect
+      x="426.6"
+      y="289.6"
+      className="adminst13"
+      width={10}
+      height="6.1"
+    />
+    <rect
+      x="229.6"
+      y="307.7"
+      className="adminst13"
+      width="74.4"
+      height="6.1"
+    />
+    <rect
+      x="331.3"
+      y="307.7"
+      className="adminst13"
+      width="36.9"
+      height="6.1"
+    />
+    <rect
+      x="426.6"
+      y="307.7"
+      className="adminst13"
+      width={10}
+      height="6.1"
+    />
+    <rect
+      x="403.1"
+      y="205.2"
+      className="adminst13"
+      width={10}
+      height="6.1"
+    />
+    <rect x="403.1" y={222} className="adminst13" width={10} height="6.1"/>
+    <rect
+      x="403.1"
+      y="237.9"
+      className="adminst13"
+      width={10}
+      height="6.1"
+    />
+    <rect
+      x="403.1"
+      y="255.1"
+      className="adminst13"
+      width={10}
+      height="6.1"
+    />
+    <rect
+      x="403.1"
+      y="271.8"
+      className="adminst13"
+      width={10}
+      height="6.1"
+    />
+    <rect
+      x="403.1"
+      y="289.6"
+      className="adminst13"
+      width={10}
+      height="6.1"
+    />
+    <rect
+      x="403.1"
+      y="307.7"
+      className="adminst13"
+      width={10}
+      height="6.1"
+    />
+    <rect
+      x="490.9"
+      y="205.2"
+      className="adminst10"
+      width="13.5"
+      height="6.1"
+    />
+    <rect
+      x="467.1"
+      y="205.2"
+      className="adminst10"
+      width="13.5"
+      height="6.1"
+    />
+    <rect
+      x="490.9"
+      y={222}
+      className="adminst10"
+      width="13.5"
+      height="6.1"
+    />
+    <rect
+      x="467.1"
+      y={222}
+      className="adminst10"
+      width="13.5"
+      height="6.1"
+    />
+    <rect
+      x="490.9"
+      y="237.9"
+      className="adminst10"
+      width="13.5"
+      height="6.1"
+    />
+    <rect
+      x="467.1"
+      y="237.9"
+      className="adminst10"
+      width="13.5"
+      height="6.1"
+    />
+    <rect
+      x="490.9"
+      y="255.1"
+      className="adminst10"
+      width="13.5"
+      height="6.1"
+    />
+    <rect
+      x="467.1"
+      y="255.1"
+      className="adminst10"
+      width="13.5"
+      height="6.1"
+    />
+    <rect
+      x="490.9"
+      y="271.8"
+      className="adminst10"
+      width="13.5"
+      height="6.1"
+    />
+    <rect
+      x="467.1"
+      y="271.8"
+      className="adminst10"
+      width="13.5"
+      height="6.1"
+    />
+    <rect
+      x="490.9"
+      y="289.6"
+      className="adminst10"
+      width="13.5"
+      height="6.1"
+    />
+    <rect
+      x="467.1"
+      y="289.6"
+      className="adminst10"
+      width="13.5"
+      height="6.1"
+    />
+    <rect
+      x="490.9"
+      y="307.7"
+      className="adminst10"
+      width="13.5"
+      height="6.1"
+    />
+    <rect
+      x="467.1"
+      y="307.7"
+      className="adminst10"
+      width="13.5"
+      height="6.1"
+    />
+    <circle className="adminst10" cx="349.7" cy="332.5" r={6}/>
+    <circle className="adminst12" cx="365.5" cy="332.5" r={6}/>
     <path
       className="adminst14"
       d="M365.5 338.8c-3.5 0-6.3-2.8-6.3-6.3 0-3.5 2.8-6.3 6.3-6.3 3.5 0 6.3 2.8 6.3 6.3C371.8 336 369 338.8 365.5 338.8zM365.5 326.7c-3.2 0-5.8 2.6-5.8 5.8s2.6 5.8 5.8 5.8 5.8-2.6 5.8-5.8S368.7 326.7 365.5 326.7z"
     />
-    <circle className="adminst12" cx="380.7" cy="332.5" r={6} />
+    <circle className="adminst12" cx="380.7" cy="332.5" r={6}/>
     <path
       className="adminst14"
       d="M380.7 338.8c-3.5 0-6.3-2.8-6.3-6.3 0-3.5 2.8-6.3 6.3-6.3 3.5 0 6.3 2.8 6.3 6.3C387 336 384.2 338.8 380.7 338.8zM380.7 326.7c-3.2 0-5.8 2.6-5.8 5.8s2.6 5.8 5.8 5.8 5.8-2.6 5.8-5.8S383.9 326.7 380.7 326.7z"
     />
-    <circle className="adminst12" cx="395.6" cy="332.8" r={6} />
+    <circle className="adminst12" cx="395.6" cy="332.8" r={6}/>
     <path
       className="adminst14"
       d="M395.6 339c-3.5 0-6.3-2.8-6.3-6.3 0-3.5 2.8-6.3 6.3-6.3 3.5 0 6.3 2.8 6.3 6.3C401.9 336.2 399.1 339 395.6 339zM395.6 327c-3.2 0-5.8 2.6-5.8 5.8s2.6 5.8 5.8 5.8 5.8-2.6 5.8-5.8S398.8 327 395.6 327z"
@@ -997,7 +1360,8 @@ const Admin = () => (
       className="adminst12"
       d="M363.4 359.2c-0.7 24.6-17.4 43.9-38.4 43.6 -21-0.3-37.4-20.5-36.7-45.1 0.7-24.6 14.1-37.7 35.1-37.4S364.1 334.6 363.4 359.2z"
     />
-    <path d="M322.3 318c-10.9-0.2-21.3 4.7-29.2 13.5 -7.9 8.8-8.2 14-8.5 26.6 -0.4 12.6 3.5 24.5 10.9 33.5 7.4 9.1 17.5 14.2 28.4 14.4 4.7 0.1 9.1-0.8 13.3-2.4 15.8-6.1 27.2-23.1 27.8-43.9C365.7 333.4 344.2 318.3 322.3 318zM324 400.6c-19.5-0.3-34.8-19.3-34.2-42.4 0.3-11.2 0.1-15.1 7.1-22.9 4-4.5 8.7-7.8 13.8-9.8 3.7-1.4 7.5-2.1 11.4-2.1 9.3 0.1 17.9 4.7 24.1 12.7 6.3 8.1 13.8 12.1 13.4 23.4C359 382.8 343.3 400.8 324 400.6z" />
+    <path
+      d="M322.3 318c-10.9-0.2-21.3 4.7-29.2 13.5 -7.9 8.8-8.2 14-8.5 26.6 -0.4 12.6 3.5 24.5 10.9 33.5 7.4 9.1 17.5 14.2 28.4 14.4 4.7 0.1 9.1-0.8 13.3-2.4 15.8-6.1 27.2-23.1 27.8-43.9C365.7 333.4 344.2 318.3 322.3 318zM324 400.6c-19.5-0.3-34.8-19.3-34.2-42.4 0.3-11.2 0.1-15.1 7.1-22.9 4-4.5 8.7-7.8 13.8-9.8 3.7-1.4 7.5-2.1 11.4-2.1 9.3 0.1 17.9 4.7 24.1 12.7 6.3 8.1 13.8 12.1 13.4 23.4C359 382.8 343.3 400.8 324 400.6z"/>
     <path
       className="adminst18"
       d="M323.3 371.7c4.1 10.6 1.7 20.3-5.4 21.6 -7.1 1.3-16.1-6.2-20.2-16.8 -4.1-10.6-1.7-20.3 5.4-21.6C310.2 353.6 319.2 361.1 323.3 371.7z"
@@ -1010,7 +1374,8 @@ const Admin = () => (
       className="adminst12"
       d="M397.1 364c-0.6 20.7-15.8 37.2-33.9 37 -18.1-0.3-32.3-17.2-31.7-37.9 0.6-20.7 13.1-33.1 31.2-32.9C380.8 330.5 397.7 343.3 397.1 364z"
     />
-    <path d="M361.7 327.8c-9.5-0.1-18.6 4-25.5 11.6 -6.9 7.5-8.2 13.4-8.5 24.1 -0.3 10.7 3.1 20.9 9.5 28.6 6.5 7.8 15.3 12.1 24.8 12.3 4.1 0.1 8.1-0.7 11.9-2.1 13.9-5.4 24.3-20.2 24.8-37.7C399.3 342.2 381.2 328 361.7 327.8zM393.2 364.4c-0.4 15.1-9.2 27.8-21.1 32.4 -3.1 1.2-6.5 1.8-10 1.8 -8-0.1-15.4-3.8-20.9-10.4 -5.6-6.6-8.5-15.4-8.2-24.6 0.4-15.1 6.6-23.7 18.4-28.2 3.1-1.2 6.5-1.8 10-1.8 8 0.1 17.1 3.3 22.6 9.9C389.6 350 393.5 355.1 393.2 364.4z" />
+    <path
+      d="M361.7 327.8c-9.5-0.1-18.6 4-25.5 11.6 -6.9 7.5-8.2 13.4-8.5 24.1 -0.3 10.7 3.1 20.9 9.5 28.6 6.5 7.8 15.3 12.1 24.8 12.3 4.1 0.1 8.1-0.7 11.9-2.1 13.9-5.4 24.3-20.2 24.8-37.7C399.3 342.2 381.2 328 361.7 327.8zM393.2 364.4c-0.4 15.1-9.2 27.8-21.1 32.4 -3.1 1.2-6.5 1.8-10 1.8 -8-0.1-15.4-3.8-20.9-10.4 -5.6-6.6-8.5-15.4-8.2-24.6 0.4-15.1 6.6-23.7 18.4-28.2 3.1-1.2 6.5-1.8 10-1.8 8 0.1 17.1 3.3 22.6 9.9C389.6 350 393.5 355.1 393.2 364.4z"/>
     <path
       className="adminst18"
       d="M363 375.5c4 8.7 2.1 16.9-4.2 18.4 -6.3 1.4-14.8-4.5-18.8-13.2 -4-8.7-2.1-16.9 4.2-18.4C350.6 360.9 359 366.8 363 375.5z"
@@ -1115,201 +1480,202 @@ const Api = () => (
     xmlns="http://www.w3.org/2000/svg"
     width={100}
     height={100}
-    viewBox="0 0 646 646">
+    viewBox="0 0 646 646"
+  >
     <style jsx>
       {`
-        .apist0 {
-          fill: #273942;
-        }
-        .apist1 {
-          fill: #b7cdd8;
-        }
-        .apist2 {
-          fill: #e2e2f7;
-        }
-        .apist3 {
-          fill: #52677a;
-        }
-        .apist4 {
-          fill: #354f5c;
-        }
-        .apist5 {
-          fill: #ce521f;
-        }
-        .apist6 {
-          fill: #ebebeb;
-        }
-        .apist7 {
-          fill: #8e96a3;
-        }
-        .apist8 {
-          fill: #3d4d5c;
-        }
-        .apist9 {
-          fill: #3e9697;
-        }
-        .apist10 {
-          fill: #68b7ce;
-        }
-        .apist11 {
-          fill: #e8e8e8;
-        }
-        .apist12 {
-          fill: #ffffff;
-        }
-        .apist13 {
-          fill: #828282;
-        }
-        .apist14 {
-          fill: #cccccc;
-        }
-        .apist15 {
-          fill: #606060;
-        }
-        .apist16 {
-          fill: #c6c6c6;
-        }
-        .apist17 {
-          opacity: 0.15;
-        }
-        .apist18 {
-          fill: #1d1e1c;
-        }
-        .apist19 {
-          fill: #ffd700;
-        }
-        .apist20 {
-          fill: #ff9700;
-        }
-        .apist21 {
-          fill: #ffffe8;
-        }
-        .apist22 {
-          fill: #f2dab8;
-        }
-        .apist23 {
-          fill: #d44d41;
-        }
-        .apist24 {
-          opacity: 0.3;
-        }
-        .apist25 {
-          opacity: 0.3;
-          fill: #ffffff;
-        }
-        .apist26 {
-          fill: #f01c01;
-        }
-        .apist27 {
-          fill: #dbdad9;
-        }
-        .apist28 {
-          opacity: 0.4;
-          fill: #ffffff;
-        }
-        .apist29 {
-          opacity: 0.2;
-        }
-        .apist30 {
-          opacity: 0.2;
-          fill: #020202;
-        }
-        .apist31 {
-          fill: #f3554b;
-        }
-        .apist32 {
-          fill: #bf2c28;
-        }
-        .apist33 {
-          fill: #1f6a7b;
-        }
-        .apist34 {
-          fill: #0594af;
-        }
-        .apist35 {
-          fill: #38a9b4;
-        }
-        .apist36 {
-          opacity: 0.2;
-          fill: #1d1e1c;
-        }
-        .apist37 {
-          opacity: 0.64;
-          fill: #a6d9ed;
-        }
-        .apist38 {
-          fill-rule: evenodd;
-          clip-rule: evenodd;
-          fill: #f0f0f0;
-        }
-        .apist39 {
-          fill-rule: evenodd;
-          clip-rule: evenodd;
-          fill: #e1dddd;
-        }
-        .apist40 {
-          fill-rule: evenodd;
-          clip-rule: evenodd;
-          fill: #ffffff;
-        }
-        .apist41 {
-          fill-rule: evenodd;
-          clip-rule: evenodd;
-          fill: #af3737;
-        }
-        .apist42 {
-          fill-rule: evenodd;
-          clip-rule: evenodd;
-          fill: #990000;
-        }
-        .apist43 {
-          fill: #990000;
-        }
-        .apist44 {
-          fill: #510000;
-        }
-        .apist45 {
-          opacity: 0.5;
-          fill-rule: evenodd;
-          clip-rule: evenodd;
-          fill: #8e2525;
-        }
-        .apist46 {
-          fill: #2ba2b2;
-        }
-        .apist47 {
-          fill: #34aac0;
-        }
-        .apist48 {
-          fill: #f69f00;
-        }
-        .apist49 {
-          fill: #f59e00;
-        }
-        .apist50 {
-          opacity: 0.1;
-        }
-        .apist51 {
-          fill: #ed9406;
-        }
-        .apist52 {
-          fill: #c6006d;
-        }
-        .apist53 {
-          fill: #a50263;
-        }
-        .apist54 {
-          fill: #6ac700;
-        }
-        .apist55 {
-          fill: #5b9904;
-        }
-        .apist56 {
-          fill: #070707;
-        }
-      `}
+                .apist0 {
+                    fill: #273942;
+                }
+                .apist1 {
+                    fill: #b7cdd8;
+                }
+                .apist2 {
+                    fill: #e2e2f7;
+                }
+                .apist3 {
+                    fill: #52677a;
+                }
+                .apist4 {
+                    fill: #354f5c;
+                }
+                .apist5 {
+                    fill: #ce521f;
+                }
+                .apist6 {
+                    fill: #ebebeb;
+                }
+                .apist7 {
+                    fill: #8e96a3;
+                }
+                .apist8 {
+                    fill: #3d4d5c;
+                }
+                .apist9 {
+                    fill: #3e9697;
+                }
+                .apist10 {
+                    fill: #68b7ce;
+                }
+                .apist11 {
+                    fill: #e8e8e8;
+                }
+                .apist12 {
+                    fill: #ffffff;
+                }
+                .apist13 {
+                    fill: #828282;
+                }
+                .apist14 {
+                    fill: #cccccc;
+                }
+                .apist15 {
+                    fill: #606060;
+                }
+                .apist16 {
+                    fill: #c6c6c6;
+                }
+                .apist17 {
+                    opacity: 0.15;
+                }
+                .apist18 {
+                    fill: #1d1e1c;
+                }
+                .apist19 {
+                    fill: #ffd700;
+                }
+                .apist20 {
+                    fill: #ff9700;
+                }
+                .apist21 {
+                    fill: #ffffe8;
+                }
+                .apist22 {
+                    fill: #f2dab8;
+                }
+                .apist23 {
+                    fill: #d44d41;
+                }
+                .apist24 {
+                    opacity: 0.3;
+                }
+                .apist25 {
+                    opacity: 0.3;
+                    fill: #ffffff;
+                }
+                .apist26 {
+                    fill: #f01c01;
+                }
+                .apist27 {
+                    fill: #dbdad9;
+                }
+                .apist28 {
+                    opacity: 0.4;
+                    fill: #ffffff;
+                }
+                .apist29 {
+                    opacity: 0.2;
+                }
+                .apist30 {
+                    opacity: 0.2;
+                    fill: #020202;
+                }
+                .apist31 {
+                    fill: #f3554b;
+                }
+                .apist32 {
+                    fill: #bf2c28;
+                }
+                .apist33 {
+                    fill: #1f6a7b;
+                }
+                .apist34 {
+                    fill: #0594af;
+                }
+                .apist35 {
+                    fill: #38a9b4;
+                }
+                .apist36 {
+                    opacity: 0.2;
+                    fill: #1d1e1c;
+                }
+                .apist37 {
+                    opacity: 0.64;
+                    fill: #a6d9ed;
+                }
+                .apist38 {
+                    fill-rule: evenodd;
+                    clip-rule: evenodd;
+                    fill: #f0f0f0;
+                }
+                .apist39 {
+                    fill-rule: evenodd;
+                    clip-rule: evenodd;
+                    fill: #e1dddd;
+                }
+                .apist40 {
+                    fill-rule: evenodd;
+                    clip-rule: evenodd;
+                    fill: #ffffff;
+                }
+                .apist41 {
+                    fill-rule: evenodd;
+                    clip-rule: evenodd;
+                    fill: #af3737;
+                }
+                .apist42 {
+                    fill-rule: evenodd;
+                    clip-rule: evenodd;
+                    fill: #990000;
+                }
+                .apist43 {
+                    fill: #990000;
+                }
+                .apist44 {
+                    fill: #510000;
+                }
+                .apist45 {
+                    opacity: 0.5;
+                    fill-rule: evenodd;
+                    clip-rule: evenodd;
+                    fill: #8e2525;
+                }
+                .apist46 {
+                    fill: #2ba2b2;
+                }
+                .apist47 {
+                    fill: #34aac0;
+                }
+                .apist48 {
+                    fill: #f69f00;
+                }
+                .apist49 {
+                    fill: #f59e00;
+                }
+                .apist50 {
+                    opacity: 0.1;
+                }
+                .apist51 {
+                    fill: #ed9406;
+                }
+                .apist52 {
+                    fill: #c6006d;
+                }
+                .apist53 {
+                    fill: #a50263;
+                }
+                .apist54 {
+                    fill: #6ac700;
+                }
+                .apist55 {
+                    fill: #5b9904;
+                }
+                .apist56 {
+                    fill: #070707;
+                }
+            `}
     </style>
-    <ellipse className="apist17" cx={349} cy="531.8" rx="65.6" ry="25.2" />
+    <ellipse className="apist17" cx={349} cy="531.8" rx="65.6" ry="25.2"/>
     <polyline
       className="apist18"
       points="258.9 104.3 202.1 24.7 196.6 27.3 257 110.5 "
@@ -1571,10 +1937,11 @@ const Mercure = () => (
     x={0}
     y={0}
     viewBox="0 0 100 100"
-    xmlSpace="preserve">
+    xmlSpace="preserve"
+  >
     <style>
       {
-        '.prefix__st1{fill:#fff}.prefix__st2,.prefix__st4{fill:#1e1f1d}.prefix__st4{opacity:.2}.prefix__st5{opacity:.1;fill:#020203}'
+        ".prefix__st1{fill:#fff}.prefix__st2,.prefix__st4{fill:#1e1f1d}.prefix__st4{opacity:.2}.prefix__st5{opacity:.1;fill:#020203}"
       }
     </style>
     <circle
@@ -1584,7 +1951,7 @@ const Mercure = () => (
       fill="#bbe1e3"
       r={45.6}
     />
-    <circle className="prefix__st1" cx={30.7} cy={34.2} r={6} />
+    <circle className="prefix__st1" cx={30.7} cy={34.2} r={6}/>
     <circle
       transform="rotate(-82.027 48.473 22.241)"
       className="prefix__st1"
@@ -1825,9 +2192,10 @@ const Mercure = () => (
       y1={-218.524}
       x2={-95.753}
       y2={-218.524}
-      gradientTransform="matrix(1.3707 .02173 -.02176 1.3727 163.251 336.41)">
-      <stop offset={0} stopColor="#76c8dd" />
-      <stop offset={1} stopColor="#2ab3d7" />
+      gradientTransform="matrix(1.3707 .02173 -.02176 1.3727 163.251 336.41)"
+    >
+      <stop offset={0} stopColor="#76c8dd"/>
+      <stop offset={1} stopColor="#2ab3d7"/>
     </linearGradient>
     <path
       d="M30.5 40.4c-3.4-.1-6.1-2.9-6-6.2s2.9-6.1 6.2-6c3.4.1 6.1 2.9 6 6.2 0 3.3-2.8 6.1-6.2 6zm.2-11.8c-3.1 0-5.7 2.4-5.7 5.5s2.4 5.7 5.5 5.7 5.7-2.4 5.7-5.5c.1-3-2.4-5.6-5.5-5.7z"
@@ -1840,9 +2208,10 @@ const Mercure = () => (
       y1={320.571}
       x2={-96.717}
       y2={320.571}
-      gradientTransform="matrix(1.3707 .02173 .02176 -1.3727 161.031 476.425)">
-      <stop offset={0} stopColor="#76c8dd" />
-      <stop offset={1} stopColor="#2ab3d7" />
+      gradientTransform="matrix(1.3707 .02173 .02176 -1.3727 161.031 476.425)"
+    >
+      <stop offset={0} stopColor="#76c8dd"/>
+      <stop offset={1} stopColor="#2ab3d7"/>
     </linearGradient>
     <path
       d="M30.7 29.4c-2.7 0-4.9 2.1-4.9 4.7 0 .8.2 1.6.5 2.3.1-.1.3-.2.4-.3 2.7-1.5 5-2.8 6.6-5.2 0 0-.2 2.7-1.7 4-.4.3-.7.5-.9.7.8-.4 1.5-.9 2-1.5 0 0-.1 1.8-1.4 2.6-.5.3-.9.5-1.4.6.8-.2 1.3-.4 1.7-.6-.4 1.1-1.1 1.7-2.3 1.9-.4 0-.8-.1-1.1-.1.7.4 1.5.6 2.3.6 2.7 0 4.9-2.1 4.9-4.7.1-2.8-2-5-4.7-5z"
@@ -1859,9 +2228,10 @@ const Mercure = () => (
       y1={-308.435}
       x2={140.301}
       y2={-308.435}
-      gradientTransform="matrix(1.2945 .5263 -.506 1.2446 -278.654 336.448)">
-      <stop offset={0} stopColor="#76c8dd" />
-      <stop offset={1} stopColor="#2ab3d7" />
+      gradientTransform="matrix(1.2945 .5263 -.506 1.2446 -278.654 336.448)"
+    >
+      <stop offset={0} stopColor="#76c8dd"/>
+      <stop offset={1} stopColor="#2ab3d7"/>
     </linearGradient>
     <path
       d="M44.7 32.1c-5.7-2.3-8.5-8.6-6.3-14.1s8.7-8 14.4-5.7 8.5 8.6 6.3 14.1c-2.3 5.5-8.7 8-14.4 5.7zm7.7-19c-5.2-2.1-11.1.2-13.1 5.2s.6 10.8 5.8 12.9S56.2 31 58.3 26c1.9-4.9-.7-10.8-5.9-12.9z"
@@ -1874,9 +2244,10 @@ const Mercure = () => (
       y1={411.231}
       x2={139.011}
       y2={411.231}
-      gradientTransform="matrix(1.27 .5163 .517 -1.2718 -332.746 476.702)">
-      <stop offset={0} stopColor="#76c8dd" />
-      <stop offset={1} stopColor="#2ab3d7" />
+      gradientTransform="matrix(1.27 .5163 .517 -1.2718 -332.746 476.702)"
+    >
+      <stop offset={0} stopColor="#76c8dd"/>
+      <stop offset={1} stopColor="#2ab3d7"/>
     </linearGradient>
     <path
       d="M51.7 14.3c-4.4-1.8-9.4.3-11.2 4.7-.6 1.4-.7 2.8-.6 4.2.3-.1.6-.1.9-.2 5.4-.8 10.1-1.4 14.3-4.4 0 0-2 4.4-5.5 5.5-.8.2-1.4.4-2 .5 1.6-.2 3-.5 4.4-1.2 0 0-1.3 3-4.1 3.4-.9.2-1.7.2-2.5.2 1.4.2 2.4.2 3.2 0-1.3 1.6-2.9 2.1-5 1.6-.7-.2-1.3-.6-1.8-1 .9 1.1 2 2 3.4 2.5 4.4 1.8 9.4-.3 11.2-4.7s-.3-9.3-4.7-11.1z"
@@ -1893,9 +2264,10 @@ const Mercure = () => (
       y1={-400.692}
       x2={357.227}
       y2={-400.692}
-      gradientTransform="matrix(.822 1.0971 -1.0987 .8232 -659.793 -18.605)">
-      <stop offset={0} stopColor="#76c8dd" />
-      <stop offset={1} stopColor="#2ab3d7" />
+      gradientTransform="matrix(.822 1.0971 -1.0987 .8232 -659.793 -18.605)"
+    >
+      <stop offset={0} stopColor="#76c8dd"/>
+      <stop offset={1} stopColor="#2ab3d7"/>
     </linearGradient>
     <path
       d="M61.4 41.6c-3-4-2.2-9.7 1.8-12.7s9.7-2.2 12.7 1.8 2.2 9.7-1.8 12.7-9.7 2.2-12.7-1.8zm13.9-10.4c-2.7-3.7-8-4.4-11.6-1.7-3.7 2.8-4.4 8-1.7 11.6 2.7 3.7 8 4.4 11.7 1.7s4.4-7.9 1.6-11.6z"
@@ -1908,9 +2280,10 @@ const Mercure = () => (
       y1={502.761}
       x2={355.8}
       y2={502.761}
-      gradientTransform="matrix(.822 1.0971 1.0987 -.8232 -771.86 65.363)">
-      <stop offset={0} stopColor="#76c8dd" />
-      <stop offset={1} stopColor="#2ab3d7" />
+      gradientTransform="matrix(.822 1.0971 1.0987 -.8232 -771.86 65.363)"
+    >
+      <stop offset={0} stopColor="#76c8dd"/>
+      <stop offset={1} stopColor="#2ab3d7"/>
     </linearGradient>
     <path
       d="M74.4 31.8c-2.4-3.2-6.8-3.8-10-1.4-1 .7-1.7 1.7-2.2 2.7.2.1.5.1.7.2 4.2 1.7 7.8 3.3 12.1 3 0 0-3.3 2.3-6.2 1.6-.6-.2-1.2-.3-1.6-.5 1.2.6 2.4 1 3.6 1 0 0-2.2 1.6-4.4.7-.8-.3-1.4-.7-1.9-1.1.9.8 1.6 1.2 2.3 1.4-1.6.6-3 .3-4.2-1-.4-.5-.6-1-.9-1.5.2 1.2.6 2.3 1.4 3.3 2.4 3.2 6.8 3.8 10 1.4 3-2.1 3.7-6.6 1.3-9.8z"
@@ -1924,17 +2297,18 @@ const Arrow = () => (
     xmlns="http://www.w3.org/2000/svg"
     width={26}
     height={18}
-    viewBox="0 0 25.9 18">
+    viewBox="0 0 25.9 18"
+  >
     <style jsx>
       {`
-        .linkst0 {
-          clip-path: url(#SVGID_2_);
-          fill: #38a9b4;
-        }
-      `}
+                .linkst0 {
+                    clip-path: url(#SVGID_2_);
+                    fill: #38a9b4;
+                }
+            `}
     </style>
     <defs>
-      <rect width="25.9" height={18} />
+      <rect width="25.9" height={18}/>
     </defs>
     <path
       className="linkst0"
@@ -1949,21 +2323,22 @@ const Flag = () => (
     width={600}
     height={30}
     viewBox="0 0 830 42"
-    className="welcome__flag">
+    className="welcome__flag"
+  >
     <style jsx>
       {`
-        .flagst0 {
-          fill: #253032;
-        }
-        .flagst1 {
-          fill: #ffffff;
-        }
-        .flagst2 {
-          fill: #c34536;
-        }
-      `}
+                .flagst0 {
+                    fill: #253032;
+                }
+                .flagst1 {
+                    fill: #ffffff;
+                }
+                .flagst2 {
+                    fill: #c34536;
+                }
+            `}
     </style>
-    <rect className="flagst0" width={830} height={42} />
+    <rect className="flagst0" width={830} height={42}/>
     <path
       className="flagst1"
       d="M241.2 27.1v-6.3c0-0.8-0.2-1.3-0.5-1.7 -0.3-0.4-0.8-0.6-1.5-0.6 -0.9 0-1.6 0.3-2 0.8s-0.7 1.3-0.7 2.4v5.4H235v-6.3c0-0.8-0.2-1.3-0.5-1.7 -0.3-0.4-0.8-0.6-1.5-0.6 -0.9 0-1.6 0.3-2 0.8 -0.4 0.5-0.6 1.4-0.6 2.7v5.1h-1.5v-9.6h1.2l0.2 1.3h0.1c0.3-0.5 0.7-0.8 1.2-1.1 0.5-0.3 1.1-0.4 1.7-0.4 1.5 0 2.5 0.5 3 1.6h0.1c0.3-0.5 0.7-0.9 1.2-1.2s1.2-0.4 1.9-0.4c1.1 0 1.9 0.3 2.4 0.8 0.5 0.6 0.8 1.5 0.8 2.7v6.3H241.2z"
@@ -2079,14 +2454,15 @@ const Flag = () => (
   </svg>
 );
 
-const HelpButton = ({ Image, url, title }) => (
+const HelpButton = ({Image, url, title}: {Image: React.FunctionComponent, url: string, title: string}) => (
   <a
     target="_blank"
     rel="noopener noreferrer"
     href={url}
     className="help__circle"
-    title={title}>
-    {Image}
+    title={title}
+  >
+    <Image/>
   </a>
 );
 
@@ -2095,26 +2471,27 @@ const Logo = () => (
     xmlns="http://www.w3.org/2000/svg"
     width={150}
     height={150}
-    viewBox="0 0 300 300">
+    viewBox="0 0 300 300"
+  >
     <style jsx>
       {`
-        .logost0 {
-          fill: #ffffff;
-        }
-        .logost1 {
-          fill: #afe5e5;
-        }
-        .logost2 {
-          opacity: 0.2;
-          fill: #1d1e1c;
-        }
-        .logost3 {
-          fill: #1d1e1c;
-        }
-        .logost4 {
-          fill: #38a9b4;
-        }
-      `}
+                .logost0 {
+                    fill: #ffffff;
+                }
+                .logost1 {
+                    fill: #afe5e5;
+                }
+                .logost2 {
+                    opacity: 0.2;
+                    fill: #1d1e1c;
+                }
+                .logost3 {
+                    fill: #1d1e1c;
+                }
+                .logost4 {
+                    fill: #38a9b4;
+                }
+            `}
     </style>
     <path
       className="logost0"
@@ -2160,11 +2537,11 @@ const Logo = () => (
       className="logost0"
       d="M264.1 214.7l3.1 3.3 3.1-3.3c1.7-1.8 4.2-1.8 5.8 0l4.2 4.4c1.3 1.4 2.4 2.4 2.6 4.4v15.7c0 4.7-7.3 4.7-7.3 0 0-6.1 0-12.2 0-18.3h-4.8c0 6.1 0 12.2 0 18.3 0 4.8-7.2 4.8-7.2 0 0-6.1 0-12.2 0-18.3h-4.8c0 6.1 0 12.2 0 18.3 0 4.7-7.3 4.7-7.3 0v-15.7c0.1-2 1.2-2.9 2.6-4.4l4.2-4.4C260 212.9 262.5 212.9 264.1 214.7z"
     />
-    <circle className="logost1" cx="148.5" cy="122.7" r="70.1" />
-    <ellipse className="logost2" cx="131.8" cy="147.2" rx="9.3" ry="2.3" />
-    <ellipse className="logost2" cx="112.5" cy="146.7" rx="9.3" ry="2.3" />
-    <ellipse className="logost2" cx="117.1" cy="160.5" rx="9.3" ry="2.3" />
-    <ellipse className="logost2" cx="99.5" cy="153.9" rx="9.3" ry="2.3" />
+    <circle className="logost1" cx="148.5" cy="122.7" r="70.1"/>
+    <ellipse className="logost2" cx="131.8" cy="147.2" rx="9.3" ry="2.3"/>
+    <ellipse className="logost2" cx="112.5" cy="146.7" rx="9.3" ry="2.3"/>
+    <ellipse className="logost2" cx="117.1" cy="160.5" rx="9.3" ry="2.3"/>
+    <ellipse className="logost2" cx="99.5" cy="153.9" rx="9.3" ry="2.3"/>
     <polygon
       className="logost3"
       points="121.6 146 119.9 146 119.9 108.6 136.4 117.5 135.6 119 121.6 111.5 "
@@ -2237,24 +2614,30 @@ const Logo = () => (
       className="logost3"
       d="M152.3 131.6c-5.3 0-9.9-1.4-13.2-4.2 -3.5-2.9-5.4-7.2-5.4-12.3 0-9.6 6.4-14.7 18.6-14.7 12.3 0 19.1 5.2 19.1 14.7 0 5.1-2 9.4-5.7 12.4C162.3 130.2 157.6 131.6 152.3 131.6zM152.3 102.2c-11.2 0-16.9 4.4-16.9 13 0 9.2 6.5 14.8 16.9 14.8 10.6 0 17.4-5.8 17.4-14.8C169.7 104.4 160.2 102.2 152.3 102.2z"
     />
-    <ellipse className="logost0" cx="145.6" cy="104.2" rx="11.4" ry="11.8" />
+    <ellipse
+      className="logost0"
+      cx="145.6"
+      cy="104.2"
+      rx="11.4"
+      ry="11.8"
+    />
     <path
       className="logost3"
       d="M145.4 116.6c-6.6 0-12-5.5-12-12.4 0-6.8 5.4-12.4 12-12.4 6.6 0 12 5.5 12 12.4C157.4 111 152 116.6 145.4 116.6zM145.4 93c-6 0-10.8 5-10.8 11.2 0 6.2 4.8 11.2 10.8 11.2s10.8-5 10.8-11.2C156.2 98.1 151.3 93 145.4 93z"
     />
-    <ellipse className="logost0" cx="162.6" cy="106.1" rx="9.4" ry="9.2" />
+    <ellipse className="logost0" cx="162.6" cy="106.1" rx="9.4" ry="9.2"/>
     <path
       className="logost3"
       d="M162.4 116c-5.5 0-10-4.4-10-9.8 0-5.4 4.5-9.8 10-9.8s10 4.4 10 9.8C172.4 111.6 167.9 116 162.4 116zM162.4 97.5c-4.9 0-8.8 3.9-8.8 8.6 0 4.8 3.9 8.6 8.8 8.6 4.9 0 8.8-3.9 8.8-8.6C171.2 101.4 167.2 97.5 162.4 97.5z"
     />
-    <circle className="logost3" cx="146.3" cy="104.8" r="5.2" />
-    <circle className="logost0" cx="149.2" cy={104} r="1.4" />
-    <ellipse className="logost3" cx="163.4" cy="106.7" rx="4.3" ry="4.1" />
-    <circle className="logost0" cx="162.5" cy={106} r="1.2" />
-    <ellipse className="logost2" cx={172} cy="147.5" rx="9.3" ry="2.3" />
-    <ellipse className="logost2" cx="191.2" cy={147} rx="9.3" ry="2.3" />
-    <ellipse className="logost2" cx="186.6" cy="160.8" rx="9.3" ry="2.3" />
-    <ellipse className="logost2" cx="204.3" cy="154.2" rx="9.3" ry="2.3" />
+    <circle className="logost3" cx="146.3" cy="104.8" r="5.2"/>
+    <circle className="logost0" cx="149.2" cy={104} r="1.4"/>
+    <ellipse className="logost3" cx="163.4" cy="106.7" rx="4.3" ry="4.1"/>
+    <circle className="logost0" cx="162.5" cy={106} r="1.2"/>
+    <ellipse className="logost2" cx={172} cy="147.5" rx="9.3" ry="2.3"/>
+    <ellipse className="logost2" cx="191.2" cy={147} rx="9.3" ry="2.3"/>
+    <ellipse className="logost2" cx="186.6" cy="160.8" rx="9.3" ry="2.3"/>
+    <ellipse className="logost2" cx="204.3" cy="154.2" rx="9.3" ry="2.3"/>
   </svg>
 );
 
@@ -2263,7 +2646,8 @@ const Slack = () => (
     xmlns="http://www.w3.org/2000/svg"
     width={24}
     height={24}
-    viewBox="0 0 120 120">
+    viewBox="0 0 120 120"
+  >
     <path
       d="M74.8 17.3c-1.5-4.6-6.4-7.1-10.9-5.6 -4.6 1.5-7.1 6.4-5.6 10.9l22.5 69.1c1.5 4.3 6.1 6.7 10.6 5.4 4.6-1.3 7.4-6.2 5.9-10.7L74.8 17.3"
       fill="#DFA22F"
@@ -2276,7 +2660,7 @@ const Slack = () => (
       d="M103 74.5c4.6-1.5 7.1-6.4 5.6-10.9 -1.5-4.6-6.4-7.1-10.9-5.6L28.6 80.4c-4.3 1.5-6.7 6.1-5.4 10.6 1.3 4.6 6.2 7.4 10.8 5.9L103 74.5"
       fill="#CE1E5B"
     />
-    <path d="M43 94l16.5-5.4 -5.4-16.5L37.6 77.5 43 94" fill="#392538" />
+    <path d="M43 94l16.5-5.4 -5.4-16.5L37.6 77.5 43 94" fill="#392538"/>
     <path
       d="M77.8 82.7c6.2-2 12-3.9 16.5-5.4L88.9 60.8 72.4 66.2 77.8 82.7"
       fill="#BB242A"
@@ -2297,16 +2681,20 @@ const Slack = () => (
 );
 
 const Sto = () => (
-  <svg width={25} height={25} viewBox="0 0 120 120">
+  <svg
+    width={25}
+    height={25}
+    viewBox="0 0 120 120"
+  >
     <style jsx>
       {`
-        .stost0 {
-          fill: #bcbbbb;
-        }
-        .stost1 {
-          fill: #f48023;
-        }
-      `}
+                .stost0 {
+                    fill: #bcbbbb;
+                }
+                .stost1 {
+                    fill: #f48023;
+                }
+            `}
     </style>
     <polygon
       className="stost0"
@@ -2324,26 +2712,27 @@ const WebbyWelcome = () => (
     xmlns="http://www.w3.org/2000/svg"
     width="400"
     height="400"
-    viewBox="0 0 300 300">
+    viewBox="0 0 300 300"
+  >
     <style jsx>
       {`
-        .webbyWelcome {
-          position: relative;
-        }
-        .webbyWelcome0 {
-          fill: #1d1e1c;
-        }
-        .webbyWelcome1 {
-          fill: #38a9b4;
-        }
-        .webbyWelcome2 {
-          fill: #ffffff;
-        }
-        .webbyWelcome3 {
-          opacity: 0.12;
-          fill: #020202;
-        }
-      `}
+                .webbyWelcome {
+                    position: relative;
+                }
+                .webbyWelcome0 {
+                    fill: #1d1e1c;
+                }
+                .webbyWelcome1 {
+                    fill: #38a9b4;
+                }
+                .webbyWelcome2 {
+                    fill: #ffffff;
+                }
+                .webbyWelcome3 {
+                    opacity: 0.12;
+                    fill: #020202;
+                }
+            `}
     </style>
     <polygon
       className="webbyWelcome0"
@@ -2423,7 +2812,7 @@ const WebbyWelcome = () => (
       rx="11.6"
       ry="11.2"
     />
-    <circle className="webbyWelcome2" cx="124.2" cy="118.2" r="3.2" />
+    <circle className="webbyWelcome2" cx="124.2" cy="118.2" r="3.2"/>
     <ellipse
       className="webbyWelcome2"
       cx="175.1"
@@ -2435,8 +2824,8 @@ const WebbyWelcome = () => (
       className="webbyWelcome0"
       d="M174.4 156.2c-18.1 0-32.8-15.2-32.8-33.8 0-18.7 14.7-33.8 32.8-33.8 18.1 0 32.8 15.2 32.8 33.8C207.2 141 192.5 156.2 174.4 156.2zM174.4 91.7c-16.3 0-29.5 13.7-29.5 30.6 0 16.9 13.2 30.6 29.5 30.6s29.5-13.7 29.5-30.6C203.9 105.5 190.7 91.7 174.4 91.7z"
     />
-    <circle className="webbyWelcome0" cx="177" cy="124" r="14.3" />
-    <circle className="webbyWelcome2" cx="184.8" cy="121.8" r="4" />
+    <circle className="webbyWelcome0" cx="177" cy="124" r="14.3"/>
+    <circle className="webbyWelcome2" cx="184.8" cy="121.8" r="4"/>
     <rect
       x="29.7"
       y="162.6"

@@ -1,22 +1,23 @@
-import { GetServerSideProps, NextComponentType, NextPageContext } from 'next';
-import Head from 'next/head';
-import { List } from 'components/review/List';
-import { PagedCollection } from 'types/Collection';
-import { Review } from 'types/Review';
-import { fetch } from 'utils/dataAccess';
-import Pagination from 'components/common/Pagination';
-import { useMercure } from 'utils/mercure';
+import { GetServerSideProps, NextComponentType, NextPageContext } from "next";
+import Head from "next/head";
+import { dehydrate, QueryClient, useQuery } from "react-query";
 
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
+import Pagination from "../../components/common/Pagination";
+import { List } from "../../components/review/List";
+import { PagedCollection } from "../../types/collection";
+import { Review } from "../../types/Review";
+import { fetch, FetchResponse } from "../../utils/dataAccess";
+import { useMercure } from "../../utils/mercure";
 
-interface Props {
-  collection: PagedCollection<Review>;
-  hubURL: string;
-}
+const getReviews = async () => await fetch<PagedCollection<Review>>("/reviews");
 
-const Page: NextComponentType<NextPageContext, Props, Props> = (props) => {
-  const collection = useMercure(props.collection, props.hubURL);
+const Page: NextComponentType<NextPageContext> = () => {
+  const { data: { data: reviews, hubURL } = { hubURL: null } } = useQuery<
+    FetchResponse<PagedCollection<Review>> | undefined
+  >("reviews", getReviews);
+  const collection = useMercure(reviews, hubURL);
+
+  if (!collection || !collection["hydra:member"]) return null;
 
   return (
     <div>
@@ -25,21 +26,19 @@ const Page: NextComponentType<NextPageContext, Props, Props> = (props) => {
           <title>Review List</title>
         </Head>
       </div>
-      <List reviews={collection['hydra:member']} />
+      <List reviews={collection["hydra:member"]} />
       <Pagination collection={collection} />
     </div>
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({
-  resolvedUrl,
-}) => {
-  const response = await fetch(resolvedUrl);
+export const getServerSideProps: GetServerSideProps = async () => {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery("reviews", getReviews);
 
   return {
     props: {
-      collection: response.data,
-      hubURL: response.hubURL,
+      dehydratedState: dehydrate(queryClient),
     },
   };
 };

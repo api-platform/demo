@@ -1,69 +1,79 @@
-import has from 'lodash/has';
-import { PagedCollection } from 'types/Collection';
-import { normalize } from 'utils/dataAccess';
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
+import { PagedCollection, isPagedCollection } from "../types/collection";
+import { Item, isItem } from "../types/item";
 
-const mercureSubscribe = (
+const mercureSubscribe = <T extends Item | PagedCollection<Item> | undefined>(
   hubURL: string,
-  data: any | PagedCollection<any>,
-  setData: Function,
+  data: T | PagedCollection<T>,
+  setData: (data: T) => void
 ) => {
+  if (!data || !data["@id"]) throw new Error("@id is missing");
+
   const url = new URL(hubURL, window.origin);
   url.searchParams.append(
-    'topic',
-    new URL(data['@id'], window.origin).toString(),
+    "topic",
+    new URL(data["@id"], window.origin).toString()
   );
   const eventSource = new EventSource(url.toString());
-  eventSource.addEventListener('message', (event) =>
-    setData(normalize(JSON.parse(event.data))),
+  eventSource.addEventListener("message", (event) =>
+    setData(JSON.parse(event.data))
   );
 
   return eventSource;
 };
 
-export const useMercure = (
-  deps: any | PagedCollection<any>,
-  hubURL: string,
-) => {
+export const useMercure = <
+  TData extends Item | PagedCollection<Item> | undefined
+>(
+  deps: TData,
+  hubURL: string | null
+): TData => {
   const [data, setData] = useState(deps);
 
   useEffect(() => {
     setData(deps);
   }, [deps]);
 
-  if (!data) {
-    return data;
-  }
-
-  if (!has(data, 'hydra:member') && !has(data, '@id')) {
-    console.error('Object sent is not in JSON-LD format.');
-
-    return data;
-  }
-
   useEffect(() => {
+    if (!hubURL || !data) {
+      return;
+    }
+
+    if (!isPagedCollection<Item>(data) && !isItem(data)) {
+      console.error("Object sent is not in JSON-LD format.");
+
+      return;
+    }
+
     if (
-      has(data, 'hydra:member') &&
-      typeof data['hydra:member'] !== 'undefined' &&
-      data['hydra:member'].length !== 0
+      isPagedCollection<Item>(data) &&
+      data["hydra:member"] &&
+      data["hydra:member"].length !== 0
     ) {
+      const eventSources: EventSource[] = [];
       // It's a PagedCollection
-      data['hydra:member'].forEach((obj, pos) =>
-        mercureSubscribe(hubURL, obj, (datum) => {
-          data['hydra:member'][pos] = datum;
-          setData(data);
-        }),
-      );
-    } else {
-      // It's a single object
-      const eventSource = mercureSubscribe(hubURL, data, setData);
+      data["hydra:member"].forEach((obj, pos) => {
+        eventSources.push(
+          mercureSubscribe(hubURL, obj, (datum) => {
+            if (data["hydra:member"]) {
+              data["hydra:member"][pos] = datum;
+            }
+            setData({ ...data });
+          })
+        );
+      });
 
       return () => {
-        eventSource.removeEventListener('message', setData);
-
-        return data;
+        eventSources.forEach((eventSource) => eventSource.close());
       };
     }
+
+    // It's a single object
+    const eventSource = mercureSubscribe<TData>(hubURL, data, setData);
+
+    return () => {
+      eventSource.close();
+    };
   }, [data]);
 
   return data;

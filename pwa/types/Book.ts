@@ -1,17 +1,17 @@
-export class Book {
-  public '@id'?: string;
+import { Item } from "./item";
+
+export class Book implements Item {
+  public "@id"?: string;
 
   constructor(
     _id?: string,
-    public id?: string,
     public isbn?: string,
     public title?: string,
     public description?: string,
     public author?: string,
-    public publicationDate?: string,
-    public reviews?: any,
-    public cover?: string,
+    public publicationDate?: Date,
+    public reviews?: any
   ) {
-    this['@id'] = _id;
+    this["@id"] = _id;
   }
 }
