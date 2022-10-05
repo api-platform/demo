@@ -50,8 +50,10 @@ services:
     build:
       context: ./pwa
       target: prod
+      args:
+        NEXT_PUBLIC_ENTRYPOINT: https://demo.api-platform.com
     environment:
-      NEXT_PUBLIC_ENTRYPOINT: http://caddy
+      NEXT_PUBLIC_ENTRYPOINT: https://demo.api-platform.com
 
   caddy:
     build:

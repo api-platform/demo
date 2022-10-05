@@ -1,3 +1,4 @@
+// @ts-ignore
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { Box, Button, CardContent, CircularProgress } from '@mui/material';
@@ -49,6 +50,7 @@ export const LoginForm = (props: LoginFormProps) => {
 
   return (
     <StyledForm
+      // @ts-ignore
       onSubmit={submit}
       mode="onChange"
       noValidate
@@ -59,6 +61,7 @@ export const LoginForm = (props: LoginFormProps) => {
           Hint: admin@example.com / admin
         </Box>
         <TextInput
+          name="username"
           autoFocus
           source="username"
           label={translate('ra.auth.username')}
@@ -66,6 +69,7 @@ export const LoginForm = (props: LoginFormProps) => {
           fullWidth
         />
         <TextInput
+          name="password"
           source="password"
           label={translate('ra.auth.password')}
           type="password"

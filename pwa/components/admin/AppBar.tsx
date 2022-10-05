@@ -23,6 +23,7 @@ const DocTypeMenuButton = () => {
   const { docType, setDocType } = useContext(DocContext);
 
   const open = Boolean(anchorEl);
+  // @ts-ignore
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };

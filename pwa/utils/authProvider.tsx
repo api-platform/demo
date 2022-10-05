@@ -1,7 +1,8 @@
 import jwtDecode from 'jwt-decode';
-import { ENTRYPOINT } from 'config/entrypoint';
+import { ENTRYPOINT } from '../config/entrypoint';
 
 export default {
+  // @ts-ignore
   login: ({ username, password }) => {
     const request = new Request(`${ENTRYPOINT}/authentication_token`, {
       method: 'POST',
@@ -39,7 +40,7 @@ export default {
       return Promise.reject();
     }
   },
-  checkError: (err) => {
+  checkError: (err: { status: any; response: { status: any; }; }) => {
     if ([401, 403].includes(err?.status || err?.response?.status)) {
       localStorage.removeItem('token');
       return Promise.reject();

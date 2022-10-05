@@ -1,22 +1,23 @@
-import { GetServerSideProps, NextComponentType, NextPageContext } from 'next';
-import { List } from 'components/book/List';
-import { PagedCollection } from 'types/Collection';
-import { Book } from 'types/Book';
-import { fetch } from 'utils/dataAccess';
-import Head from 'next/head';
-import Pagination from 'components/common/Pagination';
-import { useMercure } from 'utils/mercure';
+import { GetServerSideProps, NextComponentType, NextPageContext } from "next";
+import Head from "next/head";
+import { dehydrate, QueryClient, useQuery } from "react-query";
 
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
+import Pagination from "../../components/common/Pagination";
+import { List } from "../../components/book/List";
+import { PagedCollection } from "../../types/collection";
+import { Book } from "../../types/Book";
+import { fetch, FetchResponse } from "../../utils/dataAccess";
+import { useMercure } from "../../utils/mercure";
 
-interface Props {
-  collection: PagedCollection<Book>;
-  hubURL: string;
-}
+const getBooks = async () => await fetch<PagedCollection<Book>>("/books");
 
-const Page: NextComponentType<NextPageContext, Props, Props> = (props) => {
-  const collection = useMercure(props.collection, props.hubURL);
+const Page: NextComponentType<NextPageContext> = () => {
+  const { data: { data: books, hubURL } = { hubURL: null } } = useQuery<
+    FetchResponse<PagedCollection<Book>> | undefined
+  >("books", getBooks);
+  const collection = useMercure(books, hubURL);
+
+  if (!collection || !collection["hydra:member"]) return null;
 
   return (
     <div>
@@ -25,21 +26,19 @@ const Page: NextComponentType<NextPageContext, Props, Props> = (props) => {
           <title>Book List</title>
         </Head>
       </div>
-      <List books={collection['hydra:member']} />
+      <List books={collection["hydra:member"]} />
       <Pagination collection={collection} />
     </div>
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({
-  resolvedUrl,
-}) => {
-  const response = await fetch(resolvedUrl);
+export const getServerSideProps: GetServerSideProps = async () => {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery("books", getBooks);
 
   return {
     props: {
-      collection: response.data,
-      hubURL: response.hubURL,
+      dehydratedState: dehydrate(queryClient),
     },
   };
 };

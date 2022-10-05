@@ -3,21 +3,28 @@ import {
   GetStaticProps,
   NextComponentType,
   NextPageContext,
-} from 'next';
-import Head from 'next/head';
-import DefaultErrorPage from 'next/error';
-import { Form } from 'components/review/Form';
-import { Review } from 'types/Review';
-import { fetch } from 'utils/dataAccess';
+} from "next";
+import DefaultErrorPage from "next/error";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { dehydrate, QueryClient, useQuery } from "react-query";
 
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
+import { Form } from "../../../components/review/Form";
+import { PagedCollection } from "../../../types/collection";
+import { Review } from "../../../types/Review";
+import { fetch, FetchResponse, getPaths } from "../../../utils/dataAccess";
 
-interface Props {
-  review: Review;
-}
+const getReview = async (id: string | string[] | undefined) =>
+  id ? await fetch<Review>(`/reviews/${id}`) : Promise.resolve(undefined);
 
-const Page: NextComponentType<NextPageContext, Props, Props> = ({ review }) => {
+const Page: NextComponentType<NextPageContext> = () => {
+  const router = useRouter();
+  const { id } = router.query;
+
+  const { data: { data: review } = {} } = useQuery<
+    FetchResponse<Review> | undefined
+  >(["review", id], () => getReview(id));
+
   if (!review) {
     return <DefaultErrorPage statusCode={404} />;
   }
@@ -26,7 +33,7 @@ const Page: NextComponentType<NextPageContext, Props, Props> = ({ review }) => {
     <div>
       <div>
         <Head>
-          <title>{review && `Edit Review ${review['@id']}`}</title>
+          <title>{review && `Edit Review ${review["@id"]}`}</title>
         </Head>
       </div>
       <Form review={review} />
@@ -34,31 +41,27 @@ const Page: NextComponentType<NextPageContext, Props, Props> = ({ review }) => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps = async ({
+  params: { id } = {},
+}) => {
+  if (!id) throw new Error("id not in query param");
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(["review", id], () => getReview(id));
+
   return {
     props: {
-      review: (await fetch(`/reviews/${params.id}`)).data,
+      dehydratedState: dehydrate(queryClient),
     },
     revalidate: 1,
   };
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  try {
-    const response = await fetch('/reviews');
-
-    return {
-      paths: response.data['hydra:member'].map(
-        (review) => `${review['@id']}/edit`,
-      ),
-      fallback: true,
-    };
-  } catch (e) {
-    console.error(e);
-  }
+  const response = await fetch<PagedCollection<Review>>("/reviews");
+  const paths = await getPaths(response, "reviews", "/reviews/[id]/edit");
 
   return {
-    paths: [],
+    paths,
     fallback: true,
   };
 };

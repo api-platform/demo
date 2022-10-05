@@ -1,65 +1,65 @@
-import { useContext, useState } from 'react';
-import Head from 'next/head';
-import { Navigate, Route } from 'react-router-dom';
+import Head from "next/head";
+import { SetStateAction, useContext, useState} from "react";
+import {Navigate, Route} from "react-router-dom";
 import {
   CustomRoutes,
   Layout,
+  LayoutProps,
   localStorageStore,
   Login,
   LoginClasses,
   resolveBrowserLocale,
-} from 'react-admin';
-import polyglotI18nProvider from 'ra-i18n-polyglot';
-import englishMessages from 'ra-language-english';
-import frenchMessages from 'ra-language-french';
+} from "react-admin";
+import polyglotI18nProvider from "ra-i18n-polyglot";
+import englishMessages from "ra-language-english";
+import frenchMessages from "ra-language-french";
 import {
   fetchHydra as baseFetchHydra,
   HydraAdmin,
   hydraDataProvider as baseHydraDataProvider,
   OpenApiAdmin,
   useIntrospection,
-} from '@api-platform/admin';
-import { parseHydraDocumentation } from '@api-platform/api-doc-parser';
-import AppBar from './AppBar';
-import { LoginForm } from './LoginForm';
-import DocContext from './DocContext';
-import authProvider from 'utils/authProvider';
-import { ENTRYPOINT } from 'config/entrypoint';
+} from "@api-platform/admin";
+import {parseHydraDocumentation} from "@api-platform/api-doc-parser";
+import AppBar from "./AppBar";
+import {LoginForm} from "./LoginForm";
+import DocContext from "./DocContext";
+import authProvider from "../../utils/authProvider";
+import {ENTRYPOINT} from "../../config/entrypoint";
 
-// todo Waiting for https://github.com/api-platform/admin/issues/372
-const getHeaders = () =>
-  localStorage.getItem('token')
-    ? {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      }
-    : {};
-const fetchHydra = (url, options = {}) =>
+const getHeaders = () => localStorage.getItem("token") ? {
+  Authorization: `Bearer ${localStorage.getItem("token")}`,
+} : {};
+const fetchHydra = (url: URL, options = {}) =>
   baseFetchHydra(url, {
     ...options,
+    // @ts-ignore
     headers: getHeaders,
   });
 const RedirectToLogin = () => {
   const introspect = useIntrospection();
 
-  if (localStorage.getItem('token')) {
+  if (localStorage.getItem("token")) {
     introspect();
     return <></>;
   }
-  return <Navigate to="/login" />;
+  return <Navigate to="/login"/>;
 };
-const apiDocumentationParser = (setRedirectToLogin) => async () => {
+const apiDocumentationParser = (setRedirectToLogin: (arg0: boolean) => void) => async () => {
   try {
     setRedirectToLogin(false);
 
-    return await parseHydraDocumentation(ENTRYPOINT, { headers: getHeaders });
+    // @ts-ignore
+    return await parseHydraDocumentation(ENTRYPOINT, {headers: getHeaders});
   } catch (result) {
-    const { api, response, status } = result;
+    // @ts-ignore
+    const {api, response, status} = result;
     if (status !== 401 || !response) {
       throw result;
     }
 
     // Prevent infinite loop if the token is expired
-    localStorage.removeItem('token');
+    localStorage.removeItem("token");
 
     setRedirectToLogin(true);
 
@@ -70,19 +70,20 @@ const apiDocumentationParser = (setRedirectToLogin) => async () => {
     };
   }
 };
-const dataProvider = (setRedirectToLogin) =>
-  baseHydraDataProvider({
-    useEmbedded: false,
-    entrypoint: ENTRYPOINT,
-    httpClient: fetchHydra,
-    apiDocumentationParser: apiDocumentationParser(setRedirectToLogin),
-  });
+const dataProvider = (setRedirectToLogin: { (value: SetStateAction<boolean>): void; (arg0: boolean): void; }) => baseHydraDataProvider({
+  useEmbedded: false,
+  // @ts-ignore
+  entrypoint: ENTRYPOINT,
+  httpClient: fetchHydra,
+  apiDocumentationParser: apiDocumentationParser(setRedirectToLogin),
+});
 
 const messages = {
   fr: frenchMessages,
   en: englishMessages,
 };
 const i18nProvider = polyglotI18nProvider(
+  // @ts-ignore
   (locale) => (messages[locale] ? messages[locale] : messages.en),
   resolveBrowserLocale(),
 );
@@ -96,11 +97,11 @@ const LoginPage = () => (
         backgroundColor: 'secondary.main',
       },
     }}>
-    <LoginForm />
+    <LoginForm/>
   </Login>
 );
 
-const MyLayout = (props) => <Layout {...props} appBar={AppBar} />;
+const MyLayout = (props: JSX.IntrinsicAttributes & LayoutProps) => <Layout {...props} appBar={AppBar} />;
 
 const AdminUI = () => {
   const { docType } = useContext(DocContext);
@@ -115,9 +116,7 @@ const AdminUI = () => {
       layout={MyLayout}
       loginPage={LoginPage}>
       <CustomRoutes>
-        {redirectToLogin ? (
-          <Route path="/" element={<RedirectToLogin />} />
-        ) : null}
+        {redirectToLogin ? <Route path="/" element={<RedirectToLogin />} /> : null}
       </CustomRoutes>
     </HydraAdmin>
   ) : (

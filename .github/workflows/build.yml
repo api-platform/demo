@@ -169,5 +169,7 @@ jobs:
             type=registry,ref=eu.gcr.io/${{ secrets.gke-project }}/pwa:latest
             type=registry,ref=eu.gcr.io/${{ secrets.gke-project }}/pwa:${{ steps.docker-metadata.outputs.version }}
           cache-to: type=inline
+          build-args: |
+            NEXT_PUBLIC_ENTRYPOINT=https://demo.api-platform.com
     outputs:
       version: ${{ steps.docker-metadata.outputs.version }}
