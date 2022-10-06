@@ -13,6 +13,7 @@ import { Form } from "../../../components/book/Form";
 import { PagedCollection } from "../../../types/collection";
 import { Book } from "../../../types/Book";
 import { fetch, FetchResponse, getPaths } from "../../../utils/dataAccess";
+import {ENTRYPOINT} from "../../../config/entrypoint";
 
 const getBook = async (id: string | string[] | undefined) =>
   id ? await fetch<Book>(`/books/${id}`) : Promise.resolve(undefined);
@@ -44,6 +45,12 @@ const Page: NextComponentType<NextPageContext> = () => {
 export const getStaticProps: GetStaticProps = async ({
   params: { id } = {},
 }) => {
+  if (!ENTRYPOINT) {
+    return {
+      props: {},
+    };
+  }
+
   if (!id) throw new Error("id not in query param");
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(["book", id], () => getBook(id));
@@ -52,11 +59,18 @@ export const getStaticProps: GetStaticProps = async ({
     props: {
       dehydratedState: dehydrate(queryClient),
     },
-    revalidate: 1,
+    revalidate: 10,
   };
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  if (!ENTRYPOINT) {
+    return {
+      paths: [],
+      fallback: true,
+    };
+  }
+
   const response = await fetch<PagedCollection<Book>>("/books");
   const paths = await getPaths(response, "books", "/books/[id]/edit");
 
