@@ -119,6 +119,7 @@ jobs:
             --set=php.corsAllowOrigin="^$(echo "${{ join(fromJSON(inputs.cors), '|') }}" | sed 's/\./\\./g')$" \
             --set=php.host=${{ inputs.url }} \
             --set=mercure.publicUrl=https://${{ inputs.url }}/.well-known/mercure \
+            --set=mercure.jwtSecret="!ChangeThisMercureHubJWTSecretKey!" \
             --set=postgresql.postgresqlPassword=$(openssl rand -base64 32 | tr -d "=+/") \
             --set=mercure.extraDirectives="demo \
             cors_origins ${{ join(fromJSON(inputs.cors), ' ') }}"
@@ -141,5 +142,6 @@ jobs:
             --set=pwa.image.tag=${{ inputs.docker-images-version }} \
             --set=pwa.image.pullPolicy=Always \
             --set=php.corsAllowOrigin="^$(echo "${{ join(fromJSON(inputs.cors), '|') }}" | sed 's/\./\\./g')$" \
+            --set=mercure.jwtSecret="!ChangeThisMercureHubJWTSecretKey!" \
             --set=mercure.extraDirectives="demo \
             cors_origins ${{ join(fromJSON(inputs.cors), ' ') }}"
