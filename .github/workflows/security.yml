@@ -38,8 +38,6 @@ jobs:
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v1
         with:
-#          # https://github.com/google-github-actions/setup-gcloud/issues/128
-#          version: '290.0.1'
           project_id: ${{ secrets.gke-project }}
       - name: Configure gcloud
         run: |
