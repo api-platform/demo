@@ -43,7 +43,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Auth gcloud
-        uses: google-github-actions/auth@v0
+        uses: google-github-actions/auth@v1
         with:
           credentials_json: ${{ secrets.gke-credentials }}
       - name: Setup gcloud
@@ -90,7 +90,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Auth gcloud
-        uses: google-github-actions/auth@v0
+        uses: google-github-actions/auth@v1
         with:
           credentials_json: ${{ secrets.gke-credentials }}
       - name: Setup gcloud
@@ -137,7 +137,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Auth gcloud
-        uses: google-github-actions/auth@v0
+        uses: google-github-actions/auth@v1
         with:
           credentials_json: ${{ secrets.gke-credentials }}
       - name: Setup gcloud
