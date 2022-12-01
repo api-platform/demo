@@ -12,7 +12,14 @@ jobs:
   cleanup:
     name: Uninstall K8s Release for Closed Pull Request
     runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
     steps:
+      # gcloud does not work with Python 3.10 because collections.Mappings was removed in Python 3.10.
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.9.15
       - name: Auth gcloud
         uses: google-github-actions/auth@v1
         with:
@@ -20,8 +27,8 @@ jobs:
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v1
         with:
-          # https://github.com/google-github-actions/setup-gcloud/issues/128
-          version: '290.0.1'
+#          # https://github.com/google-github-actions/setup-gcloud/issues/128
+#          version: '290.0.1'
           project_id: ${{ secrets.GKE_PROJECT }}
       - name: Configure gcloud
         run: |
