@@ -65,7 +65,7 @@ jobs:
           images: eu.gcr.io/${{ secrets.gke-project }}/php
           tags: ${{ inputs.tags }}
       - name: Build and push
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: ./api
           target: app_php
@@ -114,7 +114,7 @@ jobs:
           images: eu.gcr.io/${{ secrets.gke-project }}/caddy
           tags: ${{ inputs.tags }}
       - name: Build and push
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: ./api
           target: app_caddy
@@ -163,7 +163,7 @@ jobs:
           images: eu.gcr.io/${{ secrets.gke-project }}/pwa
           tags: ${{ inputs.tags }}
       - name: Build and push
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: ./pwa
           target: prod

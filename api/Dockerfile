@@ -121,7 +121,7 @@ RUN rm $PHP_INI_DIR/conf.d/app.prod.ini; \
 COPY --link docker/php/conf.d/app.dev.ini $PHP_INI_DIR/conf.d/
 
 RUN set -eux; \
-	apk add --no-cache --virtual .build-deps $PHPIZE_DEPS; \
+	apk add --no-cache --update --virtual .build-deps linux-headers $PHPIZE_DEPS; \
 	pecl install xdebug; \
 	docker-php-ext-enable xdebug; \
 	apk del .build-deps
