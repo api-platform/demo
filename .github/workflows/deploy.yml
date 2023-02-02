@@ -78,6 +78,7 @@ jobs:
           project_id: ${{ secrets.gke-project }}
       - name: Configure gcloud
         run: |
+          gcloud components install gke-gcloud-auth-plugin
           gcloud --quiet auth configure-docker
           gcloud container clusters get-credentials ${{ inputs.gke-cluster }} --zone ${{ inputs.gke-zone }}
       # https://github.com/helm/helm/issues/8036
