@@ -78,13 +78,13 @@ jobs:
           project_id: ${{ secrets.gke-project }}
       - name: Configure gcloud
         run: |
+          gcloud components install gke-gcloud-auth-plugin
           gcloud --quiet auth configure-docker
           gcloud container clusters get-credentials ${{ inputs.gke-cluster }} --zone ${{ inputs.gke-zone }}
       # https://github.com/helm/helm/issues/8036
       - name: Build helm dependencies
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami/
-          helm repo add bitnami-pre-2022 https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami
           helm repo add stable https://charts.helm.sh/stable/
           helm dependency build ./helm/api-platform
       - name: Check for existing namespace
