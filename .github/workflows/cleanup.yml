@@ -34,7 +34,7 @@ jobs:
           gcloud container clusters get-credentials $GKE_CLUSTER --zone $GCE_ZONE
       - name: Check for existing namespace
         id: k8s-namespace
-        run: echo "namespace=$(kubectl get namespace pr-${{ github.event.number }} 2> /dev/null)" >> $GITHUB_OUTPUT
+        run: echo "namespace=$(kubectl get namespace pr-${{ github.event.number }} | tr -d '\n' 2> /dev/null)" >> $GITHUB_OUTPUT
       - name: Uninstall release
         if: steps.k8s-namespace.outputs.namespace != ''
         run: kubectl delete namespace pr-${{ github.event.number }}

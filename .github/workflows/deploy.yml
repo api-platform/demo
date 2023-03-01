@@ -89,7 +89,7 @@ jobs:
           helm dependency build ./helm/api-platform
       - name: Check for existing namespace
         id: k8s-namespace
-        run: echo "namespace=$(kubectl get namespace ${{ inputs.namespace }} 2> /dev/null)" >> $GITHUB_OUTPUT
+        run: echo "namespace=$(kubectl get namespace ${{ inputs.namespace }} | tr -d '\n' 2> /dev/null)" >> $GITHUB_OUTPUT
       # Release name MUST start with a letter
       # GitHub doesn't support multilines environment variables (JWT_*_KEY)
       - name: Deploy in new namespace
