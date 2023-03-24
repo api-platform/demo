@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Api;
 
-use RuntimeException;
-use LogicException;
-use iterator;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use ApiPlatform\Symfony\Routing\Router;
@@ -52,7 +49,7 @@ class BooksTest extends ApiTestCase
         $this->client = static::createClient();
         $router = static::getContainer()->get('api_platform.router');
         if (!$router instanceof Router) {
-            throw new RuntimeException('api_platform.router service not found.');
+            throw new \RuntimeException('api_platform.router service not found.');
         }
 
         $this->router = $router;
@@ -134,12 +131,17 @@ publicationDate: This value should not be null.',
         ]);
     }
 
-    public function testUpdateBook(): void
+    public function testPatchBook(): void
     {
         $iri = (string) $this->findIriBy(Book::class, ['isbn' => self::ISBN]);
-        $this->client->request('PUT', $iri, ['json' => [
-            'title' => 'updated title',
-        ]]);
+        $this->client->request('PATCH', $iri, [
+            'json' => [
+                'title' => 'updated title',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/merge-patch+json',
+            ],
+        ]);
 
         self::assertResponseIsSuccessful();
         self::assertJsonContains([
@@ -168,16 +170,16 @@ publicationDate: This value should not be null.',
         $book = static::getContainer()->get('doctrine')->getRepository(Book::class)->findOneBy(['isbn' => self::ISBN]);
         self::assertInstanceOf(Book::class, $book);
         if (!$book instanceof Book) {
-            throw new LogicException('Book not found.');
+            throw new \LogicException('Book not found.');
         }
 
-        $this->client->request('PUT', $this->router->generate('_api_/books/{id}/generate-cover.{_format}_put', ['id' => $book->getId()]), [
+        $this->client->request('PUT', $this->router->generate('_api_/books/{id}/generate-cover{._format}_put', ['id' => $book->getId()]), [
             'json' => [],
         ]);
 
         $messengerReceiverLocator = static::getContainer()->get('messenger.receiver_locator');
         if (!$messengerReceiverLocator instanceof ServiceProviderInterface) {
-            throw new RuntimeException('messenger.receiver_locator service not found.');
+            throw new \RuntimeException('messenger.receiver_locator service not found.');
         }
 
         self::assertResponseIsSuccessful();
@@ -202,7 +204,7 @@ publicationDate: This value should not be null.',
         ]);
     }
 
-    public function archivedParameterProvider(): iterator
+    public function archivedParameterProvider(): \iterator
     {
         // Only archived are returned
         yield ['true',  self::COUNT_ARCHIVED];
@@ -234,8 +236,8 @@ publicationDate: This value should not be null.',
 
     private function login(): string
     {
-        $response = static::createClient()->request('POST', '/authentication_token', ['json' => [
-            'email' => 'admin@example.com',
+        $response = static::createClient()->request('POST', '/login', ['json' => [
+            'username' => 'admin@example.com',
             'password' => 'admin',
         ]]);
 

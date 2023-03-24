@@ -59,8 +59,16 @@ export const Form: FunctionComponent<Props> = ({ review }) => {
   };
 
   return (
-    <div>
-      <h1>{review ? `Edit Review ${review["@id"]}` : `Create Review`}</h1>
+    <div className="container mx-auto px-4 max-w-2xl mt-4">
+      <Link
+        href="/reviews"
+        className="text-sm text-cyan-500 font-bold hover:text-cyan-700"
+      >
+        {`< Back to list`}
+      </Link>
+      <h1 className="text-3xl my-2">
+        {review ? `Edit Review ${review["@id"]}` : `Create Review`}
+      </h1>
       <Formik
         initialValues={
           review
@@ -113,9 +121,12 @@ export const Form: FunctionComponent<Props> = ({ review }) => {
           handleSubmit,
           isSubmitting,
         }) => (
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label className="form-control-label" htmlFor="review_body">
+          <form className="shadow-md p-4" onSubmit={handleSubmit}>
+            <div className="mb-2">
+              <label
+                className="text-gray-700 block text-sm font-bold"
+                htmlFor="review_body"
+              >
                 body
               </label>
               <input
@@ -125,21 +136,24 @@ export const Form: FunctionComponent<Props> = ({ review }) => {
                 type="text"
                 placeholder="The actual body of the review."
                 required={true}
-                className={`form-control${
-                  errors.body && touched.body ? " is-invalid" : ""
+                className={`mt-1 block w-full ${
+                  errors.body && touched.body ? "border-red-500" : ""
                 }`}
                 aria-invalid={errors.body && touched.body ? "true" : undefined}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
               <ErrorMessage
-                className="invalid-feedback"
+                className="text-xs text-red-500 pt-1"
                 component="div"
                 name="body"
               />
             </div>
-            <div className="form-group">
-              <label className="form-control-label" htmlFor="review_rating">
+            <div className="mb-2">
+              <label
+                className="text-gray-700 block text-sm font-bold"
+                htmlFor="review_rating"
+              >
                 rating
               </label>
               <input
@@ -149,8 +163,8 @@ export const Form: FunctionComponent<Props> = ({ review }) => {
                 type="number"
                 placeholder="A rating."
                 required={true}
-                className={`form-control${
-                  errors.rating && touched.rating ? " is-invalid" : ""
+                className={`mt-1 block w-full ${
+                  errors.rating && touched.rating ? "border-red-500" : ""
                 }`}
                 aria-invalid={
                   errors.rating && touched.rating ? "true" : undefined
@@ -159,13 +173,16 @@ export const Form: FunctionComponent<Props> = ({ review }) => {
                 onBlur={handleBlur}
               />
               <ErrorMessage
-                className="invalid-feedback"
+                className="text-xs text-red-500 pt-1"
                 component="div"
                 name="rating"
               />
             </div>
-            <div className="form-group">
-              <label className="form-control-label" htmlFor="review_book">
+            <div className="mb-2">
+              <label
+                className="text-gray-700 block text-sm font-bold"
+                htmlFor="review_book"
+              >
                 book
               </label>
               <input
@@ -175,21 +192,24 @@ export const Form: FunctionComponent<Props> = ({ review }) => {
                 type="text"
                 placeholder="The item that is being reviewed/rated."
                 required={true}
-                className={`form-control${
-                  errors.book && touched.book ? " is-invalid" : ""
+                className={`mt-1 block w-full ${
+                  errors.book && touched.book ? "border-red-500" : ""
                 }`}
                 aria-invalid={errors.book && touched.book ? "true" : undefined}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
               <ErrorMessage
-                className="invalid-feedback"
+                className="text-xs text-red-500 pt-1"
                 component="div"
                 name="book"
               />
             </div>
-            <div className="form-group">
-              <label className="form-control-label" htmlFor="review_author">
+            <div className="mb-2">
+              <label
+                className="text-gray-700 block text-sm font-bold"
+                htmlFor="review_author"
+              >
                 author
               </label>
               <input
@@ -198,8 +218,8 @@ export const Form: FunctionComponent<Props> = ({ review }) => {
                 value={values.author ?? ""}
                 type="text"
                 placeholder="The author of the review."
-                className={`form-control${
-                  errors.author && touched.author ? " is-invalid" : ""
+                className={`mt-1 block w-full ${
+                  errors.author && touched.author ? "border-red-500" : ""
                 }`}
                 aria-invalid={
                   errors.author && touched.author ? "true" : undefined
@@ -208,14 +228,14 @@ export const Form: FunctionComponent<Props> = ({ review }) => {
                 onBlur={handleBlur}
               />
               <ErrorMessage
-                className="invalid-feedback"
+                className="text-xs text-red-500 pt-1"
                 component="div"
                 name="author"
               />
             </div>
-            <div className="form-group">
+            <div className="mb-2">
               <label
-                className="form-control-label"
+                className="text-gray-700 block text-sm font-bold"
                 htmlFor="review_publicationDate"
               >
                 publicationDate
@@ -226,9 +246,9 @@ export const Form: FunctionComponent<Props> = ({ review }) => {
                 value={values.publicationDate?.toLocaleString() ?? ""}
                 type="dateTime"
                 placeholder="Publication date of the review."
-                className={`form-control${
+                className={`mt-1 block w-full ${
                   errors.publicationDate && touched.publicationDate
-                    ? " is-invalid"
+                    ? "border-red-500"
                     : ""
                 }`}
                 aria-invalid={
@@ -240,15 +260,17 @@ export const Form: FunctionComponent<Props> = ({ review }) => {
                 onBlur={handleBlur}
               />
               <ErrorMessage
-                className="invalid-feedback"
+                className="text-xs text-red-500 pt-1"
                 component="div"
                 name="publicationDate"
               />
             </div>
             {status && status.msg && (
               <div
-                className={`alert ${
-                  status.isValid ? "alert-success" : "alert-danger"
+                className={`border px-4 py-3 my-4 rounded ${
+                  status.isValid
+                    ? "text-cyan-700 border-cyan-500 bg-cyan-200/50"
+                    : "text-red-700 border-red-400 bg-red-100"
                 }`}
                 role="alert"
               >
@@ -257,7 +279,7 @@ export const Form: FunctionComponent<Props> = ({ review }) => {
             )}
             <button
               type="submit"
-              className="btn btn-success"
+              className="inline-block mt-2 bg-cyan-500 hover:bg-cyan-700 text-sm text-white font-bold py-2 px-4 rounded"
               disabled={isSubmitting}
             >
               Submit
@@ -265,14 +287,16 @@ export const Form: FunctionComponent<Props> = ({ review }) => {
           </form>
         )}
       </Formik>
-      <Link href="/reviews">
-        <a className="btn btn-primary">Back to list</a>
-      </Link>
-      {review && (
-        <button className="btn btn-danger" onClick={handleDelete}>
-          <a>Delete</a>
-        </button>
-      )}
+      <div className="flex space-x-2 mt-4 justify-end">
+        {review && (
+          <button
+            className="inline-block mt-2 border-2 border-red-400 hover:border-red-700 hover:text-red-700 text-sm text-red-400 font-bold py-2 px-4 rounded"
+            onClick={handleDelete}
+          >
+            Delete
+          </button>
+        )}
+      </div>
     </div>
   );
 };

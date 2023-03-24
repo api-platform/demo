@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Api;
 
-use InvalidArgumentException;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\ToolsException;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait as HautelookRefreshDatabaseTrait;
@@ -39,7 +38,7 @@ trait RefreshDatabaseTrait
             try {
                 $tool->createSchema($meta);
             } catch (ToolsException $toolsException) {
-                throw new InvalidArgumentException(sprintf('Database schema is not buildable: %s', $toolsException->getMessage()), $toolsException->getCode(), $toolsException);
+                throw new \InvalidArgumentException(sprintf('Database schema is not buildable: %s', $toolsException->getMessage()), $toolsException->getCode(), $toolsException);
             }
         }
     }

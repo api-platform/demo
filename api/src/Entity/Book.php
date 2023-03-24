@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\Link;
-use DateTimeInterface;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
@@ -19,12 +17,13 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Serializer\Filter\PropertyFilter;
 use App\Filter\ArchivedFilter;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\Doctrine\UuidGenerator;
-use Ramsey\Uuid\UuidInterface;
+use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -33,21 +32,24 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity]
 #[ApiResource(
     types: ['https://schema.org/Book'],
+    operations: [
+        new GetCollection(),
+        new Post(),
+        new Get(),
+        new Put(),
+        new Patch(),
+        new Delete(),
+        new Put(
+            uriTemplate: '/books/{id}/generate-cover{._format}',
+            normalizationContext: ['groups' => ['book:read', 'book:cover']],
+            input: false,
+            output: false,
+            messenger: true,
+        ),
+    ],
     normalizationContext: ['groups' => ['book:read']],
     mercure: true,
-    paginationClientItemsPerPage: true,
-)]
-#[GetCollection]
-#[Post]
-#[Get]
-#[Put]
-#[Patch]
-#[Delete]
-#[Put(
-    uriTemplate: '/books/{id}/generate-cover.{_format}',
-    normalizationContext: ['groups' => ['book:read', 'book:cover']],
-    output: false,
-    messenger: true,
+    paginationClientItemsPerPage: true
 )]
 #[ApiFilter(ArchivedFilter::class)]
 #[ApiFilter(OrderFilter::class, properties: ['id', 'title', 'author', 'isbn', 'publicationDate'])]
@@ -56,15 +58,18 @@ class Book implements ArchivableInterface
 {
     use ArchivableTrait;
 
-    #[ORM\Id, ORM\GeneratedValue(strategy: 'CUSTOM'), ORM\CustomIdGenerator(class: UuidGenerator::class)]
-    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\Id]
+    #[ORM\Column(type: UuidType::NAME, unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     #[Groups(groups: ['book:read'])]
-    private ?UuidInterface $id = null;
+    private ?Uuid $id = null;
 
     /**
      * The ISBN of the book.
      */
     #[ORM\Column(nullable: true)]
+    #[ApiFilter(SearchFilter::class, strategy: 'exact')]
     #[ApiProperty(types: ['https://schema.org/isbn'])]
     #[Assert\Isbn]
     #[Groups(groups: ['book:read'])]
@@ -105,9 +110,9 @@ class Book implements ArchivableInterface
     #[ORM\Column(type: 'date')]
     #[ApiProperty(types: ['https://schema.org/dateCreated'])]
     #[Assert\NotNull]
-    #[Assert\Type(DateTimeInterface::class)]
+    #[Assert\Type(\DateTimeInterface::class)]
     #[Groups(groups: ['book:read'])]
-    public ?DateTimeInterface $publicationDate = null;
+    public ?\DateTimeInterface $publicationDate = null;
 
     /**
      * The book's reviews.
@@ -120,6 +125,7 @@ class Book implements ArchivableInterface
     /**
      * The book's cover base64 encoded.
      */
+    #[ApiProperty(writable: false)]
     #[Groups(groups: ['book:cover'])]
     public ?string $cover = null;
 
@@ -128,7 +134,7 @@ class Book implements ArchivableInterface
         $this->reviews = new ArrayCollection();
     }
 
-    public function getId(): ?UuidInterface
+    public function getId(): ?Uuid
     {
         return $this->id;
     }

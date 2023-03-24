@@ -59,8 +59,16 @@ export const Form: FunctionComponent<Props> = ({ book }) => {
   };
 
   return (
-    <div>
-      <h1>{book ? `Edit Book ${book["@id"]}` : `Create Book`}</h1>
+    <div className="container mx-auto px-4 max-w-2xl mt-4">
+      <Link
+        href="/books"
+        className="text-sm text-cyan-500 font-bold hover:text-cyan-700"
+      >
+        {`< Back to list`}
+      </Link>
+      <h1 className="text-3xl my-2">
+        {book ? `Edit Book ${book["@id"]}` : `Create Book`}
+      </h1>
       <Formik
         initialValues={
           book
@@ -113,9 +121,12 @@ export const Form: FunctionComponent<Props> = ({ book }) => {
           handleSubmit,
           isSubmitting,
         }) => (
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label className="form-control-label" htmlFor="book_isbn">
+          <form className="shadow-md p-4" onSubmit={handleSubmit}>
+            <div className="mb-2">
+              <label
+                className="text-gray-700 block text-sm font-bold"
+                htmlFor="book_isbn"
+              >
                 isbn
               </label>
               <input
@@ -124,21 +135,24 @@ export const Form: FunctionComponent<Props> = ({ book }) => {
                 value={values.isbn ?? ""}
                 type="text"
                 placeholder="The ISBN of the book."
-                className={`form-control${
-                  errors.isbn && touched.isbn ? " is-invalid" : ""
+                className={`mt-1 block w-full ${
+                  errors.isbn && touched.isbn ? "border-red-500" : ""
                 }`}
                 aria-invalid={errors.isbn && touched.isbn ? "true" : undefined}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
               <ErrorMessage
-                className="invalid-feedback"
+                className="text-xs text-red-500 pt-1"
                 component="div"
                 name="isbn"
               />
             </div>
-            <div className="form-group">
-              <label className="form-control-label" htmlFor="book_title">
+            <div className="mb-2">
+              <label
+                className="text-gray-700 block text-sm font-bold"
+                htmlFor="book_title"
+              >
                 title
               </label>
               <input
@@ -148,8 +162,8 @@ export const Form: FunctionComponent<Props> = ({ book }) => {
                 type="text"
                 placeholder="The title of the book."
                 required={true}
-                className={`form-control${
-                  errors.title && touched.title ? " is-invalid" : ""
+                className={`mt-1 block w-full ${
+                  errors.title && touched.title ? "border-red-500" : ""
                 }`}
                 aria-invalid={
                   errors.title && touched.title ? "true" : undefined
@@ -158,13 +172,16 @@ export const Form: FunctionComponent<Props> = ({ book }) => {
                 onBlur={handleBlur}
               />
               <ErrorMessage
-                className="invalid-feedback"
+                className="text-xs text-red-500 pt-1"
                 component="div"
                 name="title"
               />
             </div>
-            <div className="form-group">
-              <label className="form-control-label" htmlFor="book_description">
+            <div className="mb-2">
+              <label
+                className="text-gray-700 block text-sm font-bold"
+                htmlFor="book_description"
+              >
                 description
               </label>
               <input
@@ -174,8 +191,10 @@ export const Form: FunctionComponent<Props> = ({ book }) => {
                 type="text"
                 placeholder="A description of the item."
                 required={true}
-                className={`form-control${
-                  errors.description && touched.description ? " is-invalid" : ""
+                className={`mt-1 block w-full ${
+                  errors.description && touched.description
+                    ? "border-red-500"
+                    : ""
                 }`}
                 aria-invalid={
                   errors.description && touched.description ? "true" : undefined
@@ -184,13 +203,16 @@ export const Form: FunctionComponent<Props> = ({ book }) => {
                 onBlur={handleBlur}
               />
               <ErrorMessage
-                className="invalid-feedback"
+                className="text-xs text-red-500 pt-1"
                 component="div"
                 name="description"
               />
             </div>
-            <div className="form-group">
-              <label className="form-control-label" htmlFor="book_author">
+            <div className="mb-2">
+              <label
+                className="text-gray-700 block text-sm font-bold"
+                htmlFor="book_author"
+              >
                 author
               </label>
               <input
@@ -200,8 +222,8 @@ export const Form: FunctionComponent<Props> = ({ book }) => {
                 type="text"
                 placeholder="The author of this content or rating. Please note that author is special in that HTML 5 provides a special mechanism for indicating authorship via the rel tag. That is equivalent to this and may be used interchangeably."
                 required={true}
-                className={`form-control${
-                  errors.author && touched.author ? " is-invalid" : ""
+                className={`mt-1 block w-full ${
+                  errors.author && touched.author ? "border-red-500" : ""
                 }`}
                 aria-invalid={
                   errors.author && touched.author ? "true" : undefined
@@ -210,14 +232,14 @@ export const Form: FunctionComponent<Props> = ({ book }) => {
                 onBlur={handleBlur}
               />
               <ErrorMessage
-                className="invalid-feedback"
+                className="text-xs text-red-500 pt-1"
                 component="div"
                 name="author"
               />
             </div>
-            <div className="form-group">
+            <div className="mb-2">
               <label
-                className="form-control-label"
+                className="text-gray-700 block text-sm font-bold"
                 htmlFor="book_publicationDate"
               >
                 publicationDate
@@ -229,9 +251,9 @@ export const Form: FunctionComponent<Props> = ({ book }) => {
                 type="dateTime"
                 placeholder="The date on which the CreativeWork was created or the item was added to a DataFeed."
                 required={true}
-                className={`form-control${
+                className={`mt-1 block w-full ${
                   errors.publicationDate && touched.publicationDate
-                    ? " is-invalid"
+                    ? "border-red-500"
                     : ""
                 }`}
                 aria-invalid={
@@ -243,17 +265,19 @@ export const Form: FunctionComponent<Props> = ({ book }) => {
                 onBlur={handleBlur}
               />
               <ErrorMessage
-                className="invalid-feedback"
+                className="text-xs text-red-500 pt-1"
                 component="div"
                 name="publicationDate"
               />
             </div>
-            <div className="form-group">
-              <div className="form-control-label">reviews</div>
+            <div className="mb-2">
+              <div className="text-gray-700 block text-sm font-bold">
+                reviews
+              </div>
               <FieldArray
                 name="reviews"
                 render={(arrayHelpers) => (
-                  <div id="book_reviews">
+                  <div className="mb-2" id="book_reviews">
                     {values.reviews && values.reviews.length > 0 ? (
                       values.reviews.map((item: any, index: number) => (
                         <div key={index}>
@@ -286,8 +310,10 @@ export const Form: FunctionComponent<Props> = ({ book }) => {
             </div>
             {status && status.msg && (
               <div
-                className={`alert ${
-                  status.isValid ? "alert-success" : "alert-danger"
+                className={`border px-4 py-3 my-4 rounded ${
+                  status.isValid
+                    ? "text-cyan-700 border-cyan-500 bg-cyan-200/50"
+                    : "text-red-700 border-red-400 bg-red-100"
                 }`}
                 role="alert"
               >
@@ -296,7 +322,7 @@ export const Form: FunctionComponent<Props> = ({ book }) => {
             )}
             <button
               type="submit"
-              className="btn btn-success"
+              className="inline-block mt-2 bg-cyan-500 hover:bg-cyan-700 text-sm text-white font-bold py-2 px-4 rounded"
               disabled={isSubmitting}
             >
               Submit
@@ -304,14 +330,16 @@ export const Form: FunctionComponent<Props> = ({ book }) => {
           </form>
         )}
       </Formik>
-      <Link href="/books">
-        <a className="btn btn-primary">Back to list</a>
-      </Link>
-      {book && (
-        <button className="btn btn-danger" onClick={handleDelete}>
-          <a>Delete</a>
-        </button>
-      )}
+      <div className="flex space-x-2 mt-4 justify-end">
+        {book && (
+          <button
+            className="inline-block mt-2 border-2 border-red-400 hover:border-red-700 hover:text-red-700 text-sm text-red-400 font-bold py-2 px-4 rounded"
+            onClick={handleDelete}
+          >
+            Delete
+          </button>
+        )}
+      </div>
     </div>
   );
 };

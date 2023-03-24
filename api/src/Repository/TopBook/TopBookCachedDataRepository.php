@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Repository\TopBook;
 
-use InvalidArgumentException;
 use App\Entity\TopBook;
+use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Contracts\Cache\CacheInterface;
 
+#[AsDecorator(decorates: TopBookDataRepository::class)]
 final class TopBookCachedDataRepository implements TopBookDataInterface
 {
     public function __construct(
@@ -19,9 +20,9 @@ final class TopBookCachedDataRepository implements TopBookDataInterface
     /**
      * Local caching is done so the CSV isn't reloaded at every call.
      *
-     * @throws InvalidArgumentException
-     *
      * @return array<int, TopBook>
+     *
+     * @throws \InvalidArgumentException
      */
     public function getTopBooks(): array
     {
