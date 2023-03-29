@@ -63,7 +63,9 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: eu.gcr.io/${{ secrets.gke-project }}/php
-          tags: ${{ inputs.tags }}
+          tags: |
+            type=raw,value=${{ github.sha }},priority=9999
+            ${{ inputs.tags }}
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
@@ -112,7 +114,9 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: eu.gcr.io/${{ secrets.gke-project }}/caddy
-          tags: ${{ inputs.tags }}
+          tags: |
+            type=raw,value=${{ github.sha }},priority=9999
+            ${{ inputs.tags }}
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
@@ -161,7 +165,9 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: eu.gcr.io/${{ secrets.gke-project }}/pwa
-          tags: ${{ inputs.tags }}
+          tags: |
+            type=raw,value=${{ github.sha }},priority=9999
+            ${{ inputs.tags }}
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
