@@ -95,7 +95,7 @@ jobs:
       - name: Deploy in new namespace
         if: steps.k8s-namespace.outputs.namespace == ''
         run: |
-          set -e
+          set -o pipefail
           JWT_PASSPHRASE=$(openssl rand -base64 32)
           JWT_SECRET_KEY=$(openssl genpkey -pass file:<(echo "$JWT_PASSPHRASE") -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096)
           helm upgrade ${{ inputs.release }} ./helm/api-platform \
@@ -136,7 +136,7 @@ jobs:
       - name: Upgrade namespace
         if: steps.k8s-namespace.outputs.namespace != ''
         run: |
-          set -e
+          set -o pipefail
           helm upgrade ${{ inputs.release }} ./helm/api-platform \
             --reuse-values \
             --install \
@@ -160,6 +160,6 @@ jobs:
             --set=mercure.extraDirectives="demo \
             cors_origins ${{ join(fromJSON(inputs.cors), ' ') }}" \
             | sed --unbuffered '/USER-SUPPLIED VALUES/,$d'
-      - name: Get kube events
+      - name: Debug kube events
         if: failure()
         run: kubectl get events --sort-by .metadata.creationTimestamp
