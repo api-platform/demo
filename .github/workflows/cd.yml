@@ -8,10 +8,7 @@ on:
   pull_request:
     types: [ reopened, synchronize, labeled ]
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
-  cancel-in-progress: true
-
+# Do not use concurrency to prevent simultaneous helm deployments
 jobs:
   build:
     name: Build
@@ -19,6 +16,7 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       tags: |
+        type=raw,value=${{ github.sha }}
         type=ref,event=pr,prefix=pr-,priority=1000
         type=edge,branch=$repo.default_branch,priority=900
         type=raw,value=latest,enable={{is_default_branch}},priority=900
@@ -37,7 +35,7 @@ jobs:
     with:
       environment: prod
       url: demo.api-platform.com
-      docker-images-version: latest
+      docker-images-version: ${{ github.sha }}
       cors: '["https://demo.api-platform.com", "http://localhost", "https://localhost", "http://localhost:3000"]'
       release: main
       namespace: main

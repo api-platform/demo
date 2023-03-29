@@ -95,12 +95,16 @@ jobs:
       - name: Deploy in new namespace
         if: steps.k8s-namespace.outputs.namespace == ''
         run: |
+          set -e
           JWT_PASSPHRASE=$(openssl rand -base64 32)
           JWT_SECRET_KEY=$(openssl genpkey -pass file:<(echo "$JWT_PASSPHRASE") -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096)
           helm upgrade ${{ inputs.release }} ./helm/api-platform \
             --reuse-values \
             --install \
             --create-namespace \
+            --debug \
+            --wait \
+            --atomic \
             --namespace=${{ inputs.namespace }} \
             --set=app.version=${{ github.sha }} \
             --set=php.image.repository=eu.gcr.io/${{ secrets.gke-project }}/php \
@@ -127,14 +131,19 @@ jobs:
             --set=mercure.jwtSecret="!ChangeThisMercureHubJWTSecretKey!" \
             --set=postgresql.postgresqlPassword=$(openssl rand -base64 32 | tr -d "=+/") \
             --set=mercure.extraDirectives="demo \
-            cors_origins ${{ join(fromJSON(inputs.cors), ' ') }}"
+            cors_origins ${{ join(fromJSON(inputs.cors), ' ') }}" \
+            | sed --unbuffered '/USER-SUPPLIED VALUES/,$d'
       - name: Upgrade namespace
         if: steps.k8s-namespace.outputs.namespace != ''
         run: |
+          set -e
           helm upgrade ${{ inputs.release }} ./helm/api-platform \
             --reuse-values \
             --install \
             --create-namespace \
+            --debug \
+            --wait \
+            --atomic \
             --namespace=${{ inputs.namespace }} \
             --set=app.version=${{ github.sha }} \
             --set=php.image.repository=eu.gcr.io/${{ secrets.gke-project }}/php \
@@ -149,4 +158,8 @@ jobs:
             --set=php.corsAllowOrigin="^$(echo "${{ join(fromJSON(inputs.cors), '|') }}" | sed 's/\./\\./g')$" \
             --set=mercure.jwtSecret="!ChangeThisMercureHubJWTSecretKey!" \
             --set=mercure.extraDirectives="demo \
-            cors_origins ${{ join(fromJSON(inputs.cors), ' ') }}"
+            cors_origins ${{ join(fromJSON(inputs.cors), ' ') }}" \
+            | sed --unbuffered '/USER-SUPPLIED VALUES/,$d'
+      - name: Get kube events
+        if: failure()
+        run: kubectl get events --sort-by .metadata.creationTimestamp
