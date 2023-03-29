@@ -12,8 +12,8 @@ import { dehydrate, QueryClient, useQuery } from "react-query";
 import { Form } from "../../../components/book/Form";
 import { PagedCollection } from "../../../types/collection";
 import { Book } from "../../../types/Book";
-import { fetch, FetchResponse, getPaths } from "../../../utils/dataAccess";
-import {ENTRYPOINT} from "../../../config/entrypoint";
+import { fetch, FetchResponse, getItemPaths } from "../../../utils/dataAccess";
+import { ENTRYPOINT } from "../../../config/entrypoint";
 
 const getBook = async (id: string | string[] | undefined) =>
   id ? await fetch<Book>(`/books/${id}`) : Promise.resolve(undefined);
@@ -45,6 +45,7 @@ const Page: NextComponentType<NextPageContext> = () => {
 export const getStaticProps: GetStaticProps = async ({
   params: { id } = {},
 }) => {
+  // prevent failure on build without API available
   if (!ENTRYPOINT) {
     return {
       props: {},
@@ -59,11 +60,12 @@ export const getStaticProps: GetStaticProps = async ({
     props: {
       dehydratedState: dehydrate(queryClient),
     },
-    revalidate: 10,
+    revalidate: 1,
   };
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  // prevent failure on build without API available
   if (!ENTRYPOINT) {
     return {
       paths: [],
@@ -72,7 +74,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 
   const response = await fetch<PagedCollection<Book>>("/books");
-  const paths = await getPaths(response, "books", "/books/[id]/edit");
+  const paths = await getItemPaths(response, "books", "/books/[id]/edit");
 
   return {
     paths,

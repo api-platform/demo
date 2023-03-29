@@ -73,7 +73,7 @@ final class ReviewsTest extends ApiTestCase
         $iri = $this->findIriBy(Book::class, ['isbn' => self::ISBN]);
         $this->client->request('POST', '/reviews', ['json' => [
             'body' => 'bonjour',
-            //'rating' => '', // missing rating
+            // 'rating' => '', // missing rating
             'book' => $iri,
             'author' => 'COil',
             'publicationDate' => null,

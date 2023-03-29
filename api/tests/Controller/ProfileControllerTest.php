@@ -28,9 +28,9 @@ final class ProfileControllerTest extends ApiTestCase
      */
     public function testProfile(): void
     {
-        $response = $this->client->request('POST', '/authentication_token', [
+        $response = $this->client->request('POST', '/login', [
             'json' => [
-                'email' => 'admin@example.com',
+                'username' => 'admin@example.com',
                 'password' => 'admin',
             ],
         ]);
@@ -43,7 +43,7 @@ final class ProfileControllerTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/json');
         self::assertJsonContains([
             'email' => 'admin@example.com',
-            'roles' => ['ROLE_ADMIN', 'ROLE_USER'],
+            'roles' => ['ROLE_ADMIN'],
         ]);
     }
 }

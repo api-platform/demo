@@ -10,7 +10,8 @@ export class Book implements Item {
     public description?: string,
     public author?: string,
     public publicationDate?: Date,
-    public reviews?: any
+    public reviews?: any,
+    public cover?: string
   ) {
     this["@id"] = _id;
   }

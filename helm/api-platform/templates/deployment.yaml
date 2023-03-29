@@ -71,10 +71,12 @@ spec:
             tcpSocket:
               port: 80
             initialDelaySeconds: 3
+            periodSeconds: 3
           livenessProbe:
             tcpSocket:
               port: 80
             initialDelaySeconds: 3
+            periodSeconds: 3
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
         - name: {{ .Chart.Name }}-php
@@ -165,14 +167,17 @@ spec:
               command:
                 - docker-healthcheck
             failureThreshold: 40
+            periodSeconds: 3
           readinessProbe:
             exec:
               command:
                 - docker-healthcheck
+            periodSeconds: 3
           livenessProbe:
             exec:
               command:
                 - docker-healthcheck
+            periodSeconds: 3
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
         - name: {{ .Chart.Name }}-consumer
@@ -256,12 +261,15 @@ spec:
             exec:
               command: ['pgrep', '-f', 'php bin/console messenger:consume']
             failureThreshold: 40
+            periodSeconds: 3
           readinessProbe:
             exec:
               command: ['pgrep', '-f', 'php bin/console messenger:consume']
+            periodSeconds: 3
           livenessProbe:
             exec:
               command: ['pgrep', '-f', 'php bin/console messenger:consume']
+            periodSeconds: 3
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:

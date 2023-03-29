@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Filter;
 
-use InvalidArgumentException;
 use ApiPlatform\Doctrine\Orm\Filter\FilterInterface;
 use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use ApiPlatform\Metadata\Operation;
@@ -24,7 +23,7 @@ final class ArchivedFilter implements FilterInterface
     public function apply(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, Operation $operation = null, array $context = []): void
     {
         if (!is_a($resourceClass, ArchivableInterface::class, true)) {
-            throw new InvalidArgumentException(sprintf("Can't apply the Archived filter on a resource (%s) not implementing the ArchivableInterface.", $resourceClass));
+            throw new \InvalidArgumentException(sprintf("Can't apply the Archived filter on a resource (%s) not implementing the ArchivableInterface.", $resourceClass));
         }
 
         // Parameter not provided or not supported
@@ -44,7 +43,7 @@ final class ArchivedFilter implements FilterInterface
     /**
      * {@inheritdoc}
      *
-     * @return array{archived: array{property: string, type: string, required: false, swagger: array{description: string, name: string, type: string}, openapi: array{description: string, name: string, type: string}}}
+     * @return array{archived: array{property: string, type: string, required: false, openapi: array{description: string, name: string, type: string}}}
      */
     public function getDescription(string $resourceClass): array
     {
@@ -55,11 +54,6 @@ final class ArchivedFilter implements FilterInterface
                 'property' => self::PARAMETER_NAME,
                 'type' => 'bool',
                 'required' => false,
-                'swagger' => [
-                    'description' => $description,
-                    'name' => self::PARAMETER_NAME,
-                    'type' => 'bool',
-                ],
                 'openapi' => [
                     'description' => $description,
                     'name' => self::PARAMETER_NAME,

@@ -21,5 +21,6 @@ final class SwaggerTest extends WebTestCase
         $this->client->request('GET', '/docs.json');
         self::assertResponseIsSuccessful();
         self::assertStringContainsString('/stats', (string) $this->client->getResponse()->getContent());
+        self::assertStringContainsString('/profile', (string) $this->client->getResponse()->getContent());
     }
 }

@@ -9,16 +9,17 @@ use ApiPlatform\Api\UrlGeneratorInterface;
 use ApiPlatform\JsonLd\Serializer\ItemNormalizer;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use App\Entity\Book;
-use ProxyManager\Exception\ExceptionInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-final class BookHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+final class BookHandler
 {
     public function __construct(
         private readonly IriConverterInterface $iriConverter,
@@ -44,7 +45,7 @@ final class BookHandler implements MessageHandlerInterface
 
         try {
             $contents = $response->toArray();
-        } catch (ExceptionInterface $exception) {
+        } catch (DecodingExceptionInterface $exception) {
             $this->logger->error('Invalid JSON from Imgflip API.', [
                 'error' => $exception->getMessage(),
             ]);
@@ -69,7 +70,7 @@ final class BookHandler implements MessageHandlerInterface
                 $book,
                 ItemNormalizer::FORMAT,
                 $this->resourceMetadataCollectionFactory->create(Book::class)
-                    ->getOperation('_api_/books/{id}/generate-cover.{_format}_put')
+                    ->getOperation('_api_/books/{id}/generate-cover{._format}_put')
                     ->getNormalizationContext()
             )
         );

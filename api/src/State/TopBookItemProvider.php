@@ -9,8 +9,6 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use App\Entity\TopBook;
 use App\Repository\TopBook\TopBookDataInterface;
-use Exception;
-use RuntimeException;
 
 final class TopBookItemProvider implements ProviderInterface
 {
@@ -28,8 +26,8 @@ final class TopBookItemProvider implements ProviderInterface
 
         try {
             $topBooks = $this->repository->getTopBooks();
-        } catch (Exception $exception) {
-            throw new RuntimeException(sprintf('Unable to retrieve top books from external source: %s', $exception->getMessage()));
+        } catch (\Exception $exception) {
+            throw new \RuntimeException(sprintf('Unable to retrieve top books from external source: %s', $exception->getMessage()));
         }
 
         return $topBooks[$id] ?? null;

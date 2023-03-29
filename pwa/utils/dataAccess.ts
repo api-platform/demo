@@ -73,7 +73,7 @@ export const fetch = async <TData>(
   throw { message: errorMessage, status, fields } as FetchError;
 };
 
-export const getPath = (
+export const getItemPath = (
   iri: string | undefined,
   pathTemplate: string
 ): string => {
@@ -86,7 +86,13 @@ export const getPath = (
   return pathTemplate.replace("[id]", resourceId);
 };
 
-export const getPaths = async <TData extends Item>(
+export const parsePage = (resourceName: string, path: string) =>
+  parseInt(
+    new RegExp(`^/${resourceName}\\?page=(\\d+)`).exec(path)?.[1] ?? "1",
+    10
+  );
+
+export const getItemPaths = async <TData extends Item>(
   response: FetchResponse<PagedCollection<TData>> | undefined,
   resourceName: string,
   pathTemplate: string
@@ -95,29 +101,21 @@ export const getPaths = async <TData extends Item>(
 
   try {
     const view = response.data["hydra:view"];
+    const { "hydra:last": last } = view ?? {};
     const paths =
       response.data["hydra:member"]?.map((resourceData) =>
-        getPath(resourceData["@id"] ?? "", pathTemplate)
-      ) || [];
+        getItemPath(resourceData["@id"] ?? "", pathTemplate)
+      ) ?? [];
+    const lastPage = parsePage(resourceName, last ?? "");
 
-    const { "hydra:last": last } = view || {};
-    if (last) {
-      for (
-        let page = 2;
-        page <=
-        parseInt(
-          last.replace(new RegExp(`^\/${resourceName}\?page=(\d+)`), "$1")
-        );
-        page++
-      ) {
-        paths.concat(
-          (
-            await fetch<PagedCollection<TData>>(`/${resourceName}?page=${page}`)
-          )?.data["hydra:member"]?.map((resourceData) =>
-            getPath(resourceData["@id"] ?? "", pathTemplate)
-          ) || []
-        );
-      }
+    for (let page = 2; page <= lastPage; page++) {
+      paths.push(
+        ...((
+          await fetch<PagedCollection<TData>>(`/${resourceName}?page=${page}`)
+        )?.data["hydra:member"]?.map((resourceData) =>
+          getItemPath(resourceData["@id"] ?? "", pathTemplate)
+        ) ?? [])
+      );
     }
 
     return paths;
@@ -126,4 +124,23 @@ export const getPaths = async <TData extends Item>(
 
     return [];
   }
+};
+
+export const getCollectionPaths = async <TData extends Item>(
+  response: FetchResponse<PagedCollection<TData>> | undefined,
+  resourceName: string,
+  pathTemplate: string
+) => {
+  if (!response) return [];
+
+  const view = response.data["hydra:view"];
+  const { "hydra:last": last } = view ?? {};
+  const paths = [pathTemplate.replace("[page]", "1")];
+  const lastPage = parsePage(resourceName, last ?? "");
+
+  for (let page = 2; page <= lastPage; page++) {
+    paths.push(pathTemplate.replace("[page]", page.toString()));
+  }
+
+  return paths;
 };

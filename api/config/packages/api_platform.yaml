@@ -6,6 +6,8 @@ api_platform:
         [Its source code](https://github.com/api-platform/demo) includes various examples, check it out!
         You may also be interested by [the GraphQL entrypoint](/graphql).
         [A PWA](/) and [an admin](/admin) are consuming this API.
+    graphql:
+        graphql_playground: false
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
     formats:
@@ -21,7 +23,6 @@ api_platform:
         json: ['application/merge-patch+json']
         jsonapi: ['application/vnd.api+json']
     swagger:
-        versions: [3]
         api_keys:
             apiKey:
                 name: Authorization
@@ -33,3 +34,5 @@ api_platform:
         stateless: true
         cache_headers:
             vary: ['Content-Type', 'Authorization', 'Origin']
+        extra_properties:
+            standard_put: true

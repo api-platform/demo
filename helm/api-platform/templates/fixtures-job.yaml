@@ -30,7 +30,7 @@ spec:
           image: "{{ .Values.php.image.repository }}:{{ .Values.php.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.php.image.pullPolicy }}
           command: ['/bin/sh', '-c']
-          args: ['composer install --prefer-dist --no-progress --no-suggest --no-interaction && bin/console hautelook:fixtures:load --no-interaction']
+          args: ['composer install --prefer-dist --no-progress --no-interaction && bin/console hautelook:fixtures:load --no-interaction']
           env:
             - name: API_ENTRYPOINT_HOST
               valueFrom:

@@ -12,9 +12,9 @@ import { dehydrate, QueryClient, useQuery } from "react-query";
 import { Show } from "../../../components/review/Show";
 import { PagedCollection } from "../../../types/collection";
 import { Review } from "../../../types/Review";
-import { fetch, FetchResponse, getPaths } from "../../../utils/dataAccess";
+import { fetch, FetchResponse, getItemPaths } from "../../../utils/dataAccess";
 import { useMercure } from "../../../utils/mercure";
-import {ENTRYPOINT} from "../../../config/entrypoint";
+import { ENTRYPOINT } from "../../../config/entrypoint";
 
 const getReview = async (id: string | string[] | undefined) =>
   id ? await fetch<Review>(`/reviews/${id}`) : Promise.resolve(undefined);
@@ -48,6 +48,7 @@ const Page: NextComponentType<NextPageContext> = () => {
 export const getStaticProps: GetStaticProps = async ({
   params: { id } = {},
 }) => {
+  // prevent failure on build without API available
   if (!ENTRYPOINT) {
     return {
       props: {},
@@ -62,11 +63,12 @@ export const getStaticProps: GetStaticProps = async ({
     props: {
       dehydratedState: dehydrate(queryClient),
     },
-    revalidate: 10,
+    revalidate: 1,
   };
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  // prevent failure on build without API available
   if (!ENTRYPOINT) {
     return {
       paths: [],
@@ -75,7 +77,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 
   const response = await fetch<PagedCollection<Review>>("/reviews");
-  const paths = await getPaths(response, "reviews", "/reviews/[id]");
+  const paths = await getItemPaths(response, "reviews", "/reviews/[id]");
 
   return {
     paths,

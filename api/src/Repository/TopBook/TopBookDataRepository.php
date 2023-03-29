@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Repository\TopBook;
 
-use RuntimeException;
 use App\Entity\TopBook;
 
 final class TopBookDataRepository implements TopBookDataInterface
@@ -50,7 +49,7 @@ final class TopBookDataRepository implements TopBookDataInterface
             }
 
             if (self::FIELDS_COUNT !== count($row)) {
-                throw new RuntimeException(sprintf('Invalid data at row: %d', count($row)));
+                throw new \RuntimeException(sprintf('Invalid data at row: %d', count($row)));
             }
 
             $topBook = new TopBook(
@@ -74,12 +73,12 @@ final class TopBookDataRepository implements TopBookDataInterface
     {
         $csvFileName = __DIR__.'/data/'.self::DATA_SOURCE;
         if (!is_file($csvFileName)) {
-            throw new RuntimeException(sprintf("Can't find data source: %s", $csvFileName));
+            throw new \RuntimeException(sprintf("Can't find data source: %s", $csvFileName));
         }
 
         $file = file($csvFileName);
         if (!is_array($file)) {
-            throw new RuntimeException(sprintf("Can't load data source: %s", $csvFileName));
+            throw new \RuntimeException(sprintf("Can't load data source: %s", $csvFileName));
         }
 
         return $file;

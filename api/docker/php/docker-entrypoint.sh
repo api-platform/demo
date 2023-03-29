@@ -15,8 +15,6 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 
 		echo "Making sure public / private keys for JWT exist..."
 		php bin/console lexik:jwt:generate-keypair --skip-if-exists --no-interaction
-		setfacl -R -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
-		setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
 	fi
 
 	if grep -q DATABASE_URL= .env; then
