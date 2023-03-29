@@ -162,4 +162,4 @@ jobs:
             | sed --unbuffered '/USER-SUPPLIED VALUES/,$d'
       - name: Debug kube events
         if: failure()
-        run: kubectl get events --sort-by .metadata.creationTimestamp
+        run: kubectl get events --namespace=${{ inputs.namespace }} --sort-by .metadata.creationTimestamp
