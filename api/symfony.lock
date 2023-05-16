@@ -34,6 +34,18 @@
     "composer/xdebug-handler": {
         "version": "2.0.1"
     },
+    "dama/doctrine-test-bundle": {
+        "version": "7.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "4.0",
+            "ref": "56eaa387b5e48ebcc7c95a893b47dfa1ad51449c"
+        },
+        "files": [
+            "config/packages/test/dama_doctrine_test_bundle.yaml"
+        ]
+    },
     "dnoegel/php-xdg-base-dir": {
         "version": "v0.1.1"
     },
@@ -76,6 +88,18 @@
             "config/packages/doctrine.yaml",
             "src/Entity/.gitignore",
             "src/Repository/.gitignore"
+        ]
+    },
+    "doctrine/doctrine-fixtures-bundle": {
+        "version": "3.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "3.0",
+            "ref": "1f5514cfa15b947298df4d771e694e578d4c204d"
+        },
+        "files": [
+            "src/DataFixtures/AppFixtures.php"
         ]
     },
     "doctrine/doctrine-migrations-bundle": {
@@ -151,19 +175,6 @@
     "guzzlehttp/psr7": {
         "version": "1.8.2"
     },
-    "hautelook/alice-bundle": {
-        "version": "2.10",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "2.2",
-            "ref": "c84e4f2b9d7f436d7d52e8369230b393367607ec"
-        },
-        "files": [
-            "config/packages/hautelook_alice.yaml",
-            "fixtures/.gitignore"
-        ]
-    },
     "justinrainbow/json-schema": {
         "version": "5.2.10"
     },
@@ -193,21 +204,6 @@
     },
     "monolog/monolog": {
         "version": "2.2.0"
-    },
-    "myclabs/deep-copy": {
-        "version": "1.10.2"
-    },
-    "nelmio/alice": {
-        "version": "3.10",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "3.3",
-            "ref": "42b52d2065dc3fde27912d502c18ca1926e35ae2"
-        },
-        "files": [
-            "config/packages/nelmio_alice.yaml"
-        ]
     },
     "nelmio/cors-bundle": {
         "version": "1.5",
@@ -275,16 +271,7 @@
     "ralouphie/getallheaders": {
         "version": "3.0.3"
     },
-    "sebastian/comparator": {
-        "version": "4.0.6"
-    },
     "sebastian/diff": {
-        "version": "4.0.4"
-    },
-    "sebastian/exporter": {
-        "version": "4.0.3"
-    },
-    "sebastian/recursion-context": {
         "version": "4.0.4"
     },
     "symfony/asset": {
@@ -618,15 +605,6 @@
     "symfony/yaml": {
         "version": "v5.3.0"
     },
-    "theofidry/alice-data-fixtures": {
-        "version": "1.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "1.0",
-            "ref": "fe5a50faf580eb58f08ada2abe8afbd2d4941e05"
-        }
-    },
     "twig/twig": {
         "version": "v3.3.2"
     },
@@ -641,5 +619,17 @@
     },
     "willdurand/negotiation": {
         "version": "3.0.0"
+    },
+    "zenstruck/foundry": {
+        "version": "1.32",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.10",
+            "ref": "37c2f894cc098ab4c08874b80cccc8e2f8de7976"
+        },
+        "files": [
+            "config/packages/zenstruck_foundry.yaml"
+        ]
     }
 }
