@@ -121,6 +121,7 @@ const AdminUI = () => {
     </HydraAdmin>
   ) : (
     <OpenApiAdmin
+      dataProvider={dataProvider(setRedirectToLogin)}
       authProvider={authProvider}
       entrypoint={window.origin}
       docEntrypoint={`${window.origin}/docs.json`}
