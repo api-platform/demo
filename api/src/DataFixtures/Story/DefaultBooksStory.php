@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Tests\Fixtures\Story;
+namespace App\DataFixtures\Story;
 
-use App\Tests\Fixtures\Factory\BookFactory;
+use App\DataFixtures\Factory\BookFactory;
 use Zenstruck\Foundry\Story;
 
 final class DefaultBooksStory extends Story

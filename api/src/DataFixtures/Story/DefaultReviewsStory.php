@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Tests\Fixtures\Story;
+namespace App\DataFixtures\Story;
 
-use App\Tests\Fixtures\Factory\ReviewFactory;
+use App\DataFixtures\Factory\ReviewFactory;
 use Zenstruck\Foundry\Story;
 
 final class DefaultReviewsStory extends Story

@@ -6,10 +6,10 @@ namespace App\Tests\Api;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\DataFixtures\Story\DefaultBooksStory;
 use App\Entity\TopBook;
 use App\State\TopBookCollectionProvider;
 use App\State\TopBookItemProvider;
-use App\Tests\Fixtures\Story\DefaultBooksStory;
 use Symfony\Component\HttpFoundation\Response;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;

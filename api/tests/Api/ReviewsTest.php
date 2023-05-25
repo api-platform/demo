@@ -6,8 +6,8 @@ namespace App\Tests\Api;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\DataFixtures\Story\DefaultReviewsStory;
 use App\Entity\Book;
-use App\Tests\Fixtures\Story\DefaultReviewsStory;
 use Symfony\Component\HttpFoundation\Response;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
