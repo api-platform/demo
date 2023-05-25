@@ -7,11 +7,15 @@ namespace App\Tests\Api;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Entity\Book;
+use App\Tests\Fixtures\Story\DefaultReviewsStory;
 use Symfony\Component\HttpFoundation\Response;
+use Zenstruck\Foundry\Test\Factories;
+use Zenstruck\Foundry\Test\ResetDatabase;
 
 final class ReviewsTest extends ApiTestCase
 {
-    use RefreshDatabaseTrait;
+    use ResetDatabase;
+    use Factories;
 
     private Client $client;
 
@@ -23,6 +27,7 @@ final class ReviewsTest extends ApiTestCase
     protected function setup(): void
     {
         $this->client = self::createClient();
+        DefaultReviewsStory::load();
     }
 
     public function testFilterReviewsByBook(): void

@@ -9,7 +9,10 @@ use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Entity\TopBook;
 use App\State\TopBookCollectionProvider;
 use App\State\TopBookItemProvider;
+use App\Tests\Fixtures\Story\DefaultBooksStory;
 use Symfony\Component\HttpFoundation\Response;
+use Zenstruck\Foundry\Test\Factories;
+use Zenstruck\Foundry\Test\ResetDatabase;
 
 /**
  * These tests are read only, thus there is not need to use the RefreshDatabaseTrait
@@ -17,6 +20,9 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class TopBooksTest extends ApiTestCase
 {
+    use ResetDatabase;
+    use Factories;
+
     private Client $client;
 
     /**
@@ -27,6 +33,7 @@ class TopBooksTest extends ApiTestCase
     protected function setup(): void
     {
         $this->client = static::createClient();
+        DefaultBooksStory::load();
     }
 
     /**

@@ -8,12 +8,18 @@ use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use ApiPlatform\Symfony\Routing\Router;
 use App\Entity\Book;
+use App\Tests\Fixtures\Factory\BookFactory;
+use App\Tests\Fixtures\Story\DefaultBooksStory;
+use App\Tests\Fixtures\Story\DefaultUsersStory;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Service\ServiceProviderInterface;
+use Zenstruck\Foundry\Test\Factories;
+use Zenstruck\Foundry\Test\ResetDatabase;
 
 class BooksTest extends ApiTestCase
 {
-    use RefreshDatabaseTrait;
+    use ResetDatabase;
+    use Factories;
 
     private Client $client;
 
@@ -53,6 +59,9 @@ class BooksTest extends ApiTestCase
         }
 
         $this->router = $router;
+
+        // Load fixtures
+        DefaultBooksStory::load();
     }
 
     public function testGetCollection(): void
@@ -133,6 +142,8 @@ publicationDate: This value should not be null.',
 
     public function testPatchBook(): void
     {
+        BookFactory::createOne(['isbn' => self::ISBN]);
+
         $iri = (string) $this->findIriBy(Book::class, ['isbn' => self::ISBN]);
         $this->client->request('PATCH', $iri, [
             'json' => [
@@ -153,6 +164,9 @@ publicationDate: This value should not be null.',
 
     public function testDeleteBook(): void
     {
+        DefaultUsersStory::load();
+        BookFactory::createOne(['isbn' => self::ISBN]);
+
         $token = $this->login();
         $client = static::createClient();
         $iri = (string) $this->findIriBy(Book::class, ['isbn' => self::ISBN]);
@@ -167,6 +181,8 @@ publicationDate: This value should not be null.',
 
     public function testGenerateCover(): void
     {
+        BookFactory::createOne(['isbn' => self::ISBN]);
+
         $book = static::getContainer()->get('doctrine')->getRepository(Book::class)->findOneBy(['isbn' => self::ISBN]);
         self::assertInstanceOf(Book::class, $book);
         if (!$book instanceof Book) {

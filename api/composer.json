@@ -36,7 +36,8 @@
     },
     "require-dev": {
         "api-platform/schema-generator": "^5.0",
-        "hautelook/alice-bundle": "^2.11",
+        "dama/doctrine-test-bundle": "^7.2",
+        "doctrine/doctrine-fixtures-bundle": "^3.4",
         "justinrainbow/json-schema": "^5.2",
         "symfony/browser-kit": "6.2.*",
         "symfony/css-selector": "6.2.*",
@@ -46,7 +47,8 @@
         "symfony/stopwatch": "6.2.*",
         "symfony/var-dumper": "6.2.*",
         "symfony/web-profiler-bundle": "6.2.*",
-        "vimeo/psalm": "^4.7"
+        "vimeo/psalm": "^4.7",
+        "zenstruck/foundry": "^1.32"
     },
     "config": {
         "optimize-autoloader": true,

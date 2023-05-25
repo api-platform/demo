@@ -7,14 +7,17 @@ namespace App\Tests\Controller;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Controller\ProfileController;
-use App\Tests\Api\RefreshDatabaseTrait;
+use App\Tests\Fixtures\Story\DefaultUsersStory;
+use Zenstruck\Foundry\Test\Factories;
+use Zenstruck\Foundry\Test\ResetDatabase;
 
 /**
  * @see ProfileController
  */
 final class ProfileControllerTest extends ApiTestCase
 {
-    use RefreshDatabaseTrait;
+    use ResetDatabase;
+    use Factories;
 
     private Client $client;
 
@@ -28,6 +31,8 @@ final class ProfileControllerTest extends ApiTestCase
      */
     public function testProfile(): void
     {
+        DefaultUsersStory::load();
+
         $response = $this->client->request('POST', '/login', [
             'json' => [
                 'username' => 'admin@example.com',
