@@ -11,6 +11,7 @@ concurrency:
 jobs:
   cleanup:
     name: Uninstall K8s Release for Closed Pull Request
+    if: ${{ github.repository == 'api-platform/demo' }}
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
