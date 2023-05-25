@@ -14,7 +14,8 @@ use Zenstruck\Foundry\Test\ResetDatabase;
 
 final class ReviewsTest extends ApiTestCase
 {
-    use ResetDatabase, Factories;
+    use ResetDatabase;
+    use Factories;
 
     private Client $client;
 

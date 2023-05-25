@@ -16,7 +16,8 @@ use Zenstruck\Foundry\Test\ResetDatabase;
  */
 final class ProfileControllerTest extends ApiTestCase
 {
-    use ResetDatabase, Factories;
+    use ResetDatabase;
+    use Factories;
 
     private Client $client;
 
