@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Fixtures\Factory;
+namespace App\DataFixtures\Factory;
 
 use App\Entity\Review;
 use Doctrine\ORM\EntityRepository;

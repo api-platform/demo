@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Tests\Fixtures\Story;
+namespace App\DataFixtures\Story;
 
-use App\Tests\Fixtures\Factory\UserFactory;
+use App\DataFixtures\Factory\UserFactory;
 use Zenstruck\Foundry\Story;
 
 final class DefaultUsersStory extends Story

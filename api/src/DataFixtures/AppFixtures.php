@@ -2,9 +2,9 @@
 
 namespace App\DataFixtures;
 
-use App\Tests\Fixtures\Story\DefaultBooksStory;
-use App\Tests\Fixtures\Story\DefaultReviewsStory;
-use App\Tests\Fixtures\Story\DefaultUsersStory;
+use App\DataFixtures\Story\DefaultBooksStory;
+use App\DataFixtures\Story\DefaultReviewsStory;
+use App\DataFixtures\Story\DefaultUsersStory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 

@@ -7,7 +7,7 @@ namespace App\Tests\Controller;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Controller\ProfileController;
-use App\Tests\Fixtures\Story\DefaultUsersStory;
+use App\DataFixtures\Story\DefaultUsersStory;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 

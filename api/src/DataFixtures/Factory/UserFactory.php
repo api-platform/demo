@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Tests\Fixtures\Factory;
+namespace App\DataFixtures\Factory;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
 use Zenstruck\Foundry\RepositoryProxy;
