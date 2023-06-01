@@ -30,7 +30,8 @@
     "react-admin": "^4.11.4",
     "react-dom": "^18.2.0",
     "react-query": "^3.39.3",
-    "react-router-dom": "^6.14.0"
+    "react-router-dom": "^6.14.0",
+    "react-spinners": "^0.13.8"
   },
   "devDependencies": {
     "@babel/core": "^7.22.5",
