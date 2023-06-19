@@ -8,7 +8,7 @@ test("Go to Admin Top Books Hydra", async ({browser}) => {
     "Go to previous page",
     "Go to page 1",
   ]
-  const page = new PageAdmin(10,10, "/admin#/top_books")
+  const page = new PageAdmin(10, 10, "/admin#/top_books")
   await page.getAdminPage(browser)
   await page.goToTopBooks()
   for (const elts of Books) {
@@ -18,7 +18,7 @@ test("Go to Admin Top Books Hydra", async ({browser}) => {
 })
 
 test("Go to Admin Top Books Show Hydra", async ({browser}) => {
-  const page = new PageAdmin(10,10, "/admin#/top_books")
+  const page = new PageAdmin(10, 10, "/admin#/top_books")
   await page.getAdminPage(browser)
   await page.goToTopBooks()
   await page.getElsClickable("link", "Show")

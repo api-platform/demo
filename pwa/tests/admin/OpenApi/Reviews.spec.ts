@@ -1,4 +1,4 @@
-import {Browser, expect, test} from "@playwright/test";
+import {expect, test} from "@playwright/test";
 import {PageAdmin} from "../PageAdmin";
 
 const countReviewsAllPage = 10
@@ -11,18 +11,18 @@ test('Go to Admin Reviews Open Api', async ({browser}) => {
     ['Go to previous page', countReviewsAllPage.toString(), 'page=50'],
     ['Go to page 1', countReviewsAllPage.toString(), 'page=1'],
   ]
-  const page = new PageAdmin(countReviewsAllPage,countReviewsLastPage, '/admin#/reviews')
+  const page = new PageAdmin(countReviewsAllPage, countReviewsLastPage, '/admin#/reviews')
   await page.getAdminPage(browser)
   await page.goToOpenApi()
   await page.goToReviews()
   for (const elts of Reviews) {
-    await page.getElsClickable('button',elts[0])
+    await page.getElsClickable('button', elts[0])
     await expect(await page.CountElsInList()).toEqual(elts[1])
   }
 })
 
 test('Go to Admin Reviews Show Open Api', async ({browser}) => {
-  const page = new PageAdmin(countReviewsAllPage,countReviewsLastPage, '/admin#/reviews')
+  const page = new PageAdmin(countReviewsAllPage, countReviewsLastPage, '/admin#/reviews')
   await page.getAdminPage(browser)
   await page.goToOpenApi()
   await page.goToReviews()
@@ -31,7 +31,7 @@ test('Go to Admin Reviews Show Open Api', async ({browser}) => {
 })
 
 test('Go to Admin Reviews Edit Open Api', async ({browser}) => {
-  const page = new PageAdmin(countReviewsAllPage,countReviewsLastPage, '/admin#/reviews')
+  const page = new PageAdmin(countReviewsAllPage, countReviewsLastPage, '/admin#/reviews')
   await page.getAdminPage(browser)
   await page.goToOpenApi()
   await page.goToReviews()
@@ -48,7 +48,7 @@ test('Go to Admin Reviews Create Open Api', async ({browser}) => {
     ['rating', '5'],
     ['author', 'Annette Pouros']
   ]
-  const page = new PageAdmin(countReviewsAllPage,countReviewsLastPage, '/admin#/reviews')
+  const page = new PageAdmin(countReviewsAllPage, countReviewsLastPage, '/admin#/reviews')
   await page.getAdminPage(browser)
   await page.goToOpenApi()
   await page.goToReviews()
@@ -70,7 +70,7 @@ test('Go to Admin Reviews Create Open Api', async ({browser}) => {
 })
 
 test('Go to Admin Reviews Delete Open Api', async ({browser}) => {
-  const page = new PageAdmin(countReviewsAllPage,countReviewsLastPage, '/admin#/reviews')
+  const page = new PageAdmin(countReviewsAllPage, countReviewsLastPage, '/admin#/reviews')
   await page.getAdminPage(browser)
   await page.goToOpenApi()
   await page.goToReviews()

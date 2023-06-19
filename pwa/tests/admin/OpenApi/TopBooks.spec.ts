@@ -8,7 +8,7 @@ test("Go to Admin Top Books Open Api", async ({browser}) => {
     "Go to previous page",
     "Go to page 1",
   ]
-  const page = new PageAdmin(10,10, "/admin#/top_books")
+  const page = new PageAdmin(10, 10, "/admin#/top_books")
   await page.getAdminPage(browser)
   await page.goToOpenApi()
   await page.goToTopBooks()
@@ -19,7 +19,7 @@ test("Go to Admin Top Books Open Api", async ({browser}) => {
 })
 
 test("Go to Admin Top Books Show Open Api", async ({browser}) => {
-  const page = new PageAdmin(10,10, "/admin#/top_books")
+  const page = new PageAdmin(10, 10, "/admin#/top_books")
   await page.getAdminPage(browser)
   await page.goToOpenApi()
   await page.goToTopBooks()

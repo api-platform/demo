@@ -1,4 +1,4 @@
-import {Browser, expect, test} from "@playwright/test";
+import {expect, test} from "@playwright/test";
 import {PageAdmin} from "../PageAdmin";
 
 const countReviewsAllPage = 10
@@ -11,17 +11,17 @@ test('Go to Admin Reviews Hydra', async ({browser}) => {
     ['Go to previous page', countReviewsAllPage.toString(), 'page=50'],
     ['Go to page 1', countReviewsAllPage.toString(), 'page=1'],
   ]
-  const page = new PageAdmin(countReviewsAllPage,countReviewsLastPage, '/admin#/reviews')
+  const page = new PageAdmin(countReviewsAllPage, countReviewsLastPage, '/admin#/reviews')
   await page.getAdminPage(browser)
   await page.goToReviews()
   for (const elts of Reviews) {
-    await page.getElsClickable('button',elts[0])
+    await page.getElsClickable('button', elts[0])
     await expect(await page.CountElsInList()).toEqual(elts[1])
   }
 })
 
 test('Go to Admin Reviews Show Hydra', async ({browser}) => {
-  const page = new PageAdmin(countReviewsAllPage,countReviewsLastPage, '/admin#/reviews')
+  const page = new PageAdmin(countReviewsAllPage, countReviewsLastPage, '/admin#/reviews')
   await page.getAdminPage(browser)
   await page.goToReviews()
   await page.getElsClickable('link', 'Show')
@@ -29,7 +29,7 @@ test('Go to Admin Reviews Show Hydra', async ({browser}) => {
 })
 
 test('Go to Admin Reviews Edit Hydra', async ({browser}) => {
-  const page = new PageAdmin(countReviewsAllPage,countReviewsLastPage, '/admin#/reviews')
+  const page = new PageAdmin(countReviewsAllPage, countReviewsLastPage, '/admin#/reviews')
   await page.getAdminPage(browser)
   await page.goToReviews()
   const url = await page.getPages(browser).then(async (page) => {
@@ -45,7 +45,7 @@ test('Go to Admin Reviews Create Hydra', async ({browser}) => {
     ['rating', '5'],
     ['author', 'Annette Pouros']
   ]
-  const page = new PageAdmin(countReviewsAllPage,countReviewsLastPage, '/admin#/reviews')
+  const page = new PageAdmin(countReviewsAllPage, countReviewsLastPage, '/admin#/reviews')
   await page.getAdminPage(browser)
   await page.goToReviews()
   await page.getElsClickable('button', 'Go to page 51')
@@ -66,7 +66,7 @@ test('Go to Admin Reviews Create Hydra', async ({browser}) => {
 })
 
 test('Go to Admin Reviews Delete Hydra', async ({browser}) => {
-  const page = new PageAdmin(countReviewsAllPage,countReviewsLastPage, '/admin#/reviews')
+  const page = new PageAdmin(countReviewsAllPage, countReviewsLastPage, '/admin#/reviews')
   await page.getAdminPage(browser)
   await page.goToReviews()
   await page.getElsClickable('button', 'Go to page 51')

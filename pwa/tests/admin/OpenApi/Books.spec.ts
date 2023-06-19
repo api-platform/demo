@@ -5,23 +5,23 @@ const countBooksAllPage = 10
 const countBooksLastPage = 1
 let reviewsUrl = ''
 test('Go to Admin Books Open Api', async ({browser}) => {
-    const Books = [
+  const Books = [
     ['Go to next page', countBooksAllPage.toString()],
     ['Go to page 11', countBooksLastPage.toString()],
     ['Go to previous page', countBooksAllPage.toString()],
     ['Go to page 1', countBooksAllPage.toString()],
   ]
-  const page = new PageAdmin(countBooksAllPage,countBooksAllPage, '/admin#/books')
+  const page = new PageAdmin(countBooksAllPage, countBooksAllPage, '/admin#/books')
   await page.getAdminPage(browser)
   await page.goToOpenApi()
   for (const elts of Books) {
-    await page.getElsClickable('button',elts[0])
+    await page.getElsClickable('button', elts[0])
     await expect(await page.CountElsInList()).toEqual(elts[1])
   }
 })
 
 test('Go to Admin Books Show Open Api', async ({browser}) => {
-  const page = new PageAdmin(countBooksAllPage,countBooksAllPage, '/admin#/books')
+  const page = new PageAdmin(countBooksAllPage, countBooksAllPage, '/admin#/books')
   await page.getAdminPage(browser)
   await page.goToOpenApi()
   await page.getElsClickable('link', 'Show')
@@ -35,7 +35,7 @@ test('Go to Admin Books Create Open Api', async ({browser}) => {
     ['description', 'Consequatur aut ullam qui ea. Aut cum vitae nostrum non. Non omnis aut quos ut ad est quidem eum. Voluptates laboriosam ea porro blanditiis eos enim non aut.'],
     ['author', 'Annette Pouros']
   ]
-  const page = await new PageAdmin(countBooksAllPage,countBooksLastPage,'/books')
+  const page = await new PageAdmin(countBooksAllPage, countBooksLastPage, '/books')
   await page.getAdminPage(browser)
   await page.goToOpenApi()
   await page.getElsClickable('button', 'Go to page 11')
@@ -58,7 +58,7 @@ test('Go to Admin Books Create Open Api', async ({browser}) => {
   await expect(await page.CountElsInList()).toEqual((countBooksLastPage + 1).toString())
 })
 test('Go to Admin Books Edit Open Api', async ({browser}) => {
-  const page = await new PageAdmin(countBooksAllPage,countBooksLastPage,'/books')
+  const page = await new PageAdmin(countBooksAllPage, countBooksLastPage, '/books')
   await page.getAdminPage(browser)
   await page.goToOpenApi()
   await page.getElsClickable('button', 'Go to page 11')
@@ -77,11 +77,11 @@ test('Go to Admin Books Edit Open Api', async ({browser}) => {
 })
 
 test('Go to Admin Books Delete Open Api', async ({browser}) => {
-  const page = await new PageAdmin(countBooksAllPage,countBooksLastPage,'/books')
+  const page = await new PageAdmin(countBooksAllPage, countBooksLastPage, '/books')
   await page.getAdminPage(browser)
   await page.goToOpenApi()
   await page.getElsClickable('button', 'Go to page 11')
-  await expect(await page.CountElsInList()).toEqual((countBooksLastPage+1).toString())
+  await expect(await page.CountElsInList()).toEqual((countBooksLastPage + 1).toString())
   await page.getElsClickable('link', 'Edit')
   await page.getElsClickable('button', 'Delete')
   await page.getElsClickable('button', 'Confirm')

@@ -3,8 +3,8 @@ import {Pages} from "./Page";
 
 const countReviewsAllPage = 30
 const countReviewsLastPage = 21
-test('Go to Reviews list', async ({ browser }) => {
-  const page = await new Pages(countReviewsAllPage,countReviewsLastPage,'/reviews')
+test('Go to Reviews list', async ({browser}) => {
+  const page = await new Pages(countReviewsAllPage, countReviewsLastPage, '/reviews')
   await page.getHomePage(browser)
   await expect((await page.getPages(browser)).url()).toEqual('https://localhost/reviews')
   const Reviews = [
@@ -19,15 +19,15 @@ test('Go to Reviews list', async ({ browser }) => {
   }
 })
 
-test('Go to Reviews Show', async ({ browser }) => {
-  const page = await new Pages(countReviewsLastPage,countReviewsAllPage,'/reviews')
+test('Go to Reviews Show', async ({browser}) => {
+  const page = await new Pages(countReviewsLastPage, countReviewsAllPage, '/reviews')
   await page.getHomePage(browser)
   const url = (await (await page.getPages(browser)).locator('tbody >> tr').last().locator('a').first().textContent())?.replace('/reviews', '') ?? ''
   await page.getElsClickable('link', 'Show', url)
   await expect((await page.getPages(browser)).url()).toEqual('https://localhost/reviews' + url)
 })
-test('Go to Reviews Edit', async ({ browser }) => {
-  const page = await new Pages(countReviewsAllPage,countReviewsLastPage,'/reviews')
+test('Go to Reviews Edit', async ({browser}) => {
+  const page = await new Pages(countReviewsAllPage, countReviewsLastPage, '/reviews')
   await page.getHomePage(browser)
   const url = (await (await page.getPages(browser)).locator('tbody >> tr').last().locator('a').first().textContent())?.replaceAll('/reviews', '') ?? ''
   await page.getElsClickable('link', 'Edit', url + '/edit')
@@ -41,7 +41,7 @@ test('Go to Reviews Create', async ({browser}) => {
     ['author', 'Annette Pouros'],
     ['publicationDate', '2021-05-01T00:00:00+00:00'],
   ]
-  const page = await new Pages(countReviewsAllPage, countReviewsLastPage,'/reviews')
+  const page = await new Pages(countReviewsAllPage, countReviewsLastPage, '/reviews')
   await page.getHomePage(browser)
   await page.changePage('Last page')
   const bookUrl = await (await page.getPages(browser)).locator('tbody >> tr').last().locator('a').nth(1).innerText()
@@ -57,7 +57,7 @@ test('Go to Reviews Create', async ({browser}) => {
 })
 
 test('Go to Reviews Delete', async ({browser}) => {
-  const page = await new Pages(countReviewsAllPage, countReviewsLastPage,'/reviews')
+  const page = await new Pages(countReviewsAllPage, countReviewsLastPage, '/reviews')
   await page.getHomePage(browser)
   await page.changePage('Last page')
   await expect(await page.CountElsInList()).toEqual((countReviewsLastPage + 1).toString())
