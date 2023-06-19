@@ -55,11 +55,20 @@ jobs:
         uses: pnpm/action-setup@v2
         with:
           version: 8.6.2
-      - name: Run Playwright
+      - name: Cache playwright binaries
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright
+      - name: Install Playwright dependencies
         working-directory: pwa
         run: |
-          pnpm playwright install
-          pnpm exec playwright test --workers 1
+          pnpm playwright install --with-deps
+          pnpm playwright install-deps
+      - name: Run Playwright
+        working-directory: pwa
+        # use 1 worker to prevent conflict between write and read scenarios
+        run: pnpm exec playwright test --workers=1
       - name: Doctrine Schema Validator
         run: docker compose exec -T php bin/console doctrine:schema:validate
       - name: Psalm
