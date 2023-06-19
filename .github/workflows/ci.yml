@@ -12,8 +12,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  tests-api:
-    name: Tests API
+  tests:
+    name: Tests
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
@@ -51,6 +51,15 @@ jobs:
           docker compose exec -T php bin/console -e test doctrine:migrations:migrate --no-interaction
       - name: PHPUnit
         run: docker compose exec -T php bin/phpunit
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.6.2
+      - name: Run Playwright
+        working-directory: pwa
+        run: |
+          pnpm playwright install
+          pnpm exec playwright test --workers 1
       - name: Doctrine Schema Validator
         run: docker compose exec -T php bin/console doctrine:schema:validate
       - name: Psalm
@@ -63,45 +72,3 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
       - name: Lint Helm
         run: helm lint ./helm/api-platform/
-  test-pwa:
-    name: Tests PWA
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: pnpm/action-setup@v2
-      with:
-        version: 8.6.2
-    - name: Pull images
-      run: docker compose pull --ignore-pull-failures || true
-    - name: Start services
-      run: docker compose up --build -d
-    - name: Wait for services
-      run: |
-        while status="$(docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" "$(docker compose ps -q php)")"; do
-          case $status in
-            starting) sleep 1;;
-            healthy) exit 0;;
-            unhealthy)
-              docker compose ps
-              docker compose logs
-              exit 1
-            ;;
-          esac
-        done
-        exit 1
-    - name: Check HTTP reachability
-      run: curl -v -o /dev/null http://localhost
-    - name: Check API reachability
-      run: curl -vk -o /dev/null https://localhost
-    - name: Check PWA reachability
-      run: "curl -vk -o /dev/null -H 'Accept: text/html' https://localhost"
-    - name: Create test database
-      run: |
-        docker compose exec -T php bin/console -e test doctrine:database:create
-        docker compose exec -T php bin/console -e test doctrine:migrations:migrate --no-interaction
-    - name: Run Playwright
-      run: |
-        cd pwa
-        pnpm playwright install 
-        pnpm exec playwright test --workers 1
-        
