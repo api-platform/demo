@@ -5,6 +5,8 @@ services:
     build:
       context: ./api
       target: app_php
+      cache_from:
+        - ${PHP_DOCKER_IMAGE:-api-platform/php:latest}
     depends_on:
       - database
     restart: unless-stopped
@@ -27,6 +29,8 @@ services:
     build:
       context: ./api
       target: app_php
+      cache_from:
+        - ${PHP_DOCKER_IMAGE:-api-platform/php:latest}
     entrypoint: docker-php-entrypoint
     command: bin/console messenger:consume
     depends_on:
@@ -50,6 +54,8 @@ services:
     build:
       context: ./pwa
       target: prod
+      cache_from:
+        - ${PWA_DOCKER_IMAGE:-api-platform/pwa:latest}
     environment:
       NEXT_PUBLIC_ENTRYPOINT: http://caddy
 
@@ -57,6 +63,9 @@ services:
     build:
       context: api/
       target: app_caddy
+      cache_from:
+        - ${PHP_DOCKER_IMAGE:-api-platform/php:latest}
+        - ${CADDY_DOCKER_IMAGE:-api-platform/caddy:latest}
     depends_on:
       - php
       - pwa

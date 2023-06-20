@@ -1,73 +1,125 @@
-import {expect, test} from '@playwright/test';
-import {Pages} from './Page';
+import { expect, test } from "@playwright/test";
+import { LoremIpsum } from "lorem-ipsum";
 
-const countBooksAllPage = 30
-const countBooksLastPage = 11
-test('Go to Books list', async ({browser}) => {
-  const page = await new Pages(countBooksAllPage, countBooksLastPage, '/books')
-  await page.getHomePage(browser)
-  await expect((await page.getPages(browser)).url()).toEqual('https://localhost/books')
-  const Books = [
-    ['Next page', countBooksAllPage.toString()],
-    ['Last page', countBooksLastPage.toString()],
-    ['Previous page', countBooksAllPage.toString()],
-    ['First page', countBooksAllPage.toString()],
-  ]
-  for (const elts of Books) {
-    await page.changePage(elts[0])
-    await expect(await page.CountElsInList()).toEqual(elts[1])
-  }
-})
+const lorem = new LoremIpsum();
 
-test('Go to Book Show', async ({browser}) => {
-  const page = await new Pages(countBooksAllPage, countBooksLastPage, '/books')
-  await page.getHomePage(browser)
-  const url = (await (await page.getPages(browser)).locator('tbody >> tr').last().locator('a').first().textContent())?.replace('/books', '') ?? ''
-  await page.getElsClickable('link', 'Show', url)
-  await expect((await page.getPages(browser)).url()).toEqual('https://localhost/books' + url)
-})
-test('Go to Book Edit', async ({browser}) => {
-  const page = await new Pages(countBooksAllPage, countBooksLastPage, '/books')
-  await page.getHomePage(browser)
-  const url = (await (await page.getPages(browser)).locator('tbody >> tr').last().locator('a').first().textContent())?.replaceAll('/books', '') ?? ''
-  await page.getElsClickable('link', 'Edit', url + '/edit')
-  await expect((await page.getPages(browser)).url()).toContain('/edit')
-})
+test.describe('Books', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/books')
+  })
 
-test('Go to Book Create', async ({browser}) => {
-  const allLabel = [
-    ['isbn', '9783410333852'],
-    ['title', 'Recusandae nobis hic rerum delectus dolorum voluptas.'],
-    ['description', 'Consequatur aut ullam qui ea. Aut cum vitae nostrum non. Non omnis aut quos ut ad est quidem eum. Voluptates laboriosam ea porro blanditiis eos enim non aut.'],
-    ['author', 'Annette Pouros'],
-    ['publicationDate', '2021-05-01T00:00:00+00:00'],
-  ]
-  const page = await new Pages(countBooksAllPage, countBooksLastPage, '/books')
-  await page.getHomePage(browser)
-  await page.changePage('Last page')
-  await expect(await page.CountElsInList()).toEqual(countBooksLastPage.toString())
-  await page.getElsClickable('link', 'Create', '/create')
-  for (const elts of allLabel) {
-    await page.fillData(elts[0], elts[1])
-  }
-  await page.getElsClickable('button', 'Submit', '')
-  await page.changePage('Last page')
-  await expect(await page.CountElsInList()).toEqual((countBooksLastPage + 1).toString())
-})
+  test('List books', async ({ page }) => {
+    await expect(page).toHaveURL('/books')
+    await expect(await page.textContent('h1')).toEqual('Book List')
 
-test('Go to Book Delete', async ({browser}) => {
-  const page = await new Pages(countBooksAllPage, countBooksLastPage, '/books')
-  await page.getHomePage(browser)
-  await page.changePage('Last page')
-  await expect(await page.CountElsInList()).toEqual((countBooksLastPage + 1).toString())
-  const url = (await (await page.getPages(browser)).locator('tbody >> tr').last().locator('a').first().textContent())?.replaceAll('/books', '') ?? ''
-  await page.getElsClickable('link', 'Show', url)
-  await (await page.getPages(browser)).on('dialog', async dialog => {
-    if (dialog.type() === 'confirm') {
-      return dialog.accept()
+    // Check pagination
+    const isbnSelector = 'table tbody tr:nth-child(1) td:nth-child(2)'
+    const pagination = [
+      { label: 'Next page', page: 2 },
+      { label: 'Last page', page: 4 },
+      { label: 'Previous page', page: 3 },
+    ]
+    for (const pager of pagination) {
+      const isbn = await page.textContent(isbnSelector)
+      await page.getByLabel(pager.label).click()
+      // Ensure url has changed
+      await expect(page).toHaveURL(`/books/page/${pager.page}`)
+      // Ensure first element of list has changed
+      await expect(page.textContent(isbnSelector)).not.toEqual(isbn)
     }
   })
-  await page.getElsClickable('button', 'Delete', '')
-  await (await page.getPages(browser)).goto('https://localhost/books/page/4')
-  await expect(await page.CountElsInList()).toEqual(countBooksLastPage.toString())
+
+  test('Show a book', async ({ page }) => {
+    await expect(page).toHaveURL('/books')
+
+    // Use 7th element to prevent conflict
+    await page.getByText('Show').nth(6).click()
+
+    // Ensure url has changed
+    await expect(await page.url()).not.toEqual('/books')
+    await expect(page.getByText('Edit')).toHaveCount(1)
+    await expect(page.getByText('Delete')).toHaveCount(1)
+    await expect(page.getByText('Generate')).toHaveCount(1)
+    await expect(await page.textContent('h1')).toMatch(/Show Book \/books\/.*/)
+  })
+
+  test('Generate a cover', async ({ page }) => {
+    await expect(page).toHaveURL('/books')
+
+    // Use 8th element to prevent conflict
+    await page.getByText('Show').nth(7).click()
+    await expect(page.getByText('Generate')).toHaveCount(1)
+    const url = await page.url()
+
+    await page.getByText('Generate').click()
+    // Ensure url has not changed
+    await expect(await page.url()).toEqual(url)
+    // Ensure button has been replaced by an image + a new button
+    await expect(page.locator('table tbody tr').last().textContent()).not.toEqual('Generate')
+    await expect(page.getByText('Re-generate')).toHaveCount(1)
+    await expect(page.getByAltText('Book cover')).toHaveCount(1)
+  })
+
+  test('Create a book', async ({ page }) => {
+    await expect(page).toHaveURL('/books')
+
+    await page.getByText('Create').click()
+    // Ensure url has changed
+    await expect(page).toHaveURL('/books/create')
+
+    // Fill in form
+    const data = [
+      { selector: 'input#book_isbn', value: '9781234567897' },
+      { selector: 'input#book_title', value: lorem.generateWords(3) },
+      { selector: 'input#book_description', value: lorem.generateSentences(1) },
+      { selector: 'input#book_author', value: lorem.generateWords(2) },
+      { selector: 'input#book_publicationDate', value: '2023-05-02T15:51' },
+    ]
+    for (const datum of data) {
+      await page.locator(datum.selector).fill(datum.value)
+    }
+
+    // Submit form
+    await page.getByText('Submit').click()
+
+    // Ensure url has changed
+    await expect(page).toHaveURL('/books')
+  })
+
+  test('Edit a book', async ({ page }) => {
+    await expect(page).toHaveURL('/books')
+
+    // Use 9th element to prevent conflict
+    await page.getByText('Edit').nth(8).click()
+    // Ensure url has changed
+    await expect(page).toHaveURL(/\/books\/.+/)
+
+    // Change title and author
+    const title = lorem.generateWords(3)
+    const author = lorem.generateWords(2)
+    await page.getByLabel('title').fill(title)
+    await page.getByLabel('author').fill(author)
+
+    // Submit form
+    await page.getByText('Submit').click()
+
+    // Ensure url has changed
+    await expect(page).toHaveURL('/books')
+  })
+
+  test('Delete a book', async ({ page }) => {
+    await page.goto('/books?page=4')
+
+    // Use last element of 4th page to prevent conflict
+    await page.getByText('Edit').last().click()
+    // Ensure url has changed
+    await expect(page).toHaveURL(/\/books\/.+/)
+
+    // https://playwright.dev/docs/dialogs
+    page.on('dialog', dialog => dialog.accept());
+    await page.getByText('Delete').click()
+
+    // Ensure url has changed
+    await expect(page).toHaveURL('/books?page=4')
+  })
 })
