@@ -32,7 +32,8 @@
         "symfony/twig-bundle": "6.2.*",
         "symfony/uid": "6.2.*",
         "symfony/validator": "6.2.*",
-        "symfony/yaml": "6.2.*"
+        "symfony/yaml": "6.2.*",
+        "webonyx/graphql-php": "^15.5"
     },
     "require-dev": {
         "api-platform/schema-generator": "^5.0",
