@@ -106,8 +106,7 @@ const MyLayout = (props: JSX.IntrinsicAttributes & LayoutProps) => <Layout {...p
 const AdminUI = () => {
   const { docType } = useContext(DocContext);
   const [redirectToLogin, setRedirectToLogin] = useState(false);
-
-  return docType === 'hydra' ? (
+  return (docType === 'hydra' || window.location.href.includes('/books/')) ? (
     <HydraAdmin
       dataProvider={dataProvider(setRedirectToLogin)}
       authProvider={authProvider}
