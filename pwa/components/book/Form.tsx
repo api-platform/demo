@@ -1,7 +1,7 @@
 import { FunctionComponent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ErrorMessage, Field, FieldArray, Formik } from "formik";
+import { ArrayHelpers, ErrorMessage, Field, FieldArray, Formik } from "formik";
 import { useMutation } from "react-query";
 
 import { fetch, FetchError, FetchResponse } from "../../utils/dataAccess";
@@ -276,7 +276,7 @@ export const Form: FunctionComponent<Props> = ({ book }) => {
               </div>
               <FieldArray
                 name="reviews"
-                render={(arrayHelpers) => (
+                render={(arrayHelpers: ArrayHelpers) => (
                   <div className="mb-2" id="book_reviews">
                     {values.reviews && values.reviews.length > 0 ? (
                       values.reviews.map((item: any, index: number) => (
