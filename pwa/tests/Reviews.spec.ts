@@ -1,110 +1,74 @@
-import { expect, test } from "@playwright/test";
-import { LoremIpsum } from "lorem-ipsum";
+import {expect, test} from '@playwright/test';
+import {Pages} from "./Page";
 
-const lorem = new LoremIpsum();
+const countReviewsAllPage = 30
+const countReviewsLastPage = 21
+test('Go to Reviews list', async ({browser}) => {
+  const page = await new Pages(countReviewsAllPage, countReviewsLastPage, '/reviews')
+  await page.getHomePage(browser)
+  await expect((await page.getPages(browser)).url()).toEqual('https://localhost/reviews')
+  const Reviews = [
+    ['Next page', countReviewsAllPage.toString()],
+    ['Last page', countReviewsLastPage.toString()],
+    ['Previous page', countReviewsAllPage.toString()],
+    ['First page', countReviewsAllPage.toString()],
+  ]
+  for (const elts of Reviews) {
+    await page.changePage(elts[0])
+    await expect(await page.CountElsInList()).toEqual(elts[1])
+  }
+})
 
-test.describe('Reviews', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/reviews')
-  })
+test('Go to Reviews Show', async ({browser}) => {
+  const page = await new Pages(countReviewsLastPage, countReviewsAllPage, '/reviews')
+  await page.getHomePage(browser)
+  const url = (await (await page.getPages(browser)).locator('tbody >> tr').last().locator('a').first().textContent())?.replace('/reviews', '') ?? ''
+  await page.getElsClickable('link', 'Show', url)
+  await expect((await page.getPages(browser)).url()).toEqual('https://localhost/reviews' + url)
+})
+test('Go to Reviews Edit', async ({browser}) => {
+  const page = await new Pages(countReviewsAllPage, countReviewsLastPage, '/reviews')
+  await page.getHomePage(browser)
+  const url = (await (await page.getPages(browser)).locator('tbody >> tr').last().locator('a').first().textContent())?.replaceAll('/reviews', '') ?? ''
+  await page.getElsClickable('link', 'Edit', url + '/edit')
+  await expect((await page.getPages(browser)).url()).toContain('/edit')
+})
 
-  test('List reviews', async ({ page }) => {
-    await expect(page).toHaveURL('/reviews')
-    await expect(await page.textContent('h1')).toEqual('Review List')
+test('Go to Reviews Create', async ({browser}) => {
+  const allLabel = [
+    ['body', 'Recusandae nobis hic rerum delectus dolorum voluptas.'],
+    ['rating', '5'],
+    ['author', 'Annette Pouros'],
+    ['publicationDate', '2021-05-01T00:00:00+00:00'],
+  ]
+  const page = await new Pages(countReviewsAllPage, countReviewsLastPage, '/reviews')
+  await page.getHomePage(browser)
+  await page.changePage('Last page')
+  const bookUrl = await (await page.getPages(browser)).locator('tbody >> tr').last().locator('a').nth(1).innerText()
+  allLabel.push(['book', bookUrl])
+  await expect(await page.CountElsInList()).toEqual(countReviewsLastPage.toString())
+  await page.getElsClickable('link', 'Create', '/create')
+  for (const elts of allLabel) {
+    await page.fillData(elts[0], elts[1])
+  }
+  await page.getElsClickable('button', 'Submit', '')
+  await page.changePage('Last page')
+  await expect(await page.CountElsInList()).toEqual((countReviewsLastPage + 1).toString())
+})
 
-    // Check pagination
-    const bodySelector = 'table tbody tr:nth-child(1) td:nth-child(2)'
-    const pagination = [
-      { label: 'Next page', page: 2 },
-      { label: 'Last page', page: 4 },
-      { label: 'Previous page', page: 3 },
-    ]
-    for (const pager of pagination) {
-      const body = await page.textContent(bodySelector)
-      await page.getByLabel(pager.label).click()
-      // Ensure url has changed
-      await expect(page).toHaveURL(`/reviews/page/${pager.page}`)
-      // Ensure first element of list has changed
-      await expect(page.textContent(bodySelector)).not.toEqual(body)
+test('Go to Reviews Delete', async ({browser}) => {
+  const page = await new Pages(countReviewsAllPage, countReviewsLastPage, '/reviews')
+  await page.getHomePage(browser)
+  await page.changePage('Last page')
+  await expect(await page.CountElsInList()).toEqual((countReviewsLastPage + 1).toString())
+  const url = (await (await page.getPages(browser)).locator('tbody >> tr').last().locator('a').first().textContent())?.replaceAll('/reviews', '') ?? ''
+  await page.getElsClickable('link', 'Show', url)
+  await (await page.getPages(browser)).on('dialog', async dialog => {
+    if (dialog.type() === 'confirm') {
+      return dialog.accept()
     }
   })
-
-  test('Show a review', async ({ page }) => {
-    await expect(page).toHaveURL('/reviews')
-
-    // Use 7th element to prevent conflict
-    await page.getByText('Show').nth(6).click()
-
-    // Ensure url has changed
-    await expect(await page.url()).not.toEqual('/reviews')
-    await expect(page.getByText('Edit')).toHaveCount(1)
-    await expect(page.getByText('Delete')).toHaveCount(1)
-    await expect(await page.textContent('h1')).toMatch(/Show Review \/reviews\/.*/)
-  })
-
-  test('Create a review', async ({ page }) => {
-    await expect(page).toHaveURL('/reviews')
-
-    // Save book iri
-    const bookIri = await page.locator('tbody >> tr').first().locator('a').nth(1).innerText()
-
-    await page.getByText('Create').click()
-    // Ensure url has changed
-    await expect(page).toHaveURL('/reviews/create')
-
-    // Fill in form
-    const data = [
-      { selector: 'input#review_body', value: lorem.generateWords(3) },
-      { selector: 'input#review_rating', value: '5' },
-      { selector: 'input#review_book', value: bookIri },
-      { selector: 'input#review_author', value: lorem.generateWords(2) },
-      { selector: 'input#review_publicationDate', value: '2023-05-02T15:51' },
-    ]
-    for (const datum of data) {
-      await page.locator(datum.selector).fill(datum.value)
-    }
-
-    // Submit form
-    await page.getByText('Submit').click()
-
-    // Ensure url has changed
-    await expect(page).toHaveURL('/reviews')
-  })
-
-  test('Edit a review', async ({ page }) => {
-    await expect(page).toHaveURL('/reviews')
-
-    // Use 8th element to prevent conflict
-    await page.getByText('Edit').nth(7).click()
-    // Ensure url has changed
-    await expect(page).toHaveURL(/\/reviews\/.+/)
-
-    // Change title and author
-    const body = lorem.generateWords(3)
-    const author = lorem.generateWords(2)
-    await page.getByLabel('body').fill(body)
-    await page.getByLabel('author').fill(author)
-
-    // Submit form
-    await page.getByText('Submit').click()
-
-    // Ensure url has changed
-    await expect(page).toHaveURL('/reviews')
-  })
-
-  test('Delete a review', async ({ page }) => {
-    await page.goto('/reviews?page=4')
-
-    // Use last element of 4th page to prevent conflict
-    await page.getByText('Edit').last().click()
-    // Ensure url has changed
-    await expect(page).toHaveURL(/\/reviews\/.+/)
-
-    // https://playwright.dev/docs/dialogs
-    page.on('dialog', dialog => dialog.accept());
-    await page.getByText('Delete').click()
-
-    // Ensure url has changed
-    await expect(page).toHaveURL('/reviews?page=4')
-  })
+  await page.getElsClickable('button', 'Delete', '')
+  await (await page.getPages(browser)).goto('https://localhost/reviews/page/17')
+  await expect(await page.CountElsInList()).toEqual(countReviewsLastPage.toString())
 })

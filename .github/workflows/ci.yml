@@ -95,6 +95,7 @@ jobs:
         run: pnpm playwright install
       - name: Run Playwright
         working-directory: pwa
+        # use 1 worker to prevent conflict between write and read scenarios
         run: pnpm exec playwright test --workers=1
       - uses: actions/upload-artifact@v3
         if: failure()

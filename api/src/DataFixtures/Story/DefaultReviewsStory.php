@@ -9,6 +9,6 @@ final class DefaultReviewsStory extends Story
 {
     public function build(): void
     {
-        ReviewFactory::createMany(100);
+        ReviewFactory::createMany(501);
     }
 }
