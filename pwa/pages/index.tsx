@@ -62,6 +62,7 @@ const Welcome = () => (
             <a
               className="text-white font-bold hover:bg-cyan-500"
               href="https://nextjs.org/"
+              target="_blank"
             >
               <b>Next.js</b>
             </a>{" "}

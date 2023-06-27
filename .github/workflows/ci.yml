@@ -18,9 +18,39 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
+    env:
+      PHP_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/php:latest
+      CADDY_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/caddy:latest
+      PWA_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/pwa:latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      # gcloud does not work with Python 3.10 because collections.Mappings was removed in Python 3.10.
+      - uses: actions/setup-python@v4
+        if: github.repository == 'api-platform/demo'
+        with:
+          python-version: 3.9.15
+      - name: Auth gcloud
+        if: github.repository == 'api-platform/demo'
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GKE_SA_KEY }}
+      - name: Setup gcloud
+        if: github.repository == 'api-platform/demo'
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GKE_PROJECT }}
+      - name: Configure gcloud
+        if: github.repository == 'api-platform/demo'
+        run: |
+          gcloud --quiet auth configure-docker
+          gcloud container clusters get-credentials api-platform-demo --zone europe-west1-c
+      - name: Pull cache images
+        if: github.repository == 'api-platform/demo'
+        run: |
+          docker pull $PHP_DOCKER_IMAGE || true
+          docker pull $CADDY_DOCKER_IMAGE || true
+          docker pull $PWA_DOCKER_IMAGE || true
       - name: Pull images
         run: docker compose pull --ignore-pull-failures || true
       - name: Start services
@@ -62,13 +92,16 @@ jobs:
           key: ${{ runner.os }}-playwright
       - name: Install Playwright dependencies
         working-directory: pwa
-        run: |
-          pnpm playwright install --with-deps
-          pnpm playwright install-deps
+        run: pnpm playwright install
       - name: Run Playwright
         working-directory: pwa
         # use 1 worker to prevent conflict between write and read scenarios
         run: pnpm exec playwright test --workers=1
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: playwright-screenshots
+          path: pwa/test-results
       - name: Doctrine Schema Validator
         run: docker compose exec -T php bin/console doctrine:schema:validate
       - name: Psalm
