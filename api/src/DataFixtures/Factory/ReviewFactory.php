@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataFixtures\Factory;
 
 use App\Entity\Review;
@@ -7,7 +9,6 @@ use Doctrine\ORM\EntityRepository;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
 use Zenstruck\Foundry\RepositoryProxy;
-
 use function Zenstruck\Foundry\lazy;
 
 /**
@@ -61,11 +62,11 @@ final class ReviewFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
+            'user' => lazy(fn () => UserFactory::randomOrCreate()),
+            'book' => lazy(fn () => BookFactory::randomOrCreate()),
+            'publishedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
             'body' => self::faker()->text(),
             'rating' => self::faker()->numberBetween(0, 5),
-            'book' => lazy(fn () => BookFactory::randomOrCreate()),
-            'author' => self::faker()->name(),
-            'publicationDate' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
         ];
     }
 

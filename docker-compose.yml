@@ -29,26 +29,6 @@ services:
       OIDC_SERVER_URL: ${OIDC_SERVER_URL:-https://localhost/oidc/realms/demo}
       OIDC_SERVER_URL_INTERNAL: ${OIDC_SERVER_URL_INTERNAL:-http://caddy/oidc/realms/demo}
 
-  consumer:
-    build:
-      context: ./api
-      target: app_php
-      cache_from:
-        - ${PHP_DOCKER_IMAGE:-api-platform/php:latest}
-    entrypoint: docker-php-entrypoint
-    command: bin/console messenger:consume
-    depends_on:
-      - database
-    restart: unless-stopped
-    healthcheck:
-      test: ['CMD', 'ps', 'aux', '|', 'egrep', '"\d+:\d+ php bin/console messenger:consume"']
-      interval: 10s
-      timeout: 3s
-      retries: 3
-      start_period: 30s
-    environment:
-      <<: *php-env
-
   pwa:
     build:
       context: ./pwa

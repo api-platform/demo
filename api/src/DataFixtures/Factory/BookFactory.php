@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataFixtures\Factory;
 
 use App\Entity\Book;
+use App\Enum\BookCondition;
 use Doctrine\ORM\EntityRepository;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
@@ -59,11 +62,10 @@ final class BookFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'isbn' => self::faker()->isbn13(),
-            'title' => self::faker()->sentence(),
-            'description' => self::faker()->paragraph(),
+            'book' => self::faker()->unique()->url(),
+            'title' => self::faker()->text(),
             'author' => self::faker()->name(),
-            'publicationDate' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
+            'condition' => self::faker()->randomElement(BookCondition::getCases()),
         ];
     }
 

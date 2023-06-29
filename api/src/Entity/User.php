@@ -4,41 +4,74 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 
-#[ORM\Entity(repositoryClass: UserRepository::class)]
+/**
+ * A person (alive, dead, undead, or fictional).
+ *
+ * @see https://schema.org/Person
+ */
+#[ORM\Entity]
 #[ORM\Table(name: '`user`')]
+#[ApiResource(
+    shortName: 'User',
+    types: ['https://schema.org/Person'],
+    operations: [
+        new Get(uriTemplate: '/admin/users/{id}.{_format}', security: 'is_granted("ROLE_ADMIN")'),
+    ],
+    normalizationContext: ['groups' => ['User:read']]
+)]
+#[UniqueEntity('email')]
 class User implements UserInterface
 {
+    /**
+     * @see https://schema.org/identifier
+     */
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    #[ApiProperty(types: ['https://schema.org/identifier'])]
     private ?Uuid $id = null;
 
-    #[ORM\Column(type: 'string', length: 180, unique: true)]
-    private ?string $email = null;
+    /**
+     * @see https://schema.org/email
+     */
+    #[ORM\Column(unique: true)]
+    #[ApiProperty(types: ['https://schema.org/email'])]
+    #[Groups(groups: ['User:read'])]
+    public ?string $email = null;
+
+    /**
+     * @see https://schema.org/givenName
+     */
+    #[ORM\Column]
+    #[ApiProperty(types: ['https://schema.org/givenName'])]
+    #[Groups(groups: ['User:read'])]
+    public ?string $firstName = null;
+
+    /**
+     * @see https://schema.org/familyName
+     */
+    #[ORM\Column]
+    #[ApiProperty(types: ['https://schema.org/familyName'])]
+    #[Groups(groups: ['User:read'])]
+    public ?string $lastName = null;
 
     #[ORM\Column(type: 'json')]
-    private array $roles = [];
+    public array $roles = [];
 
     public function getId(): ?Uuid
     {
         return $this->id;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): void
-    {
-        $this->email = $email;
     }
 
     public function eraseCredentials(): void
@@ -51,14 +84,6 @@ class User implements UserInterface
     public function getRoles(): array
     {
         return $this->roles;
-    }
-
-    /**
-     * @param array<int, string> $roles
-     */
-    public function setRoles(array $roles): void
-    {
-        $this->roles = $roles;
     }
 
     public function getUserIdentifier(): string

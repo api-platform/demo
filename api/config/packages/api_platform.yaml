@@ -8,23 +8,7 @@ api_platform:
         [A PWA](/) and [an admin](/admin) are consuming this API.
     graphql:
         graphql_playground: false
-    mapping:
-        paths: ['%kernel.project_dir%/src/Entity']
-    formats:
-        jsonld: ['application/ld+json']
-        jsonhal: ['application/hal+json']
-        jsonapi: ['application/vnd.api+json']
-        json: ['application/json']
-        xml: ['application/xml', 'text/xml']
-        yaml: ['application/x-yaml']
-        csv: ['text/csv']
-        html: ['text/html']
-    patch_formats:
-        json: ['application/merge-patch+json']
-        jsonapi: ['application/vnd.api+json']
-    # Mercure integration, remove if unwanted
     mercure: ~
-    # Good cache defaults for REST APIs
     defaults:
         stateless: true
         cache_headers:

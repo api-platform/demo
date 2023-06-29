@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\DataFixtures\Story;
 
-use App\DataFixtures\Factory\ReviewFactory;
+use App\DataFixtures\Factory\DownloadFactory;
 use Zenstruck\Foundry\Story;
 
-final class DefaultReviewsStory extends Story
+final class DefaultDownloadStory extends Story
 {
     public function build(): void
     {
-        ReviewFactory::createMany(100);
+        DownloadFactory::createMany(100);
     }
 }

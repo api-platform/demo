@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\Attribute\When;
  */
 #[When('test')]
 #[Autoconfigure(public: true)]
-final class OidcTokenGenerator
+final readonly class OidcTokenGenerator
 {
     public function __construct(
         #[Autowire('@security.access_token_handler.oidc.signature.ES256')]

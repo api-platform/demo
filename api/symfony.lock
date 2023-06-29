@@ -18,9 +18,6 @@
             "src/ApiResource/.gitignore"
         ]
     },
-    "api-platform/schema-generator": {
-        "version": "v3.0.0"
-    },
     "composer/package-versions-deprecated": {
         "version": "1.11.99.2"
     },
@@ -47,15 +44,6 @@
     },
     "dnoegel/php-xdg-base-dir": {
         "version": "v0.1.1"
-    },
-    "doctrine/annotations": {
-        "version": "1.13",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "1.10",
-            "ref": "64d8583af5ea57b7afa4aba4b159907f3a148b05"
-        }
     },
     "doctrine/cache": {
         "version": "1.11.3"
@@ -150,18 +138,6 @@
     "fig/link-util": {
         "version": "1.2.0"
     },
-    "friendsofphp/php-cs-fixer": {
-        "version": "3.8",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "3.0",
-            "ref": "be2103eb4a20942e28a6dd87736669b757132435"
-        },
-        "files": [
-            ".php-cs-fixer.dist.php"
-        ]
-    },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.5"
     },
@@ -183,9 +159,6 @@
     "lcobucci/jwt": {
         "version": "4.1.4"
     },
-    "league/html-to-markdown": {
-        "version": "4.10.0"
-    },
     "monolog/monolog": {
         "version": "2.2.0"
     },
@@ -203,12 +176,6 @@
     },
     "netresearch/jsonmapper": {
         "version": "v4.0.0"
-    },
-    "nette/php-generator": {
-        "version": "v4.0.1"
-    },
-    "nette/utils": {
-        "version": "v3.2.7"
     },
     "nikic/php-parser": {
         "version": "v4.10.5"
@@ -241,9 +208,6 @@
         "version": "1.0.1"
     },
     "psr/http-factory": {
-        "version": "1.0.1"
-    },
-    "psr/http-message": {
         "version": "1.0.1"
     },
     "psr/link": {
@@ -308,9 +272,6 @@
     },
     "symfony/doctrine-bridge": {
         "version": "v5.3.1"
-    },
-    "symfony/doctrine-messenger": {
-        "version": "v6.0.3"
     },
     "symfony/dom-crawler": {
         "version": "v5.3.0"
@@ -403,18 +364,6 @@
             "config/packages/mercure.yaml"
         ]
     },
-    "symfony/messenger": {
-        "version": "6.3",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "6.0",
-            "ref": "ba1ac4e919baba5644d31b57a3284d6ba12d52ee"
-        },
-        "files": [
-            "config/packages/messenger.yaml"
-        ]
-    },
     "symfony/monolog-bridge": {
         "version": "v5.3.0"
     },
@@ -429,9 +378,6 @@
         "files": [
             "config/packages/monolog.yaml"
         ]
-    },
-    "symfony/options-resolver": {
-        "version": "v5.3.0"
     },
     "symfony/password-hasher": {
         "version": "v5.3.0"
