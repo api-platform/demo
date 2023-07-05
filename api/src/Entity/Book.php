@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Enum\BookCondition;
+use App\State\Processor\BookPersistProcessor;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -30,9 +31,20 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [
         new GetCollection(),
         new Get(),
-        new Post(routePrefix: '/admin', security: 'is_granted("ROLE_ADMIN")'),
-        new Patch(routePrefix: '/admin', security: 'is_granted("ROLE_ADMIN")'),
-        new Delete(routePrefix: '/admin', security: 'is_granted("ROLE_ADMIN")'),
+        new Post(
+            routePrefix: '/admin',
+            security: 'is_granted("ROLE_ADMIN")',
+            processor: BookPersistProcessor::class
+        ),
+        new Patch(
+            routePrefix: '/admin',
+            security: 'is_granted("ROLE_ADMIN")',
+            processor: BookPersistProcessor::class
+        ),
+        new Delete(
+            routePrefix: '/admin',
+            security: 'is_granted("ROLE_ADMIN")'
+        ),
     ],
     normalizationContext: ['groups' => ['Book:read', 'Enum:read']],
     denormalizationContext: ['groups' => ['Book:write']],

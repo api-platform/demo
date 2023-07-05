@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\State\Processor\ReviewPersistProcessor;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -45,7 +46,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     types: ['https://schema.org/Review'],
     operations: [
         new GetCollection(),
-        new Post(security: 'is_granted("ROLE_USER")'),
+        new Post(security: 'is_granted("ROLE_USER")', processor: ReviewPersistProcessor::class),
         new Patch(
             uriTemplate: '/books/{bookId}/reviews/{id}.{_format}',
             uriVariables: [
@@ -53,6 +54,7 @@ use Symfony\Component\Validator\Constraints as Assert;
                 'id' => new Link(fromClass: Review::class),
             ],
             security: 'is_granted("ROLE_USER") and user == object.getUser()',
+            processor: ReviewPersistProcessor::class
         ),
         new Delete(
             uriTemplate: '/books/{bookId}/reviews/{id}.{_format}',
@@ -60,7 +62,7 @@ use Symfony\Component\Validator\Constraints as Assert;
                 'bookId' => new Link(toProperty: 'book', fromClass: Book::class),
                 'id' => new Link(fromClass: Review::class),
             ],
-            security: 'is_granted("ROLE_USER") and user == object.getUser()',
+            security: 'is_granted("ROLE_USER") and user == object.getUser()'
         ),
     ],
     uriVariables: [
