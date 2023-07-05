@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
@@ -77,6 +80,7 @@ class Book
     /**
      * @see https://schema.org/headline
      */
+    #[ApiFilter(SearchFilter::class, strategy: 'i'.SearchFilterInterface::STRATEGY_PARTIAL)]
     #[ApiProperty(types: ['https://schema.org/headline'])]
     #[Groups(groups: ['Book:read'])]
     #[ORM\Column]
@@ -85,6 +89,7 @@ class Book
     /**
      * @see https://schema.org/author
      */
+    #[ApiFilter(SearchFilter::class, strategy: 'i'.SearchFilterInterface::STRATEGY_PARTIAL)]
     #[ApiProperty(types: ['https://schema.org/author'])]
     #[Groups(groups: ['Book:read'])]
     #[ORM\Column]
@@ -93,6 +98,7 @@ class Book
     /**
      * @see https://schema.org/OfferItemCondition
      */
+    #[ApiFilter(SearchFilter::class, strategy: SearchFilterInterface::STRATEGY_EXACT)]
     #[ApiProperty(types: ['https://schema.org/OfferItemCondition'])]
     #[Groups(groups: ['Book:read', 'Book:write'])]
     #[Assert\NotNull]

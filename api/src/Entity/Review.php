@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
@@ -88,6 +91,7 @@ class Review
      */
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
+    #[ApiFilter(SearchFilter::class, strategy: SearchFilterInterface::STRATEGY_EXACT)]
     #[ApiProperty(types: ['https://schema.org/author'])]
     #[Groups(groups: ['Review:read'])]
     public ?User $user = null;
@@ -97,6 +101,7 @@ class Review
      */
     #[ORM\ManyToOne(targetEntity: Book::class)]
     #[ORM\JoinColumn(nullable: false)]
+    #[ApiFilter(SearchFilter::class, strategy: SearchFilterInterface::STRATEGY_EXACT)]
     #[ApiProperty(types: ['https://schema.org/itemReviewed'])]
     #[Groups(groups: ['Review:read', 'Review:write'])]
     #[Assert\NotNull]
@@ -123,6 +128,7 @@ class Review
      * @see https://schema.org/reviewRating
      */
     #[ORM\Column(type: 'smallint')]
+    #[ApiFilter(SearchFilter::class, strategy: SearchFilterInterface::STRATEGY_EXACT)]
     #[ApiProperty(types: ['https://schema.org/reviewRating'])]
     #[Groups(groups: ['Review:read', 'Review:write'])]
     #[Assert\NotNull]
