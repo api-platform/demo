@@ -29,29 +29,42 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @see https://schema.org/Book
  */
 #[ApiResource(
-    shortName: 'Book',
+    uriTemplate: '/admin/books{._format}',
     types: ['https://schema.org/Book', 'https://schema.org/Offer'],
     operations: [
-        new GetCollection(),
-        new Get(),
+        new GetCollection(
+            itemUriTemplate: '/admin/books/{id}{._format}'
+        ),
         new Post(
-            routePrefix: '/admin',
-            security: 'is_granted("ROLE_ADMIN")',
-            processor: BookPersistProcessor::class
+            processor: BookPersistProcessor::class,
+            itemUriTemplate: '/admin/books/{id}{._format}'
+        ),
+        new Get(
+            uriTemplate: '/admin/books/{id}{._format}'
         ),
         new Patch(
-            routePrefix: '/admin',
-            security: 'is_granted("ROLE_ADMIN")',
-            processor: BookPersistProcessor::class
+            uriTemplate: '/admin/books/{id}{._format}',
+            processor: BookPersistProcessor::class,
+            itemUriTemplate: '/admin/books/{id}{._format}'
         ),
         new Delete(
-            routePrefix: '/admin',
-            security: 'is_granted("ROLE_ADMIN")'
+            uriTemplate: '/admin/books/{id}{._format}'
         ),
     ],
-    normalizationContext: ['groups' => ['Book:read', 'Enum:read']],
+    normalizationContext: ['groups' => ['Book:read:admin', 'Enum:read']],
     denormalizationContext: ['groups' => ['Book:write']],
-    mercure: true
+    mercure: true, // todo ensure mercure message is sent to "/books/*" too
+    security: 'is_granted("ROLE_ADMIN")'
+)]
+#[ApiResource(
+    types: ['https://schema.org/Book', 'https://schema.org/Offer'],
+    operations: [
+        new GetCollection(
+            itemUriTemplate: '/books/{id}{._format}'
+        ),
+        new Get(),
+    ],
+    normalizationContext: ['groups' => ['Book:read', 'Enum:read']]
 )]
 #[ORM\Entity]
 #[UniqueEntity(fields: ['book'])]
@@ -70,8 +83,11 @@ class Book
     /**
      * @see https://schema.org/itemOffered
      */
-    #[ApiProperty(types: ['https://schema.org/itemOffered', 'https://purl.org/dc/terms/BibliographicResource'])]
-    #[Groups(groups: ['Book:read', 'Book:write'])]
+    #[ApiProperty(
+        types: ['https://schema.org/itemOffered', 'https://purl.org/dc/terms/BibliographicResource'],
+        example: 'https://gallica.bnf.fr/services/OAIRecord?ark=bpt6k5738219s'
+    )]
+    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Book:write'])]
     #[Assert\NotBlank(allowNull: false)]
     #[Assert\Url]
     #[ORM\Column(unique: true)]
@@ -82,7 +98,7 @@ class Book
      */
     #[ApiFilter(SearchFilter::class, strategy: 'i'.SearchFilterInterface::STRATEGY_PARTIAL)]
     #[ApiProperty(types: ['https://schema.org/headline'])]
-    #[Groups(groups: ['Book:read'])]
+    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Download:read', 'Review:read:admin'])]
     #[ORM\Column]
     public ?string $title = null;
 
@@ -91,7 +107,7 @@ class Book
      */
     #[ApiFilter(SearchFilter::class, strategy: 'i'.SearchFilterInterface::STRATEGY_PARTIAL)]
     #[ApiProperty(types: ['https://schema.org/author'])]
-    #[Groups(groups: ['Book:read'])]
+    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Download:read', 'Review:read:admin'])]
     #[ORM\Column]
     public ?string $author = null;
 
@@ -99,8 +115,11 @@ class Book
      * @see https://schema.org/OfferItemCondition
      */
     #[ApiFilter(SearchFilter::class, strategy: SearchFilterInterface::STRATEGY_EXACT)]
-    #[ApiProperty(types: ['https://schema.org/OfferItemCondition'])]
-    #[Groups(groups: ['Book:read', 'Book:write'])]
+    #[ApiProperty(
+        types: ['https://schema.org/OfferItemCondition'],
+        example: BookCondition::DamagedCondition->value
+    )]
+    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Book:write'])]
     #[Assert\NotNull]
     #[ORM\Column(name: '`condition`', type: 'string', enumType: BookCondition::class)]
     public ?BookCondition $condition = null;
@@ -110,7 +129,10 @@ class Book
      *
      * @see https://schema.org/reviews
      */
-    #[ApiProperty(types: ['https://schema.org/reviews'])]
+    #[ApiProperty(
+        types: ['https://schema.org/reviews'],
+        example: '/books/6acacc80-8321-4d83-9b02-7f2c7bf6eb1d/reviews'
+    )]
     #[Groups(groups: ['Book:read'])]
     public ?string $reviews = null;
 

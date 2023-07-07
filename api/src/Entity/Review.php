@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
+use ApiPlatform\Doctrine\Orm\Filter\NumericFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
@@ -15,7 +16,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
+use App\Serializer\IriTransformerNormalizer;
 use App\State\Processor\ReviewPersistProcessor;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
@@ -32,46 +33,80 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     types: ['https://schema.org/Review'],
     operations: [
-        new GetCollection(),
-        new Get(),
-        new Put(),
-        new Patch(),
-        new Delete(),
+        new GetCollection(
+            uriTemplate: '/admin/reviews{._format}',
+            itemUriTemplate: '/admin/reviews/{id}{._format}'
+        ),
+        new Get(
+            uriTemplate: '/admin/reviews/{id}{._format}'
+        ),
+        new Patch(
+            uriTemplate: '/admin/reviews/{id}{._format}',
+            itemUriTemplate: '/admin/reviews/{id}{._format}'
+        ),
+        new Delete(
+            uriTemplate: '/admin/reviews/{id}{._format}'
+        ),
     ],
-    routePrefix: '/admin',
-    normalizationContext: ['groups' => ['Review:read']],
+    normalizationContext: [
+        'groups' => ['Review:read', 'Review:read:admin'],
+        IriTransformerNormalizer::CONTEXT_KEY => [
+            'book' => '/admin/books/{id}{._format}',
+            'user' => '/admin/users/{id}{._format}',
+        ],
+    ],
     denormalizationContext: ['groups' => ['Review:write']],
     mercure: true,
     security: 'is_granted("ROLE_ADMIN")'
 )]
 #[ApiResource(
-    uriTemplate: '/books/{bookId}/reviews.{_format}',
     types: ['https://schema.org/Review'],
-    operations: [
-        new GetCollection(),
-        new Post(security: 'is_granted("ROLE_USER")', processor: ReviewPersistProcessor::class),
-        new Patch(
-            uriTemplate: '/books/{bookId}/reviews/{id}.{_format}',
-            uriVariables: [
-                'bookId' => new Link(toProperty: 'book', fromClass: Book::class),
-                'id' => new Link(fromClass: Review::class),
-            ],
-            security: 'is_granted("ROLE_USER") and user == object.getUser()',
-            processor: ReviewPersistProcessor::class
-        ),
-        new Delete(
-            uriTemplate: '/books/{bookId}/reviews/{id}.{_format}',
-            uriVariables: [
-                'bookId' => new Link(toProperty: 'book', fromClass: Book::class),
-                'id' => new Link(fromClass: Review::class),
-            ],
-            security: 'is_granted("ROLE_USER") and user == object.getUser()'
-        ),
-    ],
+    uriTemplate: '/books/{bookId}/reviews{._format}',
     uriVariables: [
         'bookId' => new Link(toProperty: 'book', fromClass: Book::class),
     ],
-    normalizationContext: ['groups' => ['Review:read']],
+    operations: [
+        new GetCollection(
+            filters: [], // disable filters
+            itemUriTemplate: '/books/{bookId}/reviews/{id}{._format}'
+        ),
+        new Get(
+            uriTemplate: '/books/{bookId}/reviews/{id}{._format}',
+            uriVariables: [
+                'bookId' => new Link(toProperty: 'book', fromClass: Book::class),
+                'id' => new Link(fromClass: Review::class),
+            ],
+        ),
+        new Post(
+            security: 'is_granted("ROLE_USER")',
+            processor: ReviewPersistProcessor::class,
+            itemUriTemplate: '/books/{bookId}/reviews/{id}{._format}'
+        ),
+        new Patch(
+            uriTemplate: '/books/{bookId}/reviews/{id}{._format}',
+            uriVariables: [
+                'bookId' => new Link(toProperty: 'book', fromClass: Book::class),
+                'id' => new Link(fromClass: Review::class),
+            ],
+            itemUriTemplate: '/books/{bookId}/reviews/{id}{._format}',
+            security: 'is_granted("ROLE_USER") and user == object.user'
+        ),
+        new Delete(
+            uriTemplate: '/books/{bookId}/reviews/{id}{._format}',
+            uriVariables: [
+                'bookId' => new Link(toProperty: 'book', fromClass: Book::class),
+                'id' => new Link(fromClass: Review::class),
+            ],
+            security: 'is_granted("ROLE_USER") and user == object.user'
+        ),
+    ],
+    normalizationContext: [
+        IriTransformerNormalizer::CONTEXT_KEY => [
+            'book' => '/books/{id}{._format}',
+            'user' => '/users/{id}{._format}',
+        ],
+        'groups' => ['Review:read'],
+    ],
     denormalizationContext: ['groups' => ['Review:write']]
 )]
 class Review
@@ -128,7 +163,7 @@ class Review
      * @see https://schema.org/reviewRating
      */
     #[ORM\Column(type: 'smallint')]
-    #[ApiFilter(SearchFilter::class, strategy: SearchFilterInterface::STRATEGY_EXACT)]
+    #[ApiFilter(NumericFilter::class)]
     #[ApiProperty(types: ['https://schema.org/reviewRating'])]
     #[Groups(groups: ['Review:read', 'Review:write'])]
     #[Assert\NotNull]

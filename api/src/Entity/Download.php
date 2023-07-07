@@ -9,8 +9,10 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
+use App\Serializer\IriTransformerNormalizer;
 use App\State\Processor\DownloadPersistProcessor;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
@@ -25,16 +27,50 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ORM\Entity]
 #[ApiResource(
-    shortName: 'Download',
     types: ['https://schema.org/DownloadAction'],
     operations: [
-        new GetCollection(security: 'is_granted("ROLE_USER")'),
-        new GetCollection(uriTemplate: '/admin/downloads.{_format}', security: 'is_granted("ROLE_ADMIN")'),
-        new Post(security: 'is_granted("ROLE_USER")', processor: DownloadPersistProcessor::class),
+        new GetCollection(
+            uriTemplate: '/admin/downloads{._format}',
+            itemUriTemplate: '/admin/downloads/{id}{._format}',
+            security: 'is_granted("ROLE_ADMIN")',
+            normalizationContext: [
+                'groups' => ['Download:read', 'Download:read:admin'],
+                IriTransformerNormalizer::CONTEXT_KEY => [
+                    'book' => '/admin/books/{id}{._format}',
+                    'user' => '/admin/users/{id}{._format}',
+                ],
+            ],
+        ),
+        new Get(
+            uriTemplate: '/admin/downloads/{id}{._format}',
+            security: 'is_granted("ROLE_ADMIN")',
+            normalizationContext: [
+                'groups' => ['Download:read', 'Download:read:admin'],
+                IriTransformerNormalizer::CONTEXT_KEY => [
+                    'book' => '/admin/books/{id}{._format}',
+                    'user' => '/admin/users/{id}{._format}',
+                ],
+            ],
+        ),
+        new GetCollection(
+            filters: [], // disable filters
+            itemUriTemplate: '/downloads/{id}{._format}'
+        ),
+        new Get(),
+        new Post(
+            processor: DownloadPersistProcessor::class,
+            itemUriTemplate: '/downloads/{id}{._format}'
+        ),
     ],
-    normalizationContext: ['groups' => ['Download:read']],
+    normalizationContext: [
+        'groups' => ['Download:read'],
+        IriTransformerNormalizer::CONTEXT_KEY => [
+            'book' => '/books/{id}{._format}',
+        ],
+    ],
     denormalizationContext: ['groups' => ['Download:write']],
-    mercure: true
+    mercure: true,
+    security: 'is_granted("ROLE_USER")'
 )]
 class Download
 {
@@ -45,7 +81,7 @@ class Download
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    #[ApiProperty(types: ['https://schema.org/identifier'])]
+    #[ApiProperty(identifier: true, types: ['https://schema.org/identifier'])]
     private ?Uuid $id = null;
 
     /**
@@ -55,7 +91,7 @@ class Download
     #[ORM\JoinColumn(nullable: false)]
     #[ApiFilter(SearchFilter::class, strategy: SearchFilterInterface::STRATEGY_EXACT)]
     #[ApiProperty(types: ['https://schema.org/agent'])]
-    #[Groups(groups: ['Download:read'])]
+    #[Groups(groups: ['Download:read:admin'])]
     public ?User $user = null;
 
     /**

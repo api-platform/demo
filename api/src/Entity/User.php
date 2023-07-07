@@ -22,10 +22,16 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity]
 #[ORM\Table(name: '`user`')]
 #[ApiResource(
-    shortName: 'User',
     types: ['https://schema.org/Person'],
     operations: [
-        new Get(uriTemplate: '/admin/users/{id}.{_format}', security: 'is_granted("ROLE_ADMIN")'),
+        new Get(
+            uriTemplate: '/admin/users/{id}{._format}',
+            security: 'is_granted("ROLE_ADMIN")'
+        ),
+        new Get(
+            uriTemplate: '/users/{id}{._format}',
+            security: 'is_granted("ROLE_USER") and object.getUserIdentifier() === user.getUserIdentifier()'
+        ),
     ],
     normalizationContext: ['groups' => ['User:read']]
 )]
@@ -46,8 +52,6 @@ class User implements UserInterface
      * @see https://schema.org/email
      */
     #[ORM\Column(unique: true)]
-    #[ApiProperty(types: ['https://schema.org/email'])]
-    #[Groups(groups: ['User:read'])]
     public ?string $email = null;
 
     /**
@@ -55,7 +59,7 @@ class User implements UserInterface
      */
     #[ORM\Column]
     #[ApiProperty(types: ['https://schema.org/givenName'])]
-    #[Groups(groups: ['User:read'])]
+    #[Groups(groups: ['User:read', 'Review:read', 'Download:read:admin'])]
     public ?string $firstName = null;
 
     /**
@@ -63,7 +67,7 @@ class User implements UserInterface
      */
     #[ORM\Column]
     #[ApiProperty(types: ['https://schema.org/familyName'])]
-    #[Groups(groups: ['User:read'])]
+    #[Groups(groups: ['User:read', 'Review:read', 'Download:read:admin'])]
     public ?string $lastName = null;
 
     #[ORM\Column(type: 'json')]

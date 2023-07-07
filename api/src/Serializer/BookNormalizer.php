@@ -23,15 +23,16 @@ final class BookNormalizer implements NormalizerInterface, NormalizerAwareInterf
      */
     public function normalize(mixed $object, string $format = null, array $context = []): array
     {
-        return $this->normalizer->normalize($object, $format, $context + [static::class => true]) + [
-            'reviews' => $this->router->generate('_api_/books/{bookId}/reviews.{_format}_get_collection', [
-                'bookId' => $object->getId(),
-            ]),
-        ];
+        // set "reviews" on the object, and let the serializer decide if it must be exposed or not
+        $object->reviews = $this->router->generate('_api_/books/{bookId}/reviews{._format}_get_collection', [
+            'bookId' => $object->getId(),
+        ]);
+
+        return $this->normalizer->normalize($object, $format, $context + [self::class => true]);
     }
 
     public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
     {
-        return $data instanceof Book && !isset($context[static::class]);
+        return $data instanceof Book && !isset($context[self::class]);
     }
 }
