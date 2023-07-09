@@ -6,9 +6,7 @@ security:
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         app_user_provider:
-            entity:
-                class: App\Entity\User
-                property: email
+            id: 'App\Security\Core\UserProvider'
     role_hierarchy:
         ROLE_ADMIN: ROLE_USER
     firewalls:

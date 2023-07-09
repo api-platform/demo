@@ -44,6 +44,8 @@ final readonly class OidcTokenGenerator
             'exp' => $time + 3600,
             'iss' => $this->issuer,
             'aud' => $this->audience,
+            'firstName' => 'John',
+            'lastName' => 'DOE',
         ];
         if (empty($claims['iat'])) {
             $claims['iat'] = $time;
