@@ -91,17 +91,17 @@ final class ReviewTest extends ApiTestCase
         yield 'all reviews' => [
             ReviewFactory::new()->many(100),
             '/admin/reviews',
-            100
+            100,
         ];
         yield 'reviews filtered by rating' => [
             ReviewFactory::new()->sequence(function () {
                 foreach (range(1, 100) as $i) {
                     // 33% of reviews are rated 5
-                    yield ['rating' => $i%3 ? 3 : 5];
+                    yield ['rating' => $i % 3 ? 3 : 5];
                 }
             }),
             '/admin/reviews?rating=5',
-            33
+            33,
         ];
         yield 'reviews filtered by user' => [
             ReviewFactory::new()->sequence(function () {
@@ -117,7 +117,7 @@ final class ReviewTest extends ApiTestCase
 
                 return '/admin/reviews?user=/admin/users/'.$users[0]->getId();
             },
-            1
+            1,
         ];
         yield 'reviews filtered by book' => [
             ReviewFactory::new()->sequence(function () {
@@ -132,7 +132,7 @@ final class ReviewTest extends ApiTestCase
 
                 return '/admin/reviews?book=/books/'.$books[0]->getId();
             },
-            1
+            1,
         ];
     }
 

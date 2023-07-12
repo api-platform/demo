@@ -48,7 +48,7 @@ final class BookTest extends ApiTestCase
         yield 'all books' => [
             BookFactory::new()->many(100),
             '/books',
-            100
+            100,
         ];
         yield 'books filtered by title' => [
             BookFactory::new()->sequence(function () {
@@ -58,7 +58,7 @@ final class BookTest extends ApiTestCase
                 }
             }),
             '/books?title=ounda',
-            1
+            1,
         ];
         yield 'books filtered by author' => [
             BookFactory::new()->sequence(function () {
@@ -68,17 +68,17 @@ final class BookTest extends ApiTestCase
                 }
             }),
             '/books?author=isaac',
-            1
+            1,
         ];
         yield 'books filtered by condition' => [
             BookFactory::new()->sequence(function () {
                 foreach (range(1, 100) as $i) {
                     // 33% of books are damaged
-                    yield ['condition' => $i%3 ? BookCondition::NewCondition : BookCondition::DamagedCondition];
+                    yield ['condition' => $i % 3 ? BookCondition::NewCondition : BookCondition::DamagedCondition];
                 }
             }),
             '/books?condition='.BookCondition::DamagedCondition->value,
-            33
+            33,
         ];
     }
 

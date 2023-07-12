@@ -70,14 +70,14 @@ final class ReviewTest extends ApiTestCase
 
                 return '/books/'.$books[0]->getId().'/reviews';
             },
-            100
+            100,
         ];
         yield 'book reviews filtered by rating' => [
             ReviewFactory::new()->sequence(function () {
                 $book = BookFactory::createOne(['title' => 'Foundation']);
                 foreach (range(1, 100) as $i) {
                     // 33% of reviews are rated 5
-                    yield ['book' => $book, 'rating' => $i%3 ? 3 : 5];
+                    yield ['book' => $book, 'rating' => $i % 3 ? 3 : 5];
                 }
             }),
             static function (): string {
@@ -86,7 +86,7 @@ final class ReviewTest extends ApiTestCase
 
                 return '/books/'.$books[0]->getId().'/reviews?rating=5';
             },
-            100
+            100,
         ];
         yield 'book reviews filtered by user' => [
             ReviewFactory::new()->sequence(function () {
@@ -104,7 +104,7 @@ final class ReviewTest extends ApiTestCase
 
                 return '/books/'.$books[0]->getId().'/reviews?user=/users/'.$users[0]->getId();
             },
-            100
+            100,
         ];
     }
 
@@ -174,21 +174,21 @@ final class ReviewTest extends ApiTestCase
                     'propertyPath' => 'rating',
                     'message' => 'This value should not be null.',
                 ],
-            ]
+            ],
         ];
-//        yield [
-//            [
-//                'book' => 'invalid book',
-//                'body' => 'Very good book!',
-//                'rating' => 5,
-//            ],
-//            [
-//                [
-//                    'propertyPath' => 'book',
-//                    'message' => 'This value is not a valid URL.',
-//                ],
-//            ]
-//        ];
+        //        yield [
+        //            [
+        //                'book' => 'invalid book',
+        //                'body' => 'Very good book!',
+        //                'rating' => 5,
+        //            ],
+        //            [
+        //                [
+        //                    'propertyPath' => 'book',
+        //                    'message' => 'This value is not a valid URL.',
+        //                ],
+        //            ]
+        //        ];
     }
 
     public function testAsAUserICanAddAReviewOnABook(): void

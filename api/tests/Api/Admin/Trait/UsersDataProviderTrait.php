@@ -14,12 +14,12 @@ trait UsersDataProviderTrait
         yield [
             Response::HTTP_UNAUTHORIZED,
             'Full authentication is required to access this resource.',
-            null
+            null,
         ];
         yield [
             Response::HTTP_FORBIDDEN,
             'Access Denied.',
-            UserFactory::new()
+            UserFactory::new(),
         ];
     }
 }

@@ -125,7 +125,7 @@ class Book
     public ?BookCondition $condition = null;
 
     /**
-     * An IRI of reviews
+     * An IRI of reviews.
      *
      * @see https://schema.org/reviews
      */
