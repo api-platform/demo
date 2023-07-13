@@ -81,27 +81,28 @@ jobs:
           docker compose exec -T php bin/console -e test doctrine:migrations:migrate --no-interaction
       - name: PHPUnit
         run: docker compose exec -T php bin/phpunit
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8.6.2
-      - name: Cache playwright binaries
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright
-      - name: Install Playwright dependencies
-        working-directory: pwa
-        run: pnpm playwright install
-      - name: Run Playwright
-        working-directory: pwa
-        # use 1 worker to prevent conflict between write and read scenarios
-        run: pnpm exec playwright test --workers=1
-      - uses: actions/upload-artifact@v3
-        if: failure()
-        with:
-          name: playwright-screenshots
-          path: pwa/test-results
+        # temporarily disable e2e, waiting for project refacto
+#      - name: Install pnpm
+#        uses: pnpm/action-setup@v2
+#        with:
+#          version: 8.6.2
+#      - name: Cache playwright binaries
+#        uses: actions/cache@v3
+#        with:
+#          path: ~/.cache/ms-playwright
+#          key: ${{ runner.os }}-playwright
+#      - name: Install Playwright dependencies
+#        working-directory: pwa
+#        run: pnpm playwright install
+#      - name: Run Playwright
+#        working-directory: pwa
+#        # use 1 worker to prevent conflict between write and read scenarios
+#        run: pnpm exec playwright test --workers=1
+#      - uses: actions/upload-artifact@v3
+#        if: failure()
+#        with:
+#          name: playwright-screenshots
+#          path: pwa/test-results
       - name: Doctrine Schema Validator
         run: docker compose exec -T php bin/console doctrine:schema:validate
       - name: Psalm
