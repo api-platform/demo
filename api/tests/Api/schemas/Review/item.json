@@ -38,6 +38,12 @@
                     "type": "string",
                     "pattern": "^https://schema.org/Person$"
                 },
+                "sub": {
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/identifier"
+                    },
+                    "type": "string"
+                },
                 "firstName": {
                     "description": "The givenName of the person",
                     "externalDocs": {
@@ -51,13 +57,22 @@
                         "url": "https:\/\/schema.org\/familyName"
                     },
                     "type": "string"
+                },
+                "name": {
+                    "description": "The name of the person",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/name"
+                    },
+                    "type": "string"
                 }
             },
             "required": [
                 "@id",
                 "@type",
+                "sub",
                 "firstName",
-                "lastName"
+                "lastName",
+                "name"
             ]
         },
         "book": {

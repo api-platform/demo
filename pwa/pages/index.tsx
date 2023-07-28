@@ -2,15 +2,12 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import adminPicture from "../public/api-platform/admin.svg";
-import rocketPicture from "../public/api-platform/rocket.svg";
-import logo from "../public/api-platform/logo_api-platform.svg";
-import mercurePicture from "../public/api-platform/mercure.svg";
-import logoTilleuls from "../public/api-platform/logo_tilleuls.svg";
-import apiPicture from "../public/api-platform/api.svg";
-import "@fontsource/poppins";
-import "@fontsource/poppins/600.css";
-import "@fontsource/poppins/700.css";
+import adminPicture from "public/api-platform/admin.svg";
+import rocketPicture from "public/api-platform/rocket.svg";
+import logo from "public/api-platform/logo_api-platform.svg";
+import mercurePicture from "public/api-platform/mercure.svg";
+import logoTilleuls from "public/api-platform/logo_tilleuls.svg";
+import apiPicture from "public/api-platform/api.svg";
 
 const Welcome = () => (
   <div className="w-full overflow-x-hidden">
@@ -19,7 +16,7 @@ const Welcome = () => (
     </Head>
     <section className="w-full bg-spider-cover relative">
       <a
-        href="https://les-tilleuls.coop/en"
+        href="https://les-tilleuls.coop/"
         target="_blank"
         rel="noreferrer noopener"
         className="z-10 bg-black px-8 py-2 text-xs text-white ribbon | md:px-12"
@@ -47,7 +44,7 @@ const Welcome = () => (
       <div className="container flex flex-row pt-24 pb-8 | md:px-20">
         <div className="hidden relative h-full w-2/5 origin-right scale-150 | md:block | lg:scale-100">
           <div className="absolute">
-            <Image src={rocketPicture} alt="" />
+            <Image src={rocketPicture} alt="API Platform" />
           </div>
         </div>
         <div className="flex flex-1 flex-col items-center text-center | md:text-left md:items-start">
@@ -58,7 +55,7 @@ const Welcome = () => (
             <Image alt="API Platform" src={logo} />
           </h1>
           <p className="text-cyan-200 my-5 text-lg">
-            This container host a generated{" "}
+            This project host a generated{" "}
             <a
               className="text-white font-bold hover:bg-cyan-500"
               href="https://nextjs.org/"
@@ -70,30 +67,10 @@ const Welcome = () => (
           </p>
           <div className="flex justify-center flex-wrap | lg:justify-start lg:grid lg:gap-5 lg:grid-cols-2">
             <Link
-              href="/books"
+              href={"/books"}
               className="bg-white text-cyan-700 px-8 py-3 relative overflow-hidden transition-all font-extrabold text-lg group hover:pl-4 hover:pr-12"
             >
-              Books
-              <div className="absolute left-full top-0 w-7 h-full bg-cyan-200 transition-all flex p-1 justify-center items-center group-hover:-translate-x-full">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M12.97 3.97a.75.75 0 011.06 0l7.5 7.5a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 11-1.06-1.06l6.22-6.22H3a.75.75 0 010-1.5h16.19l-6.22-6.22a.75.75 0 010-1.06z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-            </Link>
-            <Link
-              href="/reviews"
-              className="bg-white text-cyan-700 px-8 py-3 relative overflow-hidden transition-all font-extrabold text-lg group hover:pl-4 hover:pr-12"
-            >
-              Reviews
+              Visit the Books Store
               <div className="absolute left-full top-0 w-7 h-full bg-cyan-200 transition-all flex p-1 justify-center items-center group-hover:-translate-x-full">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -215,16 +192,16 @@ const Card = ({
   url,
   title,
 }: {
-  image: string;
-  url: string;
-  title: string;
+  image: string
+  url: string
+  title: string
 }) => (
   <div className="w-full max-w-xs p-2 | sm:w-1/2 | lg:w-full lg:p-0">
   <a
     href={url}
     className="w-full flex items-center flex-col justify-center shadow-card p-3 min-h-24 transition-colors text-cyan-500 border-4 border-transparent hover:border-cyan-200 hover:text-cyan-700 | sm:flex-row sm:justify-start sm:px-5"
   >
-    <Image src={image} width="50" height="50" alt="" />
+    <Image src={image} width="50" height="50" alt={title} />
     <h3 className="text-center text-base uppercase font-semibold leading-tight pt-3 | sm:text-left sm:pt-0 sm:pl-5">
       {title}
     </h3>
@@ -237,9 +214,9 @@ const HelpButton = ({
   url,
   title,
 }: {
-  url: string;
-  title: string;
-  children: React.ReactNode;
+  url: string
+  title: string
+  children: React.ReactNode
 }) => (
   (<Link
     href={url}

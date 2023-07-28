@@ -14,7 +14,6 @@ use App\Entity\User;
 use App\Repository\ReviewRepository;
 use App\Security\OidcTokenGenerator;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Uid\Uuid;
 use Zenstruck\Foundry\FactoryCollection;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
@@ -36,7 +35,7 @@ final class ReviewTest extends ApiTestCase
      *
      * @dataProvider getUrls
      */
-    public function testAsAnonymousICanGetACollectionOfBookReviewsWithoutFilters(FactoryCollection $factory, string|callable $url, int $hydraTotalItems): void
+    public function testAsAnonymousICanGetACollectionOfBookReviewsWithoutFilters(FactoryCollection $factory, string|callable $url, int $hydraTotalItems, int $totalHydraMember = 30): void
     {
         $factory->create();
 
@@ -51,7 +50,7 @@ final class ReviewTest extends ApiTestCase
         self::assertJsonContains([
             'hydra:totalItems' => $hydraTotalItems,
         ]);
-        self::assertCount(min($hydraTotalItems, 30), $response->toArray()['hydra:member']);
+        self::assertCount(min($hydraTotalItems, $totalHydraMember), $response->toArray()['hydra:member']);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Review/collection.json'));
     }
 
@@ -72,6 +71,22 @@ final class ReviewTest extends ApiTestCase
             },
             100,
         ];
+        yield 'all book reviews using itemsPerPage' => [
+            ReviewFactory::new()->sequence(function () {
+                $book = BookFactory::createOne(['title' => 'Foundation']);
+                foreach (range(1, 100) as $i) {
+                    yield ['book' => $book];
+                }
+            }),
+            static function (): string {
+                /** @var Book[] $books */
+                $books = BookFactory::findBy(['title' => 'Foundation']);
+
+                return '/books/'.$books[0]->getId().'/reviews?itemsPerPage=10';
+            },
+            100,
+            10,
+        ];
         yield 'book reviews filtered by rating' => [
             ReviewFactory::new()->sequence(function () {
                 $book = BookFactory::createOne(['title' => 'Foundation']);
@@ -91,7 +106,7 @@ final class ReviewTest extends ApiTestCase
         yield 'book reviews filtered by user' => [
             ReviewFactory::new()->sequence(function () {
                 $book = BookFactory::createOne(['title' => 'Foundation']);
-                yield ['book' => $book, 'user' => UserFactory::createOne(['email' => 'john.doe@example.com'])];
+                yield ['book' => $book, 'user' => UserFactory::createOne(['email' => 'user@example.com'])];
                 foreach (range(1, 99) as $i) {
                     yield ['book' => $book, 'user' => UserFactory::createOne()];
                 }
@@ -100,7 +115,7 @@ final class ReviewTest extends ApiTestCase
                 /** @var Book[] $books */
                 $books = BookFactory::findBy(['title' => 'Foundation']);
                 /** @var User[] $users */
-                $users = UserFactory::findBy(['email' => 'john.doe@example.com']);
+                $users = UserFactory::findBy(['email' => 'user@example.com']);
 
                 return '/books/'.$books[0]->getId().'/reviews?user=/users/'.$users[0]->getId();
             },
@@ -138,7 +153,6 @@ final class ReviewTest extends ApiTestCase
         $book = BookFactory::createOne();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-            'sub' => Uuid::v4()->__toString(),
             'email' => UserFactory::createOne()->email,
         ]);
 
@@ -197,7 +211,6 @@ final class ReviewTest extends ApiTestCase
         $user = UserFactory::createOne();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-            'sub' => Uuid::v4()->__toString(),
             'email' => $user->email,
         ]);
 
@@ -272,7 +285,6 @@ final class ReviewTest extends ApiTestCase
         $review = ReviewFactory::createOne(['user' => UserFactory::createOne()]);
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-            'sub' => Uuid::v4()->__toString(),
             'email' => UserFactory::createOne()->email,
         ]);
 
@@ -302,7 +314,6 @@ final class ReviewTest extends ApiTestCase
         $book = BookFactory::createOne();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-            'sub' => Uuid::v4()->__toString(),
             'email' => UserFactory::createOne()->email,
         ]);
 
@@ -325,7 +336,6 @@ final class ReviewTest extends ApiTestCase
         $review = ReviewFactory::createOne();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-            'sub' => Uuid::v4()->__toString(),
             'email' => $review->user->email,
         ]);
 
@@ -370,7 +380,6 @@ final class ReviewTest extends ApiTestCase
         $review = ReviewFactory::createOne(['user' => UserFactory::createOne()]);
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-            'sub' => Uuid::v4()->__toString(),
             'email' => UserFactory::createOne()->email,
         ]);
 
@@ -393,7 +402,6 @@ final class ReviewTest extends ApiTestCase
         $book = BookFactory::createOne();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-            'sub' => Uuid::v4()->__toString(),
             'email' => UserFactory::createOne()->email,
         ]);
 
@@ -413,7 +421,6 @@ final class ReviewTest extends ApiTestCase
         $id = $review->getId();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-            'sub' => Uuid::v4()->__toString(),
             'email' => $review->user->email,
         ]);
 

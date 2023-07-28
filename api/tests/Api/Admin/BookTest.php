@@ -12,7 +12,6 @@ use App\Enum\BookCondition;
 use App\Security\OidcTokenGenerator;
 use App\Tests\Api\Admin\Trait\UsersDataProviderTrait;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Uid\Uuid;
 use Zenstruck\Foundry\FactoryCollection;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
@@ -38,7 +37,6 @@ final class BookTest extends ApiTestCase
         $options = [];
         if ($userFactory) {
             $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-                'sub' => Uuid::v4()->__toString(),
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -64,7 +62,6 @@ final class BookTest extends ApiTestCase
         $factory->create();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-            'sub' => Uuid::v4()->__toString(),
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -128,7 +125,6 @@ final class BookTest extends ApiTestCase
         $options = [];
         if ($userFactory) {
             $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-                'sub' => Uuid::v4()->__toString(),
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -156,7 +152,6 @@ final class BookTest extends ApiTestCase
         $options = [];
         if ($userFactory) {
             $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-                'sub' => Uuid::v4()->__toString(),
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -182,7 +177,6 @@ final class BookTest extends ApiTestCase
         $book = BookFactory::createOne();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-            'sub' => Uuid::v4()->__toString(),
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -208,7 +202,6 @@ final class BookTest extends ApiTestCase
         $options = [];
         if ($userFactory) {
             $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-                'sub' => Uuid::v4()->__toString(),
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -216,7 +209,7 @@ final class BookTest extends ApiTestCase
 
         $this->client->request('POST', '/admin/books', $options + [
             'json' => [
-                'book' => 'https://gallica.bnf.fr/services/OAIRecord?ark=bpt6k5738219s',
+                'book' => 'https://openlibrary.org/books/OL28346544M.json',
                 'condition' => BookCondition::NewCondition->value,
             ],
         ]);
@@ -237,7 +230,6 @@ final class BookTest extends ApiTestCase
     public function testAsAdminUserICannotCreateABookWithInvalidData(array $data, array $violations): void
     {
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-            'sub' => Uuid::v4()->__toString(),
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -285,17 +277,19 @@ final class BookTest extends ApiTestCase
         ];
     }
 
+    /**
+     * @group apiCall
+     */
     public function testAsAdminUserICanCreateABook(): void
     {
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-            'sub' => Uuid::v4()->__toString(),
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
         $this->client->request('POST', '/admin/books', [
             'auth_bearer' => $token,
             'json' => [
-                'book' => 'https://gallica.bnf.fr/services/OAIRecord?ark=bpt6k5738219s',
+                'book' => 'https://openlibrary.org/books/OL28346544M.json',
                 'condition' => BookCondition::NewCondition->value,
             ],
         ]);
@@ -303,7 +297,7 @@ final class BookTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_CREATED);
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertJsonContains([
-            'book' => 'https://gallica.bnf.fr/services/OAIRecord?ark=bpt6k5738219s',
+            'book' => 'https://openlibrary.org/books/OL28346544M.json',
             'condition' => BookCondition::NewCondition->value,
         ]);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Book/item.json'));
@@ -319,7 +313,6 @@ final class BookTest extends ApiTestCase
         $options = [];
         if ($userFactory) {
             $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-                'sub' => Uuid::v4()->__toString(),
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -327,7 +320,7 @@ final class BookTest extends ApiTestCase
 
         $this->client->request('PATCH', '/admin/books/'.$book->getId(), $options + [
             'json' => [
-                'book' => 'https://gallica.bnf.fr/services/OAIRecord?ark=bpt6k5738219s',
+                'book' => 'https://openlibrary.org/books/OL28346544M.json',
                 'condition' => BookCondition::NewCondition->value,
             ],
             'headers' => [
@@ -350,7 +343,6 @@ final class BookTest extends ApiTestCase
         BookFactory::createOne();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-            'sub' => Uuid::v4()->__toString(),
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -376,7 +368,6 @@ final class BookTest extends ApiTestCase
         BookFactory::createOne();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-            'sub' => Uuid::v4()->__toString(),
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -398,14 +389,16 @@ final class BookTest extends ApiTestCase
         ]);
     }
 
+    /**
+     * @group apiCall
+     */
     public function testAsAdminUserICanUpdateABook(): void
     {
         $book = BookFactory::createOne([
-            'book' => 'https://gallica.bnf.fr/services/OAIRecord?ark=bpt6k5738219s',
+            'book' => 'https://openlibrary.org/books/OL28346544M.json',
         ]);
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-            'sub' => Uuid::v4()->__toString(),
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -437,7 +430,6 @@ final class BookTest extends ApiTestCase
         $options = [];
         if ($userFactory) {
             $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-                'sub' => Uuid::v4()->__toString(),
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -460,7 +452,6 @@ final class BookTest extends ApiTestCase
         BookFactory::createOne();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-            'sub' => Uuid::v4()->__toString(),
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -474,7 +465,6 @@ final class BookTest extends ApiTestCase
         $book = BookFactory::createOne();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-            'sub' => Uuid::v4()->__toString(),
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 

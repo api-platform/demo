@@ -11,12 +11,18 @@ final class DefaultUsersStory extends Story
 {
     public function build(): void
     {
-        UserFactory::createMany(10);
         UserFactory::createOne([
-            'email' => 'admin@example.com',
+            'email' => 'chuck.norris@example.com',
             'firstName' => 'Chuck',
             'lastName' => 'Norris',
             'roles' => ['ROLE_ADMIN'],
         ]);
+        UserFactory::createOne([
+            'email' => 'john.doe@example.com',
+            'firstName' => 'John',
+            'lastName' => 'Doe',
+            'roles' => ['ROLE_USER'],
+        ]);
+        UserFactory::createMany(10);
     }
 }

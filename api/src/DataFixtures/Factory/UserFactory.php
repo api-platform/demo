@@ -6,6 +6,7 @@ namespace App\DataFixtures\Factory;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Uid\Uuid;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
 use Zenstruck\Foundry\RepositoryProxy;
@@ -66,6 +67,7 @@ final class UserFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
+            'sub' => Uuid::v7(),
             'email' => self::faker()->unique()->email(),
             'firstName' => self::faker()->firstName(),
             'lastName' => self::faker()->lastName(),

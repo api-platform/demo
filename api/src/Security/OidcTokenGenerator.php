@@ -12,6 +12,7 @@ use Jose\Component\Signature\Serializer\CompactSerializer;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\Attribute\When;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * Generates a token for specified claims.
@@ -38,15 +39,20 @@ final readonly class OidcTokenGenerator
     {
         // Defaults
         $time = time();
+        $sub = Uuid::v7()->__toString();
         $claims += [
+            'sub' => $sub,
             'iat' => $time,
             'nbf' => $time,
             'exp' => $time + 3600,
             'iss' => $this->issuer,
             'aud' => $this->audience,
-            'firstName' => 'John',
-            'lastName' => 'DOE',
+            'given_name' => 'John',
+            'family_name' => 'DOE',
         ];
+        if (empty($claims['sub'])) {
+            $claims['sub'] = $sub;
+        }
         if (empty($claims['iat'])) {
             $claims['iat'] = $time;
         }

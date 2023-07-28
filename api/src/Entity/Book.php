@@ -15,7 +15,9 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Enum\BookCondition;
+use App\Repository\BookRepository;
 use App\State\Processor\BookPersistProcessor;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -44,8 +46,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
         new Patch(
             uriTemplate: '/admin/books/{id}{._format}',
-            processor: BookPersistProcessor::class,
-            itemUriTemplate: '/admin/books/{id}{._format}'
+            processor: BookPersistProcessor::class
         ),
         new Delete(
             uriTemplate: '/admin/books/{id}{._format}'
@@ -66,7 +67,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     ],
     normalizationContext: ['groups' => ['Book:read', 'Enum:read']]
 )]
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: BookRepository::class)]
 #[UniqueEntity(fields: ['book'])]
 class Book
 {
@@ -74,10 +75,10 @@ class Book
      * @see https://schema.org/identifier
      */
     #[ApiProperty(identifier: true, types: ['https://schema.org/identifier'])]
-    #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\Id]
     private ?Uuid $id = null;
 
     /**
@@ -85,30 +86,37 @@ class Book
      */
     #[ApiProperty(
         types: ['https://schema.org/itemOffered', 'https://purl.org/dc/terms/BibliographicResource'],
-        example: 'https://gallica.bnf.fr/services/OAIRecord?ark=bpt6k5738219s'
+        example: 'https://openlibrary.org/books/OL26210211M.json'
     )]
-    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Book:write'])]
     #[Assert\NotBlank(allowNull: false)]
-    #[Assert\Url]
+    #[Assert\Url(protocols: ['https'])]
+    #[Assert\Regex(pattern: '/^https:\/\/openlibrary.org\/books\/OL\d{8}M\.json$/')]
+    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Book:write'])]
     #[ORM\Column(unique: true)]
     public ?string $book = null;
 
     /**
-     * @see https://schema.org/headline
+     * @see https://schema.org/name
      */
     #[ApiFilter(SearchFilter::class, strategy: 'i'.SearchFilterInterface::STRATEGY_PARTIAL)]
-    #[ApiProperty(types: ['https://schema.org/headline'])]
-    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Download:read', 'Review:read:admin'])]
-    #[ORM\Column]
+    #[ApiProperty(
+        types: ['https://schema.org/name'],
+        example: 'Fondation'
+    )]
+    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Review:read:admin'])]
+    #[ORM\Column(type: Types::TEXT)]
     public ?string $title = null;
 
     /**
      * @see https://schema.org/author
      */
     #[ApiFilter(SearchFilter::class, strategy: 'i'.SearchFilterInterface::STRATEGY_PARTIAL)]
-    #[ApiProperty(types: ['https://schema.org/author'])]
-    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Download:read', 'Review:read:admin'])]
-    #[ORM\Column]
+    #[ApiProperty(
+        types: ['https://schema.org/author'],
+        example: 'Isaac Asimov'
+    )]
+    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Review:read:admin'])]
+    #[ORM\Column(nullable: true)]
     public ?string $author = null;
 
     /**
@@ -117,10 +125,10 @@ class Book
     #[ApiFilter(SearchFilter::class, strategy: SearchFilterInterface::STRATEGY_EXACT)]
     #[ApiProperty(
         types: ['https://schema.org/OfferItemCondition'],
-        example: BookCondition::DamagedCondition->value
+        example: BookCondition::NewCondition->value
     )]
-    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Book:write'])]
     #[Assert\NotNull]
+    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Book:write'])]
     #[ORM\Column(name: '`condition`', type: 'string', enumType: BookCondition::class)]
     public ?BookCondition $condition = null;
 
@@ -133,8 +141,20 @@ class Book
         types: ['https://schema.org/reviews'],
         example: '/books/6acacc80-8321-4d83-9b02-7f2c7bf6eb1d/reviews'
     )]
-    #[Groups(groups: ['Book:read'])]
+    #[Groups(groups: ['Book:read', 'Bookmark:read'])]
     public ?string $reviews = null;
+
+    /**
+     * The overall rating, based on a collection of reviews or ratings, of the item.
+     *
+     * @see https://schema.org/aggregateRating
+     */
+    #[ApiProperty(
+        types: ['https://schema.org/aggregateRating'],
+        example: 1
+    )]
+    #[Groups(groups: ['Book:read', 'Bookmark:read'])]
+    public ?int $rating = null;
 
     public function getId(): ?Uuid
     {

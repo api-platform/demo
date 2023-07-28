@@ -67,6 +67,13 @@
                     "type": "string",
                     "format": "iri-reference",
                     "pattern": "^/books/.+/reviews$"
+                },
+                "rating": {
+                    "description": "The overall rating, based on a collection of reviews or ratings, of the item",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/aggregateRating"
+                    },
+                    "type": "number"
                 }
             },
             "required": [

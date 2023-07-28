@@ -1,15 +1,17 @@
-import { Item } from "./item";
+import { type Item } from "./item";
+import { type User } from "./User";
+import { type Book } from "./Book";
 
 export class Review implements Item {
   public "@id"?: string;
 
   constructor(
-    _id?: string,
     public body?: string,
     public rating?: number,
-    public book?: any,
-    public author?: string,
-    public publicationDate?: Date
+    public book?: Book,
+    public user?: User,
+    public publishedAt?: Date,
+    _id?: string,
   ) {
     this["@id"] = _id;
   }

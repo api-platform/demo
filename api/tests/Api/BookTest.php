@@ -7,6 +7,7 @@ namespace App\Tests\Api;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\DataFixtures\Factory\BookFactory;
+use App\DataFixtures\Factory\ReviewFactory;
 use App\Enum\BookCondition;
 use Symfony\Component\HttpFoundation\Response;
 use Zenstruck\Foundry\FactoryCollection;
@@ -94,6 +95,11 @@ final class BookTest extends ApiTestCase
     public function testAsAnonymousICanGetABook(): void
     {
         $book = BookFactory::createOne();
+        ReviewFactory::createOne(['rating' => 1, 'book' => $book]);
+        ReviewFactory::createOne(['rating' => 2, 'book' => $book]);
+        ReviewFactory::createOne(['rating' => 3, 'book' => $book]);
+        ReviewFactory::createOne(['rating' => 4, 'book' => $book]);
+        ReviewFactory::createOne(['rating' => 5, 'book' => $book]);
 
         $this->client->request('GET', '/books/'.$book->getId());
 
@@ -105,6 +111,8 @@ final class BookTest extends ApiTestCase
             'condition' => $book->condition->value,
             'title' => $book->title,
             'author' => $book->author,
+            'reviews' => '/books/'.$book->getId().'/reviews',
+            'rating' => 3,
         ]);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Book/item.json'));
     }

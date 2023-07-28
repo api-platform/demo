@@ -1,111 +1,79 @@
-import { FunctionComponent } from "react";
-import Link from "next/link";
+import { type NextPage } from "next";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useMutation } from "react-query";
+import FilterListOutlinedIcon from "@mui/icons-material/FilterListOutlined";
 
-import ReferenceLinks from "../common/ReferenceLinks";
-import { getItemPath } from "../../utils/dataAccess";
-import { Book } from "../../types/Book";
+import { Item } from "@/components/book/Item";
+import { Filters } from "@/components/book/Filters";
+import { Pagination } from "@/components/common/Pagination";
+import { type Book } from "@/types/Book";
+import { type PagedCollection } from "@/types/collection";
+import { type FiltersProps, buildUriFromFilters } from "@/utils/book";
+import { type FetchError, type FetchResponse } from "@/utils/dataAccess";
+import { useMercure } from "@/utils/mercure";
 
 interface Props {
-  books: Book[];
+  data: PagedCollection<Book> | null
+  hubURL: string | null
+  filters: FiltersProps
+  page: number
 }
 
-export const List: FunctionComponent<Props> = ({ books }) => (
-  <div className="p-4">
-    <div className="flex justify-between items-center">
-      <h1 className="text-3xl mb-2">Book List</h1>
-      <Link
-        href="/books/create"
-        className="bg-cyan-500 hover:bg-cyan-700 text-white text-sm font-bold py-2 px-4 rounded"
-      >
-        Create
-      </Link>
-    </div>
-    <table
-      cellPadding={10}
-      className="shadow-md table border-collapse min-w-full leading-normal table-auto text-left my-3"
-    >
-      <thead className="w-full text-xs uppercase font-light text-gray-700 bg-gray-200 py-2 px-4">
-        <tr>
-          <th>id</th>
-          <th>isbn</th>
-          <th>title</th>
-          <th>description</th>
-          <th>author</th>
-          <th>publicationDate</th>
-          <th>reviews</th>
-          <th colSpan={2} />
-        </tr>
-      </thead>
-      <tbody className="text-sm divide-y divide-gray-200">
-        {books &&
-          books.length !== 0 &&
-          books.map(
-            (book) =>
-              book["@id"] && (
-                <tr className="py-2" key={book["@id"]}>
-                  <th scope="row">
-                    <ReferenceLinks
-                      items={{
-                        href: getItemPath(book["@id"], "/books/[id]"),
-                        name: book["@id"],
-                      }}
-                    />
-                  </th>
-                  <td>{book["isbn"]}</td>
-                  <td>{book["title"]}</td>
-                  <td>{book["description"]}</td>
-                  <td>{book["author"]}</td>
-                  <td>{book["publicationDate"]?.toLocaleString()}</td>
-                  <td>
-                    <ReferenceLinks
-                      items={book["reviews"].map((emb: any) => ({
-                        href: getItemPath(emb["@id"], "/reviews/[id]"),
-                        name: emb["@id"],
-                      }))}
-                    />
-                  </td>
-                  <td className="w-8">
-                    <Link
-                      href={getItemPath(book["@id"], "/books/[id]")}
-                      className="text-cyan-500"
-                    >
-                      Show
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        className="w-6 h-6"
-                      >
-                        <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
-                        <path
-                          fillRule="evenodd"
-                          d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 010-1.113zM17.25 12a5.25 5.25 0 11-10.5 0 5.25 5.25 0 0110.5 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </Link>
-                  </td>
-                  <td className="w-8">
-                    <Link
-                      href={getItemPath(book["@id"], "/books/[id]/edit")}
-                      className="text-cyan-500"
-                    >
-                      Edit
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        className="w-6 h-6"
-                      >
-                        <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z" />
-                        <path d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z" />
-                      </svg>
-                    </Link>
-                  </td>
-                </tr>
-              )
+const getPagePath = (page: number): string => `/books?page=${page}`;
+
+export const List: NextPage<Props> = ({ data, hubURL, filters, page }) => {
+  const collection = useMercure(data, hubURL);
+  const router = useRouter();
+
+  const filtersMutation = useMutation<
+    FetchResponse<PagedCollection<Book>> | undefined,
+    Error | FetchError,
+    FiltersProps
+  >(async (filters) => {
+    router.push(buildUriFromFilters("/books", filters));
+  });
+
+  return (
+    <div className="container mx-auto max-w-7xl items-center justify-between p-6 lg:px-8">
+      <Head>
+        <title>Books Store</title>
+      </Head>
+      <div className="flex">
+        <aside className="float-left w-[180px] mr-6" aria-label="Filters">
+          <div className="font-semibold pb-2 border-b border-black text-lg mb-4">
+            <FilterListOutlinedIcon className="w-6 h-6 mr-1"/>
+            Filters
+          </div>
+          <Filters mutation={filtersMutation} filters={filters}/>
+        </aside>
+        <div className="float-right w-[1010px] justify-center">
+          {!!collection && !!collection["hydra:member"] && (
+            <>
+              <p className="w-full flex px-8 pb-4 text-lg">
+                <span className="float-left mr-48">
+                  Sort by:
+                  {/*todo move to filters form?*/}
+                  <select className="ml-1 border-none selection:border-none">
+                    <option>Relevance</option>
+                    <option>Title ASC</option>
+                    <option>Title DESC</option>
+                  </select>
+                </span>
+                <span className="float-right mt-1">{collection["hydra:totalItems"]} book(s) found</span>
+              </p>
+              <div className="grid grid-cols-5 gap-4">
+                {collection["hydra:member"].length !== 0 && collection["hydra:member"].map((book) => (
+                  <Item key={book["@id"]} book={book}/>
+                ))}
+              </div>
+              <Pagination collection={collection} getPagePath={getPagePath} currentPage={page}/>
+            </>
+          ) || (
+            <p className="w-full flex px-8 pb-4 text-lg">No books found.</p>
           )}
-      </tbody>
-    </table>
-  </div>
-);
+        </div>
+      </div>
+    </div>
+  );
+};

@@ -7,6 +7,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -19,8 +20,6 @@ use Symfony\Component\Uid\Uuid;
  *
  * @see https://schema.org/Person
  */
-#[ORM\Entity]
-#[ORM\Table(name: '`user`')]
 #[ApiResource(
     types: ['https://schema.org/Person'],
     operations: [
@@ -35,18 +34,28 @@ use Symfony\Component\Uid\Uuid;
     ],
     normalizationContext: ['groups' => ['User:read']]
 )]
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Table(name: '`user`')]
 #[UniqueEntity('email')]
 class User implements UserInterface
 {
     /**
      * @see https://schema.org/identifier
      */
-    #[ORM\Id]
-    #[ORM\Column(type: UuidType::NAME, unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     #[ApiProperty(types: ['https://schema.org/identifier'])]
+    #[ORM\Column(type: UuidType::NAME, unique: true)]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\Id]
     private ?Uuid $id = null;
+
+    /**
+     * @see https://schema.org/identifier
+     */
+    #[ApiProperty(types: ['https://schema.org/identifier'])]
+    #[Groups(groups: ['User:read', 'Review:read'])]
+    #[ORM\Column(type: UuidType::NAME, unique: true)]
+    public ?Uuid $sub = null;
 
     /**
      * @see https://schema.org/email
@@ -57,17 +66,17 @@ class User implements UserInterface
     /**
      * @see https://schema.org/givenName
      */
-    #[ORM\Column]
     #[ApiProperty(types: ['https://schema.org/givenName'])]
-    #[Groups(groups: ['User:read', 'Review:read', 'Download:read:admin'])]
+    #[Groups(groups: ['User:read', 'Review:read'])]
+    #[ORM\Column]
     public ?string $firstName = null;
 
     /**
      * @see https://schema.org/familyName
      */
-    #[ORM\Column]
     #[ApiProperty(types: ['https://schema.org/familyName'])]
-    #[Groups(groups: ['User:read', 'Review:read', 'Download:read:admin'])]
+    #[Groups(groups: ['User:read', 'Review:read'])]
+    #[ORM\Column]
     public ?string $lastName = null;
 
     #[ORM\Column(type: 'json')]
@@ -93,5 +102,20 @@ class User implements UserInterface
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
+    }
+
+
+    /**
+     * @see https://schema.org/name
+     */
+    #[ApiProperty(types: ['https://schema.org/name'])]
+    #[Groups(groups: ['User:read', 'Review:read'])]
+    public function getName(): ?string
+    {
+        if (!$this->firstName && !$this->lastName) {
+            return null;
+        }
+
+        return trim(sprintf('%s %s', $this->firstName, $this->lastName));
     }
 }

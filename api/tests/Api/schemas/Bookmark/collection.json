@@ -1,0 +1,225 @@
+{
+    "$schema": "https:\/\/json-schema.org\/draft-07\/schema#",
+    "type": "object",
+    "additionalProperties": false,
+    "definitions": {
+        "Bookmark:jsonld": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "@type": {
+                    "readOnly": true,
+                    "type": "string",
+                    "pattern": "^https:\/\/schema.org\/BookmarkAction$"
+                },
+                "@id": {
+                    "readOnly": true,
+                    "type": "string",
+                    "pattern": "^/bookmarks/.+$"
+                },
+                "book": {
+                    "description": "The object of the bookmark",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/object"
+                    },
+                    "type": "object",
+                    "$ref": "#\/definitions\/Book:jsonld"
+                },
+                "bookmarkedAt": {
+                    "description": "The date time of the bookmark",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/startTime"
+                    },
+                    "type": "string",
+                    "format": "date-time"
+                }
+            },
+            "required": [
+                "@id",
+                "@type",
+                "book",
+                "bookmarkedAt"
+            ]
+        },
+        "Book:jsonld": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "@type": {
+                    "readOnly": true,
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "https://schema.org/Book",
+                            "https://schema.org/Offer"
+                        ]
+                    }
+                },
+                "@id": {
+                    "readOnly": true,
+                    "type": "string",
+                    "pattern": "^/books/.+$"
+                },
+                "book": {
+                    "description": "The IRI of the book",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/itemOffered"
+                    },
+                    "type": "string",
+                    "format": "uri"
+                },
+                "title": {
+                    "description": "The title of the book",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/title"
+                    },
+                    "type": "string"
+                },
+                "author": {
+                    "description": "The author of the book",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/author"
+                    },
+                    "type": "string"
+                },
+                "condition": {
+                    "description": "The condition of the book",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/OfferItemCondition"
+                    },
+                    "enum": [
+                        "https://schema.org/NewCondition",
+                        "https://schema.org/RefurbishedCondition",
+                        "https://schema.org/DamagedCondition",
+                        "https://schema.org/UsedCondition"
+                    ]
+                },
+                "reviews": {
+                    "description": "The IRI of the book reviews",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/reviews"
+                    },
+                    "type": "string",
+                    "format": "iri-reference",
+                    "pattern": "^/books/.+/reviews$"
+                },
+                "rating": {
+                    "description": "The overall rating, based on a collection of reviews or ratings, of the item",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/aggregateRating"
+                    },
+                    "type": "number"
+                }
+            },
+            "required": [
+                "@id",
+                "@type",
+                "book",
+                "title",
+                "author",
+                "condition",
+                "reviews"
+            ]
+        }
+    },
+    "properties": {
+        "@context": {
+            "readOnly": true,
+            "type": "string",
+            "pattern": "^/contexts/Bookmark$"
+        },
+        "@type": {
+            "readOnly": true,
+            "type": "string",
+            "pattern": "^hydra:Collection$"
+        },
+        "@id": {
+            "readOnly": true,
+            "type": "string",
+            "pattern": "^/bookmarks$"
+        },
+        "hydra:member": {
+            "type": "array",
+            "items": {
+                "$ref": "#\/definitions\/Bookmark:jsonld"
+            }
+        },
+        "hydra:totalItems": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "hydra:view": {
+            "type": "object",
+            "properties": {
+                "@id": {
+                    "type": "string",
+                    "format": "iri-reference"
+                },
+                "@type": {
+                    "type": "string"
+                },
+                "hydra:first": {
+                    "type": "string",
+                    "format": "iri-reference"
+                },
+                "hydra:last": {
+                    "type": "string",
+                    "format": "iri-reference"
+                },
+                "hydra:next": {
+                    "type": "string",
+                    "format": "iri-reference"
+                }
+            }
+        },
+        "hydra:search": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string"
+                },
+                "hydra:template": {
+                    "type": "string"
+                },
+                "hydra:variableRepresentation": {
+                    "type": "string"
+                },
+                "hydra:mapping": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "@type": {
+                                "type": "string"
+                            },
+                            "variable": {
+                                "type": "string"
+                            },
+                            "property": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "required": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "required": [
+        "@context",
+        "@type",
+        "@id",
+        "hydra:member",
+        "hydra:totalItems",
+        "hydra:view",
+        "hydra:search"
+    ]
+}

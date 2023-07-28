@@ -27,3 +27,25 @@ api_platform:
         authorizationUrl: '%env(OIDC_SERVER_URL)%/protocol/openid-connect/auth'
         scopes:
             openid: (required) Indicates that the application intends to use OIDC to verify the user's identity
+
+services:
+    app.filter.review.admin.search:
+        class: 'ApiPlatform\Doctrine\Orm\Filter\SearchFilter'
+        arguments:
+            $managerRegistry: '@doctrine'
+            $iriConverter: '@api_platform.iri_converter'
+            $propertyAccessor: '@property_accessor'
+            $logger: '@logger'
+            $properties: { user: 'exact', book: 'exact' } ]
+            $identifiersExtractor: '@api_platform.api.identifiers_extractor'
+            $nameConverter: '@?api_platform.name_converter'
+        tags: [ 'api_platform.filter' ]
+
+    app.filter.review.admin.numeric:
+        class: 'ApiPlatform\Doctrine\Orm\Filter\NumericFilter'
+        arguments:
+            $managerRegistry: '@doctrine'
+            $logger: '@logger'
+            $properties: { rating: ~ } ]
+            $nameConverter: '@?api_platform.name_converter'
+        tags: [ 'api_platform.filter' ]

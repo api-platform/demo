@@ -39,11 +39,6 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 		if [ "$( find ./migrations -iname '*.php' -print -quit )" ]; then
 			php bin/console doctrine:migrations:migrate --no-interaction
 		fi
-
-		if [ "$APP_ENV" != 'prod' ]; then
-			echo "Load fixtures"
-			bin/console doctrine:fixtures:load --no-interaction
-		fi
 	fi
 fi
 

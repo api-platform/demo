@@ -1,109 +1,89 @@
-import { FunctionComponent } from "react";
-import Link from "next/link";
+import { type FunctionComponent, useEffect, useState } from "react";
+import {signIn, useSession} from "next-auth/react";
 
-import ReferenceLinks from "../common/ReferenceLinks";
-import { getItemPath } from "../../utils/dataAccess";
-import { Review } from "../../types/Review";
+import { Pagination } from "@/components/common/Pagination";
+import { type Book } from "@/types/Book";
+import { type PagedCollection } from "@/types/collection";
+import { type Review } from "@/types/Review";
+import { fetch, type FetchResponse, getItemPath, parsePage } from "@/utils/dataAccess";
+import { useMercure } from "@/utils/mercure";
+import { Error } from "@/components/common/Error";
+import { Item } from "@/components/review/Item";
+import { Form } from "@/components/review/Form";
+import { Loading } from "@/components/common/Loading";
 
 interface Props {
-  reviews: Review[];
+  book: Book
+  page: number
 }
 
-export const List: FunctionComponent<Props> = ({ reviews }) => (
-  <div className="p-4">
-    <div className="flex justify-between items-center">
-      <h1 className="text-3xl mb-2">Review List</h1>
-      <Link
-        href="/reviews/create"
-        className="bg-cyan-500 hover:bg-cyan-700 text-white text-sm font-bold py-2 px-4 rounded"
-      >
-        Create
-      </Link>
-    </div>
-    <table
-      cellPadding={10}
-      className="shadow-md table border-collapse min-w-full leading-normal table-auto text-left my-3"
-    >
-      <thead className="w-full text-xs uppercase font-light text-gray-700 bg-gray-200 py-2 px-4">
-        <tr>
-          <th>id</th>
-          <th>body</th>
-          <th>rating</th>
-          <th>book</th>
-          <th>author</th>
-          <th>publicationDate</th>
-          <th colSpan={2} />
-        </tr>
-      </thead>
-      <tbody className="text-sm divide-y divide-gray-200">
-        {reviews &&
-          reviews.length !== 0 &&
-          reviews.map(
-            (review) =>
-              review["@id"] && (
-                <tr className="py-2" key={review["@id"]}>
-                  <th scope="row">
-                    <ReferenceLinks
-                      items={{
-                        href: getItemPath(review["@id"], "/reviews/[id]"),
-                        name: review["@id"],
-                      }}
-                    />
-                  </th>
-                  <td>{review["body"]}</td>
-                  <td>{review["rating"]}</td>
-                  <td>
-                    <ReferenceLinks
-                      items={{
-                        href: getItemPath(review["book"]["@id"], "/books/[id]"),
-                        name: review["book"]["@id"],
-                      }}
-                    />
-                  </td>
-                  <td>{review["author"]}</td>
-                  <td>{review["publicationDate"]?.toLocaleString()}</td>
-                  <td className="w-8">
-                    <Link
-                      href={getItemPath(review["@id"], "/reviews/[id]")}
-                      className="text-cyan-500"
-                    >
-                      Show
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        className="w-6 h-6"
-                      >
-                        <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
-                        <path
-                          fillRule="evenodd"
-                          d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 010-1.113zM17.25 12a5.25 5.25 0 11-10.5 0 5.25 5.25 0 0110.5 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </Link>
-                  </td>
-                  <td className="w-8">
-                    <Link
-                      href={getItemPath(review["@id"], "/reviews/[id]/edit")}
-                      className="text-cyan-500"
-                    >
-                      Edit
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        className="w-6 h-6"
-                      >
-                        <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z" />
-                        <path d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z" />
-                      </svg>
-                    </Link>
-                  </td>
-                </tr>
-              )
-          )}
-      </tbody>
-    </table>
-  </div>
-);
+export const List: FunctionComponent<Props> = ({ book, page }) => {
+  const { data: session, status } = useSession();
+  const [data, setData] = useState<PagedCollection<Review> | undefined>();
+  const [error, setError] = useState<string | undefined>();
+  const [hubURL, setHubURL] = useState<string | undefined>();
+  const collection = useMercure(data, hubURL);
+
+  useEffect(() => {
+    if (status === "loading") return;
+
+    // todo call is done twice
+    (async () => {
+      try {
+        const response: FetchResponse<PagedCollection<Review>> | undefined = await fetch(`${book["reviews"]}?itemsPerPage=5&page=${page}`);
+        if (response?.data) {
+          setData(response.data);
+        }
+        if (response && response?.hubURL) {
+          setHubURL(response.hubURL);
+        }
+      } catch (error) {
+        console.error(error);
+        setError(error.message);
+
+        return;
+      }
+    })();
+  }, [book, page, status]);
+
+  const getPagePath = (page: number): string =>
+    `${getItemPath(book, '/books/[id]/[slug]')}?page=${page}#reviews`;
+
+  return (
+    <>
+      {!!session && (
+        <div className="mb-10 max-w-4xl mx-auto">
+          <div className="mb-5 flex">
+            <div className="font-semibold text-gray-600 text-xl w-[50px] h-[50px] px-3 py-1 mr-3 rounded-full bg-gray-200 flex items-center justify-center">
+              {(session?.user?.name ?? "John Doe").substring(0, 1)}
+            </div>
+            <div className="w-full">
+              <Form book={book} username={session?.user?.name ?? "John Doe"}/>
+            </div>
+          </div>
+        </div>
+      ) || (
+        <div className="flex mb-10">
+          <button className="px-10 py-4 font-semibold text-sm bg-cyan-500 text-white rounded shadow-sm mx-auto"
+                  onClick={() => signIn("keycloak")}>
+            Log in to add a review!
+          </button>
+        </div>
+      )}
+      {!!error && (
+        <Error message={error}/>
+      ) || !!collection && !!collection["hydra:member"] && collection["hydra:member"]?.length > 0 && (
+        <>
+          {collection["hydra:member"].map((review) => (
+            <Item key={review["@id"]} review={review} onDelete={() => setData(undefined)}/>
+          ))}
+          <Pagination collection={collection} getPagePath={getPagePath} currentPage={page ? Number(page) : 1}/>
+        </>
+      ) || !!collection && (
+        <p className="text-gray-600">Be the first to add a review!</p>
+      ) || (
+        <Loading/>
+      )}
+    </>
+  );
+}

@@ -1,41 +1,30 @@
 import Head from "next/head";
-import React, { useContext, useEffect, useRef, useState } from "react";
-import {
-  DataProvider,
-  Layout,
-  LayoutProps,
-  localStorageStore,
-  resolveBrowserLocale,
-} from "react-admin";
+import { type Session } from "next-auth";
+import {useContext, useRef, useState} from "react";
+import { type DataProvider, Layout, type LayoutProps, localStorageStore, resolveBrowserLocale } from "react-admin";
+import { signIn, useSession } from "next-auth/react";
+import SyncLoader from "react-spinners/SyncLoader";
 import polyglotI18nProvider from "ra-i18n-polyglot";
 import englishMessages from "ra-language-english";
 import frenchMessages from "ra-language-french";
-import {
-  fetchHydra,
-  HydraAdmin,
-  hydraDataProvider,
-  OpenApiAdmin
-} from "@api-platform/admin";
+import { fetchHydra, HydraAdmin, hydraDataProvider, OpenApiAdmin, ResourceGuesser } from "@api-platform/admin";
 import { parseHydraDocumentation } from "@api-platform/api-doc-parser";
 
-import DocContext from "./DocContext";
-import AppBar from "./AppBar";
-import { ENTRYPOINT } from "../../config/entrypoint";
-import { getSession, signIn, useSession } from "next-auth/react";
+import DocContext from "@/components/admin/DocContext";
+import AppBar from "@/components/admin/AppBar";
+import Menu from "@/components/admin/Menu";
+import { ENTRYPOINT } from "@/config/entrypoint";
+import { List as BooksList } from "@/components/admin/book/List";
+import { List as ReviewsList } from "@/components/admin/review/List";
 
-const getHeaders = async () => {
-  const session = await getSession();
-
-  return {
-    // @ts-ignore
-    Authorization: `Bearer ${session?.accessToken}`,
-  };
-};
-
-const apiDocumentationParser = () => async () => {
+const apiDocumentationParser = (session: Session) => async () => {
   try {
-    // @ts-ignore
-    return await parseHydraDocumentation(ENTRYPOINT, { headers: getHeaders() });
+    return await parseHydraDocumentation(ENTRYPOINT, {
+        headers: {
+            // @ts-ignore
+            Authorization: `Bearer ${session?.accessToken}`,
+        },
+    });
   } catch (result) {
     // @ts-ignore
     const {api, response, status} = result;
@@ -61,9 +50,9 @@ const i18nProvider = polyglotI18nProvider(
   resolveBrowserLocale(),
 );
 
-const MyLayout = (props: React.JSX.IntrinsicAttributes & LayoutProps) => <Layout {...props} appBar={AppBar} />;
+const MyLayout = (props: React.JSX.IntrinsicAttributes & LayoutProps) => <Layout {...props} appBar={AppBar} menu={Menu} />;
 
-const AdminUI = () => {
+const AdminUI = ({ session, children }: { session: Session, children?: React.ReactNode | undefined }) => {
   // @ts-ignore
   const dataProvider = useRef<DataProvider>(undefined);
   const { docType } = useContext(DocContext);
@@ -73,20 +62,24 @@ const AdminUI = () => {
     entrypoint: ENTRYPOINT,
     httpClient: (url: URL, options = {}) => fetchHydra(url, {
       ...options,
-      // @ts-ignore
-      headers: getHeaders(),
+      headers: {
+        // @ts-ignore
+        Authorization: `Bearer ${session?.accessToken}`,
+      },
     }),
-    apiDocumentationParser: apiDocumentationParser(),
+    apiDocumentationParser: apiDocumentationParser(session),
   });
 
-  return docType === 'hydra' ? (
+  return docType === "hydra" ? (
     <HydraAdmin
       // @ts-ignore
       dataProvider={dataProvider.current}
       entrypoint={window.origin}
       i18nProvider={i18nProvider}
       layout={MyLayout}
-    />
+    >
+      {!!children && children}
+    </HydraAdmin>
   ) : (
     <OpenApiAdmin
       // @ts-ignore
@@ -95,15 +88,16 @@ const AdminUI = () => {
       docEntrypoint={`${window.origin}/docs.json`}
       i18nProvider={i18nProvider}
       layout={MyLayout}
-    />
+    >
+      {!!children && children}
+    </OpenApiAdmin>
   );
 };
 
 const store = localStorageStore();
-
-const AdminWithContext = () => {
+const AdminWithContext = ({ session }: { session: Session }) => {
   const [docType, setDocType] = useState(
-    store.getItem<string>('docType', 'hydra'),
+    store.getItem<string>("docType", "hydra"),
   );
 
   return (
@@ -112,24 +106,22 @@ const AdminWithContext = () => {
         docType,
         setDocType,
       }}>
-      <AdminUI />
+      <AdminUI session={session}>
+        <ResourceGuesser name="admin/books" list={BooksList} />
+        <ResourceGuesser name="admin/reviews" list={ReviewsList} />
+      </AdminUI>
     </DocContext.Provider>
   );
 };
 
 const AdminWithOIDC = () => {
   // Can't use next-auth/middleware because of https://github.com/nextauthjs/next-auth/discussions/7488
-  const { status } = useSession();
+  const { data: session, status } = useSession();
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      signIn('keycloak');
-    }
-  }, [status]);
+  if (status === "loading") return <SyncLoader size={8} color="#46B6BF" />;
+  if (!session) return signIn("keycloak");
 
-  if (status === "loading") return <p>Loading...</p>;
-
-  return <AdminWithContext />;
+  return <AdminWithContext session={session} />;
 };
 
 const Admin = () => (
@@ -138,6 +130,7 @@ const Admin = () => (
       <title>API Platform Admin</title>
     </Head>
 
+    {/*@ts-ignore*/}
     <AdminWithOIDC />
   </>
 );

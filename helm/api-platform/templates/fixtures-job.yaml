@@ -32,11 +32,6 @@ spec:
           command: ['/bin/sh', '-c']
           args: ['composer install --prefer-dist --no-progress --no-interaction && bin/console doctrine:fixtures:load --no-interaction']
           env:
-            - name: API_ENTRYPOINT_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "api-platform.fullname" . }}
-                  key: host
             - name: OIDC_SERVER_URL
               valueFrom:
                 configMapKeyRef:

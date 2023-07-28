@@ -29,34 +29,42 @@ jobs:
       contents: 'read'
       id-token: 'write'
     steps:
-      - name: Checkout
+      -
+        name: Checkout
         uses: actions/checkout@v3
       # gcloud does not work with Python 3.10 because collections.Mappings was removed in Python 3.10.
-      - uses: actions/setup-python@v4
+      -
+        uses: actions/setup-python@v4
         with:
           python-version: 3.9.15
-      - name: Auth gcloud
+      -
+        name: Auth gcloud
         uses: google-github-actions/auth@v1
         with:
           credentials_json: ${{ secrets.GKE_SA_KEY }}
-      - name: Setup gcloud
+      -
+        name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v1
         with:
           project_id: ${{ secrets.gke-project }}
-      - name: Configure gcloud
+      -
+        name: Configure gcloud
         run: |
           gcloud --quiet auth configure-docker
           gcloud container clusters get-credentials api-platform-demo --zone europe-west1-c
-      - name: Pull Docker Image
+      -
+        name: Pull Docker Image
         run: docker pull eu.gcr.io/${{ secrets.GKE_PROJECT }}/${{ matrix.image }}:latest
-      - name: Cache Trivy
+      -
+        name: Cache Trivy
         uses: actions/cache@v3
         with:
           path: .trivy
           key: ${{ runner.os }}-trivy-${{ github.run_id }}
           restore-keys: |
             ${{ runner.os }}-trivy-
-      - name: Run Trivy Vulnerability Scanner
+      -
+        name: Run Trivy Vulnerability Scanner
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: 'eu.gcr.io/${{ secrets.GKE_PROJECT }}/${{ matrix.image }}:latest'

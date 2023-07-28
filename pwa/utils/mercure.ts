@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { PagedCollection, isPagedCollection } from "../types/collection";
-import { Item, isItem } from "../types/item";
+import { type Item } from "@/types/item";
+import { type PagedCollection } from "@/types/collection";
+import { isItem } from "@/types/item";
+import { isPagedCollection } from "@/types/collection";
 
-const mercureSubscribe = <T extends Item | PagedCollection<Item> | undefined>(
+const mercureSubscribe = <T extends Item | PagedCollection<Item> | null | undefined>(
   hubURL: string,
   data: T | PagedCollection<T>,
   setData: (data: T) => void
@@ -23,10 +25,10 @@ const mercureSubscribe = <T extends Item | PagedCollection<Item> | undefined>(
 };
 
 export const useMercure = <
-  TData extends Item | PagedCollection<Item> | undefined
+  TData extends Item | PagedCollection<Item> | null | undefined
 >(
   deps: TData,
-  hubURL: string | null
+  hubURL: string | null | undefined
 ): TData => {
   const [data, setData] = useState(deps);
 

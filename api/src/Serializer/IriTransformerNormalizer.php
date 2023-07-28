@@ -34,6 +34,10 @@ final class IriTransformerNormalizer implements NormalizerInterface, NormalizerA
         }
 
         foreach ($value as $property => $uriTemplate) {
+            if (!isset($data[$property]) || !(is_string($data[$property]) || isset($data[$property]['@id']))) {
+                continue;
+            }
+
             $iri = $this->iriConverter->getIriFromResource(
                 $object->{$property},
                 UrlGeneratorInterface::ABS_PATH,
@@ -42,7 +46,7 @@ final class IriTransformerNormalizer implements NormalizerInterface, NormalizerA
 
             if (is_string($data[$property])) {
                 $data[$property] = $iri;
-            } else {
+            } elseif (isset($data[$property]['@id'])) {
                 $data[$property]['@id'] = $iri;
             }
         }
@@ -57,5 +61,12 @@ final class IriTransformerNormalizer implements NormalizerInterface, NormalizerA
             && isset($context[self::CONTEXT_KEY])
             && ItemNormalizer::FORMAT === $format
             && !isset($context[self::class]);
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            '*' => false,
+        ];
     }
 }

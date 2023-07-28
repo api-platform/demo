@@ -15,7 +15,6 @@ use App\Repository\ReviewRepository;
 use App\Security\OidcTokenGenerator;
 use App\Tests\Api\Admin\Trait\UsersDataProviderTrait;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Uid\Uuid;
 use Zenstruck\Foundry\FactoryCollection;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
@@ -41,7 +40,6 @@ final class ReviewTest extends ApiTestCase
         $options = [];
         if ($userFactory) {
             $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-                'sub' => Uuid::v4()->__toString(),
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -67,7 +65,6 @@ final class ReviewTest extends ApiTestCase
         $factory->create();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-            'sub' => Uuid::v4()->__toString(),
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -93,6 +90,11 @@ final class ReviewTest extends ApiTestCase
             '/admin/reviews',
             100,
         ];
+        yield 'all reviews using itemsPerPage' => [
+            ReviewFactory::new()->many(100),
+            '/admin/reviews?itemsPerPage=10',
+            100,
+        ];
         yield 'reviews filtered by rating' => [
             ReviewFactory::new()->sequence(function () {
                 foreach (range(1, 100) as $i) {
@@ -105,7 +107,7 @@ final class ReviewTest extends ApiTestCase
         ];
         yield 'reviews filtered by user' => [
             ReviewFactory::new()->sequence(function () {
-                $user = UserFactory::createOne(['email' => 'john.doe@example.com']);
+                $user = UserFactory::createOne(['email' => 'user@example.com']);
                 yield ['user' => $user];
                 foreach (range(1, 10) as $i) {
                     yield ['user' => UserFactory::createOne()];
@@ -113,7 +115,7 @@ final class ReviewTest extends ApiTestCase
             }),
             static function (): string {
                 /** @var User[] $users */
-                $users = UserFactory::findBy(['email' => 'john.doe@example.com']);
+                $users = UserFactory::findBy(['email' => 'user@example.com']);
 
                 return '/admin/reviews?user=/admin/users/'.$users[0]->getId();
             },
@@ -146,7 +148,6 @@ final class ReviewTest extends ApiTestCase
         $options = [];
         if ($userFactory) {
             $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-                'sub' => Uuid::v4()->__toString(),
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -167,7 +168,6 @@ final class ReviewTest extends ApiTestCase
     public function testAsAdminUserICannotGetAnInvalidReview(): void
     {
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-            'sub' => Uuid::v4()->__toString(),
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -181,7 +181,6 @@ final class ReviewTest extends ApiTestCase
         $review = ReviewFactory::createOne();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-            'sub' => Uuid::v4()->__toString(),
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -202,7 +201,6 @@ final class ReviewTest extends ApiTestCase
         $options = [];
         if ($userFactory) {
             $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-                'sub' => Uuid::v4()->__toString(),
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -228,7 +226,6 @@ final class ReviewTest extends ApiTestCase
     public function testAsAdminUserICannotUpdateAnInvalidReview(): void
     {
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-            'sub' => Uuid::v4()->__toString(),
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -251,7 +248,6 @@ final class ReviewTest extends ApiTestCase
         $review = ReviewFactory::createOne();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-            'sub' => Uuid::v4()->__toString(),
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -285,7 +281,6 @@ final class ReviewTest extends ApiTestCase
         $options = [];
         if ($userFactory) {
             $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-                'sub' => Uuid::v4()->__toString(),
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -306,7 +301,6 @@ final class ReviewTest extends ApiTestCase
     public function testAsAdminUserICannotDeleteAnInvalidReview(): void
     {
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-            'sub' => Uuid::v4()->__toString(),
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -321,7 +315,6 @@ final class ReviewTest extends ApiTestCase
         $id = $review->getId();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-            'sub' => Uuid::v4()->__toString(),
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 

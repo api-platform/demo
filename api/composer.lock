@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "48c2ba466ee8f0c60c13a79ba8399a97",
+    "content-hash": "556e2634ee5ee54f81424ff814ccaa8f",
     "packages": [
         {
             "name": "api-platform/core",
-            "version": "v3.1.12",
+            "version": "dev-demo",
             "source": {
                 "type": "git",
-                "url": "https://github.com/api-platform/core.git",
-                "reference": "1fe505a9d8fd235a8d7e4aa0f245f382f65578f8"
+                "url": "https://github.com/vincentchalamon/core.git",
+                "reference": "2b27c9c704edce96d52acbca0ce6dfc85554ea05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/core/zipball/1fe505a9d8fd235a8d7e4aa0f245f382f65578f8",
-                "reference": "1fe505a9d8fd235a8d7e4aa0f245f382f65578f8",
+                "url": "https://api.github.com/repos/vincentchalamon/core/zipball/2b27c9c704edce96d52acbca0ce6dfc85554ea05",
+                "reference": "2b27c9c704edce96d52acbca0ce6dfc85554ea05",
                 "shasum": ""
             },
             "require": {
@@ -74,7 +74,7 @@
                 "psr/log": "^1.0 || ^2.0 || ^3.0",
                 "ramsey/uuid": "^3.7 || ^4.0",
                 "ramsey/uuid-doctrine": "^1.4",
-                "soyuka/contexts": "^3.3.6",
+                "soyuka/contexts": "v3.3.9",
                 "soyuka/stubs-mongodb": "^1.0",
                 "symfony/asset": "^6.1",
                 "symfony/browser-kit": "^6.1",
@@ -140,7 +140,12 @@
                     "ApiPlatform\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "ApiPlatform\\Tests\\": "tests/",
+                    "App\\": "tests/Fixtures/app/var/tmp/src/"
+                }
+            },
             "license": [
                 "MIT"
             ],
@@ -154,27 +159,26 @@
             "description": "Build a fully-featured hypermedia or GraphQL API in minutes!",
             "homepage": "https://api-platform.com",
             "keywords": [
+                "API",
+                "GraphQL",
+                "HAL",
                 "Hydra",
                 "JSON-LD",
-                "api",
-                "graphql",
-                "hal",
-                "jsonapi",
-                "openapi",
-                "rest",
-                "swagger"
+                "JSONAPI",
+                "OpenAPI",
+                "REST",
+                "Swagger"
             ],
             "support": {
-                "issues": "https://github.com/api-platform/core/issues",
-                "source": "https://github.com/api-platform/core/tree/v3.1.12"
+                "source": "https://github.com/vincentchalamon/core/tree/demo"
             },
             "funding": [
                 {
-                    "url": "https://tidelift.com/funding/github/packagist/api-platform/core",
-                    "type": "tidelift"
+                    "type": "tidelift",
+                    "url": "https://tidelift.com/funding/github/packagist/api-platform/core"
                 }
             ],
-            "time": "2023-05-24T19:23:57+00:00"
+            "time": "2023-07-20T14:37:44+00:00"
         },
         {
             "name": "brick/math",
@@ -9412,7 +9416,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "api-platform/core": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

@@ -14,18 +14,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @deprecated create a Book instead
  */
-#[ORM\Entity]
 #[ApiResource(deprecationReason: 'Create a Book instead')]
+#[ORM\Entity]
 class Parchment
 {
     /**
      * @see https://schema.org/identifier
      */
-    #[ORM\Id]
-    #[ORM\Column(type: UuidType::NAME, unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     #[ApiProperty(types: ['https://schema.org/identifier'])]
+    #[ORM\Column(type: UuidType::NAME, unique: true)]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\Id]
     private ?Uuid $id = null;
 
     public function getId(): ?Uuid
@@ -36,14 +36,14 @@ class Parchment
     /**
      * The title of the book.
      */
-    #[ORM\Column]
     #[Assert\NotBlank(allowNull: false)]
+    #[ORM\Column]
     public ?string $title = null;
 
     /**
      * A description of the item.
      */
-    #[ORM\Column]
     #[Assert\NotBlank(allowNull: false)]
+    #[ORM\Column]
     public ?string $description = null;
 }

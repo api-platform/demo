@@ -1,7 +1,7 @@
-import { createContext } from 'react';
+import { createContext } from "react";
 
 const DocContext = createContext({
-  docType: 'hydra',
+  docType: "hydra",
   setDocType: (_docType: string) => {},
 });
 

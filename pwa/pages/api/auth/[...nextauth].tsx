@@ -1,12 +1,16 @@
 import NextAuth, { AuthOptions, SessionOptions } from "next-auth";
-import { type TokenSet } from "next-auth/core/types";
+import { type DefaultUser, type TokenSet } from "next-auth/core/types";
 import KeycloakProvider from "next-auth/providers/keycloak";
-
-import { OIDC_CLIENT_ID, OIDC_SERVER_URL } from "../../../config/keycloak";
+import { OIDC_CLIENT_ID, OIDC_SERVER_URL } from "@/config/keycloak";
 
 interface Session extends SessionOptions {
   accessToken: string
   error?: "RefreshAccessTokenError"
+  user?: User
+}
+
+interface User extends DefaultUser {
+  sub?: string | null
 }
 
 interface JWT {
@@ -14,6 +18,7 @@ interface JWT {
   expiresAt: number
   refreshToken: string
   error?: "RefreshAccessTokenError"
+  sub?: any
 }
 
 interface Account {
@@ -29,6 +34,7 @@ export const authOptions: AuthOptions = {
       if (account) {
         // Save the access token and refresh token in the JWT on the initial login
         return {
+          ...token,
           accessToken: account.access_token,
           expiresAt: Math.floor(Date.now() / 1000 + account.expires_in),
           refreshToken: account.refresh_token,
@@ -80,6 +86,9 @@ export const authOptions: AuthOptions = {
       if (token) {
         session.accessToken = token.accessToken;
         session.error = token.error;
+        if (session?.user && token?.sub) {
+          session.user.sub = token.sub;
+        }
       }
 
       return session;

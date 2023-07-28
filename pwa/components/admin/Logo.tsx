@@ -1,13 +1,13 @@
 const Logo = () => (
   <svg height={50} viewBox="0 0 1200 322.6" xmlSpace="preserve">
     <style>
-      {'.st0{fill: #85ccd3}' +
-        '.st1{fill: #1b939e}' +
-        '.st2,.st4{stroke: #000; stroke-width: 1.7498; stroke-miterlimit: 10}' +
-        '.st4{stroke-width: 1.2967}' +
-        '.st5{fill: #fff}' +
-        '.st6,.st8{fill: none; stroke: #000; stroke-width: 3.3286; stroke-miterlimit: 10}' +
-        '.st8{fill: #fff; stroke-width: 2.2191}'}
+      {".st0{fill: #85ccd3}" +
+        ".st1{fill: #1b939e}" +
+        ".st2,.st4{stroke: #000; stroke-width: 1.7498; stroke-miterlimit: 10}" +
+        ".st4{stroke-width: 1.2967}" +
+        ".st5{fill: #fff}" +
+        ".st6,.st8{fill: none; stroke: #000; stroke-width: 3.3286; stroke-miterlimit: 10}" +
+        ".st8{fill: #fff; stroke-width: 2.2191}"}
     </style>
     <path
       className="st0"

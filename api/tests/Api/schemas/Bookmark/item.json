@@ -1,0 +1,124 @@
+{
+    "$schema": "https:\/\/json-schema.org\/draft-07\/schema#",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "@context": {
+            "readOnly": true,
+            "type": "string",
+            "pattern": "^/contexts/Bookmark$"
+        },
+        "@type": {
+            "readOnly": true,
+            "type": "string",
+            "pattern": "^https://schema.org/BookmarkAction$"
+        },
+        "@id": {
+            "readOnly": true,
+            "type": "string",
+            "pattern": "^/bookmarks/.+$"
+        },
+        "book": {
+            "description": "The object of the bookmark",
+            "externalDocs": {
+                "url": "https:\/\/schema.org\/object"
+            },
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "@type": {
+                    "readOnly": true,
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "https://schema.org/Book",
+                            "https://schema.org/Offer"
+                        ]
+                    }
+                },
+                "@id": {
+                    "readOnly": true,
+                    "type": "string",
+                    "pattern": "^/books/.+$"
+                },
+                "book": {
+                    "description": "The IRI of the book",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/itemOffered"
+                    },
+                    "type": "string",
+                    "format": "uri"
+                },
+                "title": {
+                    "description": "The title of the book",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/title"
+                    },
+                    "type": "string"
+                },
+                "author": {
+                    "description": "The author of the book",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/author"
+                    },
+                    "type": "string"
+                },
+                "condition": {
+                    "description": "The condition of the book",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/OfferItemCondition"
+                    },
+                    "enum": [
+                        "https://schema.org/NewCondition",
+                        "https://schema.org/RefurbishedCondition",
+                        "https://schema.org/DamagedCondition",
+                        "https://schema.org/UsedCondition"
+                    ]
+                },
+                "reviews": {
+                    "description": "The IRI of the book reviews",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/reviews"
+                    },
+                    "type": "string",
+                    "format": "iri-reference",
+                    "pattern": "^/books/.+/reviews$"
+                },
+                "rating": {
+                    "description": "The overall rating, based on a collection of reviews or ratings, of the item",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/aggregateRating"
+                    },
+                    "type": "number"
+                }
+            },
+            "required": [
+                "@id",
+                "@type",
+                "book",
+                "title",
+                "author",
+                "condition",
+                "reviews"
+            ]
+        },
+        "bookmarkedAt": {
+            "description": "The date time of the bookmark",
+            "externalDocs": {
+                "url": "https:\/\/schema.org\/startTime"
+            },
+            "type": "string",
+            "format": "date-time"
+        }
+    },
+    "required": [
+        "@context",
+        "@type",
+        "@id",
+        "book",
+        "bookmarkedAt"
+    ]
+}

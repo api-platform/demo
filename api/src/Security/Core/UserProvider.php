@@ -10,6 +10,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\AttributesBasedUserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Uid\Uuid;
 
 final readonly class UserProvider implements AttributesBasedUserProviderInterface
 {
@@ -41,15 +42,24 @@ final readonly class UserProvider implements AttributesBasedUserProviderInterfac
     {
         $user = $this->repository->findOneBy(['email' => $identifier]) ?: new User();
 
-        if (!isset($attributes['firstName'])) {
-            throw new UnsupportedUserException('Property "firstName" is missing in token attributes.');
+        if (!isset($attributes['sub'])) {
+            throw new UnsupportedUserException('Property "sub" is missing in token attributes.');
         }
-        $user->firstName = $attributes['firstName'];
+        try {
+            $user->sub = Uuid::fromString($attributes['sub']);
+        } catch (\Throwable $e) {
+            throw new UnsupportedUserException($e->getMessage(), $e->getCode(), $e);
+        }
 
-        if (!isset($attributes['lastName'])) {
-            throw new UnsupportedUserException('Property "lastName" is missing in token attributes.');
+        if (!isset($attributes['given_name'])) {
+            throw new UnsupportedUserException('Property "given_name" is missing in token attributes.');
         }
-        $user->lastName = $attributes['lastName'];
+        $user->firstName = $attributes['given_name'];
+
+        if (!isset($attributes['family_name'])) {
+            throw new UnsupportedUserException('Property "family_name" is missing in token attributes.');
+        }
+        $user->lastName = $attributes['family_name'];
 
         $this->repository->save($user);
 

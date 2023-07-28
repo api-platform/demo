@@ -1,12 +1,8 @@
-version: "3.4"
+version: "3.8"
 
 services:
   php:
-    build:
-      context: ./api
-      target: app_php
-      cache_from:
-        - ${PHP_DOCKER_IMAGE:-api-platform/php:latest}
+    image: app_php
     depends_on:
       - database
     restart: unless-stopped
@@ -18,8 +14,6 @@ services:
       retries: 3
       start_period: 30s
     environment: &php-env
-      API_ENTRYPOINT_SCHEME: https
-      API_ENTRYPOINT_HOST: ${SERVER_NAME:-localhost}
       DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-!ChangeMe!}@database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-15}
       TRUSTED_PROXIES: ${TRUSTED_PROXIES:-127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
       TRUSTED_HOSTS: ^${SERVER_NAME:-example\.com|localhost}|caddy$$
@@ -30,11 +24,7 @@ services:
       OIDC_SERVER_URL_INTERNAL: ${OIDC_SERVER_URL_INTERNAL:-http://caddy/oidc/realms/demo}
 
   pwa:
-    build:
-      context: ./pwa
-      target: prod
-      cache_from:
-        - ${PWA_DOCKER_IMAGE:-api-platform/pwa:latest}
+    image: app_pwa
     environment:
       NEXT_PUBLIC_ENTRYPOINT: http://caddy
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-!ChangeThisNextAuthSecret!}
@@ -44,12 +34,7 @@ services:
       OIDC_SERVER_URL: ${OIDC_SERVER_URL_INTERNAL:-http://caddy/oidc/realms/demo}
 
   caddy:
-    build:
-      context: api/
-      target: app_caddy
-      cache_from:
-        - ${PHP_DOCKER_IMAGE:-api-platform/php:latest}
-        - ${CADDY_DOCKER_IMAGE:-api-platform/caddy:latest}
+    image: app_caddy
     depends_on:
       - php
       - pwa

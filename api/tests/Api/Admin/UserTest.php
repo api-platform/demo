@@ -37,7 +37,6 @@ final class UserTest extends ApiTestCase
         $options = [];
         if ($userFactory) {
             $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-                'sub' => Uuid::v4()->__toString(),
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -60,7 +59,6 @@ final class UserTest extends ApiTestCase
         $user = UserFactory::createOne();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-            'sub' => Uuid::v4()->__toString(),
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -80,13 +78,16 @@ final class UserTest extends ApiTestCase
         $user = UserFactory::createOne([
             'firstName' => 'John',
             'lastName' => 'DOE',
+            'sub' => Uuid::fromString('b5c5bff1-5b5f-4a73-8fc8-4ea8f18586a9'),
         ])->disableAutoRefresh();
 
+        $sub = Uuid::v7()->__toString();
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
-            'sub' => Uuid::v4()->__toString(),
+            'sub' => $sub,
             'email' => $user->email,
-            'firstName' => 'Chuck',
-            'lastName' => 'NORRIS',
+            'given_name' => 'Chuck',
+            'family_name' => 'NORRIS',
+            'name' => 'Chuck NORRIS',
         ]);
 
         $this->client->request('GET', '/books', ['auth_bearer' => $token]);
@@ -96,5 +97,7 @@ final class UserTest extends ApiTestCase
         self::assertNotNull($user);
         self::assertEquals('Chuck', $user->firstName);
         self::assertEquals('NORRIS', $user->lastName);
+        self::assertEquals('Chuck NORRIS', $user->getName());
+        self::assertEquals($sub, $user->sub);
     }
 }

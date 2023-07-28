@@ -87,11 +87,6 @@ spec:
           image: "{{ .Values.php.image.repository }}:{{ .Values.php.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.php.image.pullPolicy }}
           env:
-            - name: API_ENTRYPOINT_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "api-platform.fullname" . }}
-                  key: host
             - name: OIDC_SERVER_URL
               valueFrom:
                 configMapKeyRef:
@@ -174,93 +169,6 @@ spec:
             exec:
               command:
                 - docker-healthcheck
-            periodSeconds: 3
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-        - name: {{ .Chart.Name }}-consumer
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.php.image.repository }}:{{ .Values.php.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.php.image.pullPolicy }}
-          args: ['bin/console', 'messenger:consume']
-          env:
-            - name: API_ENTRYPOINT_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "api-platform.fullname" . }}
-                  key: host
-            - name: OIDC_SERVER_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "api-platform.fullname" . }}
-                  key: oidc-server-url
-            - name: OIDC_SERVER_URL_INTERNAL
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "api-platform.fullname" . }}
-                  key: oidc-server-url-internal
-            - name: TRUSTED_HOSTS
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "api-platform.fullname" . }}
-                  key: php-trusted-hosts
-            - name: TRUSTED_PROXIES
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "api-platform.fullname" . }}
-                  key: php-trusted-proxies
-            - name: APP_ENV
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "api-platform.fullname" . }}
-                  key: php-app-env
-            - name: APP_DEBUG
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "api-platform.fullname" . }}
-                  key: php-app-debug
-            - name: APP_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "api-platform.fullname" . }}
-                  key: php-app-secret
-            - name: CORS_ALLOW_ORIGIN
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "api-platform.fullname" . }}
-                  key: php-cors-allow-origin
-            - name: DATABASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "api-platform.fullname" . }}
-                  key: database-url
-            - name: MERCURE_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "api-platform.fullname" . }}
-                  key: mercure-url
-            - name: MERCURE_PUBLIC_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "api-platform.fullname" . }}
-                  key: mercure-public-url
-            - name: MERCURE_JWT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "api-platform.fullname" . }}
-                  key: mercure-jwt-secret
-          startupProbe:
-            exec:
-              command: ['pgrep', '-f', 'php bin/console messenger:consume']
-            failureThreshold: 40
-            periodSeconds: 3
-          readinessProbe:
-            exec:
-              command: ['pgrep', '-f', 'php bin/console messenger:consume']
-            periodSeconds: 3
-          livenessProbe:
-            exec:
-              command: ['pgrep', '-f', 'php bin/console messenger:consume']
             periodSeconds: 3
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
