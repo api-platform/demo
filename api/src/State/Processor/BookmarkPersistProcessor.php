@@ -17,7 +17,7 @@ final readonly class BookmarkPersistProcessor implements ProcessorInterface
     public function __construct(
         #[Autowire(service: BookmarkRepository::class)]
         private ObjectRepository $repository,
-        private Security         $security
+        private Security $security
     ) {
     }
 

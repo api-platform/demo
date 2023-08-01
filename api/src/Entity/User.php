@@ -104,7 +104,6 @@ class User implements UserInterface
         return (string) $this->email;
     }
 
-
     /**
      * @see https://schema.org/name
      */

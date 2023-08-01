@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
-use App\DataFixtures\Story\DefaultBookStory;
 use App\DataFixtures\Story\DefaultBookmarkStory;
+use App\DataFixtures\Story\DefaultBookStory;
 use App\DataFixtures\Story\DefaultReviewsStory;
 use App\DataFixtures\Story\DefaultUsersStory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
