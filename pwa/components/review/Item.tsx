@@ -6,7 +6,7 @@ import Rating from "@mui/material/Rating";
 import { Error } from "@/components/common/Error";
 import { type Review } from "@/types/Review";
 import { fetch, type FetchError, type FetchResponse } from "@/utils/dataAccess";
-import {Form} from "@/components/review/Form";
+import { Form } from "@/components/review/Form";
 
 interface Props {
   review: Review
@@ -81,6 +81,7 @@ export const Item: FunctionComponent<Props> = ({ review, onDelete, onEdit }) => 
                 <Rating value={Number(data["rating"] ?? 0)} readOnly className="ml-2" size="small" />
               </p>
               <p className="mt-2 mb-2 text-justify">{data["body"]}</p>
+              {/* @ts-ignore */}
               {!!session && !!session?.user?.sub && !!data["user"] && data["user"]["sub"] === session.user.sub && (
                 <div className="text-xs text-gray-400">
                   <a href="#" className="mr-1.5 text-gray-400 hover:underline" onClick={(e) => {

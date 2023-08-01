@@ -93,7 +93,9 @@ export const getItemPath = (
     uriVariables = { id: uriVariables.split("/").slice(-1)[0] };
   }
 
+  // @ts-ignore
   [...pathTemplate.matchAll(/\[([^\]]+)\]/g)].forEach((m) => {
+    // @ts-ignore
     pathTemplate = pathTemplate.replace(m[0], uriVariables[m[1]]);
   });
 

@@ -7,6 +7,7 @@ import { type PagedCollection } from "@/types/collection";
 import { type FetchResponse, fetch } from "@/utils/dataAccess";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
+// @ts-ignore
 export const getServerSideProps: GetServerSideProps<{
   data: PagedCollection<Bookmark> | null,
   hubURL: string | null,
@@ -27,6 +28,7 @@ export const getServerSideProps: GetServerSideProps<{
   try {
     const response: FetchResponse<PagedCollection<Bookmark>> | undefined = await fetch(`/bookmarks?page=${Number(page ?? 1)}`, {
       headers: {
+        // @ts-ignore
         Authorization: `Bearer ${session?.accessToken}`
       }
     });

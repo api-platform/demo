@@ -34,7 +34,10 @@ final class BookNormalizer implements NormalizerInterface, NormalizerAwareInterf
         ]);
         $object->rating = $this->repository->getAverageRating($object);
 
-        return $this->normalizer->normalize($object, $format, $context + [self::class => true]);
+        /** @var array $data */
+        $data = $this->normalizer->normalize($object, $format, $context + [self::class => true]);
+
+        return $data;
     }
 
     public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool

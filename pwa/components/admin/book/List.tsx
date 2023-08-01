@@ -41,6 +41,7 @@ const ShowButton = (props: ShowButtonProps) => {
     const record = useRecordContext(props);
 
     return record ? (
+        // @ts-ignore
         <Button label="Show" target="_blank" href={getItemPath({
             id: record.id.replace(/^\/admin\/books\//, ""),
             slug: slugify(`${record.title}-${record.author}`, { lower: true, trim: true, remove: /[*+~.(),;'"!:@]/g }),

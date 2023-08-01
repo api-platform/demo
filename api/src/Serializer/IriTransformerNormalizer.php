@@ -26,6 +26,7 @@ final class IriTransformerNormalizer implements NormalizerInterface, NormalizerA
 
     public function normalize(mixed $object, string $format = null, array $context = []): array
     {
+        /** @var array $data */
         $data = $this->normalizer->normalize($object, $format, $context + [self::class => true]);
 
         $value = $context[self::CONTEXT_KEY];

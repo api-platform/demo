@@ -5,8 +5,8 @@ export class Bookmark implements Item {
   public "@id"?: string;
 
   constructor(
-    public book?: Book,
-    public bookmarkedAt?: Date,
+    public book: Book,
+    public bookmarkedAt: Date,
     _id?: string,
   ) {
     this["@id"] = _id;

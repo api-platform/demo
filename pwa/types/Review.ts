@@ -6,11 +6,11 @@ export class Review implements Item {
   public "@id"?: string;
 
   constructor(
-    public body?: string,
-    public rating?: number,
-    public book?: Book,
-    public user?: User,
-    public publishedAt?: Date,
+    public body: string,
+    public rating: number,
+    public book: Book,
+    public user: User,
+    public publishedAt: Date,
     _id?: string,
   ) {
     this["@id"] = _id;

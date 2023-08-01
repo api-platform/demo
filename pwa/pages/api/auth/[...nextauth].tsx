@@ -1,6 +1,6 @@
-import NextAuth, { AuthOptions, SessionOptions } from "next-auth";
-import { type DefaultUser, type TokenSet } from "next-auth/core/types";
+import NextAuth, { type AuthOptions, type SessionOptions, type DefaultUser, type TokenSet } from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
+
 import { OIDC_CLIENT_ID, OIDC_SERVER_URL } from "@/config/keycloak";
 
 interface Session extends SessionOptions {

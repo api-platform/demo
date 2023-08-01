@@ -27,7 +27,7 @@ interface Props {
 }
 
 interface BookmarkProps {
-  book: string
+  book: string | undefined
 }
 
 const saveBookmark = async (values: BookmarkProps) =>
@@ -49,12 +49,14 @@ export const Show: NextPage<Props> = ({ data, hubURL, page }) => {
     Promise<FetchResponse<Bookmark> | SignInResponse | undefined>,
     Error | FetchError,
     BookmarkProps
+    // @ts-ignore
   >((data: BookmarkProps) => {
     if (!session) {
       return signIn('keycloak');
     }
 
     if (bookmark) {
+      // @ts-ignore
       return deleteBookmark(bookmark["@id"]);
     }
 

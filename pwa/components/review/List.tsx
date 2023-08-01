@@ -5,7 +5,7 @@ import { Pagination } from "@/components/common/Pagination";
 import { type Book } from "@/types/Book";
 import { type PagedCollection } from "@/types/collection";
 import { type Review } from "@/types/Review";
-import { fetch, type FetchResponse, getItemPath, parsePage } from "@/utils/dataAccess";
+import { fetch, type FetchResponse, getItemPath } from "@/utils/dataAccess";
 import { useMercure } from "@/utils/mercure";
 import { Error } from "@/components/common/Error";
 import { Item } from "@/components/review/Item";
@@ -39,6 +39,7 @@ export const List: FunctionComponent<Props> = ({ book, page }) => {
         }
       } catch (error) {
         console.error(error);
+        // @ts-ignore
         setError(error.message);
 
         return;

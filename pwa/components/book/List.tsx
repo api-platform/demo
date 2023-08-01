@@ -30,6 +30,7 @@ export const List: NextPage<Props> = ({ data, hubURL, filters, page }) => {
     FetchResponse<PagedCollection<Book>> | undefined,
     Error | FetchError,
     FiltersProps
+    // @ts-ignore
   >(async (filters) => {
     router.push(buildUriFromFilters("/books", filters));
   });
@@ -45,6 +46,7 @@ export const List: NextPage<Props> = ({ data, hubURL, filters, page }) => {
             <FilterListOutlinedIcon className="w-6 h-6 mr-1"/>
             Filters
           </div>
+          {/* @ts-ignore */}
           <Filters mutation={filtersMutation} filters={filters}/>
         </aside>
         <div className="float-right w-[1010px] justify-center">

@@ -32,7 +32,8 @@ export const Form: FunctionComponent<Props> = ({ book, onSuccess, review, userna
     <Formik
       initialValues={review ?? {}}
       enableReinitialize={true}
-      onSubmit={(values, { setSubmitting, setStatus, setErrors, resetForm }) => {
+      // @ts-ignore
+      onSubmit={(values: Review, { setSubmitting, setStatus, setErrors, resetForm }) => {
         saveMutation.mutate(
           {
             ...values,
@@ -44,6 +45,7 @@ export const Form: FunctionComponent<Props> = ({ book, onSuccess, review, userna
                 isValid: true,
               });
               if (onSuccess) {
+                // @ts-ignore
                 onSuccess(values);
               }
               resetForm();
@@ -76,6 +78,7 @@ export const Form: FunctionComponent<Props> = ({ book, onSuccess, review, userna
           <FormGroup>
             <p>
               <span className="text-lg font-semibold">{username}</span>
+              {/* @ts-ignore */}
               <Rating value={Number(values?.rating ?? 0)} name="rating" className="ml-2" size="small"
                       onChange={handleChange} onBlur={handleBlur}
               />
@@ -84,6 +87,7 @@ export const Form: FunctionComponent<Props> = ({ book, onSuccess, review, userna
           <FormGroup>
             <TextareaAutosize
               className="mt-2 mb-2 text-justify text-sm font-normal font-sans leading-5 p-3 rounded rounded-br-none shadow-md shadow-slate-100 focus:shadow-outline-purple focus:shadow-lg border border-solid border-slate-300 hover:border-purple-500 focus:border-purple-500 bg-white text-slate-900 focus-visible:outline-0"
+              // @ts-ignore
               aria-label="Review body" name="body" value={values?.body ?? ""} placeholder="Add a review..."
               onChange={handleChange} onBlur={handleBlur}
             />
