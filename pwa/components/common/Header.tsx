@@ -23,7 +23,8 @@ export const Header = () => {
             <FavoriteBorderIcon className="w-6 h-6 mr-1"/>
             My Bookmarks
           </Link>
-          {session && (
+          {/* @ts-ignore */}
+          {!!session && !session.error && (
             <a href="#" className="font-semibold text-gray-900" role="menuitem" onClick={(e) => {
               e.preventDefault()
               signOut()

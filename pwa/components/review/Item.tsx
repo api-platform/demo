@@ -22,7 +22,7 @@ const deleteReview = async (id: string) =>
   await fetch<Review>(id, { method: "DELETE" });
 
 export const Item: FunctionComponent<Props> = ({ review, onDelete, onEdit }) => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [data, setData] = useState<Review>(review);
   const [error, setError] = useState<string | undefined>();
   const [edit, setEdit] = useState<boolean>(false);
@@ -78,7 +78,7 @@ export const Item: FunctionComponent<Props> = ({ review, onDelete, onEdit }) => 
                   <span className="mr-2">・</span>
                   {new Date(data["publishedAt"]).toLocaleDateString()}
                 </span>
-                <Rating value={Number(data["rating"] ?? 0)} readOnly className="ml-2" size="small" />
+                <Rating value={Number(data["rating"] ?? 0)} readOnly className="ml-2" size="small"/>
               </p>
               <p className="mt-2 mb-2 text-justify">{data["body"]}</p>
               {/* @ts-ignore */}

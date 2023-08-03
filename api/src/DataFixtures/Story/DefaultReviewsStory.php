@@ -14,7 +14,7 @@ final class DefaultReviewsStory extends Story
     public function build(): void
     {
         ReviewFactory::createOne([
-            'book' => BookFactory::find(['book' => 'https://openlibrary.org/books/OL26210211M.json']),
+            'book' => BookFactory::find(['book' => 'https://openlibrary.org/books/OL6095440M.json']),
             'user' => UserFactory::find(['email' => 'john.doe@example.com']),
             'rating' => 5,
         ]);

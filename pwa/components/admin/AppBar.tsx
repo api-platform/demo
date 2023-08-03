@@ -29,7 +29,7 @@ const DocTypeMenuButton = () => {
   };
 
   return (
-    <div>
+    <>
       <Button
         color="inherit"
         aria-controls={open ? "doc-type-menu" : undefined}
@@ -58,7 +58,7 @@ const DocTypeMenuButton = () => {
         <MenuItem onClick={changeDocType("hydra")}>Hydra</MenuItem>
         <MenuItem onClick={changeDocType("openapi")}>OpenAPI</MenuItem>
       </Menu>
-    </div>
+    </>
   );
 };
 

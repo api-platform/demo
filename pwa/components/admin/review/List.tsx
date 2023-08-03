@@ -1,20 +1,12 @@
 import { FieldGuesser, ListGuesser, type ListGuesserProps } from "@api-platform/admin";
-import { useRecordContext, type UseRecordContextParams } from "react-admin";
-import Rating from "@mui/material/Rating";
+import { TextField } from "react-admin";
 
-const RatingField = (props: UseRecordContextParams) => {
-    const record = useRecordContext(props);
-
-    return record ? <Rating value={record.rating} readOnly /> : null;
-};
-RatingField.defaultProps = { label: "Rating" };
+import { BookField } from "@/components/admin/review/BookField";
 
 export const List = (props: ListGuesserProps) => (
-    <ListGuesser {...props} title="Reviews">
-        <FieldGuesser source="user"/>
-        <FieldGuesser source="book"/>
-        <FieldGuesser source="publishedAt"/>
-        <RatingField source="rating"/>
-        <FieldGuesser source="body"/>
-    </ListGuesser>
+  <ListGuesser {...props} title="Reviews" exporter={false} hasCreate={false}>
+    <TextField source="user.name" label="Author"/>
+    <BookField source="book"/>
+    <FieldGuesser source="publishedAt"/>
+  </ListGuesser>
 );

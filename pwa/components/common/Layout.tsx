@@ -21,7 +21,7 @@ export const Layout = ({
     <>
       <QueryClientProvider client={queryClient}>
         <Hydrate state={dehydratedState}>
-          <Header />
+          <Header/>
           {children}
         </Hydrate>
       </QueryClientProvider>

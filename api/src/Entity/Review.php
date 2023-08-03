@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\ReviewRepository;
 use App\Serializer\IriTransformerNormalizer;
 use App\State\Processor\ReviewPersistProcessor;
@@ -38,7 +39,8 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Get(
             uriTemplate: '/admin/reviews/{id}{._format}'
         ),
-        new Patch(
+        // https://github.com/api-platform/admin/issues/370
+        new Put(
             uriTemplate: '/admin/reviews/{id}{._format}'
         ),
         new Delete(

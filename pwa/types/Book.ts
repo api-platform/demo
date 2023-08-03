@@ -1,5 +1,5 @@
-import { type Item } from "./item";
-import { type Thumbnails } from "./Thumbnails";
+import { type Item } from "@/types/item";
+import { type Thumbnails } from "@/types/Thumbnails";
 
 export class Book implements Item {
   public "@id"?: string;

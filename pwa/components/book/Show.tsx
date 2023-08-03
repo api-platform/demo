@@ -51,14 +51,11 @@ export const Show: NextPage<Props> = ({ data, hubURL, page }) => {
     BookmarkProps
     // @ts-ignore
   >((data: BookmarkProps) => {
-    if (!session) {
-      return signIn('keycloak');
-    }
+    // @ts-ignore
+    if (!session || session?.error === "RefreshAccessTokenError") return signIn("keycloak");
 
-    if (bookmark) {
-      // @ts-ignore
-      return deleteBookmark(bookmark["@id"]);
-    }
+    // @ts-ignore
+    if (bookmark) return deleteBookmark(bookmark["@id"]);
 
     return saveBookmark(data);
   });

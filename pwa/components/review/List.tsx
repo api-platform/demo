@@ -52,7 +52,8 @@ export const List: FunctionComponent<Props> = ({ book, page }) => {
 
   return (
     <>
-      {!!session && (
+      {/* @ts-ignore */}
+      {!!session && !session.error && (
         <div className="mb-10 max-w-4xl mx-auto">
           <div className="mb-5 flex">
             <div className="font-semibold text-gray-600 text-xl w-[50px] h-[50px] px-3 py-1 mr-3 rounded-full bg-gray-200 flex items-center justify-center">

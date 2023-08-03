@@ -1,5 +1,5 @@
-import { type Item } from "./item";
-import { type Book } from "./Book";
+import { type Item } from "@/types/item";
+import { type Book } from "@/types/Book";
 
 export class Bookmark implements Item {
   public "@id"?: string;

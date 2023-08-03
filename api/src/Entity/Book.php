@@ -12,8 +12,8 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Enum\BookCondition;
 use App\Repository\BookRepository;
 use App\State\Processor\BookPersistProcessor;
@@ -44,7 +44,8 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Get(
             uriTemplate: '/admin/books/{id}{._format}'
         ),
-        new Patch(
+        // https://github.com/api-platform/admin/issues/370
+        new Put(
             uriTemplate: '/admin/books/{id}{._format}',
             processor: BookPersistProcessor::class
         ),
@@ -86,7 +87,7 @@ class Book
      */
     #[ApiProperty(
         types: ['https://schema.org/itemOffered', 'https://purl.org/dc/terms/BibliographicResource'],
-        example: 'https://openlibrary.org/books/OL26210211M.json'
+        example: 'https://openlibrary.org/books/OL6095440M.json'
     )]
     #[Assert\NotBlank(allowNull: false)]
     #[Assert\Url(protocols: ['https'])]
@@ -153,7 +154,7 @@ class Book
         types: ['https://schema.org/aggregateRating'],
         example: 1
     )]
-    #[Groups(groups: ['Book:read', 'Bookmark:read'])]
+    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read'])]
     public ?int $rating = null;
 
     public function getId(): ?Uuid

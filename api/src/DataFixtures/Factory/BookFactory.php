@@ -62,7 +62,7 @@ final class BookFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'book' => 'https://openlibrary.org/books/OL'.self::faker()->unique()->randomNumber(8, true).'M.json',
+            'book' => 'https://openlibrary.org/books/OL'.self::faker()->unique()->randomNumber(7, true).'M.json',
             'title' => self::faker()->text(),
             'author' => self::faker()->name(),
             'condition' => self::faker()->randomElement(BookCondition::getCases()),

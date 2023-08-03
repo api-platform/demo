@@ -7,6 +7,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
@@ -23,6 +24,12 @@ use Symfony\Component\Uid\Uuid;
 #[ApiResource(
     types: ['https://schema.org/Person'],
     operations: [
+        // todo add test
+        new GetCollection(
+            uriTemplate: '/admin/users{._format}',
+            itemUriTemplate: '/admin/users/{id}{._format}',
+            security: 'is_granted("ROLE_ADMIN")'
+        ),
         new Get(
             uriTemplate: '/admin/users/{id}{._format}',
             security: 'is_granted("ROLE_ADMIN")'

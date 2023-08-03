@@ -26,6 +26,7 @@
     "react": "18.2.0",
     "react-admin": "^4.12.2",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.45.2",
     "react-query": "^3.39.3",
     "react-spinners": "^0.13.8",
     "slugify": "^1.6.6"

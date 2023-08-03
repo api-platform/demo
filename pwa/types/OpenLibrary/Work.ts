@@ -1,4 +1,4 @@
-import { type Description } from "./Description";
+import { type Description } from "@/types/OpenLibrary/Description";
 
 export class Work {
   constructor(

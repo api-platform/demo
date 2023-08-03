@@ -30,9 +30,7 @@ export const Item: FunctionComponent<Props> = ({ book }) => {
     })()
   }, [book, status]);
 
-  if (!data) {
-    return <Loading/>;
-  }
+  if (!data) return <Loading/>;
 
   return (
     <div className="relative p-4 bg-white hover:drop-shadow-xl border-b border-gray-200 text-center">

@@ -24,7 +24,6 @@ export const Filters: FunctionComponent<Props> = ({ filters, mutation }) => (
           onSuccess: () => {
             setStatus({
               isValid: true,
-              msg: "List filtered.",
             });
           },
           // @ts-ignore
@@ -59,6 +58,7 @@ export const Filters: FunctionComponent<Props> = ({ filters, mutation }) => (
                        variant="standard" className="w-full" inputProps={{ "aria-label": "controlled" }}
                        onChange={(e) => {
                          handleChange(e);
+                         // todo use debounce
                          submitForm();
                        }}
             />
@@ -72,6 +72,7 @@ export const Filters: FunctionComponent<Props> = ({ filters, mutation }) => (
                        variant="standard" className="w-full" inputProps={{ "aria-label": "controlled" }}
                        onChange={(e) => {
                          handleChange(e);
+                         // todo use debounce
                          submitForm();
                        }}
             />
@@ -86,6 +87,7 @@ export const Filters: FunctionComponent<Props> = ({ filters, mutation }) => (
                                 value="https://schema.org/NewCondition"
                                 onChange={(e) => {
                                   handleChange(e);
+                                  // todo use debounce
                                   submitForm();
                                 }}
               />
@@ -96,6 +98,7 @@ export const Filters: FunctionComponent<Props> = ({ filters, mutation }) => (
                                 value="https://schema.org/DamagedCondition"
                                 onChange={(e) => {
                                   handleChange(e);
+                                  // todo use debounce
                                   submitForm();
                                 }}
               />
@@ -106,6 +109,7 @@ export const Filters: FunctionComponent<Props> = ({ filters, mutation }) => (
                                 value="https://schema.org/RefurbishedCondition"
                                 onChange={(e) => {
                                   handleChange(e);
+                                  // todo use debounce
                                   submitForm();
                                 }}
               />
@@ -116,6 +120,7 @@ export const Filters: FunctionComponent<Props> = ({ filters, mutation }) => (
                                 value="https://schema.org/UsedCondition"
                                 onChange={(e) => {
                                   handleChange(e);
+                                  // todo use debounce
                                   submitForm();
                                 }}
               />

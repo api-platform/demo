@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { type Session } from "next-auth";
-import {useContext, useRef, useState} from "react";
+import { useContext, useRef, useState } from "react";
 import { type DataProvider, Layout, type LayoutProps, localStorageStore, resolveBrowserLocale } from "react-admin";
 import { signIn, useSession } from "next-auth/react";
 import SyncLoader from "react-spinners/SyncLoader";
@@ -15,7 +15,10 @@ import AppBar from "@/components/admin/AppBar";
 import Menu from "@/components/admin/Menu";
 import { ENTRYPOINT } from "@/config/entrypoint";
 import { List as BooksList } from "@/components/admin/book/List";
+import { Create as BooksCreate } from "@/components/admin/book/Create";
+import { Edit as BooksEdit } from "@/components/admin/book/Edit";
 import { List as ReviewsList } from "@/components/admin/review/List";
+import { Show as ReviewsShow } from "@/components/admin/review/Show";
 
 const apiDocumentationParser = (session: Session) => async () => {
   try {
@@ -50,7 +53,7 @@ const i18nProvider = polyglotI18nProvider(
   resolveBrowserLocale(),
 );
 
-const MyLayout = (props: React.JSX.IntrinsicAttributes & LayoutProps) => <Layout {...props} appBar={AppBar} menu={Menu} />;
+const MyLayout = (props: React.JSX.IntrinsicAttributes & LayoutProps) => <Layout {...props} appBar={AppBar} menu={Menu}/>;
 
 const AdminUI = ({ session, children }: { session: Session, children?: React.ReactNode | undefined }) => {
   // @ts-ignore
@@ -58,7 +61,6 @@ const AdminUI = ({ session, children }: { session: Session, children?: React.Rea
   const { docType } = useContext(DocContext);
 
   dataProvider.current = hydraDataProvider({
-    useEmbedded: false,
     entrypoint: ENTRYPOINT,
     httpClient: (url: URL, options = {}) => fetchHydra(url, {
       ...options,
@@ -107,8 +109,8 @@ const AdminWithContext = ({ session }: { session: Session }) => {
         setDocType,
       }}>
       <AdminUI session={session}>
-        <ResourceGuesser name="admin/books" list={BooksList} />
-        <ResourceGuesser name="admin/reviews" list={ReviewsList} />
+        <ResourceGuesser name="admin/books" list={BooksList} create={BooksCreate} edit={BooksEdit} hasShow={false}/>
+        <ResourceGuesser name="admin/reviews" list={ReviewsList} show={ReviewsShow} hasCreate={false}/>
       </AdminUI>
     </DocContext.Provider>
   );
@@ -118,10 +120,11 @@ const AdminWithOIDC = () => {
   // Can't use next-auth/middleware because of https://github.com/nextauthjs/next-auth/discussions/7488
   const { data: session, status } = useSession();
 
-  if (status === "loading") return <SyncLoader size={8} color="#46B6BF" />;
-  if (!session) return signIn("keycloak");
+  if (status === "loading") return <SyncLoader size={8} color="#46B6BF"/>;
+  // @ts-ignore
+  if (!session || session?.error === "RefreshAccessTokenError") return signIn("keycloak");
 
-  return <AdminWithContext session={session} />;
+  return <AdminWithContext session={session}/>;
 };
 
 const Admin = () => (

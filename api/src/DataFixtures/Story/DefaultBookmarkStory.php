@@ -14,7 +14,7 @@ final class DefaultBookmarkStory extends Story
     public function build(): void
     {
         BookmarkFactory::createOne([
-            'book' => BookFactory::find(['book' => 'https://openlibrary.org/books/OL26210211M.json']),
+            'book' => BookFactory::find(['book' => 'https://openlibrary.org/books/OL6095440M.json']),
             'user' => UserFactory::find(['email' => 'john.doe@example.com']),
         ]);
 
