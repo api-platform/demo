@@ -190,24 +190,25 @@ final class ReviewTest extends ApiTestCase
                 ],
             ],
         ];
-        //        yield [
-        //            [
-        //                'book' => 'invalid book',
-        //                'body' => 'Very good book!',
-        //                'rating' => 5,
-        //            ],
-        //            [
-        //                [
-        //                    'propertyPath' => 'book',
-        //                    'message' => 'This value is not a valid URL.',
-        //                ],
-        //            ]
-        //        ];
+        yield [
+            [
+                'book' => 'invalid book',
+                'body' => 'Very good book!',
+                'rating' => 5,
+            ],
+            [
+                [
+                    'propertyPath' => 'book',
+                    'message' => 'This value is not a valid URL.',
+                ],
+            ]
+        ];
     }
 
     public function testAsAUserICanAddAReviewOnABook(): void
     {
-        $book = BookFactory::createOne();
+        $book = BookFactory::createOne()->disableAutoRefresh();
+        ReviewFactory::createMany(5, ['book' => $book]);
         $user = UserFactory::createOne();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
@@ -234,6 +235,9 @@ final class ReviewTest extends ApiTestCase
             'rating' => 5,
         ]);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Review/item.json'));
+        // if I add a review on a book with reviews, it doesn't erase the existing reviews
+        $reviews = self::getContainer()->get(ReviewRepository::class)->findBy(['book' => $book]);
+        self::assertCount(6, $reviews);
     }
 
     public function testAsAnonymousICannotGetAnInvalidReview(): void

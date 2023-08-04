@@ -8,9 +8,9 @@ import { type PagedCollection } from "@/types/collection";
 import { useMercure } from "@/utils/mercure";
 
 interface Props {
-  data: PagedCollection<Bookmark> | null
-  hubURL: string | null
-  page: number
+  data: PagedCollection<Bookmark> | null;
+  hubURL: string | null;
+  page: number;
 }
 
 const getPagePath = (page: number): string => `/bookmarks?page=${page}`;

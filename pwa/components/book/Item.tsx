@@ -1,36 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { type FunctionComponent, useEffect, useState } from "react";
+import { type FunctionComponent } from "react";
 import Rating from "@mui/material/Rating";
 
 import { type Book } from "@/types/Book";
 import { getItemPath } from "@/utils/dataAccess";
-import { populateBook } from "@/utils/book";
+import { useOpenLibraryBook } from "@/utils/book";
 import { Loading } from "@/components/common/Loading";
 
 interface Props {
-  book: Book
+  book: Book;
 }
 
 export const Item: FunctionComponent<Props> = ({ book }) => {
-  const [data, setData] = useState<Book | undefined>();
-  const { status } = useSession();
+  const { data, isLoading } = useOpenLibraryBook(book);
 
-  useEffect(() => {
-    if (status === "loading") return;
-
-    (async () => {
-      try {
-        const bookData = await populateBook(book);
-        setData(bookData);
-      } catch (error) {
-        console.error(error);
-      }
-    })()
-  }, [book, status]);
-
-  if (!data) return <Loading/>;
+  if (isLoading || !data) return <Loading/>;
 
   return (
     <div className="relative p-4 bg-white hover:drop-shadow-xl border-b border-gray-200 text-center">

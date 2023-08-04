@@ -1,7 +1,7 @@
 import { Formik } from "formik";
 import { type FunctionComponent } from "react";
 import { type UseMutationResult } from "react-query";
-import { Checkbox, FormControlLabel, FormGroup, TextField, Typography } from "@mui/material";
+import { debounce, Checkbox, FormControlLabel, FormGroup, TextField, Typography } from "@mui/material";
 
 import { type FiltersProps } from "@/utils/book";
 import { type FetchError, type FetchResponse } from "@/utils/dataAccess";
@@ -9,8 +9,8 @@ import { type PagedCollection } from "@/types/collection";
 import { type Book } from "@/types/Book";
 
 interface Props {
-  filters: FiltersProps | undefined
-  mutation: UseMutationResult<FetchResponse<PagedCollection<Book>>>
+  filters: FiltersProps | undefined;
+  mutation: UseMutationResult<FetchResponse<PagedCollection<Book>>>;
 }
 
 export const Filters: FunctionComponent<Props> = ({ filters, mutation }) => (
@@ -51,29 +51,25 @@ export const Filters: FunctionComponent<Props> = ({ filters, mutation }) => (
     }) => (
       <form onSubmit={handleSubmit}>
         <FormGroup className="mb-4">
-          <FormControlLabel name="author" labelPlacement="top" className="m-0" label={
+          <FormControlLabel name="author" labelPlacement="top" className="!m-0" label={
             <Typography className="font-semibold w-full">Author</Typography>
           } control={
             <TextField value={values?.author ?? ""} placeholder="Search by author..." type="search"
-                       variant="standard" className="w-full" inputProps={{ "aria-label": "controlled" }}
-                       onChange={(e) => {
+                       variant="standard" className="w-full" onChange={(e) => {
                          handleChange(e);
-                         // todo use debounce
-                         submitForm();
+                         debounce(submitForm, 1000)();
                        }}
             />
           }/>
         </FormGroup>
         <FormGroup className="mb-4">
-          <FormControlLabel name="title" labelPlacement="top" className="m-0" label={
+          <FormControlLabel name="title" labelPlacement="top" className="!m-0" label={
             <Typography className="font-semibold w-full">Title</Typography>
           } control={
             <TextField value={values?.title ?? ""} placeholder="Search by title..." type="search"
-                       variant="standard" className="w-full" inputProps={{ "aria-label": "controlled" }}
-                       onChange={(e) => {
+                       variant="standard" className="w-full" onChange={(e) => {
                          handleChange(e);
-                         // todo use debounce
-                         submitForm();
+                         debounce(submitForm, 1000)();
                        }}
             />
           }/>
@@ -87,7 +83,6 @@ export const Filters: FunctionComponent<Props> = ({ filters, mutation }) => (
                                 value="https://schema.org/NewCondition"
                                 onChange={(e) => {
                                   handleChange(e);
-                                  // todo use debounce
                                   submitForm();
                                 }}
               />
@@ -98,7 +93,6 @@ export const Filters: FunctionComponent<Props> = ({ filters, mutation }) => (
                                 value="https://schema.org/DamagedCondition"
                                 onChange={(e) => {
                                   handleChange(e);
-                                  // todo use debounce
                                   submitForm();
                                 }}
               />
@@ -109,7 +103,6 @@ export const Filters: FunctionComponent<Props> = ({ filters, mutation }) => (
                                 value="https://schema.org/RefurbishedCondition"
                                 onChange={(e) => {
                                   handleChange(e);
-                                  // todo use debounce
                                   submitForm();
                                 }}
               />
@@ -120,7 +113,6 @@ export const Filters: FunctionComponent<Props> = ({ filters, mutation }) => (
                                 value="https://schema.org/UsedCondition"
                                 onChange={(e) => {
                                   handleChange(e);
-                                  // todo use debounce
                                   submitForm();
                                 }}
               />

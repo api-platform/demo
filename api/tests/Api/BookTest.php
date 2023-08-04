@@ -83,6 +83,22 @@ final class BookTest extends ApiTestCase
         ];
     }
 
+    public function testAsAdminUserICanGetACollectionOfBooksOrderedByTitle(): void
+    {
+        BookFactory::createOne(['title' => 'Foundation']);
+        BookFactory::createOne(['title' => 'Nemesis']);
+        BookFactory::createOne(['title' => 'I, Robot']);
+
+        $response = $this->client->request('GET', '/books?order[title]=asc');
+
+        self::assertResponseIsSuccessful();
+        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertEquals('Foundation', $response->toArray()['hydra:member'][0]['title']);
+        self::assertEquals('I, Robot', $response->toArray()['hydra:member'][1]['title']);
+        self::assertEquals('Nemesis', $response->toArray()['hydra:member'][2]['title']);
+        self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Book/collection.json'));
+    }
+
     public function testAsAnonymousICannotGetAnInvalidBook(): void
     {
         BookFactory::createOne();

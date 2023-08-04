@@ -12,7 +12,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-xml": "*",
-        "api-platform/core": "dev-demo",
+        "api-platform/core": "dev-fix/issues/5662",
         "doctrine/doctrine-bundle": "^2.7",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.12",

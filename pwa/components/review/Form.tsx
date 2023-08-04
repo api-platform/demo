@@ -9,10 +9,10 @@ import { type Book } from "@/types/Book";
 import { type Review } from "@/types/Review";
 
 interface Props {
-  book: Book
-  onSuccess?: (review: Review) => void,
-  review?: Review
-  username: string
+  book: Book;
+  onSuccess?: (review: Review) => void;
+  review?: Review;
+  username: string;
 }
 
 export const Form: FunctionComponent<Props> = ({ book, onSuccess, review, username }) => {

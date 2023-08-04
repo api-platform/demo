@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
@@ -91,7 +92,7 @@ class Book
     )]
     #[Assert\NotBlank(allowNull: false)]
     #[Assert\Url(protocols: ['https'])]
-    #[Assert\Regex(pattern: '/^https:\/\/openlibrary.org\/books\/OL\d{8}M\.json$/')]
+    #[Assert\Regex(pattern: '/^https:\/\/openlibrary.org\/books\/OL\d+M\.json$/')]
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Book:write'])]
     #[ORM\Column(unique: true)]
     public ?string $book = null;
@@ -99,10 +100,11 @@ class Book
     /**
      * @see https://schema.org/name
      */
+    #[ApiFilter(OrderFilter::class)]
     #[ApiFilter(SearchFilter::class, strategy: 'i'.SearchFilterInterface::STRATEGY_PARTIAL)]
     #[ApiProperty(
         types: ['https://schema.org/name'],
-        example: 'Fondation'
+        example: 'Foundation'
     )]
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Review:read:admin'])]
     #[ORM\Column(type: Types::TEXT)]

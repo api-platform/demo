@@ -13,8 +13,6 @@ api_platform:
         stateless: true
         cache_headers:
             vary: ['Content-Type', 'Authorization', 'Origin']
-        extra_properties:
-            standard_put: true
     oauth:
         enabled: true
         clientId: '%env(OIDC_SWAGGER_CLIENT_ID)%'

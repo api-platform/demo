@@ -9,12 +9,13 @@ import { type FiltersProps, buildUriFromFilters } from "@/utils/book";
 export const getServerSideProps: GetServerSideProps<{
   data: PagedCollection<Book> | null,
   hubURL: string | null,
-  page: number,
   filters: FiltersProps,
 }> = async ({ query }) => {
-  const page = query.page ? Number(query.page) : 1;
-
   const filters: FiltersProps = {};
+  if (query.page) {
+    // @ts-ignore
+    filters.page = query.page;
+  }
   if (query.author) {
     // @ts-ignore
     filters.author = query.author;
@@ -31,19 +32,23 @@ export const getServerSideProps: GetServerSideProps<{
   } else if (typeof query["condition[]"] === "object") {
     filters.condition = query["condition[]"];
   }
+  if (query["order[title]"]) {
+    // @ts-ignore
+    filters.order = { title: query["order[title]"] };
+  }
 
   try {
-    const response: FetchResponse<PagedCollection<Book>> | undefined = await fetch(buildUriFromFilters("/books", filters, page));
+    const response: FetchResponse<PagedCollection<Book>> | undefined = await fetch(buildUriFromFilters("/books", filters));
     if (!response?.data) {
       throw new Error('Unable to retrieve data from /books.');
     }
 
-    return { props: { data: response.data, hubURL: response.hubURL, filters, page } };
+    return { props: { data: response.data, hubURL: response.hubURL, filters } };
   } catch (error) {
     console.error(error);
   }
 
-  return { props: { data: null, hubURL: null, filters, page } };
+  return { props: { data: null, hubURL: null, filters } };
 };
 
 export default List;

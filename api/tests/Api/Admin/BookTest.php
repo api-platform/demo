@@ -115,6 +115,26 @@ final class BookTest extends ApiTestCase
         ];
     }
 
+    public function testAsAdminUserICanGetACollectionOfBooksOrderedByTitle(): void
+    {
+        BookFactory::createOne(['title' => 'Foundation']);
+        BookFactory::createOne(['title' => 'Nemesis']);
+        BookFactory::createOne(['title' => 'I, Robot']);
+
+        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+            'email' => UserFactory::createOneAdmin()->email,
+        ]);
+
+        $response = $this->client->request('GET', '/admin/books?order[title]=asc', ['auth_bearer' => $token]);
+
+        self::assertResponseIsSuccessful();
+        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertEquals('Foundation', $response->toArray()['hydra:member'][0]['title']);
+        self::assertEquals('I, Robot', $response->toArray()['hydra:member'][1]['title']);
+        self::assertEquals('Nemesis', $response->toArray()['hydra:member'][2]['title']);
+        self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Book/collection.json'));
+    }
+
     /**
      * @dataProvider getAllUsers
      */
@@ -318,13 +338,10 @@ final class BookTest extends ApiTestCase
             $options['auth_bearer'] = $token;
         }
 
-        $this->client->request('PATCH', '/admin/books/'.$book->getId(), $options + [
+        $this->client->request('PUT', '/admin/books/'.$book->getId(), $options + [
             'json' => [
                 'book' => 'https://openlibrary.org/books/OL28346544M.json',
                 'condition' => BookCondition::NewCondition->value,
-            ],
-            'headers' => [
-                'Content-Type' => 'application/merge-patch+json',
             ],
         ]);
 
@@ -346,13 +363,10 @@ final class BookTest extends ApiTestCase
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
-        $this->client->request('PATCH', '/admin/books/invalid', [
+        $this->client->request('PUT', '/admin/books/invalid', [
             'auth_bearer' => $token,
             'json' => [
                 'condition' => BookCondition::DamagedCondition->value,
-            ],
-            'headers' => [
-                'Content-Type' => 'application/merge-patch+json',
             ],
         ]);
 
@@ -364,19 +378,15 @@ final class BookTest extends ApiTestCase
      */
     public function testAsAdminUserICannotUpdateABookWithInvalidData(array $data, array $violations): void
     {
-        $this->markTestIncomplete('Invalid identifier value or configuration.');
         BookFactory::createOne();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
-        $this->client->request('PATCH', '/admin/books/invalid', [
+        $this->client->request('PUT', '/admin/books/invalid', [
             'auth_bearer' => $token,
             'json' => $data,
-            'headers' => [
-                'Content-Type' => 'application/merge-patch+json',
-            ],
         ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -402,13 +412,10 @@ final class BookTest extends ApiTestCase
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
-        $this->client->request('PATCH', '/admin/books/'.$book->getId(), [
+        $this->client->request('PUT', '/admin/books/'.$book->getId(), [
             'auth_bearer' => $token,
             'json' => [
                 'condition' => BookCondition::DamagedCondition->value,
-            ],
-            'headers' => [
-                'Content-Type' => 'application/merge-patch+json',
             ],
         ]);
 

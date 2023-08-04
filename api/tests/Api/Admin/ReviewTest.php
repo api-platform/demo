@@ -229,14 +229,11 @@ final class ReviewTest extends ApiTestCase
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
-        $this->client->request('PATCH', '/admin/reviews/invalid', [
+        $this->client->request('PUT', '/admin/reviews/invalid', [
             'auth_bearer' => $token,
             'json' => [
                 'body' => 'Very good book!',
                 'rating' => 5,
-            ],
-            'headers' => [
-                'Content-Type' => 'application/merge-patch+json',
             ],
         ]);
 
@@ -251,14 +248,11 @@ final class ReviewTest extends ApiTestCase
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
-        $this->client->request('PATCH', '/admin/reviews/'.$review->getId(), [
+        $this->client->request('PUT', '/admin/reviews/'.$review->getId(), [
             'auth_bearer' => $token,
             'json' => [
                 'body' => 'Very good book!',
                 'rating' => 5,
-            ],
-            'headers' => [
-                'Content-Type' => 'application/merge-patch+json',
             ],
         ]);
 

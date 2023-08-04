@@ -1,5 +1,5 @@
 interface Props {
-  message: string
+  message: string;
 }
 
 export const Error = ({ message }: Props) => (

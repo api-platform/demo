@@ -13,8 +13,8 @@ import { Form } from "@/components/review/Form";
 import { Loading } from "@/components/common/Loading";
 
 interface Props {
-  book: Book
-  page: number
+  book: Book;
+  page: number;
 }
 
 export const List: FunctionComponent<Props> = ({ book, page }) => {
@@ -27,7 +27,6 @@ export const List: FunctionComponent<Props> = ({ book, page }) => {
   useEffect(() => {
     if (status === "loading") return;
 
-    // todo call is done twice
     (async () => {
       try {
         const response: FetchResponse<PagedCollection<Review>> | undefined = await fetch(`${book["reviews"]}?itemsPerPage=5&page=${page}`);

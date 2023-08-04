@@ -24,7 +24,7 @@ final class DefaultBookStory extends Story
         BookFactory::createOne([
             'condition' => BookCondition::NewCondition,
             'book' => 'https://openlibrary.org/books/OL6095440M.json',
-            'title' => 'Fondation',
+            'title' => 'Foundation',
             'author' => 'Isaac Asimov',
         ]);
 

@@ -8,7 +8,7 @@ import { parsePage } from "@/utils/dataAccess";
 interface Props {
   collection: PagedCollection<unknown>;
   getPagePath: (page: number) => string;
-  currentPage: number;
+  currentPage: number | undefined;
 }
 
 export const Pagination = ({ collection, getPagePath, currentPage }: Props) => {

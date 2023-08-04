@@ -1,4 +1,4 @@
-import { forwardRef, SyntheticEvent, useRef, useState } from "react";
+import { SyntheticEvent, useMemo, useRef, useState } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import { debounce } from "@mui/material";
 import { TextInput, type TextInputProps, useInput } from "react-admin";
@@ -9,14 +9,14 @@ import { Search } from "@/types/OpenLibrary/Search";
 import { SearchDoc } from "@/types/OpenLibrary/SearchDoc";
 
 interface Result {
-  title: string
-  author: string
-  value: string
+  title: string;
+  author: string;
+  value: string;
 }
 
 interface BookInputProps extends TextInputProps {
-  title?: string
-  author?: string
+  title?: string;
+  author?: string;
 }
 
 const fetchOpenLibrarySearch = async (query: string, signal?: AbortSignal | undefined): Promise<Array<Result>> => {
@@ -54,16 +54,14 @@ const fetchOpenLibrarySearch = async (query: string, signal?: AbortSignal | unde
 };
 
 export const BookInput = (props: BookInputProps) => {
-  const { field } = useInput(props);
+  const { field: { ref, ...field} } = useInput(props);
   const title = useWatch({ name: "title" });
   const author = useWatch({ name: "author" });
   const controller = useRef<AbortController | undefined>();
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const initialData = !!title && !!author && !!field.value ? {
-    title: title,
-    author: author,
-    value: field.value,
-  } : undefined;
+  const [value, setValue] = useState<Result | null | undefined>(
+    !!title && !!author && !!field.value ? { title: title, author: author, value: field.value } : undefined
+  );
   const { isLoading, data, isFetched } = useQuery<Result[]>(
     ["search", searchQuery],
     async () => {
@@ -78,15 +76,22 @@ export const BookInput = (props: BookInputProps) => {
       enabled: !!searchQuery,
     }
   );
+  const onInputChange = useMemo(() =>
+      debounce((event: SyntheticEvent, value: string) => setSearchQuery(value), 400),
+      []
+  );
+  const onChange = (event: SyntheticEvent, value: Result | null | undefined) => {
+    field.onChange(value?.value);
+    setValue(value);
+  };
 
   return <Autocomplete
-      defaultValue={initialData}
-      isOptionEqualToValue={(option, value) => option.value === value.value}
-      // @ts-ignore
-      options={!isFetched ? [initialData] : data}
-      onChange={(event: SyntheticEvent, value: Result | null) => field.value = value?.value ?? ""}
-      onInputChange={debounce((event: SyntheticEvent, value: string) => setSearchQuery(value), 400)}
-      getOptionLabel={(option: Result) => `${option.title} - ${option.author}`}
+      value={value}
+      options={!isFetched ? (!!value ? [value] : []) : (data ?? [])}
+      isOptionEqualToValue={(option, val) => option?.value === (val?.value || value?.value)}
+      onChange={onChange}
+      onInputChange={onInputChange}
+      getOptionLabel={(option: Result | undefined) => !!option ? `${option.title} - ${option.author}` : "No options"}
       style={{ width: 500 }}
       loading={isLoading}
       renderInput={(params) => (

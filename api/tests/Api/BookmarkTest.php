@@ -88,7 +88,6 @@ final class BookmarkTest extends ApiTestCase
 
     public function testAsAUserICannotCreateABookmarkWithInvalidData(): void
     {
-        $this->markTestIncomplete('Identifier "id" could not be transformed.');
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
             'email' => UserFactory::createOne()->email,
         ]);

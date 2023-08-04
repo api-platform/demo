@@ -9,13 +9,13 @@ import { fetch, type FetchError, type FetchResponse } from "@/utils/dataAccess";
 import { Form } from "@/components/review/Form";
 
 interface Props {
-  review: Review
-  onDelete?: (review: Review) => void
-  onEdit?: (review: Review) => void
+  review: Review;
+  onDelete?: (review: Review) => void;
+  onEdit?: (review: Review) => void;
 }
 
 interface DeleteParams {
-  id: string
+  id: string;
 }
 
 const deleteReview = async (id: string) =>

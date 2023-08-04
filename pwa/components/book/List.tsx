@@ -3,6 +3,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useMutation } from "react-query";
 import FilterListOutlinedIcon from "@mui/icons-material/FilterListOutlined";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 import { Item } from "@/components/book/Item";
 import { Filters } from "@/components/book/Filters";
@@ -14,15 +15,14 @@ import { type FetchError, type FetchResponse } from "@/utils/dataAccess";
 import { useMercure } from "@/utils/mercure";
 
 interface Props {
-  data: PagedCollection<Book> | null
-  hubURL: string | null
-  filters: FiltersProps
-  page: number
+  data: PagedCollection<Book> | null;
+  hubURL: string | null;
+  filters: FiltersProps;
 }
 
 const getPagePath = (page: number): string => `/books?page=${page}`;
 
-export const List: NextPage<Props> = ({ data, hubURL, filters, page }) => {
+export const List: NextPage<Props> = ({ data, hubURL, filters }) => {
   const collection = useMercure(data, hubURL);
   const router = useRouter();
 
@@ -52,24 +52,30 @@ export const List: NextPage<Props> = ({ data, hubURL, filters, page }) => {
         <div className="float-right w-[1010px] justify-center">
           {!!collection && !!collection["hydra:member"] && (
             <>
-              <p className="w-full flex px-8 pb-4 text-lg">
-                <span className="float-left mr-48">
-                  Sort by:
-                  {/*todo move to filters form?*/}
-                  <select className="ml-1 border-none selection:border-none">
-                    <option>Relevance</option>
-                    <option>Title ASC</option>
-                    <option>Title DESC</option>
-                  </select>
-                </span>
+              <div className="w-full flex px-8 pb-4 text-lg">
+                <div className="float-left flex w-[400px]">
+                  <span className="mr-2">Sort by:</span>
+                  <Select
+                    variant="standard"
+                    value={filters.order?.title ?? ""}
+                    displayEmpty
+                    onChange={(event) => {
+                      filtersMutation.mutate({ ...filters, order: event.target.value ? { title: event.target.value } : undefined });
+                    }}
+                    >
+                    <MenuItem value="">Relevance</MenuItem>
+                    <MenuItem value="asc">Title ASC</MenuItem>
+                    <MenuItem value="desc">Title DESC</MenuItem>
+                  </Select>
+                </div>
                 <span className="float-right mt-1">{collection["hydra:totalItems"]} book(s) found</span>
-              </p>
+              </div>
               <div className="grid grid-cols-5 gap-4">
                 {collection["hydra:member"].length !== 0 && collection["hydra:member"].map((book) => (
                   <Item key={book["@id"]} book={book}/>
                 ))}
               </div>
-              <Pagination collection={collection} getPagePath={getPagePath} currentPage={page}/>
+              <Pagination collection={collection} getPagePath={getPagePath} currentPage={filters?.page}/>
             </>
           ) || (
             <p className="w-full flex px-8 pb-4 text-lg">No books found.</p>

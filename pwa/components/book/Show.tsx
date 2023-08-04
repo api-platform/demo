@@ -14,20 +14,20 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { type Book } from "@/types/Book";
 import { useMercure } from "@/utils/mercure";
 import { List as Reviews } from "@/components/review/List";
-import { populateBook } from "@/utils/book";
+import { useOpenLibraryBook } from "@/utils/book";
 import { fetch, type FetchError, type FetchResponse } from "@/utils/dataAccess";
 import { type Bookmark } from "@/types/Bookmark";
 import { type PagedCollection } from "@/types/collection";
 import { Loading } from "@/components/common/Loading";
 
 interface Props {
-  data: Book
-  hubURL: string | null
-  page: number
+  data: Book;
+  hubURL: string | null;
+  page: number;
 }
 
 interface BookmarkProps {
-  book: string | undefined
+  book: string | undefined;
 }
 
 const saveBookmark = async (values: BookmarkProps) =>
@@ -41,8 +41,8 @@ const deleteBookmark = async (id: string) =>
 
 export const Show: NextPage<Props> = ({ data, hubURL, page }) => {
   const { data: session, status } = useSession();
-  const [book, setBook] = useState<Book | undefined>();
   const [bookmark, setBookmark] = useState<Bookmark | undefined>();
+  const { data: book, isLoading } = useOpenLibraryBook(data);
   const item = useMercure(data, hubURL);
 
   const bookmarkMutation = useMutation<
@@ -59,15 +59,6 @@ export const Show: NextPage<Props> = ({ data, hubURL, page }) => {
 
     return saveBookmark(data);
   });
-
-  useEffect(() => {
-    if (status === "loading") return;
-
-    (async () => {
-      const book = await populateBook(data);
-      setBook(book);
-    })()
-  }, [data, status]);
 
   useEffect(() => {
     if (status === "loading") return;
@@ -101,7 +92,7 @@ export const Show: NextPage<Props> = ({ data, hubURL, page }) => {
           <Typography color="text.primary">{item["title"]}</Typography>
         </Breadcrumbs>
       </div>
-      {!!book && (
+      {!!book && !isLoading && (
         <>
           <div className="flex">
             <div className="min-w-[270px] max-w-[300px] w-full mr-10 text-center">
@@ -120,8 +111,7 @@ export const Show: NextPage<Props> = ({ data, hubURL, page }) => {
               </h2>
               <p className="text-gray-600 mt-4">
                 <span className="flex">
-                  {/*todo translate condition*/}
-                  <span>Condition: {book["condition"].replace("https://schema.org/", "")}</span>
+                  <span>Condition: {book["condition"].replace(/https:\/\/schema\.org\/(.+)Condition$/, "$1")}</span>
                   {!!book["publicationDate"] && (
                     <span className="ml-1"> | Published on {book["publicationDate"]}</span>
                   )}

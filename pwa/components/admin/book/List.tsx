@@ -20,8 +20,7 @@ import { ConditionInput } from "@/components/admin/book/ConditionInput";
 const ConditionField = (props: UseRecordContextParams) => {
   const record = useRecordContext(props);
 
-  // todo translate condition
-  return !!record && !!record.condition ? <span>{record.condition.replace("https://schema.org/", "")}</span> : null;
+  return !!record && !!record.condition ? <span>{record.condition.replace(/https:\/\/schema\.org\/(.+)Condition$/, "$1")}</span> : null;
 };
 ConditionField.defaultProps = { label: "Condition" };
 
