@@ -18,6 +18,7 @@ use ApiPlatform\Metadata\Put;
 use App\Enum\BookCondition;
 use App\Repository\BookRepository;
 use App\State\Processor\BookPersistProcessor;
+use App\State\Processor\BookRemoveProcessor;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
@@ -39,6 +40,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             itemUriTemplate: '/admin/books/{id}{._format}'
         ),
         new Post(
+            // Mercure publish is done manually in MercureProcessor through BookPersistProcessor
             processor: BookPersistProcessor::class,
             itemUriTemplate: '/admin/books/{id}{._format}'
         ),
@@ -48,15 +50,21 @@ use Symfony\Component\Validator\Constraints as Assert;
         // https://github.com/api-platform/admin/issues/370
         new Put(
             uriTemplate: '/admin/books/{id}{._format}',
+            // Mercure publish is done manually in MercureProcessor through BookPersistProcessor
             processor: BookPersistProcessor::class
         ),
         new Delete(
-            uriTemplate: '/admin/books/{id}{._format}'
+            uriTemplate: '/admin/books/{id}{._format}',
+            // Mercure publish is done manually in MercureProcessor through BookRemoveProcessor
+            processor: BookRemoveProcessor::class
         ),
     ],
-    normalizationContext: ['groups' => ['Book:read:admin', 'Enum:read']],
+    normalizationContext: [
+        'item_uri_template' => '/admin/books/{id}{._format}',
+        'groups' => ['Book:read:admin', 'Enum:read'],
+        'skip_null_values' => true,
+    ],
     denormalizationContext: ['groups' => ['Book:write']],
-    mercure: true, // todo ensure mercure message is sent to "/books/*" too
     security: 'is_granted("ROLE_ADMIN")'
 )]
 #[ApiResource(
@@ -67,7 +75,11 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
         new Get(),
     ],
-    normalizationContext: ['groups' => ['Book:read', 'Enum:read']]
+    normalizationContext: [
+        'item_uri_template' => '/books/{id}{._format}',
+        'groups' => ['Book:read', 'Enum:read'],
+        'skip_null_values' => true,
+    ]
 )]
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 #[UniqueEntity(fields: ['book'])]

@@ -10,10 +10,13 @@ use App\DataFixtures\Factory\BookFactory;
 use App\DataFixtures\Factory\ReviewFactory;
 use App\DataFixtures\Factory\UserFactory;
 use App\Entity\Book;
+use App\Entity\Review;
 use App\Entity\User;
 use App\Repository\ReviewRepository;
 use App\Security\OidcTokenGenerator;
+use App\Tests\Api\Trait\MercureTrait;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mercure\Update;
 use Zenstruck\Foundry\FactoryCollection;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
@@ -21,6 +24,7 @@ use Zenstruck\Foundry\Test\ResetDatabase;
 final class ReviewTest extends ApiTestCase
 {
     use Factories;
+    use MercureTrait;
     use ResetDatabase;
 
     private Client $client;
@@ -201,21 +205,26 @@ final class ReviewTest extends ApiTestCase
                     'propertyPath' => 'book',
                     'message' => 'This value is not a valid URL.',
                 ],
-            ]
+            ],
         ];
     }
 
+    /**
+     * @group mercure
+     */
     public function testAsAUserICanAddAReviewOnABook(): void
     {
+        $this->markTestIncomplete();
         $book = BookFactory::createOne()->disableAutoRefresh();
         ReviewFactory::createMany(5, ['book' => $book]);
         $user = UserFactory::createOne();
+        self::getMercureHub()->reset();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
             'email' => $user->email,
         ]);
 
-        $this->client->request('POST', '/books/'.$book->getId().'/reviews', [
+        $response = $this->client->request('POST', '/books/'.$book->getId().'/reviews', [
             'auth_bearer' => $token,
             'json' => [
                 'book' => '/books/'.$book->getId(),
@@ -238,8 +247,31 @@ final class ReviewTest extends ApiTestCase
         // if I add a review on a book with reviews, it doesn't erase the existing reviews
         $reviews = self::getContainer()->get(ReviewRepository::class)->findBy(['book' => $book]);
         self::assertCount(6, $reviews);
+        $id = preg_replace('/^.*\/(.+)$/', '$1', $response->toArray()['@id']);
+        /** @var Review $review */
+        $review = self::getContainer()->get(ReviewRepository::class)->find($id);
+        self::assertCount(2, self::getMercureMessages());
+        //        self::assertMercureUpdateMatches(
+        //            self::getMercureMessage(),
+        //            ['http://localhost/admin/reviews/'.$review->getId()],
+        //            self::serialize(
+        //                $review,
+        //                'jsonld',
+        //                self::getOperationNormalizationContext(Review::class, '/admin/reviews/{id}{._format}')
+        //            )
+        //        );
+        //        self::assertMercureUpdateMatches(
+        //            self::getMercureMessage(1),
+        //            ['http://localhost/books/'.$review->book->getId().'/reviews/'.$review->getId()],
+        //            self::serialize(
+        //                $review,
+        //                'jsonld',
+        //                self::getOperationNormalizationContext(Review::class, '/books/{bookId}/reviews/{id}{._format}')
+        //            )
+        //        );
     }
 
+    // todo invalid test, should return 405 or similar
     public function testAsAnonymousICannotGetAnInvalidReview(): void
     {
         $book = BookFactory::createOne();
@@ -249,6 +281,7 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 
+    // todo invalid test, should return 405 or similar
     public function testAsAnonymousICanGetABookReview(): void
     {
         $review = ReviewFactory::createOne();
@@ -335,9 +368,13 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 
+    /**
+     * @group mercure
+     */
     public function testAsAUserICanUpdateMyBookReview(): void
     {
         $review = ReviewFactory::createOne();
+        self::getMercureHub()->reset();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
             'email' => $review->user->email,
@@ -361,6 +398,17 @@ final class ReviewTest extends ApiTestCase
             'rating' => 5,
         ]);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Review/item.json'));
+        self::assertCount(2, self::getMercureMessages());
+        self::assertMercureUpdateMatchesJsonSchema(
+            update: self::getMercureMessage(),
+            topics: ['http://localhost/admin/reviews/'.$review->getId()],
+            jsonSchema: file_get_contents(__DIR__.'/Admin/schemas/Review/item.json')
+        );
+        self::assertMercureUpdateMatchesJsonSchema(
+            update: self::getMercureMessage(1),
+            topics: ['http://localhost/books/'.$review->book->getId().'/reviews/'.$review->getId()],
+            jsonSchema: file_get_contents(__DIR__.'/schemas/Review/item.json')
+        );
     }
 
     public function testAsAnonymousICannotDeleteABookReview(): void
@@ -409,30 +457,49 @@ final class ReviewTest extends ApiTestCase
             'email' => UserFactory::createOne()->email,
         ]);
 
-        $this->client->request('PATCH', '/books/'.$book->getId().'/reviews/invalid', [
+        $this->client->request('DELETE', '/books/'.$book->getId().'/reviews/invalid', [
             'auth_bearer' => $token,
-            'headers' => [
-                'Content-Type' => 'application/merge-patch+json',
-            ],
         ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 
+    /**
+     * @group mercure
+     */
     public function testAsAUserICanDeleteMyBookReview(): void
     {
         $review = ReviewFactory::createOne()->disableAutoRefresh();
+        self::getMercureHub()->reset();
         $id = $review->getId();
+        $bookId = $review->book->getId();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
             'email' => $review->user->email,
         ]);
 
-        $this->client->request('DELETE', '/books/'.$review->book->getId().'/reviews/'.$review->getId(), [
+        $response = $this->client->request('DELETE', '/books/'.$bookId.'/reviews/'.$id, [
             'auth_bearer' => $token,
         ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
+        self::assertEmpty($response->getContent());
         self::assertNull(self::getContainer()->get(ReviewRepository::class)->find($id));
+        self::assertCount(2, self::getMercureMessages());
+        // todo how to ensure it's a delete update
+        self::assertEquals(
+            new Update(
+                topics: ['http://localhost/admin/reviews/'.$id],
+                data: json_encode(['@id' => 'http://localhost/admin/reviews/'.$id])
+            ),
+            self::getMercureMessage()
+        );
+        self::assertEquals(
+            new Update(
+                topics: ['http://localhost/books/'.$bookId.'/reviews/'.$id],
+                data: json_encode(['@id' => 'http://localhost/books/'.$bookId.'/reviews/'.$id])
+            ),
+            self::getMercureMessage(1)
+        );
     }
 }

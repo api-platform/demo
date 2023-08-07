@@ -17,7 +17,9 @@ final readonly class BookPersistProcessor implements ProcessorInterface
 {
     public function __construct(
         #[Autowire(service: PersistProcessor::class)]
-        private ProcessorInterface $processor,
+        private ProcessorInterface $persistProcessor,
+        #[Autowire(service: MercureProcessor::class)]
+        private ProcessorInterface $mercureProcessor,
         private HttpClientInterface $client,
         private DecoderInterface $decoder
     ) {
@@ -40,7 +42,20 @@ final readonly class BookPersistProcessor implements ProcessorInterface
         }
 
         // save entity
-        $this->processor->process($data, $operation, $uriVariables, $context);
+        $this->persistProcessor->process($data, $operation, $uriVariables, $context);
+
+        // publish on Mercure
+        // todo find a way to do it in API Platform
+        foreach (['/admin/books/{id}{._format}', '/books/{id}{._format}'] as $uriTemplate) {
+            $this->mercureProcessor->process(
+                $data,
+                $operation,
+                $uriVariables,
+                $context + [
+                    'item_uri_template' => $uriTemplate,
+                ]
+            );
+        }
 
         return $data;
     }

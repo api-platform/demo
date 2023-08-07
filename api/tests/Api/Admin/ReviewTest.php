@@ -10,11 +10,14 @@ use App\DataFixtures\Factory\BookFactory;
 use App\DataFixtures\Factory\ReviewFactory;
 use App\DataFixtures\Factory\UserFactory;
 use App\Entity\Book;
+use App\Entity\Review;
 use App\Entity\User;
 use App\Repository\ReviewRepository;
 use App\Security\OidcTokenGenerator;
 use App\Tests\Api\Admin\Trait\UsersDataProviderTrait;
+use App\Tests\Api\Trait\MercureTrait;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mercure\Update;
 use Zenstruck\Foundry\FactoryCollection;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
@@ -22,6 +25,7 @@ use Zenstruck\Foundry\Test\ResetDatabase;
 final class ReviewTest extends ApiTestCase
 {
     use Factories;
+    use MercureTrait;
     use ResetDatabase;
     use UsersDataProviderTrait;
 
@@ -240,6 +244,9 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 
+    /**
+     * @group mercure
+     */
     public function testAsAdminUserICanUpdateAReview(): void
     {
         $review = ReviewFactory::createOne();
@@ -263,6 +270,29 @@ final class ReviewTest extends ApiTestCase
             'rating' => 5,
         ]);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Review/item.json'));
+        self::assertCount(2, self::getMercureMessages());
+        self::assertEquals(
+            new Update(
+                topics: ['http://localhost/admin/reviews/'.$review->getId()],
+                data: self::serialize(
+                    $review->object(),
+                    'jsonld',
+                    self::getOperationNormalizationContext(Review::class, '/admin/reviews/{id}{._format}')
+                ),
+            ),
+            self::getMercureMessage()
+        );
+        self::assertEquals(
+            new Update(
+                topics: ['http://localhost/books/'.$review->book->getId().'/reviews/'.$review->getId()],
+                data: self::serialize(
+                    $review->object(),
+                    'jsonld',
+                    self::getOperationNormalizationContext(Review::class, '/books/{bookId}/reviews/{id}{._format}')
+                ),
+            ),
+            self::getMercureMessage(1)
+        );
     }
 
     /**
@@ -303,18 +333,41 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 
+    /**
+     * @group mercure
+     */
     public function testAsAdminUserICanDeleteAReview(): void
     {
         $review = ReviewFactory::createOne()->disableAutoRefresh();
         $id = $review->getId();
+        $bookId = $review->book->getId();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
-        $this->client->request('DELETE', '/admin/reviews/'.$review->getId(), ['auth_bearer' => $token]);
+        $response = $this->client->request('DELETE', '/admin/reviews/'.$review->getId(), [
+            'auth_bearer' => $token,
+        ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
+        self::assertEmpty($response->getContent());
         self::assertNull(self::getContainer()->get(ReviewRepository::class)->find($id));
+        self::assertCount(2, self::getMercureMessages());
+        // todo how to ensure it's a delete update
+        self::assertEquals(
+            new Update(
+                topics: ['http://localhost/admin/reviews/'.$id],
+                data: json_encode(['@id' => 'http://localhost/admin/reviews/'.$id])
+            ),
+            self::getMercureMessage()
+        );
+        self::assertEquals(
+            new Update(
+                topics: ['http://localhost/books/'.$bookId.'/reviews/'.$id],
+                data: json_encode(['@id' => 'http://localhost/books/'.$bookId.'/reviews/'.$id])
+            ),
+            self::getMercureMessage(1)
+        );
     }
 }

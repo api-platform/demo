@@ -32,7 +32,10 @@ use Symfony\Component\Uid\Uuid;
             security: 'is_granted("ROLE_USER") and object.getUserIdentifier() === user.getUserIdentifier()'
         ),
     ],
-    normalizationContext: ['groups' => ['User:read']]
+    normalizationContext: [
+        'groups' => ['User:read'],
+        'skip_null_values' => true,
+    ]
 )]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]

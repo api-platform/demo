@@ -9,7 +9,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Repository\BookmarkRepository;
@@ -30,13 +30,16 @@ use Symfony\Component\Validator\Constraints as Assert;
     types: ['https://schema.org/BookmarkAction'],
     operations: [
         new GetCollection(),
-        new Get(),
+        new Delete(
+            security: 'is_granted("ROLE_USER") and object.user === user'
+        ),
         new Post(
             processor: BookmarkPersistProcessor::class
         ),
     ],
     normalizationContext: [
         'groups' => ['Bookmark:read'],
+        'skip_null_values' => true,
         IriTransformerNormalizer::CONTEXT_KEY => [
             'book' => '/books/{id}{._format}',
         ],

@@ -17,7 +17,9 @@ final readonly class ReviewPersistProcessor implements ProcessorInterface
     public function __construct(
         #[Autowire(service: ReviewRepository::class)]
         private ObjectRepository $repository,
-        private Security $security
+        private Security $security,
+        #[Autowire(service: MercureProcessor::class)]
+        private ProcessorInterface $mercureProcessor
     ) {
     }
 
@@ -31,6 +33,19 @@ final readonly class ReviewPersistProcessor implements ProcessorInterface
 
         // save entity
         $this->repository->save($data, true);
+
+        // publish on Mercure
+        // todo find a way to do it in API Platform
+        foreach (['/admin/reviews/{id}{._format}', '/books/{bookId}/reviews/{id}{._format}'] as $uriTemplate) {
+            $this->mercureProcessor->process(
+                $data,
+                $operation,
+                $uriVariables,
+                $context + [
+                    'item_uri_template' => $uriTemplate,
+                ]
+            );
+        }
 
         return $data;
     }

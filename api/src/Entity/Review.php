@@ -10,12 +10,14 @@ use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\NotExposed;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Repository\ReviewRepository;
 use App\Serializer\IriTransformerNormalizer;
 use App\State\Processor\ReviewPersistProcessor;
+use App\State\Processor\ReviewRemoveProcessor;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
@@ -41,10 +43,14 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
         // https://github.com/api-platform/admin/issues/370
         new Put(
-            uriTemplate: '/admin/reviews/{id}{._format}'
+            uriTemplate: '/admin/reviews/{id}{._format}',
+            // Mercure publish is done manually in MercureProcessor through ReviewPersistProcessor
+            processor: ReviewPersistProcessor::class
         ),
         new Delete(
-            uriTemplate: '/admin/reviews/{id}{._format}'
+            uriTemplate: '/admin/reviews/{id}{._format}',
+            // Mercure publish is done manually in MercureProcessor through ReviewRemoveProcessor
+            processor: ReviewRemoveProcessor::class
         ),
     ],
     normalizationContext: [
@@ -52,10 +58,11 @@ use Symfony\Component\Validator\Constraints as Assert;
             'book' => '/admin/books/{id}{._format}',
             'user' => '/admin/users/{id}{._format}',
         ],
+        'item_uri_template' => '/admin/reviews/{id}{._format}',
+        'skip_null_values' => true,
         'groups' => ['Review:read', 'Review:read:admin'],
     ],
     denormalizationContext: ['groups' => ['Review:write']],
-    mercure: true,
     security: 'is_granted("ROLE_ADMIN")'
 )]
 #[ApiResource(
@@ -69,7 +76,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             itemUriTemplate: '/books/{bookId}/reviews/{id}{._format}',
             paginationClientItemsPerPage: true
         ),
-        new Get(
+        new NotExposed(
             uriTemplate: '/books/{bookId}/reviews/{id}{._format}',
             uriVariables: [
                 'bookId' => new Link(toProperty: 'book', fromClass: Book::class),
@@ -78,6 +85,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
         new Post(
             security: 'is_granted("ROLE_USER")',
+            // Mercure publish is done manually in MercureProcessor through ReviewPersistProcessor
             processor: ReviewPersistProcessor::class,
             itemUriTemplate: '/books/{bookId}/reviews/{id}{._format}'
         ),
@@ -87,7 +95,9 @@ use Symfony\Component\Validator\Constraints as Assert;
                 'bookId' => new Link(toProperty: 'book', fromClass: Book::class),
                 'id' => new Link(fromClass: Review::class),
             ],
-            security: 'is_granted("ROLE_USER") and user == object.user'
+            security: 'is_granted("ROLE_USER") and user == object.user',
+            // Mercure publish is done manually in MercureProcessor through ReviewPersistProcessor
+            processor: ReviewPersistProcessor::class
         ),
         new Delete(
             uriTemplate: '/books/{bookId}/reviews/{id}{._format}',
@@ -95,7 +105,9 @@ use Symfony\Component\Validator\Constraints as Assert;
                 'bookId' => new Link(toProperty: 'book', fromClass: Book::class),
                 'id' => new Link(fromClass: Review::class),
             ],
-            security: 'is_granted("ROLE_USER") and user == object.user'
+            security: 'is_granted("ROLE_USER") and user == object.user',
+            // Mercure publish is done manually in MercureProcessor through ReviewRemoveProcessor
+            processor: ReviewRemoveProcessor::class
         ),
     ],
     normalizationContext: [
@@ -103,6 +115,8 @@ use Symfony\Component\Validator\Constraints as Assert;
             'book' => '/books/{id}{._format}',
             'user' => '/users/{id}{._format}',
         ],
+        'item_uri_template' => '/books/{bookId}/reviews/{id}{._format}',
+        'skip_null_values' => true,
         'groups' => ['Review:read'],
     ],
     denormalizationContext: ['groups' => ['Review:write']]

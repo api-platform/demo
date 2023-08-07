@@ -9,14 +9,19 @@ use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\DataFixtures\Factory\BookFactory;
 use App\DataFixtures\Factory\BookmarkFactory;
 use App\DataFixtures\Factory\UserFactory;
+use App\Entity\Bookmark;
+use App\Repository\BookmarkRepository;
 use App\Security\OidcTokenGenerator;
+use App\Tests\Api\Trait\MercureTrait;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mercure\Update;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
 final class BookmarkTest extends ApiTestCase
 {
     use Factories;
+    use MercureTrait;
     use ResetDatabase;
 
     private Client $client;
@@ -114,16 +119,20 @@ final class BookmarkTest extends ApiTestCase
         ]);
     }
 
+    /**
+     * @group mercure
+     */
     public function testAsAUserICanCreateABookmark(): void
     {
         $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL28346544M.json']);
         $user = UserFactory::createOne();
+        self::getMercureHub()->reset();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
             'email' => $user->email,
         ]);
 
-        $this->client->request('POST', '/bookmarks', [
+        $response = $this->client->request('POST', '/bookmarks', [
             'json' => [
                 'book' => '/books/'.$book->getId(),
             ],
@@ -138,5 +147,102 @@ final class BookmarkTest extends ApiTestCase
             ],
         ]);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Bookmark/item.json'));
+        $id = preg_replace('/^.*\/(.+)$/', '$1', $response->toArray()['@id']);
+        $object = self::getContainer()->get(BookmarkRepository::class)->find($id);
+        self::assertCount(1, self::getMercureMessages());
+        self::assertEquals(
+            self::getMercureMessage(),
+            new Update(
+                topics: ['http://localhost/bookmarks/'.$id],
+                data: self::serialize(
+                    $object,
+                    'jsonld',
+                    self::getOperationNormalizationContext(Bookmark::class, '/bookmarks/{id}{._format}')
+                )
+            )
+        );
+    }
+
+    public function testAsAnonymousICannotDeleteABookmark(): void
+    {
+        $bookmark = BookmarkFactory::createOne();
+
+        $this->client->request('DELETE', '/bookmarks/'.$bookmark->getId());
+
+        self::assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
+        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertJsonContains([
+            '@context' => '/contexts/Error',
+            '@type' => 'hydra:Error',
+            'hydra:title' => 'An error occurred',
+            'hydra:description' => 'Full authentication is required to access this resource.',
+        ]);
+    }
+
+    public function testAsAUserICannotDeleteABookmarkOfAnotherUser(): void
+    {
+        $bookmark = BookmarkFactory::createOne(['user' => UserFactory::createOne()]);
+
+        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+            'email' => UserFactory::createOne()->email,
+        ]);
+
+        $this->client->request('DELETE', '/bookmarks/'.$bookmark->getId(), [
+            'auth_bearer' => $token,
+        ]);
+
+        self::assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertJsonContains([
+            '@context' => '/contexts/Error',
+            '@type' => 'hydra:Error',
+            'hydra:title' => 'An error occurred',
+            'hydra:description' => 'Access Denied.',
+        ]);
+    }
+
+    public function testAsAUserICannotDeleteAnInvalidBookmark(): void
+    {
+        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+            'email' => UserFactory::createOne()->email,
+        ]);
+
+        $this->client->request('DELETE', '/bookmarks/invalid', [
+            'auth_bearer' => $token,
+        ]);
+
+        self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
+    }
+
+    /**
+     * @group mercure
+     */
+    public function testAsAUserICanDeleteMyBookmark(): void
+    {
+        $bookmark = BookmarkFactory::createOne()->disableAutoRefresh();
+        self::getMercureHub()->reset();
+
+        $id = $bookmark->getId();
+
+        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+            'email' => $bookmark->user->email,
+        ]);
+
+        $response = $this->client->request('DELETE', '/bookmarks/'.$bookmark->getId(), [
+            'auth_bearer' => $token,
+        ]);
+
+        self::assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
+        self::assertEmpty($response->getContent());
+        self::assertNull(self::getContainer()->get(BookmarkRepository::class)->find($id));
+        self::assertCount(1, self::getMercureMessages());
+        // todo how to ensure it's a delete update
+        self::assertEquals(
+            new Update(
+                topics: ['http://localhost/bookmarks/'.$id],
+                data: json_encode(['@id' => '/bookmarks/'.$id])
+            ),
+            self::getMercureMessage()
+        );
     }
 }

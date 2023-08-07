@@ -8,10 +8,14 @@ use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\DataFixtures\Factory\BookFactory;
 use App\DataFixtures\Factory\UserFactory;
+use App\Entity\Book;
 use App\Enum\BookCondition;
+use App\Repository\BookRepository;
 use App\Security\OidcTokenGenerator;
 use App\Tests\Api\Admin\Trait\UsersDataProviderTrait;
+use App\Tests\Api\Trait\MercureTrait;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mercure\Update;
 use Zenstruck\Foundry\FactoryCollection;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
@@ -19,6 +23,7 @@ use Zenstruck\Foundry\Test\ResetDatabase;
 final class BookTest extends ApiTestCase
 {
     use Factories;
+    use MercureTrait;
     use ResetDatabase;
     use UsersDataProviderTrait;
 
@@ -299,6 +304,7 @@ final class BookTest extends ApiTestCase
 
     /**
      * @group apiCall
+     * @group mercure
      */
     public function testAsAdminUserICanCreateABook(): void
     {
@@ -306,7 +312,7 @@ final class BookTest extends ApiTestCase
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
-        $this->client->request('POST', '/admin/books', [
+        $response = $this->client->request('POST', '/admin/books', [
             'auth_bearer' => $token,
             'json' => [
                 'book' => 'https://openlibrary.org/books/OL28346544M.json',
@@ -321,6 +327,32 @@ final class BookTest extends ApiTestCase
             'condition' => BookCondition::NewCondition->value,
         ]);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Book/item.json'));
+        $id = preg_replace('/^.*\/(.+)$/', '$1', $response->toArray()['@id']);
+        /** @var Book $book */
+        $book = self::getContainer()->get(BookRepository::class)->find($id);
+        self::assertCount(2, self::getMercureMessages());
+        self::assertEquals(
+            new Update(
+                topics: ['http://localhost/admin/books/'.$book->getId()],
+                data: self::serialize(
+                    $book,
+                    'jsonld',
+                    self::getOperationNormalizationContext(Book::class, '/admin/books/{id}{._format}')
+                ),
+            ),
+            self::getMercureMessage()
+        );
+        self::assertEquals(
+            new Update(
+                topics: ['http://localhost/books/'.$book->getId()],
+                data: self::serialize(
+                    $book,
+                    'jsonld',
+                    self::getOperationNormalizationContext(Book::class, '/books/{id}{._format}')
+                ),
+            ),
+            self::getMercureMessage(1)
+        );
     }
 
     /**
@@ -401,12 +433,14 @@ final class BookTest extends ApiTestCase
 
     /**
      * @group apiCall
+     * @group mercure
      */
     public function testAsAdminUserICanUpdateABook(): void
     {
         $book = BookFactory::createOne([
             'book' => 'https://openlibrary.org/books/OL28346544M.json',
         ]);
+        self::getMercureHub()->reset();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
             'email' => UserFactory::createOneAdmin()->email,
@@ -425,6 +459,29 @@ final class BookTest extends ApiTestCase
             'condition' => BookCondition::DamagedCondition->value,
         ]);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Book/item.json'));
+        self::assertCount(2, self::getMercureMessages());
+        self::assertEquals(
+            new Update(
+                topics: ['http://localhost/admin/books/'.$book->getId()],
+                data: self::serialize(
+                    $book->object(),
+                    'jsonld',
+                    self::getOperationNormalizationContext(Book::class, '/admin/books/{id}{._format}')
+                ),
+            ),
+            self::getMercureMessage()
+        );
+        self::assertEquals(
+            new Update(
+                topics: ['http://localhost/books/'.$book->getId()],
+                data: self::serialize(
+                    $book->object(),
+                    'jsonld',
+                    self::getOperationNormalizationContext(Book::class, '/books/{id}{._format}')
+                ),
+            ),
+            self::getMercureMessage(1)
+        );
     }
 
     /**
@@ -467,17 +524,39 @@ final class BookTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 
+    /**
+     * @group mercure
+     */
     public function testAsAdminUserICanDeleteABook(): void
     {
-        $book = BookFactory::createOne();
+        $book = BookFactory::createOne()->disableAutoRefresh();
+        self::getMercureHub()->reset();
+        $id = $book->getId();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
-        $response = $this->client->request('DELETE', '/admin/books/'.$book->getId(), ['auth_bearer' => $token]);
+        $response = $this->client->request('DELETE', '/admin/books/'.$id, ['auth_bearer' => $token]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
         self::assertEmpty($response->getContent());
+        self::assertNull(self::getContainer()->get(BookRepository::class)->find($id));
+        self::assertCount(2, self::getMercureMessages());
+        // todo how to ensure it's a delete update
+        self::assertEquals(
+            new Update(
+                topics: ['http://localhost/admin/books/'.$id],
+                data: json_encode(['@id' => 'http://localhost/admin/books/'.$id])
+            ),
+            self::getMercureMessage()
+        );
+        self::assertEquals(
+            new Update(
+                topics: ['http://localhost/books/'.$id],
+                data: json_encode(['@id' => 'http://localhost/books/'.$id])
+            ),
+            self::getMercureMessage(1)
+        );
     }
 }
