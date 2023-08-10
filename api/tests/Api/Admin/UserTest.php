@@ -8,8 +8,8 @@ use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\DataFixtures\Factory\UserFactory;
 use App\Repository\UserRepository;
-use App\Security\OidcTokenGenerator;
 use App\Tests\Api\Admin\Trait\UsersDataProviderTrait;
+use App\Tests\Api\Trait\SecurityTrait;
 use Symfony\Component\Uid\Uuid;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
@@ -18,6 +18,7 @@ final class UserTest extends ApiTestCase
 {
     use Factories;
     use ResetDatabase;
+    use SecurityTrait;
     use UsersDataProviderTrait;
 
     private Client $client;
@@ -36,7 +37,7 @@ final class UserTest extends ApiTestCase
 
         $options = [];
         if ($userFactory) {
-            $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+            $token = $this->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -58,7 +59,7 @@ final class UserTest extends ApiTestCase
     {
         $user = UserFactory::createOne();
 
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -82,7 +83,7 @@ final class UserTest extends ApiTestCase
         ])->disableAutoRefresh();
 
         $sub = Uuid::v7()->__toString();
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'sub' => $sub,
             'email' => $user->email,
             'given_name' => 'Chuck',

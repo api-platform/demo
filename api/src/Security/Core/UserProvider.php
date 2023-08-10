@@ -41,6 +41,7 @@ final readonly class UserProvider implements AttributesBasedUserProviderInterfac
     public function loadUserByIdentifier(string $identifier, array $attributes = []): UserInterface
     {
         $user = $this->repository->findOneBy(['email' => $identifier]) ?: new User();
+        $user->email = $identifier;
 
         if (!isset($attributes['sub'])) {
             throw new UnsupportedUserException('Property "sub" is missing in token attributes.');

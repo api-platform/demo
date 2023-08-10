@@ -13,9 +13,9 @@ use App\Entity\Book;
 use App\Entity\Review;
 use App\Entity\User;
 use App\Repository\ReviewRepository;
-use App\Security\OidcTokenGenerator;
 use App\Tests\Api\Admin\Trait\UsersDataProviderTrait;
 use App\Tests\Api\Trait\MercureTrait;
+use App\Tests\Api\Trait\SecurityTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\Update;
 use Zenstruck\Foundry\FactoryCollection;
@@ -27,6 +27,7 @@ final class ReviewTest extends ApiTestCase
     use Factories;
     use MercureTrait;
     use ResetDatabase;
+    use SecurityTrait;
     use UsersDataProviderTrait;
 
     private Client $client;
@@ -43,7 +44,7 @@ final class ReviewTest extends ApiTestCase
     {
         $options = [];
         if ($userFactory) {
-            $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+            $token = $this->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -68,7 +69,7 @@ final class ReviewTest extends ApiTestCase
     {
         $factory->create();
 
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -151,7 +152,7 @@ final class ReviewTest extends ApiTestCase
 
         $options = [];
         if ($userFactory) {
-            $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+            $token = $this->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -171,7 +172,7 @@ final class ReviewTest extends ApiTestCase
 
     public function testAsAdminUserICannotGetAnInvalidReview(): void
     {
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -184,7 +185,7 @@ final class ReviewTest extends ApiTestCase
     {
         $review = ReviewFactory::createOne();
 
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -204,7 +205,7 @@ final class ReviewTest extends ApiTestCase
 
         $options = [];
         if ($userFactory) {
-            $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+            $token = $this->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -229,7 +230,7 @@ final class ReviewTest extends ApiTestCase
 
     public function testAsAdminUserICannotUpdateAnInvalidReview(): void
     {
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -252,7 +253,7 @@ final class ReviewTest extends ApiTestCase
         $book = BookFactory::createOne();
         $review = ReviewFactory::createOne(['book' => $book]);
 
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -308,7 +309,7 @@ final class ReviewTest extends ApiTestCase
 
         $options = [];
         if ($userFactory) {
-            $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+            $token = $this->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -328,7 +329,7 @@ final class ReviewTest extends ApiTestCase
 
     public function testAsAdminUserICannotDeleteAnInvalidReview(): void
     {
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -346,7 +347,7 @@ final class ReviewTest extends ApiTestCase
         $id = $review->getId();
         $bookId = $review->book->getId();
 
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 

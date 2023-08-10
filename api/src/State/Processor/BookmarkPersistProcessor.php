@@ -4,20 +4,21 @@ declare(strict_types=1);
 
 namespace App\State\Processor;
 
+use ApiPlatform\Doctrine\Common\State\PersistProcessor;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Bookmark;
-use App\Repository\BookmarkRepository;
-use Doctrine\Persistence\ObjectRepository;
+use Psr\Clock\ClockInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 final readonly class BookmarkPersistProcessor implements ProcessorInterface
 {
     public function __construct(
-        #[Autowire(service: BookmarkRepository::class)]
-        private ObjectRepository $repository,
-        private Security $security
+        #[Autowire(service: PersistProcessor::class)]
+        private ProcessorInterface $persistProcessor,
+        private Security $security,
+        private ClockInterface $clock
     ) {
     }
 
@@ -27,10 +28,10 @@ final readonly class BookmarkPersistProcessor implements ProcessorInterface
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Bookmark
     {
         $data->user = $this->security->getUser();
-        $data->bookmarkedAt = new \DateTimeImmutable();
+        $data->bookmarkedAt = $this->clock->now();
 
         // save entity
-        $this->repository->save($data, true);
+        $data = $this->persistProcessor->process($data, $operation, $uriVariables, $context);
 
         return $data;
     }

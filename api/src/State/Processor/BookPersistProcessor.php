@@ -35,7 +35,7 @@ final readonly class BookPersistProcessor implements ProcessorInterface
 
         $data->author = null;
         if (isset($book['authors'][0]['key'])) {
-            $author = $this->getData('https://openlibrary.org'.$book['authors'][0]['key']);
+            $author = $this->getData('https://openlibrary.org'.$book['authors'][0]['key'].'.json');
             if (isset($author['name'])) {
                 $data->author = $author['name'];
             }

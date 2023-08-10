@@ -53,9 +53,12 @@ when@test:
                             issuers: [ '%env(OIDC_SERVER_URL)%' ]
                             algorithm: 'ES256'
                             key: '%app.oidc.jwk%'
+    # required by App\Tests\Api\Trait\SecurityTrait
+    parameters:
+        app.oidc.issuer: '%env(OIDC_SERVER_URL)%'
     services:
-        # required by App\Security\OidcTokenGenerator
         app.security.jwk:
             parent: 'security.access_token_handler.oidc.jwk'
+            public: true
             arguments:
                 $json: '%app.oidc.jwk%'

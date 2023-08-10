@@ -13,8 +13,8 @@ use App\Entity\Book;
 use App\Entity\Review;
 use App\Entity\User;
 use App\Repository\ReviewRepository;
-use App\Security\OidcTokenGenerator;
 use App\Tests\Api\Trait\MercureTrait;
+use App\Tests\Api\Trait\SecurityTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Uid\Uuid;
@@ -27,6 +27,7 @@ final class ReviewTest extends ApiTestCase
     use Factories;
     use MercureTrait;
     use ResetDatabase;
+    use SecurityTrait;
 
     private Client $client;
 
@@ -157,7 +158,7 @@ final class ReviewTest extends ApiTestCase
     {
         $book = BookFactory::createOne();
 
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => UserFactory::createOne()->email,
         ]);
 
@@ -231,7 +232,7 @@ final class ReviewTest extends ApiTestCase
         $user = UserFactory::createOne();
         self::getMercureHub()->reset();
 
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => $user->email,
         ]);
 
@@ -264,7 +265,7 @@ final class ReviewTest extends ApiTestCase
         $user = UserFactory::createOne();
         self::getMercureHub()->reset();
 
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => $user->email,
         ]);
 
@@ -367,7 +368,7 @@ final class ReviewTest extends ApiTestCase
     {
         $review = ReviewFactory::createOne(['user' => UserFactory::createOne()]);
 
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => UserFactory::createOne()->email,
         ]);
 
@@ -396,7 +397,7 @@ final class ReviewTest extends ApiTestCase
     {
         $book = BookFactory::createOne();
 
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => UserFactory::createOne()->email,
         ]);
 
@@ -422,7 +423,7 @@ final class ReviewTest extends ApiTestCase
         $review = ReviewFactory::createOne();
         self::getMercureHub()->reset();
 
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => $review->user->email,
         ]);
 
@@ -477,7 +478,7 @@ final class ReviewTest extends ApiTestCase
     {
         $review = ReviewFactory::createOne(['user' => UserFactory::createOne()]);
 
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => UserFactory::createOne()->email,
         ]);
 
@@ -499,7 +500,7 @@ final class ReviewTest extends ApiTestCase
     {
         $book = BookFactory::createOne();
 
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => UserFactory::createOne()->email,
         ]);
 
@@ -520,7 +521,7 @@ final class ReviewTest extends ApiTestCase
         $id = $review->getId();
         $bookId = $review->book->getId();
 
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => $review->user->email,
         ]);
 

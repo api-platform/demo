@@ -8,6 +8,7 @@ use ApiPlatform\Doctrine\Common\State\PersistProcessor;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Review;
+use Psr\Clock\ClockInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
@@ -16,9 +17,10 @@ final readonly class ReviewPersistProcessor implements ProcessorInterface
     public function __construct(
         #[Autowire(service: PersistProcessor::class)]
         private ProcessorInterface $persistProcessor,
-        private Security $security,
         #[Autowire(service: MercureProcessor::class)]
-        private ProcessorInterface $mercureProcessor
+        private ProcessorInterface $mercureProcessor,
+        private Security $security,
+        private ClockInterface $clock
     ) {
     }
 
@@ -28,7 +30,7 @@ final readonly class ReviewPersistProcessor implements ProcessorInterface
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Review
     {
         $data->user = $this->security->getUser();
-        $data->publishedAt = new \DateTimeImmutable();
+        $data->publishedAt = $this->clock->now();
 
         // save entity
         $data = $this->persistProcessor->process($data, $operation, $uriVariables, $context);

@@ -11,8 +11,8 @@ use App\DataFixtures\Factory\BookmarkFactory;
 use App\DataFixtures\Factory\UserFactory;
 use App\Entity\Bookmark;
 use App\Repository\BookmarkRepository;
-use App\Security\OidcTokenGenerator;
 use App\Tests\Api\Trait\MercureTrait;
+use App\Tests\Api\Trait\SecurityTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Uid\Uuid;
@@ -24,6 +24,7 @@ final class BookmarkTest extends ApiTestCase
     use Factories;
     use MercureTrait;
     use ResetDatabase;
+    use SecurityTrait;
 
     private Client $client;
 
@@ -57,7 +58,7 @@ final class BookmarkTest extends ApiTestCase
         $user = UserFactory::createOne();
         BookmarkFactory::createMany(40, ['user' => $user]);
 
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => $user->email,
         ]);
 
@@ -94,7 +95,7 @@ final class BookmarkTest extends ApiTestCase
 
     public function testAsAUserICannotCreateABookmarkWithInvalidData(): void
     {
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => UserFactory::createOne()->email,
         ]);
 
@@ -126,7 +127,7 @@ final class BookmarkTest extends ApiTestCase
         $user = UserFactory::createOne();
         self::getMercureHub()->reset();
 
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => $user->email,
         ]);
 
@@ -181,7 +182,7 @@ final class BookmarkTest extends ApiTestCase
     {
         $bookmark = BookmarkFactory::createOne(['user' => UserFactory::createOne()]);
 
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => UserFactory::createOne()->email,
         ]);
 
@@ -201,7 +202,7 @@ final class BookmarkTest extends ApiTestCase
 
     public function testAsAUserICannotDeleteAnInvalidBookmark(): void
     {
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => UserFactory::createOne()->email,
         ]);
 
@@ -222,7 +223,7 @@ final class BookmarkTest extends ApiTestCase
 
         $id = $bookmark->getId();
 
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => $bookmark->user->email,
         ]);
 

@@ -30,7 +30,8 @@ final readonly class BookmarkQueryCollectionExtension implements QueryCollection
             return;
         }
 
-        $queryBuilder->andWhere(sprintf('%s.user = :user', $queryBuilder->getRootAliases()[0]))
+        $queryBuilder
+            ->andWhere(sprintf('%s.user = :user', $queryBuilder->getRootAliases()[0]))
             ->setParameter('user', $user);
     }
 }

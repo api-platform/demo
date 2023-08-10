@@ -11,9 +11,9 @@ use App\DataFixtures\Factory\UserFactory;
 use App\Entity\Book;
 use App\Enum\BookCondition;
 use App\Repository\BookRepository;
-use App\Security\OidcTokenGenerator;
 use App\Tests\Api\Admin\Trait\UsersDataProviderTrait;
 use App\Tests\Api\Trait\MercureTrait;
+use App\Tests\Api\Trait\SecurityTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\Update;
 use Zenstruck\Foundry\FactoryCollection;
@@ -25,6 +25,7 @@ final class BookTest extends ApiTestCase
     use Factories;
     use MercureTrait;
     use ResetDatabase;
+    use SecurityTrait;
     use UsersDataProviderTrait;
 
     private Client $client;
@@ -41,7 +42,7 @@ final class BookTest extends ApiTestCase
     {
         $options = [];
         if ($userFactory) {
-            $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+            $token = $this->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -66,7 +67,7 @@ final class BookTest extends ApiTestCase
     {
         $factory->create();
 
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -126,7 +127,7 @@ final class BookTest extends ApiTestCase
         BookFactory::createOne(['title' => 'Nemesis']);
         BookFactory::createOne(['title' => 'I, Robot']);
 
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -149,7 +150,7 @@ final class BookTest extends ApiTestCase
 
         $options = [];
         if ($userFactory) {
-            $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+            $token = $this->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -176,7 +177,7 @@ final class BookTest extends ApiTestCase
 
         $options = [];
         if ($userFactory) {
-            $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+            $token = $this->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -201,7 +202,7 @@ final class BookTest extends ApiTestCase
     {
         $book = BookFactory::createOne();
 
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -226,7 +227,7 @@ final class BookTest extends ApiTestCase
     {
         $options = [];
         if ($userFactory) {
-            $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+            $token = $this->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -254,7 +255,7 @@ final class BookTest extends ApiTestCase
      */
     public function testAsAdminUserICannotCreateABookWithInvalidData(array $data, int $statusCode, array $expected): void
     {
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -346,7 +347,7 @@ final class BookTest extends ApiTestCase
      */
     public function testAsAdminUserICanCreateABook(): void
     {
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -402,7 +403,7 @@ final class BookTest extends ApiTestCase
 
         $options = [];
         if ($userFactory) {
-            $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+            $token = $this->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -429,7 +430,7 @@ final class BookTest extends ApiTestCase
     {
         BookFactory::createOne();
 
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -450,7 +451,7 @@ final class BookTest extends ApiTestCase
     {
         $book = BookFactory::createOne();
 
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -475,7 +476,7 @@ final class BookTest extends ApiTestCase
         ]);
         self::getMercureHub()->reset();
 
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -530,7 +531,7 @@ final class BookTest extends ApiTestCase
 
         $options = [];
         if ($userFactory) {
-            $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+            $token = $this->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -552,7 +553,7 @@ final class BookTest extends ApiTestCase
     {
         BookFactory::createOne();
 
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -570,7 +571,7 @@ final class BookTest extends ApiTestCase
         self::getMercureHub()->reset();
         $id = $book->getId();
 
-        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+        $token = $this->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
