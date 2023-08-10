@@ -6,7 +6,7 @@ namespace App\State\Processor;
 
 use ApiPlatform\Api\IriConverterInterface;
 use ApiPlatform\Api\UrlGeneratorInterface;
-use ApiPlatform\Doctrine\Common\State\RemoveProcessor as DoctrineRemoveProcessor;
+use ApiPlatform\Doctrine\Common\State\RemoveProcessor;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\State\ProcessorInterface;
@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 final readonly class ReviewRemoveProcessor implements ProcessorInterface
 {
     public function __construct(
-        #[Autowire(service: DoctrineRemoveProcessor::class)]
+        #[Autowire(service: RemoveProcessor::class)]
         private ProcessorInterface $removeProcessor,
         #[Autowire(service: MercureProcessor::class)]
         private ProcessorInterface $mercureProcessor,
@@ -36,7 +36,6 @@ final readonly class ReviewRemoveProcessor implements ProcessorInterface
         $this->removeProcessor->process($data, $operation, $uriVariables, $context);
 
         // publish on Mercure
-        // todo find a way to do it in API Platform
         foreach (['/admin/reviews/{id}{._format}', '/books/{bookId}/reviews/{id}{._format}'] as $uriTemplate) {
             $iri = $this->iriConverter->getIriFromResource(
                 $object,

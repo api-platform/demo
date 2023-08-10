@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/vincentchalamon/core.git",
-                "reference": "daed45503aaa6cabfe22374654a54dc32615956d"
+                "reference": "d6c3019671c7d668fa0cc8a624fc5bc17a26ddd2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vincentchalamon/core/zipball/daed45503aaa6cabfe22374654a54dc32615956d",
-                "reference": "daed45503aaa6cabfe22374654a54dc32615956d",
+                "url": "https://api.github.com/repos/vincentchalamon/core/zipball/d6c3019671c7d668fa0cc8a624fc5bc17a26ddd2",
+                "reference": "d6c3019671c7d668fa0cc8a624fc5bc17a26ddd2",
                 "shasum": ""
             },
             "require": {
@@ -177,7 +177,7 @@
                     "url": "https://tidelift.com/funding/github/packagist/api-platform/core"
                 }
             ],
-            "time": "2023-08-07T07:08:54+00:00"
+            "time": "2023-08-08T18:08:58+00:00"
         },
         {
             "name": "brick/math",

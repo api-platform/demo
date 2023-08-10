@@ -32,7 +32,7 @@ trait SerializerTrait
             $operation = $operationName ? (new Get())->withName($operationName) : new Get();
         }
 
-        return $operation->getNormalizationContext() ?? [];
+        return ($operation->getNormalizationContext() ?? []) + ['item_uri_template' => $operation->getUriTemplate()];
     }
 
     /**

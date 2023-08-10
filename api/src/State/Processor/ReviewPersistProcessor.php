@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace App\State\Processor;
 
+use ApiPlatform\Doctrine\Common\State\PersistProcessor;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Review;
-use App\Repository\ReviewRepository;
-use Doctrine\Persistence\ObjectRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 final readonly class ReviewPersistProcessor implements ProcessorInterface
 {
     public function __construct(
-        #[Autowire(service: ReviewRepository::class)]
-        private ObjectRepository $repository,
+        #[Autowire(service: PersistProcessor::class)]
+        private ProcessorInterface $persistProcessor,
         private Security $security,
         #[Autowire(service: MercureProcessor::class)]
         private ProcessorInterface $mercureProcessor
@@ -32,10 +31,9 @@ final readonly class ReviewPersistProcessor implements ProcessorInterface
         $data->publishedAt = new \DateTimeImmutable();
 
         // save entity
-        $this->repository->save($data, true);
+        $data = $this->persistProcessor->process($data, $operation, $uriVariables, $context);
 
         // publish on Mercure
-        // todo find a way to do it in API Platform
         foreach (['/admin/reviews/{id}{._format}', '/books/{bookId}/reviews/{id}{._format}'] as $uriTemplate) {
             $this->mercureProcessor->process(
                 $data,

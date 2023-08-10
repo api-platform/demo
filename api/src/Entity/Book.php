@@ -60,7 +60,6 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
     ],
     normalizationContext: [
-        'item_uri_template' => '/admin/books/{id}{._format}',
         'groups' => ['Book:read:admin', 'Enum:read'],
         'skip_null_values' => true,
     ],
@@ -76,7 +75,6 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Get(),
     ],
     normalizationContext: [
-        'item_uri_template' => '/books/{id}{._format}',
         'groups' => ['Book:read', 'Enum:read'],
         'skip_null_values' => true,
     ]

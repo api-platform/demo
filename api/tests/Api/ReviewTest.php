@@ -17,6 +17,7 @@ use App\Security\OidcTokenGenerator;
 use App\Tests\Api\Trait\MercureTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\Update;
+use Symfony\Component\Uid\Uuid;
 use Zenstruck\Foundry\FactoryCollection;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
@@ -152,7 +153,7 @@ final class ReviewTest extends ApiTestCase
     /**
      * @dataProvider getInvalidData
      */
-    public function testAsAUserICannotAddAReviewOnABookWithInvalidData(array $data, array $violations): void
+    public function testAsAUserICannotAddAReviewOnABookWithInvalidData(array $data, int $statusCode, array $expected): void
     {
         $book = BookFactory::createOne();
 
@@ -165,48 +166,92 @@ final class ReviewTest extends ApiTestCase
             'json' => $data,
         ]);
 
-        self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        self::assertResponseStatusCodeSame($statusCode);
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
-        self::assertJsonContains([
-            '@context' => '/contexts/ConstraintViolationList',
-            '@type' => 'ConstraintViolationList',
-            'hydra:title' => 'An error occurred',
-            'violations' => $violations,
-        ]);
+        self::assertJsonContains($expected);
     }
 
     public function getInvalidData(): iterable
     {
-        yield [
+        $uuid = Uuid::v7()->__toString();
+
+        yield 'empty data' => [
             [],
+            Response::HTTP_UNPROCESSABLE_ENTITY,
             [
-                [
-                    'propertyPath' => 'book',
-                    'message' => 'This value should not be null.',
-                ],
-                [
-                    'propertyPath' => 'body',
-                    'message' => 'This value should not be blank.',
-                ],
-                [
-                    'propertyPath' => 'rating',
-                    'message' => 'This value should not be null.',
+                '@context' => '/contexts/ConstraintViolationList',
+                '@type' => 'ConstraintViolationList',
+                'hydra:title' => 'An error occurred',
+                'violations' => [
+                    [
+                        'propertyPath' => 'body',
+                        'message' => 'This value should not be blank.',
+                    ],
+                    [
+                        'propertyPath' => 'rating',
+                        'message' => 'This value should not be null.',
+                    ],
                 ],
             ],
         ];
-        yield [
+        yield 'invalid book data' => [
             [
                 'book' => 'invalid book',
                 'body' => 'Very good book!',
                 'rating' => 5,
             ],
+            Response::HTTP_BAD_REQUEST,
             [
-                [
-                    'propertyPath' => 'book',
-                    'message' => 'This value is not a valid URL.',
-                ],
+                '@context' => '/contexts/Error',
+                '@type' => 'hydra:Error',
+                'hydra:title' => 'An error occurred',
+                'hydra:description' => 'Invalid IRI "invalid book".',
             ],
         ];
+        yield 'invalid book identifier' => [
+            [
+                'book' => '/books/'.$uuid,
+                'body' => 'Very good book!',
+                'rating' => 5,
+            ],
+            Response::HTTP_BAD_REQUEST,
+            [
+                '@context' => '/contexts/Error',
+                '@type' => 'hydra:Error',
+                'hydra:title' => 'An error occurred',
+                'hydra:description' => 'Item not found for "/books/'.$uuid.'".',
+            ],
+        ];
+    }
+
+    public function testAsAUserICannotAddAReviewWithValidDataOnAnInvalidBook(): void
+    {
+        $book = BookFactory::createOne();
+        ReviewFactory::createMany(5, ['book' => $book]);
+        $user = UserFactory::createOne();
+        self::getMercureHub()->reset();
+
+        $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
+            'email' => $user->email,
+        ]);
+
+        $this->client->request('POST', '/books/invalid/reviews', [
+            'auth_bearer' => $token,
+            'json' => [
+                'book' => '/books/'.$book->getId(),
+                'body' => 'Very good book!',
+                'rating' => 5,
+            ],
+        ]);
+
+        self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
+        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertJsonContains([
+            '@context' => '/contexts/Error',
+            '@type' => 'hydra:Error',
+            'hydra:title' => 'An error occurred',
+            'hydra:description' => 'Invalid identifier value or configuration.',
+        ]);
     }
 
     /**
@@ -214,8 +259,7 @@ final class ReviewTest extends ApiTestCase
      */
     public function testAsAUserICanAddAReviewOnABook(): void
     {
-        $this->markTestIncomplete();
-        $book = BookFactory::createOne()->disableAutoRefresh();
+        $book = BookFactory::createOne();
         ReviewFactory::createMany(5, ['book' => $book]);
         $user = UserFactory::createOne();
         self::getMercureHub()->reset();
@@ -245,33 +289,24 @@ final class ReviewTest extends ApiTestCase
         ]);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Review/item.json'));
         // if I add a review on a book with reviews, it doesn't erase the existing reviews
-        $reviews = self::getContainer()->get(ReviewRepository::class)->findBy(['book' => $book]);
+        $reviews = self::getContainer()->get(ReviewRepository::class)->findBy(['book' => $book->object()]);
         self::assertCount(6, $reviews);
         $id = preg_replace('/^.*\/(.+)$/', '$1', $response->toArray()['@id']);
         /** @var Review $review */
         $review = self::getContainer()->get(ReviewRepository::class)->find($id);
         self::assertCount(2, self::getMercureMessages());
-        //        self::assertMercureUpdateMatches(
-        //            self::getMercureMessage(),
-        //            ['http://localhost/admin/reviews/'.$review->getId()],
-        //            self::serialize(
-        //                $review,
-        //                'jsonld',
-        //                self::getOperationNormalizationContext(Review::class, '/admin/reviews/{id}{._format}')
-        //            )
-        //        );
-        //        self::assertMercureUpdateMatches(
-        //            self::getMercureMessage(1),
-        //            ['http://localhost/books/'.$review->book->getId().'/reviews/'.$review->getId()],
-        //            self::serialize(
-        //                $review,
-        //                'jsonld',
-        //                self::getOperationNormalizationContext(Review::class, '/books/{bookId}/reviews/{id}{._format}')
-        //            )
-        //        );
+        self::assertMercureUpdateMatchesJsonSchema(
+            update: self::getMercureMessage(),
+            topics: ['http://localhost/admin/reviews/'.$review->getId()],
+            jsonSchema: file_get_contents(__DIR__.'/Admin/schemas/Review/item.json')
+        );
+        self::assertMercureUpdateMatchesJsonSchema(
+            update: self::getMercureMessage(1),
+            topics: ['http://localhost/books/'.$book->getId().'/reviews/'.$review->getId()],
+            jsonSchema: file_get_contents(__DIR__.'/schemas/Review/item.json')
+        );
     }
 
-    // todo invalid test, should return 405 or similar
     public function testAsAnonymousICannotGetAnInvalidReview(): void
     {
         $book = BookFactory::createOne();
@@ -279,18 +314,29 @@ final class ReviewTest extends ApiTestCase
         $this->client->request('GET', '/books/'.$book->getId().'/reviews/invalid');
 
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
+        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertJsonContains([
+            '@context' => '/contexts/Error',
+            '@type' => 'hydra:Error',
+            'hydra:title' => 'An error occurred',
+            'hydra:description' => 'This route does not aim to be called.',
+        ]);
     }
 
-    // todo invalid test, should return 405 or similar
     public function testAsAnonymousICanGetABookReview(): void
     {
         $review = ReviewFactory::createOne();
 
         $this->client->request('GET', '/books/'.$review->book->getId().'/reviews/'.$review->getId());
 
-        self::assertResponseIsSuccessful();
+        self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
-        self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Review/item.json'));
+        self::assertJsonContains([
+            '@context' => '/contexts/Error',
+            '@type' => 'hydra:Error',
+            'hydra:title' => 'An error occurred',
+            'hydra:description' => 'This route does not aim to be called.',
+        ]);
     }
 
     public function testAsAnonymousICannotUpdateABookReview(): void

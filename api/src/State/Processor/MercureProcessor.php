@@ -46,9 +46,9 @@ final readonly class MercureProcessor implements ProcessorInterface
             $context['data'] = $this->serializer->serialize(
                 $data,
                 key($this->formats),
-                ($operation->getNormalizationContext() ?? [] + [
-                    'item_uri_template' => $context['item_uri_template'] ?? null,
-                ])
+                ($operation->getNormalizationContext() ?? []) + (isset($context['item_uri_template']) ? [
+                    'item_uri_template' => $context['item_uri_template'],
+                ] : [])
             );
         }
 

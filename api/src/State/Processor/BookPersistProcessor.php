@@ -42,10 +42,9 @@ final readonly class BookPersistProcessor implements ProcessorInterface
         }
 
         // save entity
-        $this->persistProcessor->process($data, $operation, $uriVariables, $context);
+        $data = $this->persistProcessor->process($data, $operation, $uriVariables, $context);
 
         // publish on Mercure
-        // todo find a way to do it in API Platform
         foreach (['/admin/books/{id}{._format}', '/books/{id}{._format}'] as $uriTemplate) {
             $this->mercureProcessor->process(
                 $data,

@@ -249,7 +249,8 @@ final class ReviewTest extends ApiTestCase
      */
     public function testAsAdminUserICanUpdateAReview(): void
     {
-        $review = ReviewFactory::createOne();
+        $book = BookFactory::createOne();
+        $review = ReviewFactory::createOne(['book' => $book]);
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
             'email' => UserFactory::createOneAdmin()->email,
@@ -258,6 +259,9 @@ final class ReviewTest extends ApiTestCase
         $this->client->request('PUT', '/admin/reviews/'.$review->getId(), [
             'auth_bearer' => $token,
             'json' => [
+                // Must set all data because of standard PUT
+                'book' => '/admin/books/'.$book->getId(),
+                'letter' => null,
                 'body' => 'Very good book!',
                 'rating' => 5,
             ],

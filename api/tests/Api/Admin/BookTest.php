@@ -250,9 +250,9 @@ final class BookTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider getInvalidData
+     * @dataProvider getInvalidDataOnCreate
      */
-    public function testAsAdminUserICannotCreateABookWithInvalidData(array $data, array $violations): void
+    public function testAsAdminUserICannotCreateABookWithInvalidData(array $data, int $statusCode, array $expected): void
     {
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
             'email' => UserFactory::createOneAdmin()->email,
@@ -263,40 +263,78 @@ final class BookTest extends ApiTestCase
             'json' => $data,
         ]);
 
-        self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        self::assertResponseStatusCodeSame($statusCode);
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
-        self::assertJsonContains([
-            '@context' => '/contexts/ConstraintViolationList',
-            '@type' => 'ConstraintViolationList',
-            'hydra:title' => 'An error occurred',
-            'violations' => $violations,
-        ]);
+        self::assertJsonContains($expected);
+    }
+
+    public function getInvalidDataOnCreate(): iterable
+    {
+        yield 'no data' => [
+            [],
+            Response::HTTP_UNPROCESSABLE_ENTITY,
+            [
+                '@context' => '/contexts/ConstraintViolationList',
+                '@type' => 'ConstraintViolationList',
+                'hydra:title' => 'An error occurred',
+                'violations' => [
+                    [
+                        'propertyPath' => 'book',
+                        'message' => 'This value should not be blank.',
+                    ],
+                    [
+                        'propertyPath' => 'condition',
+                        'message' => 'This value should not be null.',
+                    ],
+                ],
+            ],
+        ];
+        yield from $this->getInvalidData();
     }
 
     public function getInvalidData(): iterable
     {
-        yield [
-            [],
+        yield 'empty data' => [
             [
-                [
-                    'propertyPath' => 'book',
-                    'message' => 'This value should not be blank.',
-                ],
-                [
-                    'propertyPath' => 'condition',
-                    'message' => 'This value should not be null.',
-                ],
+                'book' => '',
+                'condition' => '',
+            ],
+            Response::HTTP_BAD_REQUEST,
+            [
+                '@context' => '/contexts/Error',
+                '@type' => 'hydra:Error',
+                'hydra:title' => 'An error occurred',
+                'hydra:description' => 'The data must belong to a backed enumeration of type '.BookCondition::class,
             ],
         ];
-        yield [
+        yield 'invalid condition' => [
+            [
+                'book' => 'https://openlibrary.org/books/OL28346544M.json',
+                'condition' => 'invalid condition',
+            ],
+            Response::HTTP_BAD_REQUEST,
+            [
+                '@context' => '/contexts/Error',
+                '@type' => 'hydra:Error',
+                'hydra:title' => 'An error occurred',
+                'hydra:description' => 'The data must belong to a backed enumeration of type '.BookCondition::class,
+            ],
+        ];
+        yield 'invalid book' => [
             [
                 'book' => 'invalid book',
                 'condition' => BookCondition::NewCondition->value,
             ],
+            Response::HTTP_UNPROCESSABLE_ENTITY,
             [
-                [
-                    'propertyPath' => 'book',
-                    'message' => 'This value is not a valid URL.',
+                '@context' => '/contexts/ConstraintViolationList',
+                '@type' => 'ConstraintViolationList',
+                'hydra:title' => 'An error occurred',
+                'violations' => [
+                    [
+                        'propertyPath' => 'book',
+                        'message' => 'This value is not a valid URL.',
+                    ],
                 ],
             ],
         ];
@@ -408,27 +446,22 @@ final class BookTest extends ApiTestCase
     /**
      * @dataProvider getInvalidData
      */
-    public function testAsAdminUserICannotUpdateABookWithInvalidData(array $data, array $violations): void
+    public function testAsAdminUserICannotUpdateABookWithInvalidData(array $data, int $statusCode, array $expected): void
     {
-        BookFactory::createOne();
+        $book = BookFactory::createOne();
 
         $token = self::getContainer()->get(OidcTokenGenerator::class)->generate([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
-        $this->client->request('PUT', '/admin/books/invalid', [
+        $this->client->request('PUT', '/admin/books/'.$book->getId(), [
             'auth_bearer' => $token,
             'json' => $data,
         ]);
 
-        self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        self::assertResponseStatusCodeSame($statusCode);
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
-        self::assertJsonContains([
-            '@context' => '/contexts/ConstraintViolationList',
-            '@type' => 'ConstraintViolationList',
-            'hydra:title' => 'An error occurred',
-            'violations' => $violations,
-        ]);
+        self::assertJsonContains($expected);
     }
 
     /**
@@ -449,6 +482,10 @@ final class BookTest extends ApiTestCase
         $this->client->request('PUT', '/admin/books/'.$book->getId(), [
             'auth_bearer' => $token,
             'json' => [
+                /* @see https://github.com/api-platform/core/blob/main/src/Serializer/ItemNormalizer.php */
+                'id' => '/books/'.$book->getId(),
+                // Must set all data because of standard PUT
+                'book' => 'https://openlibrary.org/books/OL28346544M.json',
                 'condition' => BookCondition::DamagedCondition->value,
             ],
         ]);

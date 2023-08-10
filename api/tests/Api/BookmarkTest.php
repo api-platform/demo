@@ -15,6 +15,7 @@ use App\Security\OidcTokenGenerator;
 use App\Tests\Api\Trait\MercureTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\Update;
+use Symfony\Component\Uid\Uuid;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
@@ -97,25 +98,22 @@ final class BookmarkTest extends ApiTestCase
             'email' => UserFactory::createOne()->email,
         ]);
 
+        $uuid = Uuid::v7()->__toString();
+
         $this->client->request('POST', '/bookmarks', [
             'json' => [
-                'book' => '/books/invalid',
+                'book' => '/books/'.$uuid,
             ],
             'auth_bearer' => $token,
         ]);
 
-        self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        self::assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertJsonContains([
-            '@context' => '/contexts/ConstraintViolationList',
-            '@type' => 'ConstraintViolationList',
+            '@context' => '/contexts/Error',
+            '@type' => 'hydra:Error',
             'hydra:title' => 'An error occurred',
-            'violations' => [
-                [
-                    'propertyPath' => 'book',
-                    'message' => 'This value is not valid.',
-                ],
-            ],
+            'hydra:description' => 'Item not found for "/books/'.$uuid.'".',
         ]);
     }
 
