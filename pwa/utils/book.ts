@@ -67,7 +67,6 @@ export const useOpenLibraryBook = <TData extends Book>(data: TData) => {
   });
 };
 
-// @ts-ignore
 const filterObject = (object: object) => Object.fromEntries(Object.entries(object).filter(([, value]) => {
   return typeof value === "object" ? Object.keys(value).length > 0 : value?.length > 0;
 }));

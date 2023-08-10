@@ -29,7 +29,7 @@ export const getServerSideProps: GetServerSideProps<{
     const response: FetchResponse<PagedCollection<Bookmark>> | undefined = await fetch(`/bookmarks?page=${Number(page ?? 1)}`, {
       headers: {
         // @ts-ignore
-        Authorization: `Bearer ${session?.accessToken}`
+        Authorization: `Bearer ${session?.accessToken}`,
       }
     });
     if (!response?.data) {

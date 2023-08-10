@@ -10,11 +10,14 @@ export const getServerSideProps: GetServerSideProps<{
   page: number, // required for reviews pagination, prevents useRouter
 }> = async ({ query: { id, page } }) => {
   try {
-    const response: FetchResponse<Book> | undefined = await fetch(`/books/${id}`);
+    const response: FetchResponse<Book> | undefined = await fetch(`/books/${id}`, {
+      headers: {
+        Preload: "/books/*/reviews",
+      }
+    });
     if (!response?.data) {
       throw new Error(`Unable to retrieve data from /books/${id}.`);
     }
-    console.log(response.data);
 
     return { props: { data: response.data, hubURL: response.hubURL, page: page ? Number(page) : 1 } };
   } catch (error) {
