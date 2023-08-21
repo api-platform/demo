@@ -135,7 +135,6 @@ final class ReviewTest extends ApiTestCase
 
         $this->client->request('POST', '/books/'.$book->getId().'/reviews', [
             'json' => [
-                'book' => '/books/'.$book->getId(),
                 'body' => 'Very good book!',
                 'rating' => 5,
             ],
@@ -239,7 +238,6 @@ final class ReviewTest extends ApiTestCase
         $this->client->request('POST', '/books/invalid/reviews', [
             'auth_bearer' => $token,
             'json' => [
-                'book' => '/books/'.$book->getId(),
                 'body' => 'Very good book!',
                 'rating' => 5,
             ],
@@ -272,7 +270,6 @@ final class ReviewTest extends ApiTestCase
         $response = $this->client->request('POST', '/books/'.$book->getId().'/reviews', [
             'auth_bearer' => $token,
             'json' => [
-                'book' => '/books/'.$book->getId(),
                 'body' => 'Very good book!',
                 'rating' => 5,
             ],

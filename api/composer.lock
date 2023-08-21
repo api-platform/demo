@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2947cff93e0b37a3ddb3109f97d6dc5e",
+    "content-hash": "51b61f485c4305effda0483967f341b4",
     "packages": [
         {
             "name": "api-platform/core",
-            "version": "dev-demo",
+            "version": "3.1.x-dev",
             "source": {
                 "type": "git",
-                "url": "https://github.com/vincentchalamon/core.git",
-                "reference": "d6c3019671c7d668fa0cc8a624fc5bc17a26ddd2"
+                "url": "https://github.com/api-platform/core.git",
+                "reference": "a774f4c51167dbbe585269f14a7c51a3f9e38c3c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vincentchalamon/core/zipball/d6c3019671c7d668fa0cc8a624fc5bc17a26ddd2",
-                "reference": "d6c3019671c7d668fa0cc8a624fc5bc17a26ddd2",
+                "url": "https://api.github.com/repos/api-platform/core/zipball/a774f4c51167dbbe585269f14a7c51a3f9e38c3c",
+                "reference": "a774f4c51167dbbe585269f14a7c51a3f9e38c3c",
                 "shasum": ""
             },
             "require": {
@@ -139,12 +139,7 @@
                     "ApiPlatform\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "ApiPlatform\\Tests\\": "tests/",
-                    "App\\": "tests/Fixtures/app/var/tmp/src/"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -158,26 +153,27 @@
             "description": "Build a fully-featured hypermedia or GraphQL API in minutes!",
             "homepage": "https://api-platform.com",
             "keywords": [
-                "API",
-                "GraphQL",
-                "HAL",
                 "Hydra",
                 "JSON-LD",
-                "JSONAPI",
-                "OpenAPI",
-                "REST",
-                "Swagger"
+                "api",
+                "graphql",
+                "hal",
+                "jsonapi",
+                "openapi",
+                "rest",
+                "swagger"
             ],
             "support": {
-                "source": "https://github.com/vincentchalamon/core/tree/demo"
+                "issues": "https://github.com/api-platform/core/issues",
+                "source": "https://github.com/api-platform/core/tree/3.1"
             },
             "funding": [
                 {
-                    "type": "tidelift",
-                    "url": "https://tidelift.com/funding/github/packagist/api-platform/core"
+                    "url": "https://tidelift.com/funding/github/packagist/api-platform/core",
+                    "type": "tidelift"
                 }
             ],
-            "time": "2023-08-08T18:08:58+00:00"
+            "time": "2023-08-23T07:41:20+00:00"
         },
         {
             "name": "brick/math",

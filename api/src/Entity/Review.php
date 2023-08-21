@@ -14,6 +14,7 @@ use ApiPlatform\Metadata\NotExposed;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\State\CreateProvider;
 use App\Repository\ReviewRepository;
 use App\Serializer\IriTransformerNormalizer;
 use App\State\Processor\ReviewPersistProcessor;
@@ -86,6 +87,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             security: 'is_granted("ROLE_USER")',
             // Mercure publish is done manually in MercureProcessor through ReviewPersistProcessor
             processor: ReviewPersistProcessor::class,
+            provider: CreateProvider::class,
             itemUriTemplate: '/books/{bookId}/reviews/{id}{._format}'
         ),
         new Patch(
