@@ -27,6 +27,14 @@ services:
     environment:
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
       MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
+      CADDY_GLOBAL_OPTIONS: |
+        order cache before rewrite
+        cache {
+            api {
+                souin
+            }
+        }
+      CADDY_CACHE: cache
 
   database:
     environment:

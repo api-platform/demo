@@ -1,11 +1,12 @@
 {
-    # Debug
-    {$CADDY_DEBUG}
+    {$CADDY_GLOBAL_OPTIONS}
 }
 
 {$SERVER_NAME}
 
 log
+
+{$CADDY_CACHE}
 
 # Matches requests for OIDC routes
 @oidc expression path('/oidc/*')
