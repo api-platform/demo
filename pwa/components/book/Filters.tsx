@@ -55,7 +55,7 @@ export const Filters: FunctionComponent<Props> = ({ filters, mutation }) => (
             <Typography className="font-semibold w-full">Author</Typography>
           } control={
             <TextField value={values?.author ?? ""} placeholder="Search by author..." type="search"
-                       variant="standard" className="w-full" onChange={(e) => {
+                       data-testid="filter-author" variant="standard" className="w-full" onChange={(e) => {
                          handleChange(e);
                          debounce(submitForm, 1000)();
                        }}
@@ -67,7 +67,7 @@ export const Filters: FunctionComponent<Props> = ({ filters, mutation }) => (
             <Typography className="font-semibold w-full">Title</Typography>
           } control={
             <TextField value={values?.title ?? ""} placeholder="Search by title..." type="search"
-                       variant="standard" className="w-full" onChange={(e) => {
+                       data-testid="filter-title" variant="standard" className="w-full" onChange={(e) => {
                          handleChange(e);
                          debounce(submitForm, 1000)();
                        }}
@@ -78,7 +78,7 @@ export const Filters: FunctionComponent<Props> = ({ filters, mutation }) => (
           <ul className="block">
             <p className="font-semibold">Condition</p>
             <li>
-              <FormControlLabel name="condition" label="New" control={<Checkbox/>}
+              <FormControlLabel name="condition" label="New" control={<Checkbox data-testid="filter-condition-new"/>}
                                 checked={!!values?.condition?.includes("https://schema.org/NewCondition")}
                                 value="https://schema.org/NewCondition"
                                 onChange={(e) => {
@@ -88,7 +88,7 @@ export const Filters: FunctionComponent<Props> = ({ filters, mutation }) => (
               />
             </li>
             <li>
-              <FormControlLabel name="condition" label="Damaged" control={<Checkbox/>}
+              <FormControlLabel name="condition" label="Damaged" control={<Checkbox data-testid="filter-condition-damaged"/>}
                                 checked={!!values?.condition?.includes("https://schema.org/DamagedCondition")}
                                 value="https://schema.org/DamagedCondition"
                                 onChange={(e) => {
@@ -98,7 +98,7 @@ export const Filters: FunctionComponent<Props> = ({ filters, mutation }) => (
               />
             </li>
             <li>
-              <FormControlLabel name="condition" label="Refurbished" control={<Checkbox/>}
+              <FormControlLabel name="condition" label="Refurbished" control={<Checkbox data-testid="filter-condition-refurbished"/>}
                                 checked={!!values?.condition?.includes("https://schema.org/RefurbishedCondition")}
                                 value="https://schema.org/RefurbishedCondition"
                                 onChange={(e) => {
@@ -108,7 +108,7 @@ export const Filters: FunctionComponent<Props> = ({ filters, mutation }) => (
               />
             </li>
             <li>
-              <FormControlLabel name="condition" label="Used" control={<Checkbox/>}
+              <FormControlLabel name="condition" label="Used" control={<Checkbox data-testid="filter-condition-used"/>}
                                 checked={!!values?.condition?.includes("https://schema.org/UsedCondition")}
                                 value="https://schema.org/UsedCondition"
                                 onChange={(e) => {

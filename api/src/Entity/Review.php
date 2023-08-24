@@ -33,6 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ApiResource(
     types: ['https://schema.org/Review'],
+    order: ['publishedAt' => 'DESC'],
     operations: [
         new GetCollection(
             uriTemplate: '/admin/reviews{._format}',
@@ -67,6 +68,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[ApiResource(
     types: ['https://schema.org/Review'],
+    order: ['publishedAt' => 'DESC'],
     uriTemplate: '/books/{bookId}/reviews{._format}',
     uriVariables: [
         'bookId' => new Link(toProperty: 'book', fromClass: Book::class),

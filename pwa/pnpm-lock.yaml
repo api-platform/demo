@@ -70,6 +70,9 @@ dependencies:
     version: 1.6.6
 
 devDependencies:
+  '@playwright/test':
+    specifier: ^1.37.1
+    version: 1.37.1
   '@tailwindcss/forms':
     specifier: ^0.5.4
     version: 0.5.4(tailwindcss@3.3.3)
@@ -731,6 +734,17 @@ packages:
       open: 9.1.0
       picocolors: 1.0.0
       tslib: 2.6.1
+    dev: true
+
+  /@playwright/test@1.37.1:
+    resolution: {integrity: sha512-bq9zTli3vWJo8S3LwB91U0qDNQDpEXnw7knhxLM0nwDvexQAwx9tO8iKDZSqqneVq+URd/WIoz+BALMqUTgdSg==}
+    engines: {node: '>=16'}
+    hasBin: true
+    dependencies:
+      '@types/node': 20.4.2
+      playwright-core: 1.37.1
+    optionalDependencies:
+      fsevents: 2.3.2
     dev: true
 
   /@popperjs/core@2.11.8:
@@ -2932,6 +2946,12 @@ packages:
   /pirates@4.0.6:
     resolution: {integrity: sha512-saLsH7WeYYPiD25LDuLRRY/i+6HaPYr6G1OUlN39otzkSTxKnubR9RTxS3/Kk50s1g2JTgFwWQDQyplC5/SHZg==}
     engines: {node: '>= 6'}
+    dev: true
+
+  /playwright-core@1.37.1:
+    resolution: {integrity: sha512-17EuQxlSIYCmEMwzMqusJ2ztDgJePjrbttaefgdsiqeLWidjYz9BxXaTaZWxH1J95SHGk6tjE+dwgWILJoUZfA==}
+    engines: {node: '>=16'}
+    hasBin: true
     dev: true
 
   /postcss-import@15.1.0(postcss@8.4.27):

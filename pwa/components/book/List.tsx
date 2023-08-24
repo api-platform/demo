@@ -56,6 +56,7 @@ export const List: NextPage<Props> = ({ data, hubURL, filters }) => {
                 <div className="float-left flex w-[400px]">
                   <span className="mr-2">Sort by:</span>
                   <Select
+                    data-testid="sort"
                     variant="standard"
                     value={filters.order?.title ?? ""}
                     displayEmpty
@@ -68,14 +69,14 @@ export const List: NextPage<Props> = ({ data, hubURL, filters }) => {
                     <MenuItem value="desc">Title DESC</MenuItem>
                   </Select>
                 </div>
-                <span className="float-right mt-1">{collection["hydra:totalItems"]} book(s) found</span>
+                <span data-testid="nb-books" className="float-right mt-1">{collection["hydra:totalItems"]} book(s) found</span>
               </div>
-              <div className="grid grid-cols-5 gap-4">
+              <div data-testid="books-collection" className="grid grid-cols-5 gap-4">
                 {collection["hydra:member"].length !== 0 && collection["hydra:member"].map((book) => (
                   <Item key={book["@id"]} book={book}/>
                 ))}
               </div>
-              <Pagination collection={collection} getPagePath={getPagePath} currentPage={filters?.page}/>
+              <Pagination data-testid="books-pagination" collection={collection} getPagePath={getPagePath} currentPage={filters?.page}/>
             </>
           ) || (
             <p className="w-full flex px-8 pb-4 text-lg">No books found.</p>

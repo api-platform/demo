@@ -65,7 +65,7 @@ final class ReviewFactory extends ModelFactory
         return [
             'user' => lazy(fn () => UserFactory::randomOrCreate()),
             'book' => lazy(fn () => BookFactory::randomOrCreate()),
-            'publishedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
+            'publishedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime('-1 week')),
             'body' => self::faker()->text(),
             'rating' => self::faker()->numberBetween(0, 5),
         ];

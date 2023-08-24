@@ -22,7 +22,7 @@ final class DefaultBookStory extends Story
     public function build(): void
     {
         BookFactory::createOne([
-            'condition' => BookCondition::NewCondition,
+            'condition' => BookCondition::UsedCondition,
             'book' => 'https://openlibrary.org/books/OL6095440M.json',
             'title' => 'Foundation',
             'author' => 'Isaac Asimov',
@@ -37,7 +37,7 @@ final class DefaultBookStory extends Story
             $books = $this->getData($uri);
             foreach ($books as $book) {
                 $datum = [
-                    'condition' => BookCondition::NewCondition,
+                    'condition' => BookCondition::cases()[array_rand(BookCondition::cases())],
                     'book' => 'https://openlibrary.org'.$book['key'].'.json',
                     'title' => $book['title'],
                 ];

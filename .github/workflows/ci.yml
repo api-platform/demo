@@ -18,10 +18,6 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
-    env:
-      PHP_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/php:latest
-      CADDY_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/caddy:latest
-      PWA_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/pwa:latest
     steps:
       -
         name: Checkout
@@ -30,7 +26,7 @@ jobs:
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       -
-        name: Build Docker images
+        name: Build Docker Images
         uses: docker/bake-action@v3
         with:
           pull: true
@@ -43,72 +39,127 @@ jobs:
             *.cache-from=type=gha,scope=refs/heads/main
             *.cache-to=type=gha,scope=${{github.ref}},mode=max
       -
-        name: Start services
+        name: Start Services
         run: docker compose up --wait --no-build
       -
-        name: Wait for services
+        name: Debug Services
+        if: failure()
         run: |
-          while status="$(docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" "$(docker compose ps -q php)")"; do
-            case $status in
-              starting) sleep 1;;
-              healthy) exit 0;;
-              unhealthy)
-                docker compose ps
-                docker compose logs
-                exit 1
-              ;;
-            esac
-          done
-          exit 1
+          docker compose ps
+          docker compose logs
       -
-        name: Check HTTP reachability
+        name: Check HTTP Reachability
         run: curl -v -o /dev/null http://localhost
       -
-        name: Check API reachability
+        name: Check API Reachability
         run: curl -vk -o /dev/null https://localhost
       -
-        name: Check PWA reachability
+        name: Check PWA Reachability
         run: "curl -vk -o /dev/null -H 'Accept: text/html' https://localhost"
       -
-        name: Create test database
+        name: Create Test Database
         run: |
           docker compose exec -T php bin/console -e test doctrine:database:create
           docker compose exec -T php bin/console -e test doctrine:migrations:migrate --no-interaction
       -
-        name: PHPUnit
+        name: Run PHPUnit Tests
         run: docker compose exec -T php bin/phpunit
-      -
-        name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8.6.2
       -
         name: Doctrine Schema Validator
         run: docker compose exec -T php bin/console doctrine:schema:validate
       -
-        name: Psalm
+        name: Run Psalm Analysis
         run: docker compose exec -T php vendor/bin/psalm
-#      -
-#        name: Cache playwright binaries
-#        uses: actions/cache@v3
-#        with:
-#          path: ~/.cache/ms-playwright
-#          key: ${{ runner.os }}-playwright
-#      -
-#        name: Install Playwright dependencies
-#        working-directory: pwa
-#        run: pnpm playwright install
-#      -
-#        name: Run Playwright
-#        working-directory: pwa
-#        # use 1 worker to prevent conflict between write and read scenarios
-#        run: pnpm exec playwright test --workers=1
-#      -
-#        uses: actions/upload-artifact@v3
-#        if: failure()
-#        with:
-#          name: playwright-screenshots
-#          path: pwa/test-results
+      -
+        name: Run PWA Lint
+        run: docker compose exec -T pwa pnpm lint
+
+  # run e2e tests iso-prod
+  e2e-tests:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    env:
+      PHP_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/php:latest
+      APP_SECRET: "ba63418865d58089f7f070e0a437b6d16b1fb970"
+      CADDY_MERCURE_JWT_SECRET: "f8675b65055fc9f1ccdc21e425c00798633d5556"
+      PWA_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/pwa:latest
+      NEXTAUTH_SECRET: "0efafa22ed0e5f4d1875777584eebeebf14068f1"
+      CADDY_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/caddy:latest
+      POSTGRES_PASSWORD: "01c3b2511ddbff2838fa39cc3b823037e1627397"
+      KEYCLOAK_POSTGRES_PASSWORD: "b8ef720708474177fa169a5c3fec495e04660f44"
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      -
+        name: Build Docker Images
+        uses: docker/bake-action@v3
+        with:
+          pull: true
+          load: true
+          files: |
+            docker-compose.yml
+            docker-compose.prod.yml
+          set: |
+            *.cache-from=type=gha,scope=${{github.ref}}-e2e
+            *.cache-from=type=gha,scope=${{github.ref}}
+            *.cache-from=type=gha,scope=refs/heads/main
+            *.cache-to=type=gha,scope=${{github.ref}}-e2e,mode=max
+      -
+        name: Start Services
+        run: docker compose up --wait --no-build
+      -
+        name: Debug Services
+        if: failure()
+        run: |
+          docker compose ps
+          docker compose logs
+      -
+        name: Cache Playwright Binaries
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright
+      -
+        name: Install PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.6.2
+      -
+        name: Install Dependencies
+        working-directory: pwa
+        run: pnpm install
+      -
+        name: Install Playwright Browsers
+        working-directory: pwa
+        run: pnpm exec playwright install --with-deps
+      -
+        name: Run Playwright @read
+        working-directory: pwa
+        run: pnpm exec playwright test --grep @read
+      -
+        name: Run Playwright @write
+        working-directory: pwa
+        # use 1 worker to prevent conflict between write scenarios
+        run: pnpm exec playwright test --grep @write --workers=1
+      -
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: playwright-screenshots
+          path: pwa/test-results
+      -
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: pwa/playwright-report
 
   lint:
     name: Docker Lint

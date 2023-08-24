@@ -14,12 +14,13 @@ export const getServerSideProps: GetServerSideProps<{
   page: number,
 }> = async ({ query: { page }, req, res }) => {
   const session = await getServerSession(req, res, authOptions);
-  if (!session) {
+  // @ts-ignore
+  if (!session || session?.error === "RefreshAccessTokenError") {
     // todo find a way to redirect directly to keycloak from here
     // Can't use next-auth/middleware because of https://github.com/nextauthjs/next-auth/discussions/7488
     return {
       redirect: {
-        destination: `/api/auth/signin?callbackUrl=${req.url}`,
+        destination: "/api/auth/signin?callbackUrl=/bookmarks",
         permanent: false
       }
     };

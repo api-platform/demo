@@ -17,6 +17,9 @@ final class DefaultBookmarkStory extends Story
             'book' => BookFactory::find(['book' => 'https://openlibrary.org/books/OL6095440M.json']),
             'user' => UserFactory::find(['email' => 'john.doe@example.com']),
         ]);
+        BookmarkFactory::createMany(30, [
+            'user' => UserFactory::find(['email' => 'john.doe@example.com']),
+        ]);
 
         BookmarkFactory::createMany(99);
     }

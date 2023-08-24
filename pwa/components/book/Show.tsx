@@ -82,7 +82,7 @@ export const Show: NextPage<Props> = ({ data, hubURL, page }) => {
         <title>{`${item["title"]}${!!item["author"] && ` - ${item["author"]}`}`}</title>
       </Head>
       <div role="presentation" className="mb-8">
-        <Breadcrumbs aria-label="breadcrumb">
+        <Breadcrumbs aria-label="breadcrumb" data-testid="book-breadcrumb">
           <Link href="/books" className="hover:underline">
             Books Store
           </Link>
@@ -97,7 +97,7 @@ export const Show: NextPage<Props> = ({ data, hubURL, page }) => {
           <div className="flex">
             <div className="min-w-[270px] max-w-[300px] w-full mr-10 text-center">
               {!!book["images"] && (
-                <Image alt={book["title"]} width={300} height={300} src={book["images"]["large"]}/>
+                <Image alt={book["title"]} width={300} height={300} src={book["images"]["large"]} data-testid="book-cover"/>
               ) || (
                 <span className="h-40 text-slate-300">No cover</span>
               )}
@@ -109,7 +109,7 @@ export const Show: NextPage<Props> = ({ data, hubURL, page }) => {
                   {book["author"]}
                 </Link>
               </h2>
-              <p className="text-gray-600 mt-4">
+              <p className="text-gray-600 mt-4" data-testid="book-metadata">
                 <span className="flex">
                   <span>Condition: {book["condition"].replace(/https:\/\/schema\.org\/(.+)Condition$/, "$1")}</span>
                   {!!book["publicationDate"] && (
@@ -118,11 +118,13 @@ export const Show: NextPage<Props> = ({ data, hubURL, page }) => {
                 </span>
                 <span className="mt-2 flex">
                   <span>Average rating</span>
-                  <Rating value={book["rating"] ?? 0} readOnly className="ml-2" />
+                  <Rating value={book["rating"] ?? 0} readOnly className="ml-2"/>
                   <Link href="#reviews" className="ml-4 hover:underline">Add a review</Link>
                 </span>
               </p>
-              <p className="text-justify leading-7 my-8">{book["description"] ?? "This book has no description."}</p>
+              <p className="text-justify leading-7 my-8" data-testid="book-description">
+                {book["description"] ?? "This book has no description."}
+              </p>
               <button className="mt-4 px-10 py-4 font-semibold text-sm bg-cyan-500 text-white rounded-full shadow-sm"
                       onClick={() => bookmarkMutation.mutate({ book: book["@id"] })}>
                 {!!bookmark && (
