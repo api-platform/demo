@@ -38,14 +38,14 @@ const DocTypeMenuButton = () => {
         onClick={handleClick}>
         {docType === "hydra" ? (
           <>
-            <HydraLogo /> Hydra
+            <HydraLogo/> Hydra
           </>
         ) : (
           <>
-            <OpenApiLogo /> OpenAPI
+            <OpenApiLogo/> OpenAPI
           </>
         )}
-        <ExpandMoreIcon fontSize="small" />
+        <ExpandMoreIcon fontSize="small"/>
       </Button>
       <Menu
         id="doc-type-menu"
@@ -73,10 +73,10 @@ const CustomAppBar = ({ classes, userMenu, ...props }: AppBarProps) => {
         className={`${AppBarClasses.title} w-[200px]`}
         id="react-admin-title"
       />
-      <Logo />
-      <Box component="span" sx={{ flex: 0 }} />
-      <DocTypeMenuButton />
-      <Box component="span" sx={{ flex: 0.5 }} />
+      <Logo/>
+      <Box component="span" sx={{ flex: 0 }}/>
+      <DocTypeMenuButton/>
+      <Box component="span" sx={{ flex: 0.5 }}/>
     </AppBar>
   );
 };

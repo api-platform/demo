@@ -15,7 +15,7 @@ export default function MyApp({ Component, pageProps }: AppProps<{
   return (
     <SessionProvider session={pageProps.session}>
       <Layout dehydratedState={pageProps.dehydratedState}>
-        <Component {...pageProps} />
+        <Component {...pageProps}/>
       </Layout>
     </SessionProvider>
   );

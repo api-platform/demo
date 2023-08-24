@@ -134,7 +134,7 @@ const Admin = () => (
     </Head>
 
     {/*@ts-ignore*/}
-    <AdminWithOIDC />
+    <AdminWithOIDC/>
   </>
 );
 

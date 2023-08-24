@@ -25,9 +25,9 @@ const ConditionField = (props: UseRecordContextParams) => {
 ConditionField.defaultProps = { label: "Condition" };
 
 const filters = [
-  <TextInput source="title"/>,
-  <TextInput source="author"/>,
-  <ConditionInput source="condition"/>,
+  <TextInput source="title" key="title"/>,
+  <TextInput source="author" key="author"/>,
+  <ConditionInput source="condition" key="condition"/>,
 ];
 
 const PostPagination = (props: PaginationProps) => <Pagination rowsPerPageOptions={[]} {...props}/>;
