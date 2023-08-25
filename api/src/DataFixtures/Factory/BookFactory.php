@@ -7,6 +7,7 @@ namespace App\DataFixtures\Factory;
 use App\Entity\Book;
 use App\Enum\BookCondition;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Serializer\Encoder\DecoderInterface;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
 use Zenstruck\Foundry\RepositoryProxy;
@@ -51,7 +52,7 @@ final class BookFactory extends ModelFactory
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
      */
-    public function __construct()
+    public function __construct(private readonly DecoderInterface $decoder)
     {
         parent::__construct();
     }
@@ -61,10 +62,13 @@ final class BookFactory extends ModelFactory
      */
     protected function getDefaults(): array
     {
+        $data = $this->decoder->decode(file_get_contents(__DIR__.'/../books.json'), 'json');
+        $datum = $data[array_rand($data)];
+
         return [
-            'book' => 'https://openlibrary.org/books/OL'.self::faker()->unique()->randomNumber(7, true).'M.json',
-            'title' => self::faker()->text(),
-            'author' => self::faker()->name(),
+            'book' => $datum['book'],
+            'title' => $datum['title'],
+            'author' => $datum['author'],
             'condition' => self::faker()->randomElement(BookCondition::getCases()),
         ];
     }

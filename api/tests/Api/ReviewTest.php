@@ -173,8 +173,6 @@ final class ReviewTest extends ApiTestCase
 
     public function getInvalidData(): iterable
     {
-        $uuid = Uuid::v7()->__toString();
-
         yield 'empty data' => [
             [],
             Response::HTTP_UNPROCESSABLE_ENTITY,
@@ -192,34 +190,6 @@ final class ReviewTest extends ApiTestCase
                         'message' => 'This value should not be null.',
                     ],
                 ],
-            ],
-        ];
-        yield 'invalid book data' => [
-            [
-                'book' => 'invalid book',
-                'body' => 'Very good book!',
-                'rating' => 5,
-            ],
-            Response::HTTP_BAD_REQUEST,
-            [
-                '@context' => '/contexts/Error',
-                '@type' => 'hydra:Error',
-                'hydra:title' => 'An error occurred',
-                'hydra:description' => 'Invalid IRI "invalid book".',
-            ],
-        ];
-        yield 'invalid book identifier' => [
-            [
-                'book' => '/books/'.$uuid,
-                'body' => 'Very good book!',
-                'rating' => 5,
-            ],
-            Response::HTTP_BAD_REQUEST,
-            [
-                '@context' => '/contexts/Error',
-                '@type' => 'hydra:Error',
-                'hydra:title' => 'An error occurred',
-                'hydra:description' => 'Item not found for "/books/'.$uuid.'".',
             ],
         ];
     }
@@ -303,6 +273,36 @@ final class ReviewTest extends ApiTestCase
             topics: ['http://localhost/books/'.$book->getId().'/reviews/'.$review->getId()],
             jsonSchema: file_get_contents(__DIR__.'/schemas/Review/item.json')
         );
+    }
+
+    public function testAsAUserICannotAddADuplicateReviewOnABook(): void
+    {
+        $book = BookFactory::createOne();
+        ReviewFactory::createMany(5, ['book' => $book]);
+        $user = UserFactory::createOne();
+        ReviewFactory::createOne(['book' => $book, 'user' => $user]);
+        self::getMercureHub()->reset();
+
+        $token = $this->generateToken([
+            'email' => $user->email,
+        ]);
+
+        $this->client->request('POST', '/books/'.$book->getId().'/reviews', [
+            'auth_bearer' => $token,
+            'json' => [
+                'body' => 'Very good book!',
+                'rating' => 5,
+            ],
+        ]);
+
+        self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertJsonContains([
+            '@context' => '/contexts/ConstraintViolationList',
+            '@type' => 'ConstraintViolationList',
+            'hydra:title' => 'An error occurred',
+            'hydra:description' => 'You have already reviewed this book.',
+        ]);
     }
 
     public function testAsAnonymousICannotGetAnInvalidReview(): void

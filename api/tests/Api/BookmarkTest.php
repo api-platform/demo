@@ -162,6 +162,34 @@ final class BookmarkTest extends ApiTestCase
         );
     }
 
+    public function testAsAUserICannotCreateADuplicateBookmark(): void
+    {
+        $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL28346544M.json']);
+        $user = UserFactory::createOne();
+        BookmarkFactory::createOne(['book' => $book, 'user' => $user]);
+        self::getMercureHub()->reset();
+
+        $token = $this->generateToken([
+            'email' => $user->email,
+        ]);
+
+        $this->client->request('POST', '/bookmarks', [
+            'json' => [
+                'book' => '/books/'.$book->getId(),
+            ],
+            'auth_bearer' => $token,
+        ]);
+
+        self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertJsonContains([
+            '@context' => '/contexts/ConstraintViolationList',
+            '@type' => 'ConstraintViolationList',
+            'hydra:title' => 'An error occurred',
+            'hydra:description' => 'You have already bookmarked this book.',
+        ]);
+    }
+
     public function testAsAnonymousICannotDeleteABookmark(): void
     {
         $bookmark = BookmarkFactory::createOne();

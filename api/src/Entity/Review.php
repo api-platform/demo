@@ -19,6 +19,7 @@ use App\Repository\ReviewRepository;
 use App\Serializer\IriTransformerNormalizer;
 use App\State\Processor\ReviewPersistProcessor;
 use App\State\Processor\ReviewRemoveProcessor;
+use App\Validator\UniqueUserBook;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
@@ -63,7 +64,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         'skip_null_values' => true,
         'groups' => ['Review:read', 'Review:read:admin'],
     ],
-    denormalizationContext: ['groups' => ['Review:write']],
+    denormalizationContext: ['groups' => ['Review:write', 'Review:write:admin']],
     security: 'is_granted("ROLE_ADMIN")'
 )]
 #[ApiResource(
@@ -90,7 +91,8 @@ use Symfony\Component\Validator\Constraints as Assert;
             // Mercure publish is done manually in MercureProcessor through ReviewPersistProcessor
             processor: ReviewPersistProcessor::class,
             provider: CreateProvider::class,
-            itemUriTemplate: '/books/{bookId}/reviews/{id}{._format}'
+            itemUriTemplate: '/books/{bookId}/reviews/{id}{._format}',
+            validationContext: ['groups' => ['Default', 'Review:create']]
         ),
         new Patch(
             uriTemplate: '/books/{bookId}/reviews/{id}{._format}',
@@ -124,6 +126,8 @@ use Symfony\Component\Validator\Constraints as Assert;
     denormalizationContext: ['groups' => ['Review:write']]
 )]
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
+#[ORM\UniqueConstraint(fields: ['user', 'book'])]
+#[UniqueUserBook(message: 'You have already reviewed this book.', groups: ['Review:create'])]
 class Review
 {
     /**
@@ -150,7 +154,7 @@ class Review
      */
     #[ApiProperty(types: ['https://schema.org/itemReviewed'])]
     #[Assert\NotNull]
-    #[Groups(groups: ['Review:read', 'Review:write'])]
+    #[Groups(groups: ['Review:read', 'Review:write:admin'])]
     #[ORM\ManyToOne(targetEntity: Book::class)]
     #[ORM\JoinColumn(nullable: false)]
     public ?Book $book = null;

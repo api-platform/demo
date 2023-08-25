@@ -15,6 +15,7 @@ use ApiPlatform\Metadata\Post;
 use App\Repository\BookmarkRepository;
 use App\Serializer\IriTransformerNormalizer;
 use App\State\Processor\BookmarkPersistProcessor;
+use App\Validator\UniqueUserBook;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -49,6 +50,8 @@ use Symfony\Component\Validator\Constraints as Assert;
     security: 'is_granted("ROLE_USER")'
 )]
 #[ORM\Entity(repositoryClass: BookmarkRepository::class)]
+#[ORM\UniqueConstraint(fields: ['user', 'book'])]
+#[UniqueUserBook(message: 'You have already bookmarked this book.')]
 class Bookmark
 {
     /**
