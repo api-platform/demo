@@ -7,9 +7,9 @@ test.describe("Book view", () => {
 
   test("I can see the book details @read", async ({ page }) => {
     // test book display
-    await expect(page).toHaveTitle("Foundation - Isaac Asimov");
+    await expect(page).toHaveTitle("Foundation - Liu Cixin");
     await expect(page.locator("h1")).toHaveText("Foundation");
-    await expect(page.locator("h2")).toHaveText("Isaac Asimov");
+    await expect(page.locator("h2")).toHaveText("Liu Cixin");
     await expect(page.getByTestId("book-cover")).toBeVisible();
     await expect(page.getByTestId("book-metadata")).toContainText("Condition: Used | Published on 1951");
     await expect(page.getByTestId("book-description")).not.toBeEmpty();
@@ -22,9 +22,9 @@ test.describe("Book view", () => {
   });
 
   test("I can go back to the books list filtered by author through the breadcrumb @read", async ({ page }) => {
-    await expect(page.getByTestId("book-breadcrumb")).toContainText("Isaac Asimov");
-    await page.getByTestId("book-breadcrumb").getByText("Isaac Asimov").click();
-    await expect(page).toHaveURL(/\/books\?author=Isaac%20Asimov$/);
+    await expect(page.getByTestId("book-breadcrumb")).toContainText("Liu Cixin");
+    await page.getByTestId("book-breadcrumb").getByText("Liu Cixin").click();
+    await expect(page).toHaveURL(/\/books\?author=Liu%20Cixin/);
   });
 
   test("I can bookmark the book @write @login", async ({ bookPage, page }) => {
@@ -34,7 +34,7 @@ test.describe("Book view", () => {
     await expect(page).toBeOnLoginPage();
     await bookPage.login();
 
-    await expect(page).toHaveURL(/\/books\/.*\/foundation-isaac-asimov$/);
+    await expect(page).toHaveURL(/\/books\/.*\/foundation-liu-cixin$/);
     // note: book is already bookmarked through the fixtures
     await expect(page.getByLabel("Bookmark")).toHaveCount(0);
     await expect(page.getByLabel("Bookmarked")).toHaveCount(1);
@@ -69,7 +69,7 @@ test.describe("Book view", () => {
 
     // navigate through pagination
     await page.getByLabel("Go to next page").click();
-    await expect(page).toHaveURL(/\/books\/.*\/foundation-isaac-asimov\?page=2#reviews$/);
+    await expect(page).toHaveURL(/\/books\/.*\/foundation-liu-cixin\?page=2#reviews$/);
     await expect(page.getByTestId("review")).toHaveCount(5);
     await expect(await bookPage.getDefaultReview()).not.toBeVisible();
     await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", "page 2");
@@ -79,7 +79,7 @@ test.describe("Book view", () => {
     await expect(page.getByLabel("Go to last page")).toBeEnabled();
 
     await page.getByLabel("page 3").click();
-    await expect(page).toHaveURL(/\/books\/.*\/foundation-isaac-asimov\?page=3#reviews$/);
+    await expect(page).toHaveURL(/\/books\/.*\/foundation-liu-cixin\?page=3#reviews$/);
     await expect(page.getByTestId("review")).toHaveCount(5);
     await expect(await bookPage.getDefaultReview()).not.toBeVisible();
     await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", "page 3");
@@ -89,7 +89,7 @@ test.describe("Book view", () => {
     await expect(page.getByLabel("Go to last page")).toBeEnabled();
 
     await page.getByLabel("Go to previous page").click();
-    await expect(page).toHaveURL(/\/books\/.*\/foundation-isaac-asimov\?page=2#reviews$/);
+    await expect(page).toHaveURL(/\/books\/.*\/foundation-liu-cixin\?page=2#reviews$/);
     await expect(page.getByTestId("review")).toHaveCount(5);
     await expect(await bookPage.getDefaultReview()).not.toBeVisible();
     await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", "page 2");
@@ -99,7 +99,7 @@ test.describe("Book view", () => {
     await expect(page.getByLabel("Go to last page")).toBeEnabled();
 
     await page.getByLabel("Go to last page").click();
-    await expect(page).toHaveURL(/\/books\/.*\/foundation-isaac-asimov\?page=7#reviews$/);
+    await expect(page).toHaveURL(/\/books\/.*\/foundation-liu-cixin\?page=7#reviews$/);
     await expect(page.getByTestId("review")).toHaveCount(1);
     await expect(await bookPage.getDefaultReview()).not.toBeVisible();
     await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", "page 7");
@@ -109,7 +109,7 @@ test.describe("Book view", () => {
     await expect(page.getByLabel("Go to last page")).toBeDisabled();
 
     await page.getByLabel("Go to first page").click();
-    await expect(page).toHaveURL(/\/books\/.*\/foundation-isaac-asimov\?page=1#reviews$/);
+    await expect(page).toHaveURL(/\/books\/.*\/foundation-liu-cixin\?page=1#reviews$/);
     await expect(page.getByTestId("review")).toHaveCount(5);
     await expect(await bookPage.getDefaultReview()).toBeVisible();
     await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", "page 1");
@@ -121,7 +121,7 @@ test.describe("Book view", () => {
     // direct url should target to the right page
     await bookPage.gotoDefaultBook();
     await page.goto(`${page.url()}?page=2`);
-    await page.waitForURL(/\/books\/.*\/foundation-isaac-asimov\?page=2$/);
+    await page.waitForURL(/\/books\/.*\/foundation-liu-cixin\?page=2$/);
     await expect(page.getByTestId("review")).toHaveCount(5);
     await expect(await bookPage.getDefaultReview()).not.toBeVisible();
     await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", "page 2");

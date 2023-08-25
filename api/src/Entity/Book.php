@@ -98,11 +98,11 @@ class Book
      */
     #[ApiProperty(
         types: ['https://schema.org/itemOffered', 'https://purl.org/dc/terms/BibliographicResource'],
-        example: 'https://openlibrary.org/books/OL6095440M.json'
+        example: 'https://openlibrary.org/books/OL17267881W.json'
     )]
     #[Assert\NotBlank(allowNull: false)]
     #[Assert\Url(protocols: ['https'])]
-    #[Assert\Regex(pattern: '/^https:\/\/openlibrary.org\/books\/OL\d+M\.json$/')]
+    #[Assert\Regex(pattern: '/^https:\/\/openlibrary.org\/books\/OL\d+[A-Z]{1}\.json$/')]
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Book:write'])]
     #[ORM\Column(unique: true)]
     public ?string $book = null;
@@ -114,7 +114,7 @@ class Book
     #[ApiFilter(SearchFilter::class, strategy: 'i'.SearchFilterInterface::STRATEGY_PARTIAL)]
     #[ApiProperty(
         types: ['https://schema.org/name'],
-        example: 'Foundation'
+        example: 'The Three-Body Problem'
     )]
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Review:read:admin'])]
     #[ORM\Column(type: Types::TEXT)]
@@ -126,7 +126,7 @@ class Book
     #[ApiFilter(SearchFilter::class, strategy: 'i'.SearchFilterInterface::STRATEGY_PARTIAL)]
     #[ApiProperty(
         types: ['https://schema.org/author'],
-        example: 'Isaac Asimov'
+        example: 'Liu Cixin'
     )]
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Review:read:admin'])]
     #[ORM\Column(nullable: true)]

@@ -47,7 +47,7 @@ final class BooksImportCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $offset = 0;
-        $limit = $input->getOption('limit');
+        $limit = (int) $input->getOption('limit');
         $io->progressStart($limit);
         $data = [];
         while ($offset < $limit) {

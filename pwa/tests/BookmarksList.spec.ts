@@ -97,12 +97,12 @@ test.describe("Bookmarks list", () => {
   });
 
   test("I can go to the books store filtered by author @read @login", async ({ bookmarkPage, page }) => {
-    await (await bookmarkPage.getDefaultBook()).getByText("Isaac Asimov").click();
-    await expect(page).toHaveURL(/\/books\?author=Isaac\+Asimov$/);
+    await (await bookmarkPage.getDefaultBook()).getByText("Liu Cixin").click();
+    await expect(page).toHaveURL(/\/books\?author=Liu\+Cixin/);
   });
 
   test("I can go to a book @read @login", async ({ bookmarkPage, page }) => {
     await (await bookmarkPage.getDefaultBook()).getByText("Foundation").click();
-    await expect(page).toHaveURL(/\/books\/.*\/foundation-isaac-asimov$/);
+    await expect(page).toHaveURL(/\/books\/.*\/foundation-liu-cixin/);
   });
 });

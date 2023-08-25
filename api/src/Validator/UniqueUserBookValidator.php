@@ -21,7 +21,8 @@ final class UniqueUserBookValidator extends ConstraintValidator
         private readonly Security $security,
         private readonly ManagerRegistry $registry,
         private readonly PropertyAccessorInterface $propertyAccessor
-    ) {}
+    ) {
+    }
 
     public function validate($value, Constraint $constraint): void
     {

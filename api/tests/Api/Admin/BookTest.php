@@ -65,6 +65,7 @@ final class BookTest extends ApiTestCase
      */
     public function testAsAdminUserICanGetACollectionOfBooks(FactoryCollection $factory, string $url, int $hydraTotalItems): void
     {
+        // Cannot use Factory as data provider because BookFactory has a service dependency
         $factory->create();
 
         $token = $this->generateToken([
@@ -85,28 +86,28 @@ final class BookTest extends ApiTestCase
     public function getUrls(): iterable
     {
         yield 'all books' => [
-            BookFactory::new()->many(100),
+            BookFactory::new()->many(35),
             '/admin/books',
-            100,
+            35,
         ];
         yield 'books filtered by title' => [
             BookFactory::new()->sequence(function () {
-                yield ['title' => 'Foundation'];
-                foreach (range(1, 100) as $i) {
+                yield ['title' => 'The Three-Body Problem'];
+                foreach (range(1, 10) as $i) {
                     yield [];
                 }
             }),
-            '/admin/books?title=ounda',
+            '/admin/books?title=three-body',
             1,
         ];
         yield 'books filtered by author' => [
             BookFactory::new()->sequence(function () {
-                yield ['author' => 'Isaac Asimov'];
-                foreach (range(1, 100) as $i) {
+                yield ['author' => 'Liu Cixin'];
+                foreach (range(1, 10) as $i) {
                     yield [];
                 }
             }),
-            '/admin/books?author=isaac',
+            '/admin/books?author=liu',
             1,
         ];
         yield 'books filtered by condition' => [
@@ -123,9 +124,9 @@ final class BookTest extends ApiTestCase
 
     public function testAsAdminUserICanGetACollectionOfBooksOrderedByTitle(): void
     {
-        BookFactory::createOne(['title' => 'Foundation']);
-        BookFactory::createOne(['title' => 'Nemesis']);
-        BookFactory::createOne(['title' => 'I, Robot']);
+        BookFactory::createOne(['title' => 'The Three-Body Problem']);
+        BookFactory::createOne(['title' => 'The Wandering Earth']);
+        BookFactory::createOne(['title' => 'Ball Lightning']);
 
         $token = $this->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
@@ -135,9 +136,9 @@ final class BookTest extends ApiTestCase
 
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
-        self::assertEquals('Foundation', $response->toArray()['hydra:member'][0]['title']);
-        self::assertEquals('I, Robot', $response->toArray()['hydra:member'][1]['title']);
-        self::assertEquals('Nemesis', $response->toArray()['hydra:member'][2]['title']);
+        self::assertEquals('Ball Lightning', $response->toArray()['hydra:member'][0]['title']);
+        self::assertEquals('The Three-Body Problem', $response->toArray()['hydra:member'][1]['title']);
+        self::assertEquals('The Wandering Earth', $response->toArray()['hydra:member'][2]['title']);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Book/collection.json'));
     }
 
@@ -364,6 +365,8 @@ final class BookTest extends ApiTestCase
         self::assertJsonContains([
             'book' => 'https://openlibrary.org/books/OL28346544M.json',
             'condition' => BookCondition::NewCondition->value,
+            'title' => 'Foundation',
+            'author' => 'Isaac Asimov',
         ]);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Book/item.json'));
         $id = preg_replace('/^.*\/(.+)$/', '$1', $response->toArray()['@id']);
@@ -494,7 +497,10 @@ final class BookTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_OK);
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertJsonContains([
+            'book' => 'https://openlibrary.org/books/OL28346544M.json',
             'condition' => BookCondition::DamagedCondition->value,
+            'title' => 'Foundation',
+            'author' => 'Isaac Asimov',
         ]);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Book/item.json'));
         self::assertCount(2, self::getMercureMessages());
@@ -567,7 +573,7 @@ final class BookTest extends ApiTestCase
      */
     public function testAsAdminUserICanDeleteABook(): void
     {
-        $book = BookFactory::createOne()->disableAutoRefresh();
+        $book = BookFactory::createOne(['title' => 'The Three-Body Problem']);
         self::getMercureHub()->reset();
         $id = $book->getId();
 
@@ -579,7 +585,7 @@ final class BookTest extends ApiTestCase
 
         self::assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
         self::assertEmpty($response->getContent());
-        self::assertNull(self::getContainer()->get(BookRepository::class)->find($id));
+        BookFactory::assert()->notExists(['title' => 'The Three-Body Problem']);
         self::assertCount(2, self::getMercureMessages());
         // todo how to ensure it's a delete update
         self::assertEquals(

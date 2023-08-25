@@ -18,7 +18,7 @@ final class BookmarkQueryCollectionExtensionTest extends TestCase
 {
     private MockObject|Security $securityMock;
     private MockObject|UserInterface $userMock;
-    private MockObject|QueryBuilder$queryBuilderMock;
+    private MockObject|QueryBuilder $queryBuilderMock;
     private MockObject|QueryNameGeneratorInterface $queryNameGeneratorMock;
     private MockObject|Operation $operationMock;
     private BookmarkQueryCollectionExtension $extension;

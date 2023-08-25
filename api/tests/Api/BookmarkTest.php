@@ -35,7 +35,7 @@ final class BookmarkTest extends ApiTestCase
 
     public function testAsAnonymousICannotGetACollectionOfBookmarks(): void
     {
-        BookmarkFactory::createMany(100);
+        BookmarkFactory::createMany(10);
 
         $this->client->request('GET', '/bookmarks');
 
@@ -54,9 +54,9 @@ final class BookmarkTest extends ApiTestCase
      */
     public function testAsAUserICanGetACollectionOfMyBookmarksWithoutFilters(): void
     {
-        BookmarkFactory::createMany(60);
+        BookmarkFactory::createMany(10);
         $user = UserFactory::createOne();
-        BookmarkFactory::createMany(40, ['user' => $user]);
+        BookmarkFactory::createMany(35, ['user' => $user]);
 
         $token = $this->generateToken([
             'email' => $user->email,
@@ -67,7 +67,7 @@ final class BookmarkTest extends ApiTestCase
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertJsonContains([
-            'hydra:totalItems' => 40,
+            'hydra:totalItems' => 35,
         ]);
         self::assertCount(30, $response->toArray()['hydra:member']);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Bookmark/collection.json'));
@@ -75,7 +75,7 @@ final class BookmarkTest extends ApiTestCase
 
     public function testAsAnonymousICannotCreateABookmark(): void
     {
-        $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL28346544M.json']);
+        $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL17267881W.json']);
 
         $this->client->request('POST', '/bookmarks', [
             'json' => [
@@ -123,7 +123,7 @@ final class BookmarkTest extends ApiTestCase
      */
     public function testAsAUserICanCreateABookmark(): void
     {
-        $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL28346544M.json']);
+        $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL17267881W.json']);
         $user = UserFactory::createOne();
         self::getMercureHub()->reset();
 
@@ -164,7 +164,7 @@ final class BookmarkTest extends ApiTestCase
 
     public function testAsAUserICannotCreateADuplicateBookmark(): void
     {
-        $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL28346544M.json']);
+        $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL17267881W.json']);
         $user = UserFactory::createOne();
         BookmarkFactory::createOne(['book' => $book, 'user' => $user]);
         self::getMercureHub()->reset();
@@ -246,7 +246,8 @@ final class BookmarkTest extends ApiTestCase
      */
     public function testAsAUserICanDeleteMyBookmark(): void
     {
-        $bookmark = BookmarkFactory::createOne()->disableAutoRefresh();
+        $book = BookFactory::createOne(['title' => 'The Three-Body Problem']);
+        $bookmark = BookmarkFactory::createOne(['book' => $book]);
         self::getMercureHub()->reset();
 
         $id = $bookmark->getId();
@@ -261,7 +262,7 @@ final class BookmarkTest extends ApiTestCase
 
         self::assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
         self::assertEmpty($response->getContent());
-        self::assertNull(self::getContainer()->get(BookmarkRepository::class)->find($id));
+        BookmarkFactory::assert()->notExists(['book' => $book]);
         self::assertCount(1, self::getMercureMessages());
         // todo how to ensure it's a delete update
         self::assertEquals(

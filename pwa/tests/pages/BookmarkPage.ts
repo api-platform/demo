@@ -7,7 +7,7 @@ export class BookmarkPage extends AbstractPage {
     await this.page.getByRole("button", { name: "Sign in with Keycloak" }).click();
     await this.login();
     await this.page.waitForURL(/\/bookmarks$/);
-    await this.page.waitForResponse("https://openlibrary.org/books/OL6095440M.json");
+    await this.page.waitForResponse("https://openlibrary.org/books/OL17267881W.json");
     await this.page.waitForResponse(/covers\.openlibrary\.org/);
     await (await this.getDefaultBook()).waitFor({ state: "visible" });
 

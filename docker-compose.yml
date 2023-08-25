@@ -69,10 +69,10 @@ services:
   database:
     image: postgres:${POSTGRES_VERSION:-15}-alpine
     environment:
-      - POSTGRES_DB=${POSTGRES_DB:-app}
+      POSTGRES_DB: ${POSTGRES_DB:-app}
       # You should definitely change the password in production
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-!ChangeMe!}
-      - POSTGRES_USER=${POSTGRES_USER:-app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
+      POSTGRES_USER: ${POSTGRES_USER:-app}
     volumes:
       - db_data:/var/lib/postgresql/data
       # you may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
@@ -86,10 +86,10 @@ services:
   keycloak-database:
     image: postgres:${KEYCLOAK_POSTGRES_VERSION:-15}-alpine
     environment:
-      - POSTGRES_DB=${KEYCLOAK_POSTGRES_DB:-keycloak}
+      POSTGRES_DB: ${KEYCLOAK_POSTGRES_DB:-keycloak}
       # You should definitely change the password in production
-      - POSTGRES_PASSWORD=${KEYCLOAK_POSTGRES_PASSWORD:-!ChangeMe!}
-      - POSTGRES_USER=${KEYCLOAK_POSTGRES_USER:-keycloak}
+      POSTGRES_PASSWORD: ${KEYCLOAK_POSTGRES_PASSWORD:-!ChangeMe!}
+      POSTGRES_USER: ${KEYCLOAK_POSTGRES_USER:-keycloak}
     volumes:
       - keycloak_db_data:/var/lib/postgresql/data
 
@@ -117,8 +117,8 @@ services:
     image: bitnami/keycloak-config-cli:5-debian-11
     environment:
       KEYCLOAK_URL: http://caddy/oidc/
-      KEYCLOAK_USER: ${KEYCLOAK_USER:-admin}
-      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD:-!ChangeMe!}
+      KEYCLOAK_USER: ${KEYCLOAK_ADMIN_USER:-admin}
+      KEYCLOAK_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-!ChangeMe!}
       KEYCLOAK_AVAILABILITYCHECK_ENABLED: true
       KEYCLOAK_AVAILABILITYCHECK_TIMEOUT: 120s
       IMPORT_FILES_LOCATIONS: "/config/*"

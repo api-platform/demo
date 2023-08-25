@@ -492,5 +492,503 @@
         "book": "https:\/\/openlibrary.org\/books\/OL9889622M.json",
         "title": "Space Winners",
         "author": "Gordon R. Dickson"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL7993555M.json",
+        "title": "The High King's Tomb",
+        "author": "Kristen Britain"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL7993582M.json",
+        "title": "Crown of Shadows",
+        "author": "C. S. Friedman"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9671663M.json",
+        "title": "Battle Station",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL11347285M.json",
+        "title": "Escape Plus",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL8053862M.json",
+        "title": "Mercury (The Grand Tour)",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL8875086M.json",
+        "title": "Mercury (The Grand Tour)",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL8875083M.json",
+        "title": "The Rock Rats (The Grand Tour; also Asteroid Wars)",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9620787M.json",
+        "title": "The Rock Rats (The Grand Tour; also Asteroid Wars)",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL8053863M.json",
+        "title": "Titan (The Grand Tour)",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL26617775M.json",
+        "title": "Star road",
+        "author": "Matthew J. Costello"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL26609256M.json",
+        "title": "Dognap",
+        "author": "Patrick Jennings"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL26604296M.json",
+        "title": "Rebellion",
+        "author": "Adam Jay Epstein"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL26603950M.json",
+        "title": "Goodhouse",
+        "author": "Peyton Marshall"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL26603716M.json",
+        "title": "The black stars",
+        "author": "Dan Krokos"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL26588301M.json",
+        "title": "Arclight",
+        "author": "Josin L. McQuein"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL26586705M.json",
+        "title": "The pack",
+        "author": "L. M. Preston"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL26586071M.json",
+        "title": "Cain's blood",
+        "author": "Geoffrey Girard"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL26545238M.json",
+        "title": "The Raven's child",
+        "author": "Tom Sniegoski"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL26515163M.json",
+        "title": "Dark Days",
+        "author": "Kate Ormand"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL26494341M.json",
+        "title": "Guardians",
+        "author": "Susan Kim"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL26493086M.json",
+        "title": "Red planet blues",
+        "author": "Robert J. Sawyer"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL26492608M.json",
+        "title": "Feuds",
+        "author": "Avery Hastings"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL26490070M.json",
+        "title": "Mentats of Dune",
+        "author": "Brian Herbert"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL26488871M.json",
+        "title": "So close to you",
+        "author": "Rachel Carter"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL26480201M.json",
+        "title": "Triggers",
+        "author": "Robert J. Sawyer"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL26474975M.json",
+        "title": "1636",
+        "author": "Eric Flint"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL26472800M.json",
+        "title": "Last plane to Heaven",
+        "author": "Jay Lake"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL26466355M.json",
+        "title": "UnDivided",
+        "author": "Neal Shusterman"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL26465037M.json",
+        "title": "The Innocence Treatment",
+        "author": "Ari Goelman"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL26464643M.json",
+        "title": "School for sidekicks",
+        "author": "Kelly McCullough"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL26464147M.json",
+        "title": "The Drake Equation",
+        "author": "Bart King"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL8875087M.json",
+        "title": "Titan (The Grand Tour)",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL8875084M.json",
+        "title": "Saturn",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9520191M.json",
+        "title": "Saturn",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL8875088M.json",
+        "title": "The Silent War",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9757182M.json",
+        "title": "The Silent War",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL8053345M.json",
+        "title": "The Aftermath",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL8875081M.json",
+        "title": "Jupiter",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9407723M.json",
+        "title": "The Multiple Man",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9434820M.json",
+        "title": "Starcrossed",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9449754M.json",
+        "title": "As On A Darkling Plain",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL7769456M.json",
+        "title": "Test of Fire",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9454280M.json",
+        "title": "The Winds of Altair",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL7667231M.json",
+        "title": "The Exiles Trilogy",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL11347290M.json",
+        "title": "Colony",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL7866835M.json",
+        "title": "Orion",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL8547215M.json",
+        "title": "Voyagers II",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL8547213M.json",
+        "title": "Voyagers II"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9629002M.json",
+        "title": "Voyagers II",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9867385M.json",
+        "title": "Orion",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL8547214M.json",
+        "title": "Voyagers II",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9446675M.json",
+        "title": "Privateers",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9318944M.json",
+        "title": "Voyagers III",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL11970714M.json",
+        "title": "Voyagers III",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL11970713M.json",
+        "title": "Voyagers III"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL7822324M.json",
+        "title": "Voyagers",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL8106968M.json",
+        "title": "Voyagers"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL8107646M.json",
+        "title": "Voyagers",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL8108102M.json",
+        "title": "Voyagers",
+        "author": "Ben Bova"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL12231743M.json",
+        "title": "Mars"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL8547417M.json",
+        "title": "Ten From Infinity",
+        "author": "Paul W. Fairman"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL7659550M.json",
+        "title": "The Game Beyond",
+        "author": "Melissa Scott"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9601224M.json",
+        "title": "Starstrike",
+        "author": "Douglas Niles"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL8054100M.json",
+        "title": "War of the Worlds",
+        "author": "Douglas Niles"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL8645086M.json",
+        "title": "The Flash",
+        "author": "Mark Waid"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL8645104M.json",
+        "title": "Impulse",
+        "author": "Mark Waid"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL7663979M.json",
+        "title": "Corona (Star Trek, No 15)",
+        "author": "Greg Bear"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9468923M.json",
+        "title": "City at the End of Time",
+        "author": "Greg Bear"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9503596M.json",
+        "title": "Legacy"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL8871137M.json",
+        "title": "Quantico",
+        "author": "Greg Bear"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL7866964M.json",
+        "title": "Psychlone",
+        "author": "Greg Bear"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9815710M.json",
+        "title": "Psychlone",
+        "author": "Greg Bear"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9241818M.json",
+        "title": "Foundation and Chaos",
+        "author": "Greg Bear"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL10936439M.json",
+        "title": "Anvil of Stars",
+        "author": "Greg Bear"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL8737166M.json",
+        "title": "Fantastic Four",
+        "author": "Nancy A. Collins"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9351051M.json",
+        "title": "Heads",
+        "author": "Greg Bear"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9308753M.json",
+        "title": "Beyond Heaven's River",
+        "author": "Greg Bear"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL7866910M.json",
+        "title": "Beyond Heaven's River",
+        "author": "Greg Bear"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL8007651M.json",
+        "title": "Beyond Heaven's River",
+        "author": "Greg Bear"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL7866996M.json",
+        "title": "Strength of Stones",
+        "author": "Greg Bear"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL7950326M.json",
+        "title": "Strength of Stones",
+        "author": "Greg Bear"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL8053293M.json",
+        "title": "The Forge of God",
+        "author": "Greg Bear"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9782643M.json",
+        "title": "The Forge of God",
+        "author": "Greg Bear"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL12316859M.json",
+        "title": "Strength of Stones",
+        "author": "Greg Bear"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9459938M.json",
+        "title": "Eternity",
+        "author": "Greg Bear"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9499030M.json",
+        "title": "Hegira",
+        "author": "Greg Bear"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9460731M.json",
+        "title": "Eon",
+        "author": "Greg Bear"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9546342M.json",
+        "title": "Moving Mars",
+        "author": "Greg Bear"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9769879M.json",
+        "title": "Eon",
+        "author": "Greg Bear"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL11843502M.json",
+        "title": "Moving Mars",
+        "author": "Greg Bear"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9379848M.json",
+        "title": "Eon"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL11761605M.json",
+        "title": "Moving Mars"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL11843501M.json",
+        "title": "Moving Mars",
+        "author": "Greg Bear"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL8054189M.json",
+        "title": "The Disunited States of America (Crosstime Traffic)",
+        "author": "Harry Turtledove"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9636678M.json",
+        "title": "Upsetting the Balance (Worldwar Series, Volume 3)",
+        "author": "Harry Turtledove"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9676041M.json",
+        "title": "Upsetting the Balance (Worldwar Series, Volume 3)",
+        "author": "Harry Turtledove"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9597703M.json",
+        "title": "Tilting the Balance (Worldwar Series, Volume 2)",
+        "author": "Harry Turtledove"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9770983M.json",
+        "title": "Upsetting the Balance (Worldwar Series, Volume 3)",
+        "author": "Harry Turtledove"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9816126M.json",
+        "title": "American Empire",
+        "author": "Harry Turtledove"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL9315637M.json",
+        "title": "Guns of the South",
+        "author": "Harry Turtledove"
+    },
+    {
+        "book": "https:\/\/openlibrary.org\/books\/OL8645297M.json",
+        "title": "The Green Lantern Green Arrow Collection (Green Lantern - Green Arrow Series)",
+        "author": "Dennis O'Neil"
     }
 ]

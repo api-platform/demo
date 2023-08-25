@@ -17,7 +17,6 @@ use App\Tests\Api\Trait\MercureTrait;
 use App\Tests\Api\Trait\SecurityTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\Update;
-use Symfony\Component\Uid\Uuid;
 use Zenstruck\Foundry\FactoryCollection;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
@@ -64,38 +63,38 @@ final class ReviewTest extends ApiTestCase
     {
         yield 'all book reviews' => [
             ReviewFactory::new()->sequence(function () {
-                $book = BookFactory::createOne(['title' => 'Foundation']);
-                foreach (range(1, 100) as $i) {
+                $book = BookFactory::createOne(['title' => 'The Three-Body Problem']);
+                foreach (range(1, 35) as $i) {
                     yield ['book' => $book];
                 }
             }),
             static function (): string {
                 /** @var Book[] $books */
-                $books = BookFactory::findBy(['title' => 'Foundation']);
+                $books = BookFactory::findBy(['title' => 'The Three-Body Problem']);
 
                 return '/books/'.$books[0]->getId().'/reviews';
             },
-            100,
+            35,
         ];
         yield 'all book reviews using itemsPerPage' => [
             ReviewFactory::new()->sequence(function () {
-                $book = BookFactory::createOne(['title' => 'Foundation']);
-                foreach (range(1, 100) as $i) {
+                $book = BookFactory::createOne(['title' => 'The Three-Body Problem']);
+                foreach (range(1, 20) as $i) {
                     yield ['book' => $book];
                 }
             }),
             static function (): string {
                 /** @var Book[] $books */
-                $books = BookFactory::findBy(['title' => 'Foundation']);
+                $books = BookFactory::findBy(['title' => 'The Three-Body Problem']);
 
                 return '/books/'.$books[0]->getId().'/reviews?itemsPerPage=10';
             },
-            100,
+            20,
             10,
         ];
-        yield 'book reviews filtered by rating' => [
+        yield 'book reviews filtered by rating (filter is disabled for non-admin users)' => [
             ReviewFactory::new()->sequence(function () {
-                $book = BookFactory::createOne(['title' => 'Foundation']);
+                $book = BookFactory::createOne(['title' => 'The Three-Body Problem']);
                 foreach (range(1, 100) as $i) {
                     // 33% of reviews are rated 5
                     yield ['book' => $book, 'rating' => $i % 3 ? 3 : 5];
@@ -103,29 +102,29 @@ final class ReviewTest extends ApiTestCase
             }),
             static function (): string {
                 /** @var Book[] $books */
-                $books = BookFactory::findBy(['title' => 'Foundation']);
+                $books = BookFactory::findBy(['title' => 'The Three-Body Problem']);
 
                 return '/books/'.$books[0]->getId().'/reviews?rating=5';
             },
             100,
         ];
-        yield 'book reviews filtered by user' => [
+        yield 'book reviews filtered by user (filter is disabled for non-admin users)' => [
             ReviewFactory::new()->sequence(function () {
-                $book = BookFactory::createOne(['title' => 'Foundation']);
+                $book = BookFactory::createOne(['title' => 'The Three-Body Problem']);
                 yield ['book' => $book, 'user' => UserFactory::createOne(['email' => 'user@example.com'])];
-                foreach (range(1, 99) as $i) {
+                foreach (range(1, 34) as $i) {
                     yield ['book' => $book, 'user' => UserFactory::createOne()];
                 }
             }),
             static function (): string {
                 /** @var Book[] $books */
-                $books = BookFactory::findBy(['title' => 'Foundation']);
+                $books = BookFactory::findBy(['title' => 'The Three-Body Problem']);
                 /** @var User[] $users */
                 $users = UserFactory::findBy(['email' => 'user@example.com']);
 
                 return '/books/'.$books[0]->getId().'/reviews?user=/users/'.$users[0]->getId();
             },
-            100,
+            35,
         ];
     }
 
@@ -513,7 +512,7 @@ final class ReviewTest extends ApiTestCase
      */
     public function testAsAUserICanDeleteMyBookReview(): void
     {
-        $review = ReviewFactory::createOne()->disableAutoRefresh();
+        $review = ReviewFactory::createOne(['body' => 'Best book ever!']);
         self::getMercureHub()->reset();
         $id = $review->getId();
         $bookId = $review->book->getId();
@@ -528,7 +527,7 @@ final class ReviewTest extends ApiTestCase
 
         self::assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
         self::assertEmpty($response->getContent());
-        self::assertNull(self::getContainer()->get(ReviewRepository::class)->find($id));
+        ReviewFactory::assert()->notExists(['body' => 'Best book ever!']);
         self::assertCount(2, self::getMercureMessages());
         // todo how to ensure it's a delete update
         self::assertEquals(

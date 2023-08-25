@@ -16,7 +16,6 @@ use App\Entity\Book;
 use App\State\Processor\BookRemoveProcessor;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\Request;
 
 final class BookRemoveProcessorTest extends TestCase
 {
@@ -89,7 +88,7 @@ final class BookRemoveProcessorTest extends TestCase
                     [
                         'item_uri_template' => '/admin/books/{id}{._format}',
                         'data' => json_encode(['@id' => '/admin/books/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6']),
-                    ]
+                    ],
                 ],
                 [
                     $this->objectMock,
@@ -98,7 +97,7 @@ final class BookRemoveProcessorTest extends TestCase
                     [
                         'item_uri_template' => '/books/{id}{._format}',
                         'data' => json_encode(['@id' => '/books/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6']),
-                    ]
+                    ],
                 ],
             );
 

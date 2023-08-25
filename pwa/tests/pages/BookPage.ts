@@ -45,7 +45,7 @@ export class BookPage extends AbstractPage {
   public async gotoList(url: string | undefined = "/books") {
     await this.page.goto(url);
     await this.page.waitForURL(/\/books/);
-    await this.page.waitForResponse("https://openlibrary.org/books/OL6095440M.json");
+    await this.page.waitForResponse("https://openlibrary.org/books/OL17267881W.json");
     await this.page.waitForResponse(/covers\.openlibrary\.org/);
     await (await this.getDefaultBook()).waitFor({ state: "visible" });
 
@@ -53,9 +53,9 @@ export class BookPage extends AbstractPage {
   }
 
   public async gotoDefaultBook() {
-    await this.gotoList("/books?title=Foundation&author=Isaac+Asimov");
+    await this.gotoList("/books?title=Foundation&author=Liu+Cixin");
     await (await this.getDefaultBook()).getByText("Foundation").first().click();
-    await this.page.waitForURL(/\/books\/.*\/foundation-isaac-asimov$/);
+    await this.page.waitForURL(/\/books\/.*\/foundation-liu-cixin$/);
 
     return this.page;
   }

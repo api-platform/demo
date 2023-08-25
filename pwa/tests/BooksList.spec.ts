@@ -88,8 +88,8 @@ test.describe("Books list", () => {
 
   test("I can filter the list @read", async ({ bookPage, page }) => {
     // filter by author
-    await bookPage.filter({ author: "Isaac Asimov" });
-    await expect(page).toHaveURL(/\/books\?author=Isaac\+Asimov$/);
+    await bookPage.filter({ author: "Liu Cixin" });
+    await expect(page).toHaveURL(/\/books\?author=Liu\+Cixin/);
     await expect(page.getByTestId("nb-books")).toHaveText("1 book(s) found");
     await expect(page.getByTestId("book")).toHaveCount(1);
     await expect(page.getByTestId("pagination")).toHaveCount(0);
@@ -103,8 +103,8 @@ test.describe("Books list", () => {
     await expect(page.getByTestId("book")).toHaveCount(30);
 
     // filter by title, author and condition
-    await bookPage.filter({ author: "Isaac Asimov", title: "Foundation", condition: "Used" });
-    await expect(page).toHaveURL(/\/books\?author=Isaac\+Asimov&title=Foundation&condition%5B%5D=https%3A%2F%2Fschema\.org%2FUsedCondition$/);
+    await bookPage.filter({ author: "Liu Cixin", title: "Foundation", condition: "Used" });
+    await expect(page).toHaveURL(/\/books\?author=Liu\+Cixin&title=Foundation&condition%5B%5D=https%3A%2F%2Fschema\.org%2FUsedCondition$/);
     await expect(page.getByTestId("nb-books")).toHaveText("1 book(s) found");
     await expect(page.getByTestId("book")).toHaveCount(1);
     await expect(page.getByTestId("pagination")).toHaveCount(0);
@@ -112,17 +112,17 @@ test.describe("Books list", () => {
 
     // click on a book author clears the filters and only apply the author filter
     await page.getByTestId("book").first().locator("a").nth(1).click();
-    await expect(page.getByTestId("filter-author")).toHaveValue("Isaac Asimov");
+    await expect(page.getByTestId("filter-author")).toHaveValue("Liu Cixin");
     await expect(page.getByTestId("filter-title")).toHaveValue("");
     expect(await page.getByTestId("filter-condition-used").isChecked()).toBeFalsy();
-    await expect(page).toHaveURL(/\/books\?author=Isaac\+Asimov$/);
+    await expect(page).toHaveURL(/\/books\?author=Liu\+Cixin$/);
     await expect(page.getByTestId("nb-books")).toHaveText("1 book(s) found");
     await expect(page.getByTestId("book")).toHaveCount(1);
     await expect(page.getByTestId("pagination")).toHaveCount(0);
 
     // direct url should apply the filters
-    await page.goto("/books?author=Isaac+Asimov&title=Foundation&condition%5B%5D=https%3A%2F%2Fschema.org%2FUsedCondition");
-    await expect(page.getByTestId("filter-author")).toHaveValue("Isaac Asimov");
+    await page.goto("/books?author=Liu+Cixin&title=Foundation&condition%5B%5D=https%3A%2F%2Fschema.org%2FUsedCondition");
+    await expect(page.getByTestId("filter-author")).toHaveValue("Liu Cixin");
     await expect(page.getByTestId("filter-title")).toHaveValue("Foundation");
     expect(await page.getByTestId("filter-condition-used").isChecked()).toBeTruthy();
     await expect(page.getByTestId("nb-books")).toHaveText("1 book(s) found");

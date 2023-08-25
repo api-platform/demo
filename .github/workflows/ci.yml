@@ -83,13 +83,16 @@ jobs:
       id-token: 'write'
     env:
       PHP_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/php:latest
-      APP_SECRET: "ba63418865d58089f7f070e0a437b6d16b1fb970"
-      CADDY_MERCURE_JWT_SECRET: "f8675b65055fc9f1ccdc21e425c00798633d5556"
       PWA_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/pwa:latest
-      NEXTAUTH_SECRET: "0efafa22ed0e5f4d1875777584eebeebf14068f1"
       CADDY_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/caddy:latest
-      POSTGRES_PASSWORD: "01c3b2511ddbff2838fa39cc3b823037e1627397"
-      KEYCLOAK_POSTGRES_PASSWORD: "b8ef720708474177fa169a5c3fec495e04660f44"
+      APP_SECRET: ba63418865d58089f7f070e0a437b6d16b1fb970
+      CADDY_MERCURE_JWT_SECRET: 33b04d361e437e0d7d715600fc24fdefba317154
+      NEXTAUTH_SECRET: 77e4c3f5a6fb652b6245a5df8a704e04ad90bc7e
+      POSTGRES_PASSWORD: aae5bf316ef5fe87ad806c6a9240fff68bcfdaf7
+      KEYCLOAK_POSTGRES_PASSWORD: 26d7f630f1524eb210bbf496443f2038a9316e9e
+      KEYCLOAK_ADMIN_PASSWORD: 2f31e2fad93941b818449fd8d57fd019b6ce7fa5
+      # https://docs.docker.com/compose/environment-variables/envvars/
+      COMPOSE_FILE: docker-compose.yml:docker-compose.prod.yml
     steps:
       -
         name: Checkout
@@ -120,6 +123,9 @@ jobs:
         run: |
           docker compose ps
           docker compose logs
+      -
+        name: Load Fixtures
+        run: docker compose run --rm --env APP_ENV=dev php bin/console doctrine:fixtures:load --no-interaction
       -
         name: Cache Playwright Binaries
         uses: actions/cache@v3

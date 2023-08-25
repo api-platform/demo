@@ -45,7 +45,7 @@
                     "externalDocs": {
                         "url": "https:\/\/schema.org\/author"
                     },
-                    "type": "string"
+                    "type": ["string", "null"]
                 },
                 "condition": {
                     "description": "The condition of the book",
@@ -81,7 +81,6 @@
                 "@id",
                 "book",
                 "title",
-                "author",
                 "condition",
                 "reviews"
             ]

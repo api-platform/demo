@@ -11,7 +11,6 @@ use App\DataFixtures\Factory\UserFactory;
 use App\Enum\BookCondition;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Zenstruck\Foundry\Story;
 
 final class DefaultStory extends Story
@@ -25,9 +24,9 @@ final class DefaultStory extends Story
         // Create default book (must be created first to appear first in list)
         $defaultBook = BookFactory::createOne([
             'condition' => BookCondition::UsedCondition,
-            'book' => 'https://openlibrary.org/books/OL6095440M.json',
-            'title' => 'Foundation',
-            'author' => 'Isaac Asimov',
+            'book' => 'https://openlibrary.org/books/OL17267881W.json',
+            'title' => 'The Three-Body Problem',
+            'author' => 'Liu Cixin',
         ]);
 
         // Default book has reviews (new users are created)

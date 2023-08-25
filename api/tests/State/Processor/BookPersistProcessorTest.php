@@ -34,7 +34,7 @@ final class BookPersistProcessorTest extends TestCase
         $this->responseMock = $this->createMock(ResponseInterface::class);
         $this->decoderMock = $this->createMock(DecoderInterface::class);
         $this->objectMock = $this->createMock(Book::class);
-        $this->objectMock->book = 'https://openlibrary.org/books/OL28346544M.json';
+        $this->objectMock->book = 'https://openlibrary.org/books/OL17267881W.json';
         $this->operationMock = $this->createMock(Operation::class);
 
         $this->processor = new BookPersistProcessor(
@@ -49,25 +49,25 @@ final class BookPersistProcessorTest extends TestCase
     {
         $expectedData = $this->objectMock;
         $expectedData->title = 'Foundation';
-        $expectedData->author = 'Isaac Asimov';
+        $expectedData->author = 'Liu Cixin';
 
         $this->clientMock
             ->expects($this->exactly(2))
             ->method('request')
             ->withConsecutive(
                 [
-                    Request::METHOD_GET, 'https://openlibrary.org/books/OL28346544M.json', [
+                    Request::METHOD_GET, 'https://openlibrary.org/books/OL17267881W.json', [
                         'headers' => [
                             'Accept' => 'application/json',
                         ],
-                    ]
+                    ],
                 ],
                 [
                     Request::METHOD_GET, 'https://openlibrary.org/authors/OL34221A.json', [
                         'headers' => [
                             'Accept' => 'application/json',
                         ],
-                    ]
+                    ],
                 ],
             )
             ->willReturnOnConsecutiveCalls($this->responseMock, $this->responseMock);
@@ -78,11 +78,11 @@ final class BookPersistProcessorTest extends TestCase
                 json_encode([
                     'title' => 'Foundation',
                     'authors' => [
-                        ['key' => '/authors/OL34221A']
+                        ['key' => '/authors/OL34221A'],
                     ],
                 ]),
                 json_encode([
-                    'name' => 'Isaac Asimov',
+                    'name' => 'Liu Cixin',
                 ]),
             );
         $this->decoderMock
@@ -93,27 +93,27 @@ final class BookPersistProcessorTest extends TestCase
                     json_encode([
                         'title' => 'Foundation',
                         'authors' => [
-                            ['key' => '/authors/OL34221A']
+                            ['key' => '/authors/OL34221A'],
                         ],
                     ]),
-                    'json'
+                    'json',
                 ],
                 [
                     json_encode([
-                        'name' => 'Isaac Asimov',
+                        'name' => 'Liu Cixin',
                     ]),
-                    'json'
+                    'json',
                 ],
             )
             ->willReturnOnConsecutiveCalls(
                 [
                     'title' => 'Foundation',
                     'authors' => [
-                        ['key' => '/authors/OL34221A']
+                        ['key' => '/authors/OL34221A'],
                     ],
                 ],
                 [
-                    'name' => 'Isaac Asimov',
+                    'name' => 'Liu Cixin',
                 ],
             );
         $this->persistProcessorMock

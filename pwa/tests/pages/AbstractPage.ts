@@ -13,6 +13,6 @@ export abstract class AbstractPage {
   }
 
   public async getDefaultBook() {
-    return this.page.getByTestId("book").filter({ hasText: "Foundation" }).filter({ hasText: "Isaac Asimov" }).first();
+    return this.page.getByTestId("book").filter({ hasText: "Foundation" }).filter({ hasText: "Liu Cixin" }).first();
   }
 }

@@ -12,7 +12,6 @@ use App\DataFixtures\Factory\UserFactory;
 use App\Entity\Book;
 use App\Entity\Review;
 use App\Entity\User;
-use App\Repository\ReviewRepository;
 use App\Tests\Api\Admin\Trait\UsersDataProviderTrait;
 use App\Tests\Api\Trait\MercureTrait;
 use App\Tests\Api\Trait\SecurityTrait;
@@ -91,14 +90,14 @@ final class ReviewTest extends ApiTestCase
     public function getAdminUrls(): iterable
     {
         yield 'all reviews' => [
-            ReviewFactory::new()->many(100),
+            ReviewFactory::new()->many(35),
             '/admin/reviews',
-            100,
+            35,
         ];
-        yield 'all reviews using itemsPerPage' => [
-            ReviewFactory::new()->many(100),
+        yield 'all reviews using itemsPerPage (disabled on admin)' => [
+            ReviewFactory::new()->many(35),
             '/admin/reviews?itemsPerPage=10',
-            100,
+            35,
         ];
         yield 'reviews filtered by rating' => [
             ReviewFactory::new()->sequence(function () {
@@ -128,14 +127,14 @@ final class ReviewTest extends ApiTestCase
         ];
         yield 'reviews filtered by book' => [
             ReviewFactory::new()->sequence(function () {
-                yield ['book' => BookFactory::createOne(['title' => 'Foundation'])];
+                yield ['book' => BookFactory::createOne(['title' => 'The Three-Body Problem'])];
                 foreach (range(1, 10) as $i) {
                     yield ['book' => BookFactory::createOne()];
                 }
             }),
             static function (): string {
                 /** @var Book[] $books */
-                $books = BookFactory::findBy(['title' => 'Foundation']);
+                $books = BookFactory::findBy(['title' => 'The Three-Body Problem']);
 
                 return '/admin/reviews?book=/books/'.$books[0]->getId();
             },
@@ -343,7 +342,7 @@ final class ReviewTest extends ApiTestCase
      */
     public function testAsAdminUserICanDeleteAReview(): void
     {
-        $review = ReviewFactory::createOne()->disableAutoRefresh();
+        $review = ReviewFactory::createOne(['body' => 'Best book ever!']);
         $id = $review->getId();
         $bookId = $review->book->getId();
 
@@ -357,7 +356,7 @@ final class ReviewTest extends ApiTestCase
 
         self::assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
         self::assertEmpty($response->getContent());
-        self::assertNull(self::getContainer()->get(ReviewRepository::class)->find($id));
+        ReviewFactory::assert()->notExists(['body' => 'Best book ever!']);
         self::assertCount(2, self::getMercureMessages());
         // todo how to ensure it's a delete update
         self::assertEquals(

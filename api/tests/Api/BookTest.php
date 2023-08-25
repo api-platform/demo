@@ -31,6 +31,7 @@ final class BookTest extends ApiTestCase
      */
     public function testAsAnonymousICanGetACollectionOfBooks(FactoryCollection $factory, string $url, int $hydraTotalItems): void
     {
+        // Cannot use Factory as data provider because BookFactory has a service dependency
         $factory->create();
 
         $response = $this->client->request('GET', $url);
@@ -47,28 +48,28 @@ final class BookTest extends ApiTestCase
     public function getUrls(): iterable
     {
         yield 'all books' => [
-            BookFactory::new()->many(100),
+            BookFactory::new()->many(35),
             '/books',
-            100,
+            35,
         ];
         yield 'books filtered by title' => [
             BookFactory::new()->sequence(function () {
-                yield ['title' => 'Foundation'];
-                foreach (range(1, 100) as $i) {
+                yield ['title' => 'The Three-Body Problem'];
+                foreach (range(1, 10) as $i) {
                     yield [];
                 }
             }),
-            '/books?title=ounda',
+            '/books?title=three-body',
             1,
         ];
         yield 'books filtered by author' => [
             BookFactory::new()->sequence(function () {
-                yield ['author' => 'Isaac Asimov'];
-                foreach (range(1, 100) as $i) {
+                yield ['author' => 'Liu Cixin'];
+                foreach (range(1, 10) as $i) {
                     yield [];
                 }
             }),
-            '/books?author=isaac',
+            '/books?author=cixin',
             1,
         ];
         yield 'books filtered by condition' => [
@@ -85,17 +86,17 @@ final class BookTest extends ApiTestCase
 
     public function testAsAdminUserICanGetACollectionOfBooksOrderedByTitle(): void
     {
-        BookFactory::createOne(['title' => 'Foundation']);
-        BookFactory::createOne(['title' => 'Nemesis']);
-        BookFactory::createOne(['title' => 'I, Robot']);
+        BookFactory::createOne(['title' => 'The Three-Body Problem']);
+        BookFactory::createOne(['title' => 'The Wandering Earth']);
+        BookFactory::createOne(['title' => 'Ball Lightning']);
 
         $response = $this->client->request('GET', '/books?order[title]=asc');
 
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
-        self::assertEquals('Foundation', $response->toArray()['hydra:member'][0]['title']);
-        self::assertEquals('I, Robot', $response->toArray()['hydra:member'][1]['title']);
-        self::assertEquals('Nemesis', $response->toArray()['hydra:member'][2]['title']);
+        self::assertEquals('Ball Lightning', $response->toArray()['hydra:member'][0]['title']);
+        self::assertEquals('The Three-Body Problem', $response->toArray()['hydra:member'][1]['title']);
+        self::assertEquals('The Wandering Earth', $response->toArray()['hydra:member'][2]['title']);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Book/collection.json'));
     }
 

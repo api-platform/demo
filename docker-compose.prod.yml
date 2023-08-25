@@ -9,12 +9,15 @@ services:
       target: php_prod
     environment:
       APP_SECRET: ${APP_SECRET}
+      MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET}
 
   pwa:
     image: ${PWA_DOCKER_IMAGE}
     build:
       context: ./pwa
       target: prod
+    environment:
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
 
   caddy:
     image: ${CADDY_DOCKER_IMAGE}
@@ -33,6 +36,16 @@ services:
         }
       CADDY_CACHE: cache
 
+  database:
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+  keycloak-database:
+    environment:
+      POSTGRES_PASSWORD: ${KEYCLOAK_POSTGRES_PASSWORD}
+
   keycloak:
     environment:
       KEYCLOAK_PRODUCTION: "true"
+      KEYCLOAK_ENABLE_HTTPS: "false"
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
