@@ -97,7 +97,7 @@ export const Show: NextPage<Props> = ({ data, hubURL, page }) => {
           <div className="flex">
             <div className="min-w-[270px] max-w-[300px] w-full mr-10 text-center">
               {!!book["images"] && (
-                <Image alt={book["title"]} width={300} height={300} src={book["images"]["large"]} data-testid="book-cover"/>
+                <Image alt={book["title"]} width={300} height={300} src={book["images"]["large"]} priority={true} data-testid="book-cover"/>
               ) || (
                 <span className="h-40 text-slate-300">No cover</span>
               )}

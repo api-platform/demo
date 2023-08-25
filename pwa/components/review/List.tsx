@@ -74,12 +74,12 @@ export const List: FunctionComponent<Props> = ({ book, page }) => {
       {!!error && (
         <Error message={error}/>
       ) || !!collection && !!collection["hydra:member"] && collection["hydra:member"]?.length > 0 && (
-        <div data-testid="reviews-collection">
+        <>
           {collection["hydra:member"].map((review) => (
             <Item key={review["@id"]} review={review} onDelete={() => setData(undefined)}/>
           ))}
-          <Pagination data-testid="reviews-pagination" collection={collection} getPagePath={getPagePath} currentPage={page ? Number(page) : 1}/>
-        </div>
+          <Pagination collection={collection} getPagePath={getPagePath} currentPage={page ? Number(page) : 1}/>
+        </>
       ) || !!collection && (
         <p className="text-gray-600">Be the first to add a review!</p>
       ) || (

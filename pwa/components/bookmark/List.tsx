@@ -28,12 +28,12 @@ export const List: NextPage<Props> = ({ data, hubURL, page }) => {
           <p className="w-full text-center px-8 pb-4 text-lg" data-testid="nb-bookmarks">
             {collection["hydra:totalItems"]} book(s) bookmarked
           </p>
-          <div className="grid grid-cols-6 gap-4" data-testid="bookmarks-collection">
+          <div className="grid grid-cols-6 gap-4">
             {collection["hydra:member"].length !== 0 && collection["hydra:member"].map((bookmark) => (
               <Item key={bookmark["@id"]} book={bookmark.book}/>
             ))}
           </div>
-          <Pagination data-testid="bookmarks-pagination" collection={collection} getPagePath={getPagePath} currentPage={page}/>
+          <Pagination collection={collection} getPagePath={getPagePath} currentPage={page}/>
         </>
       ) || (
         <p className="w-full flex pb-4 text-lg">No bookmarks found.</p>

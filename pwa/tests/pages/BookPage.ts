@@ -9,9 +9,19 @@ interface ReviewProps {
 
 export class BookPage extends AbstractPage {
   public async filter(filters: FiltersProps) {
-    await this.page.getByTestId("filter-author").fill(filters.author ?? "");
-    await this.page.getByTestId("filter-title").fill(filters.title ?? "");
-    await this.page.getByTestId("sort").selectOption(filters.order ?? "Relevance");
+    if (filters.author) {
+      await this.page.getByTestId("filter-author").fill(filters.author);
+    }
+
+    if (filters.title) {
+      await this.page.getByTestId("filter-title").fill(filters.title);
+    }
+
+    if (filters.order) {
+      await this.page.getByTestId("sort").click();
+      await this.page.getByText(filters.order).waitFor({state: "visible"});
+      await this.page.getByText(filters.order).click();
+    }
 
     if (typeof filters.condition === "string") {
       await this.page.getByLabel(filters.condition).check();
@@ -32,17 +42,20 @@ export class BookPage extends AbstractPage {
     return this.page;
   }
 
-  public async gotoList() {
-    await this.page.goto("/books");
-    await this.page.waitForURL("https://localhost/books");
+  public async gotoList(url: string | undefined = "/books") {
+    await this.page.goto(url);
+    await this.page.waitForURL(/\/books/);
+    await this.page.waitForResponse("https://openlibrary.org/books/OL6095440M.json");
+    await this.page.waitForResponse(/covers\.openlibrary\.org/);
+    await (await this.getDefaultBook()).waitFor({ state: "visible" });
 
     return this.page;
   }
 
   public async gotoDefaultBook() {
-    await this.gotoList();
-    await this.page.getByTestId("books-collection").locator(".relative").first().locator("a").first().click();
-    await this.page.waitForURL(/^https:\/\/localhost\/books\/.*\/foundation-isaac-asimov$/);
+    await this.gotoList("/books?title=Foundation&author=Isaac+Asimov");
+    await (await this.getDefaultBook()).getByText("Foundation").first().click();
+    await this.page.waitForURL(/\/books\/.*\/foundation-isaac-asimov$/);
 
     return this.page;
   }
@@ -57,5 +70,9 @@ export class BookPage extends AbstractPage {
     await this.page.getByLabel("Bookmarked").click();
 
     return this.page;
+  }
+
+  public async getDefaultReview() {
+    return this.page.getByTestId("review").filter({ hasText: "John Doe" }).first();
   }
 }

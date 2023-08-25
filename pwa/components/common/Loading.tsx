@@ -1,5 +1,5 @@
 export const Loading = () => (
-  <div className="animate-pulse flex space-x-4 h-64 p-4 w-[180px]">
+  <div className="animate-pulse flex space-x-4 h-64 p-4 w-[180px]" data-testid="loading">
     <div className="rounded-full bg-slate-700 h-10 w-[40px]"></div>
     <div className="flex-1 space-y-6 py-1">
       <div className="h-2 bg-slate-700 rounded"></div>

@@ -16,7 +16,7 @@ export const Pagination = ({ collection, getPagePath, currentPage }: Props) => {
   if (!view || !view["hydra:last"]) return null;
 
   return (
-    <div className="flex items-center justify-between bg-white mt-2 py-3 px-6">
+    <div className="flex items-center justify-between bg-white mt-2 py-3 px-6" data-testid="pagination">
       <div className="mx-auto">
         <div className="flex flex-1 items-center justify-between">
           <MuiPagination count={parsePage(view["hydra:last"])} page={currentPage} siblingCount={2}

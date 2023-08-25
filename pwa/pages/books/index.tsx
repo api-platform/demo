@@ -14,7 +14,7 @@ export const getServerSideProps: GetServerSideProps<{
   const filters: FiltersProps = {};
   if (query.page) {
     // @ts-ignore
-    filters.page = query.page;
+    filters.page = Number(query.page);
   }
   if (query.author) {
     // @ts-ignore

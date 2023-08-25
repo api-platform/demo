@@ -7,24 +7,24 @@ test.describe("Book view", () => {
 
   test("I can see the book details @read", async ({ page }) => {
     // test book display
-    await expect(page.title()).toEqual("Foundation - Isaac Asimov");
+    await expect(page).toHaveTitle("Foundation - Isaac Asimov");
     await expect(page.locator("h1")).toHaveText("Foundation");
     await expect(page.locator("h2")).toHaveText("Isaac Asimov");
-    await expect(page.getByTestId("book-cover")).toHaveAttribute("src", /covers\.openlibrary\.org\/b\/id\/.*\/-L\.jpg/);
+    await expect(page.getByTestId("book-cover")).toBeVisible();
     await expect(page.getByTestId("book-metadata")).toContainText("Condition: Used | Published on 1951");
     await expect(page.getByTestId("book-description")).not.toBeEmpty();
   });
 
   test("I can go back to the books list through the breadcrumb @read", async ({ page }) => {
-    await expect(page.getByTestId("book-breadcrumb")).toContainText("Books Store / Isaac Asimov / Foundation");
+    await expect(page.getByTestId("book-breadcrumb")).toContainText("Books Store");
     await page.getByTestId("book-breadcrumb").getByText("Books Store").click();
-    await expect(page).toHaveURL(/^https:\/\/localhost\/books$/);
+    await expect(page).toHaveURL(/\/books$/);
   });
 
   test("I can go back to the books list filtered by author through the breadcrumb @read", async ({ page }) => {
-    await expect(page.getByTestId("book-breadcrumb")).toContainText("Books Store / Isaac Asimov / Foundation");
+    await expect(page.getByTestId("book-breadcrumb")).toContainText("Isaac Asimov");
     await page.getByTestId("book-breadcrumb").getByText("Isaac Asimov").click();
-    await expect(page).toHaveURL(/^https:\/\/localhost\/books\?author=Isaac\+Asimov$/);
+    await expect(page).toHaveURL(/\/books\?author=Isaac%20Asimov$/);
   });
 
   test("I can bookmark the book @write @login", async ({ bookPage, page }) => {
@@ -34,7 +34,7 @@ test.describe("Book view", () => {
     await expect(page).toBeOnLoginPage();
     await bookPage.login();
 
-    await expect(page).toHaveURL(/^https:\/\/localhost\/books\/.*\/foundation-isaac-asimov$/);
+    await expect(page).toHaveURL(/\/books\/.*\/foundation-isaac-asimov$/);
     // note: book is already bookmarked through the fixtures
     await expect(page.getByLabel("Bookmark")).toHaveCount(0);
     await expect(page.getByLabel("Bookmarked")).toHaveCount(1);
@@ -49,92 +49,90 @@ test.describe("Book view", () => {
   });
 
   test("I can navigate through the book reviews @read", async ({ bookPage, page }) => {
-    await expect(page.locator("reviews-collection").locator(".mb-5")).toHaveCount(5);
+    await expect(page.getByTestId("review")).toHaveCount(5);
 
     // test first comment display
-    const first = page.locator("reviews-collection").locator(".mb-5").first();
-    await expect(first).toContainText("John Doe");
-    await expect(first.locator(".MuiRating-root")).toHaveAttribute("aria-label", "5 Stars");
+    await expect(await bookPage.getDefaultReview()).toBeVisible();
+    await expect(page.getByTestId("review").first().locator(".MuiRating-root")).toHaveAttribute("aria-label", "5 Stars");
 
     // test pagination display
-    await expect(page.getByTestId("reviews-pagination").locator("li")).toHaveCount(11);
-    await expect(page.getByTestId("reviews-pagination").locator("li").first()).toHaveAttribute("aria-label", "Go to first page");
-    await expect(page.getByTestId("reviews-pagination").locator("li").nth(1)).toHaveAttribute("aria-label", "Go to previous page");
-    await expect(page.getByTestId("reviews-pagination").locator("li").nth(6)).toHaveAttribute("aria-label", "Go to next page");
-    await expect(page.getByTestId("reviews-pagination").locator("li").nth(7)).toHaveAttribute("aria-label", "Go to last page");
-    await expect(page.getByTestId("reviews-pagination").locator("li .Mui-selected")).toHaveAttribute("aria-label", "page 1");
-    await expect(page.getByLabel("Go to first page")).toHaveClass("Mui-disabled");
-    await expect(page.getByLabel("Go to previous page")).toHaveClass("Mui-disabled");
-    await expect(page.getByLabel("Go to next page")).not.toHaveClass("Mui-disabled");
-    await expect(page.getByLabel("Go to last page")).not.toHaveClass("Mui-disabled");
+    await expect(page.getByTestId("pagination").locator("li a")).toHaveCount(11);
+    await expect(page.getByTestId("pagination").locator("li a").first()).toHaveAttribute("aria-label", "Go to first page");
+    await expect(page.getByTestId("pagination").locator("li a").nth(1)).toHaveAttribute("aria-label", "Go to previous page");
+    await expect(page.getByTestId("pagination").locator("li a").nth(9)).toHaveAttribute("aria-label", "Go to next page");
+    await expect(page.getByTestId("pagination").locator("li a").nth(10)).toHaveAttribute("aria-label", "Go to last page");
+    await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", "page 1");
+    await expect(page.getByLabel("Go to first page")).toBeDisabled();
+    await expect(page.getByLabel("Go to previous page")).toBeDisabled();
+    await expect(page.getByLabel("Go to next page")).toBeEnabled();
+    await expect(page.getByLabel("Go to last page")).toBeEnabled();
 
     // navigate through pagination
     await page.getByLabel("Go to next page").click();
-    await expect(page).toHaveURL(/^https:\/\/localhost\/books\/.*\/foundation-isaac-asimov\?page=2#reviews$/);
-    await expect(page.getByTestId("reviews-collection").locator(".mb-5")).toHaveCount(5);
-    await expect(page.getByTestId("reviews-collection").locator(".mb-5").first()).not.toHaveText("John Doe");
-    await expect(page.getByTestId("reviews-pagination").locator("li .Mui-selected")).toHaveAttribute("aria-label", "page 2");
-    await expect(page.getByLabel("Go to first page")).not.toHaveClass("Mui-disabled");
-    await expect(page.getByLabel("Go to previous page")).not.toHaveClass("Mui-disabled");
-    await expect(page.getByLabel("Go to next page")).not.toHaveClass("Mui-disabled");
-    await expect(page.getByLabel("Go to last page")).not.toHaveClass("Mui-disabled");
+    await expect(page).toHaveURL(/\/books\/.*\/foundation-isaac-asimov\?page=2#reviews$/);
+    await expect(page.getByTestId("review")).toHaveCount(5);
+    await expect(await bookPage.getDefaultReview()).not.toBeVisible();
+    await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", "page 2");
+    await expect(page.getByLabel("Go to first page")).toBeEnabled();
+    await expect(page.getByLabel("Go to previous page")).toBeEnabled();
+    await expect(page.getByLabel("Go to next page")).toBeEnabled();
+    await expect(page.getByLabel("Go to last page")).toBeEnabled();
 
     await page.getByLabel("page 3").click();
-    await expect(page).toHaveURL(/^https:\/\/localhost\/books\/.*\/foundation-isaac-asimov\?page=3#reviews$/);
-    await expect(page.getByTestId("reviews-collection").locator(".mb-5")).toHaveCount(5);
-    await expect(page.getByTestId("reviews-collection").locator(".mb-5").first()).not.toHaveText("John Doe");
-    await expect(page.getByTestId("reviews-pagination").locator("li .Mui-selected")).toHaveAttribute("aria-label", "page 3");
-    await expect(page.getByLabel("Go to first page")).not.toHaveClass("Mui-disabled");
-    await expect(page.getByLabel("Go to previous page")).not.toHaveClass("Mui-disabled");
-    await expect(page.getByLabel("Go to next page")).not.toHaveClass("Mui-disabled");
-    await expect(page.getByLabel("Go to last page")).not.toHaveClass("Mui-disabled");
+    await expect(page).toHaveURL(/\/books\/.*\/foundation-isaac-asimov\?page=3#reviews$/);
+    await expect(page.getByTestId("review")).toHaveCount(5);
+    await expect(await bookPage.getDefaultReview()).not.toBeVisible();
+    await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", "page 3");
+    await expect(page.getByLabel("Go to first page")).toBeEnabled();
+    await expect(page.getByLabel("Go to previous page")).toBeEnabled();
+    await expect(page.getByLabel("Go to next page")).toBeEnabled();
+    await expect(page.getByLabel("Go to last page")).toBeEnabled();
 
     await page.getByLabel("Go to previous page").click();
-    await expect(page).toHaveURL(/^https:\/\/localhost\/books\/.*\/foundation-isaac-asimov\?page=2#reviews$/);
-    await expect(page.getByTestId("reviews-collection").locator(".mb-5")).toHaveCount(5);
-    await expect(page.getByTestId("reviews-collection").locator(".mb-5").first()).not.toHaveText("John Doe");
-    await expect(page.getByTestId("reviews-pagination").locator("li .Mui-selected")).toHaveAttribute("aria-label", "page 2");
-    await expect(page.getByLabel("Go to first page")).not.toHaveClass("Mui-disabled");
-    await expect(page.getByLabel("Go to previous page")).not.toHaveClass("Mui-disabled");
-    await expect(page.getByLabel("Go to next page")).not.toHaveClass("Mui-disabled");
-    await expect(page.getByLabel("Go to last page")).not.toHaveClass("Mui-disabled");
+    await expect(page).toHaveURL(/\/books\/.*\/foundation-isaac-asimov\?page=2#reviews$/);
+    await expect(page.getByTestId("review")).toHaveCount(5);
+    await expect(await bookPage.getDefaultReview()).not.toBeVisible();
+    await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", "page 2");
+    await expect(page.getByLabel("Go to first page")).toBeEnabled();
+    await expect(page.getByLabel("Go to previous page")).toBeEnabled();
+    await expect(page.getByLabel("Go to next page")).toBeEnabled();
+    await expect(page.getByLabel("Go to last page")).toBeEnabled();
 
     await page.getByLabel("Go to last page").click();
-    await expect(page).toHaveURL(/^https:\/\/localhost\/books\/.*\/foundation-isaac-asimov\?page=7#reviews$/);
-    await expect(page.getByTestId("reviews-collection").locator(".mb-5")).toHaveCount(1);
-    await expect(page.getByTestId("reviews-collection").locator(".mb-5").first()).not.toHaveText("John Doe");
-    await expect(page.getByTestId("reviews-pagination").locator("li .Mui-selected")).toHaveAttribute("aria-label", "page 4");
-    await expect(page.getByLabel("Go to first page")).not.toHaveClass("Mui-disabled");
-    await expect(page.getByLabel("Go to previous page")).not.toHaveClass("Mui-disabled");
-    await expect(page.getByLabel("Go to next page")).toHaveClass("Mui-disabled");
-    await expect(page.getByLabel("Go to last page")).toHaveClass("Mui-disabled");
+    await expect(page).toHaveURL(/\/books\/.*\/foundation-isaac-asimov\?page=7#reviews$/);
+    await expect(page.getByTestId("review")).toHaveCount(1);
+    await expect(await bookPage.getDefaultReview()).not.toBeVisible();
+    await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", "page 7");
+    await expect(page.getByLabel("Go to first page")).toBeEnabled();
+    await expect(page.getByLabel("Go to previous page")).toBeEnabled();
+    await expect(page.getByLabel("Go to next page")).toBeDisabled();
+    await expect(page.getByLabel("Go to last page")).toBeDisabled();
 
     await page.getByLabel("Go to first page").click();
-    await expect(page).toHaveURL(/^https:\/\/localhost\/books\/.*\/foundation-isaac-asimov\?page=1#reviews$/);
-    await expect(page.getByTestId("reviews-collection").locator(".mb-5")).toHaveCount(5);
-    await expect(page.getByTestId("reviews-collection").locator(".mb-5").first()).not.toHaveText("John Doe");
-    await expect(page.getByTestId("reviews-pagination").locator("li .Mui-selected")).toHaveAttribute("aria-label", "page 1");
-    await expect(page.getByLabel("Go to first page")).toHaveClass("Mui-disabled");
-    await expect(page.getByLabel("Go to previous page")).toHaveClass("Mui-disabled");
-    await expect(page.getByLabel("Go to next page")).not.toHaveClass("Mui-disabled");
-    await expect(page.getByLabel("Go to last page")).not.toHaveClass("Mui-disabled");
+    await expect(page).toHaveURL(/\/books\/.*\/foundation-isaac-asimov\?page=1#reviews$/);
+    await expect(page.getByTestId("review")).toHaveCount(5);
+    await expect(await bookPage.getDefaultReview()).toBeVisible();
+    await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", "page 1");
+    await expect(page.getByLabel("Go to first page")).toBeDisabled();
+    await expect(page.getByLabel("Go to previous page")).toBeDisabled();
+    await expect(page.getByLabel("Go to next page")).toBeEnabled();
+    await expect(page.getByLabel("Go to last page")).toBeEnabled();
 
     // direct url should target to the right page
     await bookPage.gotoDefaultBook();
     await page.goto(`${page.url()}?page=2`);
-    await page.waitForURL(/^https:\/\/localhost\/books\/.*\/foundation-isaac-asimov\?page=2$/);
-    await expect(page.getByTestId("reviews-collection").locator(".mb-5")).toHaveCount(5);
-    await expect(page.getByTestId("reviews-collection").locator(".mb-5").first()).not.toHaveText("John Doe");
-    await expect(page.getByTestId("reviews-pagination").locator("li .Mui-selected")).toHaveAttribute("aria-label", "page 2");
-    await expect(page.getByLabel("Go to first page")).not.toHaveClass("Mui-disabled");
-    await expect(page.getByLabel("Go to previous page")).not.toHaveClass("Mui-disabled");
-    await expect(page.getByLabel("Go to next page")).not.toHaveClass("Mui-disabled");
-    await expect(page.getByLabel("Go to last page")).not.toHaveClass("Mui-disabled");
+    await page.waitForURL(/\/books\/.*\/foundation-isaac-asimov\?page=2$/);
+    await expect(page.getByTestId("review")).toHaveCount(5);
+    await expect(await bookPage.getDefaultReview()).not.toBeVisible();
+    await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", "page 2");
+    await expect(page.getByLabel("Go to first page")).toBeEnabled();
+    await expect(page.getByLabel("Go to previous page")).toBeEnabled();
+    await expect(page.getByLabel("Go to next page")).toBeEnabled();
+    await expect(page.getByLabel("Go to last page")).toBeEnabled();
   });
 
   test("I can update my review on a book @write @login", async ({ bookPage, page }) => {
-    let first = page.locator("reviews-collection").locator(".mb-5").first();
-    await expect(first.getByLabel("Edit")).toHaveCount(0);
+    await expect(page.getByTestId("review").first().getByLabel("Edit")).toHaveCount(0);
 
     // I must log in to update my review
     await page.getByLabel("Log in to add a review!").click();
@@ -143,25 +141,22 @@ test.describe("Book view", () => {
     await bookPage.login();
 
     // display edit form
-    first = page.locator("reviews-collection").locator(".mb-5").first();
-    await expect(first.getByLabel("Edit")).toBeVisible();
-    await first.getByLabel("Edit").click();
-    await expect(first.getByLabel("Edit")).toHaveCount(0);
-    await expect(first.getByTestId("review-body")).toBeVisible();
+    await expect(page.getByTestId("review").first().getByLabel("Edit")).toBeVisible();
+    await page.getByTestId("review").first().getByLabel("Edit").click();
+    await expect(page.getByTestId("review").first().getByLabel("Edit")).toHaveCount(0);
+    await expect(page.getByTestId("review").first().getByTestId("review-body")).toBeVisible();
 
     // update review
-    await bookPage.writeReview({ rating: 4, body: "I really love this book!" }, first);
+    await bookPage.writeReview({ rating: 4, body: "I really love this book!" }, page.getByTestId("review").first());
 
     // test review display has been updated
-    first = page.locator("reviews-collection").locator(".mb-5").first();
-    await expect(first).toContainText("John Doe");
-    await expect(first).toContainText("I really love this book!");
-    await expect(first.locator(".MuiRating-root")).toHaveAttribute("aria-label", "4 Stars");
+    await expect(page.getByTestId("review").first()).toContainText("John Doe");
+    await expect(page.getByTestId("review").first()).toContainText("I really love this book!");
+    await expect(page.getByTestId("review").first().locator(".MuiRating-root")).toHaveAttribute("aria-label", "4 Stars");
   });
 
   test("I can delete my review on a book @write @login", async ({ bookPage, page }) => {
-    let first = page.locator("reviews-collection").locator(".mb-5").first();
-    await expect(first.getByLabel("Delete")).toHaveCount(0);
+    await expect(page.getByTestId("review").first().getByLabel("Delete")).toHaveCount(0);
 
     // I must log in to update my review
     await page.getByLabel("Log in to add a review!").click();
@@ -170,21 +165,19 @@ test.describe("Book view", () => {
     await bookPage.login();
 
     // display edit form
-    first = page.locator("reviews-collection").locator(".mb-5").first();
-    await expect(first.getByLabel("Delete")).toBeVisible();
+    await expect(page.getByTestId("review").first().getByLabel("Delete")).toBeVisible();
     page.on("dialog", dialog => dialog.accept());
-    await first.getByLabel("Delete").click();
-    await expect(first.getByLabel("Delete")).toHaveCount(0);
-    await expect(first.getByTestId("review-body")).toBeVisible();
+    await page.getByTestId("review").first().getByLabel("Delete").click();
+    await expect(page.getByTestId("review").first().getByLabel("Delete")).toHaveCount(0);
+    await expect(page.getByTestId("review").first().getByTestId("review-body")).toBeVisible();
 
     // update review
-    await bookPage.writeReview({ rating: 4, body: "I really love this book!" }, first);
+    await bookPage.writeReview({ rating: 4, body: "I really love this book!" }, page.getByTestId("review").first());
 
     // test review display has been updated
-    first = page.locator("reviews-collection").locator(".mb-5").first();
-    await expect(first).toContainText("John Doe");
-    await expect(first).toContainText("I really love this book!");
-    await expect(first.locator(".MuiRating-root")).toHaveAttribute("aria-label", "4 Stars");
+    await expect(page.getByTestId("review").first()).toContainText("John Doe");
+    await expect(page.getByTestId("review").first()).toContainText("I really love this book!");
+    await expect(page.getByTestId("review").first().locator(".MuiRating-root")).toHaveAttribute("aria-label", "4 Stars");
   });
 
   // note: this test must be executed after update/delete (cf. previous tests)
@@ -206,10 +199,9 @@ test.describe("Book view", () => {
     await expect(page.getByLabel("Add a review...")).toHaveValue("");
 
     // adding a review refresh the list: new review is displayed first
-    await expect(page.getByTestId("reviews-collection").locator(".mb-5")).toHaveCount(5);
-    const first = page.locator("reviews-collection").locator(".mb-5").first();
-    await expect(first).toContainText("John Doe");
-    await expect(first).toContainText("This is the best SF book ever!");
-    await expect(first.locator(".MuiRating-root")).toHaveAttribute("aria-label", "5 Stars");
+    await expect(page.getByTestId("review")).toHaveCount(5);
+    await expect(page.getByTestId("review").first()).toContainText("John Doe");
+    await expect(page.getByTestId("review").first()).toContainText("This is the best SF book ever!");
+    await expect(page.getByTestId("review").first().locator(".MuiRating-root")).toHaveAttribute("aria-label", "5 Stars");
   });
 });

@@ -121,14 +121,10 @@ const Welcome = () => (
           <h2 className="text-black text-md font-bold mb-5">
             Available services:
           </h2>
-          <div className="flex justify-center flex-wrap | lg:justify-start lg:grid lg:gap-5 lg:grid-cols-2">
+          <div className="flex justify-center flex-wrap | lg:justify-start lg:grid lg:gap-5 lg:grid-cols-2" data-testid="cards">
             <Card image={apiPicture} title="API" url="/docs"/>
             <Card image={adminPicture} title="Admin" url="/admin"/>
-            <Card
-              image={mercurePicture}
-              title="Mercure debugger"
-              url="/.well-known/mercure/ui/"
-            />
+            <Card image={mercurePicture} title="Mercure debugger" url="/.well-known/mercure/ui/"/>
           </div>
         </div>
       </div>

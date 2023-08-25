@@ -54,7 +54,7 @@ export const Item: FunctionComponent<Props> = ({ review, onDelete, onEdit }) => 
       {!!error && (
         <Error message={error}/>
       )}
-      <div key={data["@id"]} className="mb-5 flex">
+      <div key={data["@id"]} className="mb-5 flex" data-testid="review">
         <div className="font-semibold text-gray-600 text-xl w-[50px] h-[50px] px-3 py-1 mr-3 rounded-full bg-gray-200 flex items-center justify-center">
           {data["user"]["name"].substring(0, 1)}
         </div>

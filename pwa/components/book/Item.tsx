@@ -18,11 +18,11 @@ export const Item: FunctionComponent<Props> = ({ book }) => {
   if (isLoading || !data) return <Loading/>;
 
   return (
-    <div className="relative p-4 bg-white hover:drop-shadow-xl border-b border-gray-200 text-center">
+    <div className="relative p-4 bg-white hover:drop-shadow-xl border-b border-gray-200 text-center" data-testid="book">
       <div className="h-40 mb-2">
         {!!data["images"] && (
           <Image alt={data["title"]} width={100} height={130} src={data["images"]["medium"]}
-                 className="mx-auto w-auto max-w-[150px] h-auto max-h-[165px]"
+                 className="mx-auto w-auto max-w-[150px] h-auto max-h-[165px]" priority={true}
           />
         ) || (
           <span className="h-40 text-slate-300">No cover</span>

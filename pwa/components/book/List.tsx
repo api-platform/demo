@@ -71,12 +71,12 @@ export const List: NextPage<Props> = ({ data, hubURL, filters }) => {
                 </div>
                 <span data-testid="nb-books" className="float-right mt-1">{collection["hydra:totalItems"]} book(s) found</span>
               </div>
-              <div data-testid="books-collection" className="grid grid-cols-5 gap-4">
+              <div className="grid grid-cols-5 gap-4">
                 {collection["hydra:member"].length !== 0 && collection["hydra:member"].map((book) => (
                   <Item key={book["@id"]} book={book}/>
                 ))}
               </div>
-              <Pagination data-testid="books-pagination" collection={collection} getPagePath={getPagePath} currentPage={filters?.page}/>
+              <Pagination collection={collection} getPagePath={getPagePath} currentPage={filters?.page}/>
             </>
           ) || (
             <p className="w-full flex px-8 pb-4 text-lg">No books found.</p>
