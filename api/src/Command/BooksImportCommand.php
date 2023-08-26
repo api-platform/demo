@@ -23,7 +23,8 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 final class BooksImportCommand extends Command
 {
     public function __construct(
-        private readonly SerializerInterface&DecoderInterface $serializer,
+        private readonly SerializerInterface $serializer,
+        private readonly DecoderInterface $decoder,
         private readonly HttpClientInterface $client,
         private readonly LoggerInterface $logger
     ) {
@@ -89,7 +90,7 @@ final class BooksImportCommand extends Command
 
     private function getData(string $uri): array
     {
-        return $this->serializer->decode($this->client->request(Request::METHOD_GET, $uri, [
+        return $this->decoder->decode($this->client->request(Request::METHOD_GET, $uri, [
             'headers' => [
                 'Accept' => 'application/json',
             ],
