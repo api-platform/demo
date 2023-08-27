@@ -1,5 +1,5 @@
 import { type FunctionComponent, useEffect, useState } from "react";
-import {signIn, useSession} from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 import { Pagination } from "@/components/common/Pagination";
 import { type Book } from "@/types/Book";
@@ -19,14 +19,13 @@ interface Props {
 
 export const List: FunctionComponent<Props> = ({ book, page }) => {
   const { data: session, status } = useSession();
-  const [data, setData] = useState<PagedCollection<Review> | undefined>();
+  const [data, setData] = useState<PagedCollection<Review> | null | undefined>();
+  const [reload, toggleReload] = useState<boolean>(true);
   const [error, setError] = useState<string | undefined>();
   const [hubURL, setHubURL] = useState<string | undefined>();
   const collection = useMercure(data, hubURL);
 
   useEffect(() => {
-    if (status === "loading") return;
-
     (async () => {
       try {
         const response: FetchResponse<PagedCollection<Review>> | undefined = await fetch(`${book["reviews"]}?itemsPerPage=5&page=${page}`);
@@ -44,7 +43,7 @@ export const List: FunctionComponent<Props> = ({ book, page }) => {
         return;
       }
     })();
-  }, [book, page, status]);
+  }, [book, page, status, reload]);
 
   const getPagePath = (page: number): string =>
     `${getItemPath(book, '/books/[id]/[slug]')}?page=${page}#reviews`;
@@ -59,7 +58,11 @@ export const List: FunctionComponent<Props> = ({ book, page }) => {
               {(session?.user?.name ?? "John Doe").substring(0, 1)}
             </div>
             <div className="w-full">
-              <Form book={book} username={session?.user?.name ?? "John Doe"}/>
+              <Form book={book} username={session?.user?.name ?? "John Doe"}
+                    onSuccess={(values) => {
+                      toggleReload(!reload);
+                    }}
+              />
             </div>
           </div>
         </div>
@@ -76,9 +79,9 @@ export const List: FunctionComponent<Props> = ({ book, page }) => {
       ) || !!collection && !!collection["hydra:member"] && collection["hydra:member"]?.length > 0 && (
         <>
           {collection["hydra:member"].map((review) => (
-            <Item key={review["@id"]} review={review} onDelete={() => setData(undefined)}/>
+            <Item key={review["@id"]} review={review} onDelete={() => toggleReload(!reload)}/>
           ))}
-          <Pagination collection={collection} getPagePath={getPagePath} currentPage={page ? Number(page) : 1}/>
+          <Pagination collection={collection} getPagePath={getPagePath} currentPage={page}/>
         </>
       ) || !!collection && (
         <p className="text-gray-600">Be the first to add a review!</p>

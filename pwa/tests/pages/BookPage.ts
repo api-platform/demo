@@ -1,5 +1,6 @@
 import { Locator } from "@playwright/test";
 import { type FiltersProps } from "@/utils/book";
+
 import { AbstractPage } from "./AbstractPage";
 
 interface ReviewProps {
@@ -19,7 +20,7 @@ export class BookPage extends AbstractPage {
 
     if (filters.order) {
       await this.page.getByTestId("sort").click();
-      await this.page.getByText(filters.order).waitFor({state: "visible"});
+      await this.page.getByText(filters.order).waitFor({ state: "visible" });
       await this.page.getByText(filters.order).click();
     }
 
@@ -36,38 +37,38 @@ export class BookPage extends AbstractPage {
 
   public async writeReview(values: ReviewProps, locator: Locator | undefined = undefined) {
     await (locator ?? this.page).getByTestId("review-body").fill(values.body);
-    await (locator ?? this.page).getByTestId("review-rating").locator("label").nth(values.rating).click();
-    await (locator ?? this.page).getByLabel("Submit").click();
+    await (locator ?? this.page).getByTestId("review-rating").locator("label").nth(values.rating-1).click();
+    await (locator ?? this.page).getByRole("button", { name: "Submit" }).click();
 
     return this.page;
   }
 
-  public async gotoList(url: string | undefined = "/books") {
-    await this.page.goto(url);
+  public async gotoList(filters: URLSearchParams | undefined) {
+    await this.registerMock();
+
+    await this.page.goto(`/books${filters && filters.size > 0 ? `?${filters.toString()}` : ""}`);
     await this.page.waitForURL(/\/books/);
-    await this.page.waitForResponse("https://openlibrary.org/books/OL17267881W.json");
-    await this.page.waitForResponse(/covers\.openlibrary\.org/);
-    await (await this.getDefaultBook()).waitFor({ state: "visible" });
+    await this.waitForDefaultBookToBeLoaded();
 
     return this.page;
   }
 
   public async gotoDefaultBook() {
-    await this.gotoList("/books?title=Foundation&author=Liu+Cixin");
-    await (await this.getDefaultBook()).getByText("Foundation").first().click();
-    await this.page.waitForURL(/\/books\/.*\/foundation-liu-cixin$/);
+    await this.gotoList(new URLSearchParams("title=The+Three-Body+Problem&author=Liu+Cixin"));
+    await (await this.getDefaultBook()).getByText("The Three-Body Problem").first().click();
+    await this.page.waitForURL(/\/books\/.*\/the-three-body-problem-liu-cixin$/);
 
     return this.page;
   }
 
   public async bookmark() {
-    await this.page.getByLabel("Bookmark").click();
+    await this.page.getByRole("button", { name: "Bookmark" }).click();
 
     return this.page;
   }
 
   public async unbookmark() {
-    await this.page.getByLabel("Bookmarked").click();
+    await this.page.getByRole("button", { name: "Bookmarked" }).click();
 
     return this.page;
   }

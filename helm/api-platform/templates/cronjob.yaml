@@ -25,8 +25,7 @@ spec:
             - name: {{ .Chart.Name }}-cronjob
               image: "{{ .Values.php.image.repository }}:{{ .Values.php.image.tag | default .Chart.AppVersion }}"
               imagePullPolicy: {{ .Values.php.image.pullPolicy }}
-              command: ['/bin/sh', '-c']
-              args: ['composer install --prefer-dist --no-progress --no-interaction && bin/console doctrine:schema:drop --force --no-interaction && bin/console doctrine:migrations:version --delete --all --no-interaction && bin/console doctrine:migrations:migrate --no-interaction && bin/console doctrine:fixtures:load --no-interaction']
+              args: ['bin/console', 'doctrine:fixtures:load', '--no-interaction']
               env:
                 - name: OIDC_SERVER_URL
                   valueFrom:

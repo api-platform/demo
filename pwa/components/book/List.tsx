@@ -3,7 +3,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useMutation } from "react-query";
 import FilterListOutlinedIcon from "@mui/icons-material/FilterListOutlined";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { MenuItem, Select } from "@mui/material";
 
 import { Item } from "@/components/book/Item";
 import { Filters } from "@/components/book/Filters";
@@ -18,11 +18,12 @@ interface Props {
   data: PagedCollection<Book> | null;
   hubURL: string | null;
   filters: FiltersProps;
+  page: number;
 }
 
 const getPagePath = (page: number): string => `/books?page=${page}`;
 
-export const List: NextPage<Props> = ({ data, hubURL, filters }) => {
+export const List: NextPage<Props> = ({ data, hubURL, filters, page }) => {
   const collection = useMercure(data, hubURL);
   const router = useRouter();
 
@@ -76,7 +77,7 @@ export const List: NextPage<Props> = ({ data, hubURL, filters }) => {
                   <Item key={book["@id"]} book={book}/>
                 ))}
               </div>
-              <Pagination collection={collection} getPagePath={getPagePath} currentPage={filters?.page}/>
+              <Pagination collection={collection} getPagePath={getPagePath} currentPage={page}/>
             </>
           ) || (
             <p className="w-full flex px-8 pb-4 text-lg">No books found.</p>

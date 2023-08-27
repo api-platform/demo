@@ -27,14 +27,14 @@ services:
     environment:
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
       MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
-      CADDY_GLOBAL_OPTIONS: |
-        order cache before rewrite
-        cache {
-            api {
-                souin
-            }
-        }
-      CADDY_CACHE: cache
+#      CADDY_GLOBAL_OPTIONS: |
+#        order cache before rewrite
+#        cache {
+#            api {
+#                souin
+#            }
+#        }
+#      CADDY_CACHE: cache
 
   database:
     environment:
@@ -47,5 +47,11 @@ services:
   keycloak:
     environment:
       KEYCLOAK_PRODUCTION: "true"
-      KEYCLOAK_ENABLE_HTTPS: "false"
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KEYCLOAK_ENABLE_HTTPS: "true"
+      KEYCLOAK_HTTPS_USE_PEM: "true"
+      KEYCLOAK_HTTPS_CERTIFICATE_FILE: /opt/bitnami/keycloak/certs/tls.crt
+      KEYCLOAK_HTTPS_CERTIFICATE_KEY_FILE: /opt/bitnami/keycloak/certs/tls.key
+    volumes:
+      - ${KEYCLOAK_HTTPS_CERTIFICATE_FILE}:/opt/bitnami/keycloak/certs/tls.crt:ro
+      - ${KEYCLOAK_HTTPS_CERTIFICATE_KEY_FILE}:/opt/bitnami/keycloak/certs/tls.key:ro

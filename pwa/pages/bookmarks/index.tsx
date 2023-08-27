@@ -37,12 +37,12 @@ export const getServerSideProps: GetServerSideProps<{
       throw new Error('Unable to retrieve data from /bookmarks.');
     }
 
-    return { props: { data: response.data, hubURL: response.hubURL, page: page ?? 1 } };
+    return { props: { data: response.data, hubURL: response.hubURL, page: Number(page ?? 1) } };
   } catch (error) {
     console.error(error);
   }
 
-  return { props: { data: null, hubURL: null, page: page ?? 1 } };
+  return { props: { data: null, hubURL: null, page: Number(page ?? 1) } };
 };
 
 export default List;

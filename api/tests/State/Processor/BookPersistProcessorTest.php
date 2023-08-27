@@ -34,7 +34,7 @@ final class BookPersistProcessorTest extends TestCase
         $this->responseMock = $this->createMock(ResponseInterface::class);
         $this->decoderMock = $this->createMock(DecoderInterface::class);
         $this->objectMock = $this->createMock(Book::class);
-        $this->objectMock->book = 'https://openlibrary.org/books/OL17267881W.json';
+        $this->objectMock->book = 'https://openlibrary.org/books/OL25840917M.json';
         $this->operationMock = $this->createMock(Operation::class);
 
         $this->processor = new BookPersistProcessor(
@@ -56,7 +56,7 @@ final class BookPersistProcessorTest extends TestCase
             ->method('request')
             ->withConsecutive(
                 [
-                    Request::METHOD_GET, 'https://openlibrary.org/books/OL17267881W.json', [
+                    Request::METHOD_GET, 'https://openlibrary.org/books/OL25840917M.json', [
                         'headers' => [
                             'Accept' => 'application/json',
                         ],

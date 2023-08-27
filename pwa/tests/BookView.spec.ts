@@ -7,11 +7,11 @@ test.describe("Book view", () => {
 
   test("I can see the book details @read", async ({ page }) => {
     // test book display
-    await expect(page).toHaveTitle("Foundation - Liu Cixin");
-    await expect(page.locator("h1")).toHaveText("Foundation");
+    await expect(page).toHaveTitle("The Three-Body Problem - Liu Cixin");
+    await expect(page.locator("h1")).toHaveText("The Three-Body Problem");
     await expect(page.locator("h2")).toHaveText("Liu Cixin");
     await expect(page.getByTestId("book-cover")).toBeVisible();
-    await expect(page.getByTestId("book-metadata")).toContainText("Condition: Used | Published on 1951");
+    await expect(page.getByTestId("book-metadata")).toContainText("Condition: Used | Published on 2014-11-11");
     await expect(page.getByTestId("book-description")).not.toBeEmpty();
   });
 
@@ -30,22 +30,25 @@ test.describe("Book view", () => {
   test("I can bookmark the book @write @login", async ({ bookPage, page }) => {
     // I must log in to bookmark a book
     await bookPage.bookmark();
+    await page.getByRole("button", { name: "Bookmark" }).waitFor({ state: "hidden" });
     // @ts-ignore assert declared on test.ts
     await expect(page).toBeOnLoginPage();
     await bookPage.login();
 
-    await expect(page).toHaveURL(/\/books\/.*\/foundation-liu-cixin$/);
-    // note: book is already bookmarked through the fixtures
-    await expect(page.getByLabel("Bookmark")).toHaveCount(0);
-    await expect(page.getByLabel("Bookmarked")).toHaveCount(1);
+    await expect(page).toHaveURL(/\/books\/.*\/the-three-body-problem-liu-cixin$/);
+    // note: book is already bookmarked in the fixtures
+    await expect(page.getByRole("button", { name: "Bookmark" })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Bookmarked" })).toHaveCount(1);
 
     await bookPage.unbookmark();
-    await expect(page.getByLabel("Bookmark")).toHaveCount(1);
-    await expect(page.getByLabel("Bookmarked")).toHaveCount(0);
+    await page.waitForTimeout(100);
+    await expect(page.getByRole("button", { name: "Bookmark", exact: true })).toHaveCount(1);
+    await expect(page.getByRole("button", { name: "Bookmarked", exact: true })).toHaveCount(0);
 
     await bookPage.bookmark();
-    await expect(page.getByLabel("Bookmark")).toHaveCount(0);
-    await expect(page.getByLabel("Bookmarked")).toHaveCount(1);
+    await page.waitForTimeout(100);
+    await expect(page.getByRole("button", { name: "Bookmark", exact: true })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Bookmarked", exact: true })).toHaveCount(1);
   });
 
   test("I can navigate through the book reviews @read", async ({ bookPage, page }) => {
@@ -69,7 +72,7 @@ test.describe("Book view", () => {
 
     // navigate through pagination
     await page.getByLabel("Go to next page").click();
-    await expect(page).toHaveURL(/\/books\/.*\/foundation-liu-cixin\?page=2#reviews$/);
+    await expect(page).toHaveURL(/\/books\/.*\/the-three-body-problem-liu-cixin\?page=2#reviews$/);
     await expect(page.getByTestId("review")).toHaveCount(5);
     await expect(await bookPage.getDefaultReview()).not.toBeVisible();
     await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", "page 2");
@@ -79,7 +82,7 @@ test.describe("Book view", () => {
     await expect(page.getByLabel("Go to last page")).toBeEnabled();
 
     await page.getByLabel("page 3").click();
-    await expect(page).toHaveURL(/\/books\/.*\/foundation-liu-cixin\?page=3#reviews$/);
+    await expect(page).toHaveURL(/\/books\/.*\/the-three-body-problem-liu-cixin\?page=3#reviews$/);
     await expect(page.getByTestId("review")).toHaveCount(5);
     await expect(await bookPage.getDefaultReview()).not.toBeVisible();
     await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", "page 3");
@@ -89,7 +92,7 @@ test.describe("Book view", () => {
     await expect(page.getByLabel("Go to last page")).toBeEnabled();
 
     await page.getByLabel("Go to previous page").click();
-    await expect(page).toHaveURL(/\/books\/.*\/foundation-liu-cixin\?page=2#reviews$/);
+    await expect(page).toHaveURL(/\/books\/.*\/the-three-body-problem-liu-cixin\?page=2#reviews$/);
     await expect(page.getByTestId("review")).toHaveCount(5);
     await expect(await bookPage.getDefaultReview()).not.toBeVisible();
     await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", "page 2");
@@ -99,7 +102,7 @@ test.describe("Book view", () => {
     await expect(page.getByLabel("Go to last page")).toBeEnabled();
 
     await page.getByLabel("Go to last page").click();
-    await expect(page).toHaveURL(/\/books\/.*\/foundation-liu-cixin\?page=7#reviews$/);
+    await expect(page).toHaveURL(/\/books\/.*\/the-three-body-problem-liu-cixin\?page=7#reviews$/);
     await expect(page.getByTestId("review")).toHaveCount(1);
     await expect(await bookPage.getDefaultReview()).not.toBeVisible();
     await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", "page 7");
@@ -109,7 +112,7 @@ test.describe("Book view", () => {
     await expect(page.getByLabel("Go to last page")).toBeDisabled();
 
     await page.getByLabel("Go to first page").click();
-    await expect(page).toHaveURL(/\/books\/.*\/foundation-liu-cixin\?page=1#reviews$/);
+    await expect(page).toHaveURL(/\/books\/.*\/the-three-body-problem-liu-cixin\?page=1#reviews$/);
     await expect(page.getByTestId("review")).toHaveCount(5);
     await expect(await bookPage.getDefaultReview()).toBeVisible();
     await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", "page 1");
@@ -121,7 +124,7 @@ test.describe("Book view", () => {
     // direct url should target to the right page
     await bookPage.gotoDefaultBook();
     await page.goto(`${page.url()}?page=2`);
-    await page.waitForURL(/\/books\/.*\/foundation-liu-cixin\?page=2$/);
+    await page.waitForURL(/\/books\/.*\/the-three-body-problem-liu-cixin\?page=2$/);
     await expect(page.getByTestId("review")).toHaveCount(5);
     await expect(await bookPage.getDefaultReview()).not.toBeVisible();
     await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", "page 2");
@@ -132,18 +135,19 @@ test.describe("Book view", () => {
   });
 
   test("I can update my review on a book @write @login", async ({ bookPage, page }) => {
-    await expect(page.getByTestId("review").first().getByLabel("Edit")).toHaveCount(0);
+    await expect(page.getByTestId("review").first().getByRole("link", { name: "Edit" })).toHaveCount(0);
 
     // I must log in to update my review
-    await page.getByLabel("Log in to add a review!").click();
+    await page.getByRole("button", { name: "Log in to add a review!" }).click();
+    await page.getByRole("button", { name: "Log in to add a review!" }).waitFor({ state: "hidden" });
     // @ts-ignore assert declared on test.ts
     await expect(page).toBeOnLoginPage();
     await bookPage.login();
 
     // display edit form
-    await expect(page.getByTestId("review").first().getByLabel("Edit")).toBeVisible();
-    await page.getByTestId("review").first().getByLabel("Edit").click();
-    await expect(page.getByTestId("review").first().getByLabel("Edit")).toHaveCount(0);
+    await expect(page.getByTestId("review").first().getByRole("link", { name: "Edit" })).toBeVisible();
+    await page.getByTestId("review").first().getByRole("link", { name: "Edit" }).click();
+    await expect(page.getByTestId("review").first().getByRole("link", { name: "Edit" })).toHaveCount(0);
     await expect(page.getByTestId("review").first().getByTestId("review-body")).toBeVisible();
 
     // update review
@@ -156,47 +160,45 @@ test.describe("Book view", () => {
   });
 
   test("I can delete my review on a book @write @login", async ({ bookPage, page }) => {
-    await expect(page.getByTestId("review").first().getByLabel("Delete")).toHaveCount(0);
+    await expect(page.getByTestId("review").first().getByRole("link", { name: "Delete" })).toHaveCount(0);
 
     // I must log in to update my review
-    await page.getByLabel("Log in to add a review!").click();
+    await page.getByRole("button", { name: "Log in to add a review!" }).click();
+    await page.getByRole("button", { name: "Log in to add a review!" }).waitFor({ state: "hidden" });
     // @ts-ignore assert declared on test.ts
     await expect(page).toBeOnLoginPage();
     await bookPage.login();
 
     // display edit form
-    await expect(page.getByTestId("review").first().getByLabel("Delete")).toBeVisible();
+    await expect(page.getByTestId("review").first().getByRole("link", { name: "Delete" })).toBeVisible();
     page.on("dialog", dialog => dialog.accept());
-    await page.getByTestId("review").first().getByLabel("Delete").click();
-    await expect(page.getByTestId("review").first().getByLabel("Delete")).toHaveCount(0);
-    await expect(page.getByTestId("review").first().getByTestId("review-body")).toBeVisible();
+    await page.getByTestId("review").first().getByRole("link", { name: "Delete" }).click();
+    await expect(page.getByTestId("review").first().getByRole("link", { name: "Delete" })).toHaveCount(0);
 
-    // update review
-    await bookPage.writeReview({ rating: 4, body: "I really love this book!" }, page.getByTestId("review").first());
-
-    // test review display has been updated
-    await expect(page.getByTestId("review").first()).toContainText("John Doe");
-    await expect(page.getByTestId("review").first()).toContainText("I really love this book!");
-    await expect(page.getByTestId("review").first().locator(".MuiRating-root")).toHaveAttribute("aria-label", "4 Stars");
+    // test reviews list has been refreshed
+    await expect(page.getByTestId("review")).toHaveCount(5);
+    await expect(page.getByTestId("review").first()).not.toContainText("John Doe");
+    await expect(page.getByTestId("review").first()).not.toContainText("I really love this book!");
   });
 
   // note: this test must be executed after update/delete (cf. previous tests)
   test("I can add a review on a book @write @login", async ({ bookPage, page }) => {
-    await expect(page.getByLabel("Log in to add a review!")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Log in to add a review!" })).toBeVisible();
 
     // I must log in to review a book
-    await page.getByLabel("Log in to add a review!").click();
+    await page.getByRole("button", { name: "Log in to add a review!" }).click();
+    await page.getByRole("button", { name: "Log in to add a review!" }).waitFor({ state: "hidden" });
     // @ts-ignore assert declared on test.ts
     await expect(page).toBeOnLoginPage();
     await bookPage.login();
 
     await expect(page.getByLabel("Log in to add a review!")).toHaveCount(0);
-    await expect(page.getByLabel("Add a review...")).toBeVisible();
-    await expect(page.getByLabel("Submit")).toBeVisible();
+    await expect(page.getByPlaceholder("Add a review...")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Submit" })).toBeVisible();
     await expect(page.getByTestId("review-form")).toContainText("John Doe");
 
     await bookPage.writeReview({ rating: 5, body: "This is the best SF book ever!" });
-    await expect(page.getByLabel("Add a review...")).toHaveValue("");
+    await expect(page.getByPlaceholder("Add a review...")).toHaveValue("");
 
     // adding a review refresh the list: new review is displayed first
     await expect(page.getByTestId("review")).toHaveCount(5);

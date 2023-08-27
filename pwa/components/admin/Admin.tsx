@@ -57,7 +57,7 @@ const MyLayout = (props: React.JSX.IntrinsicAttributes & LayoutProps) => <Layout
 
 const AdminUI = ({ session, children }: { session: Session, children?: React.ReactNode | undefined }) => {
   // @ts-ignore
-  const dataProvider = useRef<DataProvider>(undefined);
+  const dataProvider = useRef<DataProvider>();
   const { docType } = useContext(DocContext);
 
   dataProvider.current = hydraDataProvider({

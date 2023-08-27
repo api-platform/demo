@@ -70,7 +70,7 @@ export const BookInput = (props: BookInputProps) => {
       }
       controller.current = new AbortController();
 
-      return await fetchOpenLibrarySearch(searchQuery, controller.current.signal)
+      return await fetchOpenLibrarySearch(searchQuery, controller.current.signal);
     },
     {
       enabled: !!searchQuery,

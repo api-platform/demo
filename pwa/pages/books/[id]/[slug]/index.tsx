@@ -19,7 +19,7 @@ export const getServerSideProps: GetServerSideProps<{
       throw new Error(`Unable to retrieve data from /books/${id}.`);
     }
 
-    return { props: { data: response.data, hubURL: response.hubURL, page: page ? Number(page) : 1 } };
+    return { props: { data: response.data, hubURL: response.hubURL, page: Number(page ?? 1) } };
   } catch (error) {
     console.error(error);
   }

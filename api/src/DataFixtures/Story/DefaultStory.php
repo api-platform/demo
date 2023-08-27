@@ -9,7 +9,6 @@ use App\DataFixtures\Factory\BookmarkFactory;
 use App\DataFixtures\Factory\ReviewFactory;
 use App\DataFixtures\Factory\UserFactory;
 use App\Enum\BookCondition;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
 use Zenstruck\Foundry\Story;
 
@@ -24,7 +23,7 @@ final class DefaultStory extends Story
         // Create default book (must be created first to appear first in list)
         $defaultBook = BookFactory::createOne([
             'condition' => BookCondition::UsedCondition,
-            'book' => 'https://openlibrary.org/books/OL17267881W.json',
+            'book' => 'https://openlibrary.org/books/OL25840917M.json',
             'title' => 'The Three-Body Problem',
             'author' => 'Liu Cixin',
         ]);
@@ -75,6 +74,7 @@ final class DefaultStory extends Story
         BookmarkFactory::createOne([
             'book' => $defaultBook,
             'user' => $defaultUser,
+            'bookmarkedAt' => new \DateTimeImmutable('-1 hour'),
         ]);
 
         // Default user has bookmarked other books
@@ -82,6 +82,7 @@ final class DefaultStory extends Story
             BookmarkFactory::createOne([
                 'user' => $defaultUser,
                 'book' => $books[$key],
+                'bookmarkedAt' => \DateTimeImmutable::createFromMutable(BookmarkFactory::faker()->dateTime('-1 week')),
             ]);
         }
 
@@ -92,14 +93,5 @@ final class DefaultStory extends Story
             'lastName' => 'Norris',
             'roles' => ['ROLE_ADMIN'],
         ]);
-    }
-
-    private function getData(string $uri): array
-    {
-        return $this->decoder->decode($this->client->request(Request::METHOD_GET, $uri, [
-            'headers' => [
-                'Accept' => 'application/json',
-            ],
-        ])->getContent(), 'json');
     }
 }

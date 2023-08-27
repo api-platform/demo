@@ -41,7 +41,7 @@ const deleteBookmark = async (id: string) =>
 
 export const Show: NextPage<Props> = ({ data, hubURL, page }) => {
   const { data: session, status } = useSession();
-  const [bookmark, setBookmark] = useState<Bookmark | undefined>();
+  const [bookmark, setBookmark] = useState<Bookmark | null | undefined>();
   const { data: book, isLoading } = useOpenLibraryBook(data);
   const item = useMercure(data, hubURL);
 
@@ -50,18 +50,28 @@ export const Show: NextPage<Props> = ({ data, hubURL, page }) => {
     Error | FetchError,
     BookmarkProps
     // @ts-ignore
-  >((data: BookmarkProps) => {
+  >(async (data: BookmarkProps) => {
     // @ts-ignore
     if (!session || session?.error === "RefreshAccessTokenError") return signIn("keycloak");
 
-    // @ts-ignore
-    if (bookmark) return deleteBookmark(bookmark["@id"]);
+    if (bookmark) {
+      // @ts-ignore
+      await deleteBookmark(bookmark["@id"]);
+      setBookmark(null);
 
-    return saveBookmark(data);
+      return;
+    }
+
+    const response: FetchResponse<Bookmark> | undefined = await saveBookmark(data);
+    if (response && response?.data) {
+      setBookmark(response.data);
+    }
   });
 
+  // Check in user bookmarks if the current book has been bookmarked
   useEffect(() => {
-    if (status === "loading") return;
+    // /bookmarks endpoint requires authentication
+    if (status === "loading" || status === "unauthenticated") return;
 
     (async () => {
       try {
@@ -71,7 +81,7 @@ export const Show: NextPage<Props> = ({ data, hubURL, page }) => {
         }
       } catch (error) {
         console.error(error);
-        setBookmark(undefined);
+        setBookmark(null);
       }
     })()
   }, [data, status]);
@@ -126,7 +136,7 @@ export const Show: NextPage<Props> = ({ data, hubURL, page }) => {
                 {book["description"] ?? "This book has no description."}
               </p>
               <button className="mt-4 px-10 py-4 font-semibold text-sm bg-cyan-500 text-white rounded-full shadow-sm"
-                      onClick={() => bookmarkMutation.mutate({ book: book["@id"] })}>
+                      onClick={() => bookmarkMutation.mutate({ book: book["@id"] })} data-testid="bookmark">
                 {!!bookmark && (
                   <>
                     <FavoriteIcon className="w-6 h-6 mr-2"/>

@@ -11,10 +11,11 @@ export const getServerSideProps: GetServerSideProps<{
   hubURL: string | null,
   filters: FiltersProps,
 }> = async ({ query }) => {
+  const page = Number(query.page ?? 1);
   const filters: FiltersProps = {};
   if (query.page) {
     // @ts-ignore
-    filters.page = Number(query.page);
+    filters.page = query.page;
   }
   if (query.author) {
     // @ts-ignore
@@ -43,12 +44,12 @@ export const getServerSideProps: GetServerSideProps<{
       throw new Error('Unable to retrieve data from /books.');
     }
 
-    return { props: { data: response.data, hubURL: response.hubURL, filters } };
+    return { props: { data: response.data, hubURL: response.hubURL, filters, page } };
   } catch (error) {
     console.error(error);
   }
 
-  return { props: { data: null, hubURL: null, filters } };
+  return { props: { data: null, hubURL: null, filters, page } };
 };
 
 export default List;

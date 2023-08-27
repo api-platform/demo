@@ -30,22 +30,22 @@ api_platform:
         scopes:
             openid: (required) Indicates that the application intends to use OIDC to verify the user's identity
 
-when@prod:
-    parameters:
-        # The api url that is called to invalidate cached resources
-        # Can't be set in .env file cause it's only available on prod env
-        env(SOUIN_API_URL): http://caddy/souin-api/souin
-
-    api_platform:
-        http_cache:
-            invalidation:
-                enabled: true
-                purger: 'api_platform.http_cache.purger.souin'
-                urls: ['%env(SOUIN_API_URL)%']
-        defaults:
-            cache_headers:
-                max_age: 0
-                shared_max_age: 3600
+#when@prod:
+#    parameters:
+#        # The api url that is called to invalidate cached resources
+#        # Can't be set in .env file cause it's only available on prod env
+#        env(SOUIN_API_URL): http://caddy/souin-api
+#
+#    api_platform:
+#        http_cache:
+#            invalidation:
+#                enabled: true
+#                purger: 'api_platform.http_cache.purger.souin'
+#                urls: ['%env(SOUIN_API_URL)%']
+#        defaults:
+#            cache_headers:
+#                max_age: 0
+#                shared_max_age: 3600
 
 services:
     app.filter.review.admin.search:

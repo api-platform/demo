@@ -91,6 +91,8 @@ jobs:
       POSTGRES_PASSWORD: aae5bf316ef5fe87ad806c6a9240fff68bcfdaf7
       KEYCLOAK_POSTGRES_PASSWORD: 26d7f630f1524eb210bbf496443f2038a9316e9e
       KEYCLOAK_ADMIN_PASSWORD: 2f31e2fad93941b818449fd8d57fd019b6ce7fa5
+      KEYCLOAK_HTTPS_CERTIFICATE_FILE: ./helm/api-platform/keycloak/certs/tls.crt
+      KEYCLOAK_HTTPS_CERTIFICATE_KEY_FILE: ./helm/api-platform/keycloak/certs/tls.pem
       # https://docs.docker.com/compose/environment-variables/envvars/
       COMPOSE_FILE: docker-compose.yml:docker-compose.prod.yml
     steps:
@@ -148,11 +150,12 @@ jobs:
       -
         name: Run Playwright @read
         working-directory: pwa
+        # don't run @read and @write scenarios to prevent conflict between them
         run: pnpm exec playwright test --grep @read
       -
         name: Run Playwright @write
         working-directory: pwa
-        # use 1 worker to prevent conflict between write scenarios
+        # use 1 worker to prevent conflict between scenarios
         run: pnpm exec playwright test --grep @write --workers=1
       -
         uses: actions/upload-artifact@v3
@@ -160,12 +163,6 @@ jobs:
         with:
           name: playwright-screenshots
           path: pwa/test-results
-      -
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: playwright-report
-          path: pwa/playwright-report
 
   lint:
     name: Docker Lint

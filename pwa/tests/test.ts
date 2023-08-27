@@ -5,7 +5,17 @@ import { UserPage } from "./pages/UserPage";
 
 expect.extend({
   toBeOnLoginPage(page: Page) {
-    return expect(page).toHaveURL(/^https:\/\/localhost\/oidc\/realms\/demo\/protocol\/openid-connect\/auth/);
+    if (page.url().match(/\/oidc\/realms\/demo\/protocol\/openid-connect\/auth/)) {
+      return {
+        message: () => "passed",
+        pass: true,
+      };
+    }
+
+    return {
+      message: () => `toBeOnLoginPage() assertion failed.\nExpected "/oidc/realms/demo/protocol/openid-connect/auth", got "${page.url()}".`,
+      pass: false,
+    };
   },
 });
 

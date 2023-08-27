@@ -3,6 +3,7 @@
   "displayName": "API Platform - Demo",
   "enabled": true,
   "registrationAllowed": false,
+  "accessCodeLifespan": 1,
   "users": [
     {
       "username": "chuck.norris",

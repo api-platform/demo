@@ -98,7 +98,7 @@ class Book
      */
     #[ApiProperty(
         types: ['https://schema.org/itemOffered', 'https://purl.org/dc/terms/BibliographicResource'],
-        example: 'https://openlibrary.org/books/OL17267881W.json'
+        example: 'https://openlibrary.org/books/OL25840917M.json'
     )]
     #[Assert\NotBlank(allowNull: false)]
     #[Assert\Url(protocols: ['https'])]

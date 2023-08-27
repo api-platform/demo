@@ -73,7 +73,7 @@ final class BookNormalizerTest extends TestCase
             ->method('normalize')
             ->with($expectedObject, null, [BookNormalizer::class => true])
             ->willReturn([
-                'book' => 'https://openlibrary.org/books/OL17267881W.json',
+                'book' => 'https://openlibrary.org/books/OL25840917M.json',
                 'title' => 'Foundation',
                 'author' => 'Liu Cixin',
                 'condition' => BookCondition::NewCondition->value,
@@ -82,7 +82,7 @@ final class BookNormalizerTest extends TestCase
             ]);
 
         $this->assertEquals([
-            'book' => 'https://openlibrary.org/books/OL17267881W.json',
+            'book' => 'https://openlibrary.org/books/OL25840917M.json',
             'title' => 'Foundation',
             'author' => 'Liu Cixin',
             'condition' => BookCondition::NewCondition->value,

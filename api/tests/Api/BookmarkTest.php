@@ -75,7 +75,7 @@ final class BookmarkTest extends ApiTestCase
 
     public function testAsAnonymousICannotCreateABookmark(): void
     {
-        $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL17267881W.json']);
+        $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL25840917M.json']);
 
         $this->client->request('POST', '/bookmarks', [
             'json' => [
@@ -123,7 +123,7 @@ final class BookmarkTest extends ApiTestCase
      */
     public function testAsAUserICanCreateABookmark(): void
     {
-        $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL17267881W.json']);
+        $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL25840917M.json']);
         $user = UserFactory::createOne();
         self::getMercureHub()->reset();
 
@@ -164,7 +164,7 @@ final class BookmarkTest extends ApiTestCase
 
     public function testAsAUserICannotCreateADuplicateBookmark(): void
     {
-        $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL17267881W.json']);
+        $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL25840917M.json']);
         $user = UserFactory::createOne();
         BookmarkFactory::createOne(['book' => $book, 'user' => $user]);
         self::getMercureHub()->reset();

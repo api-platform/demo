@@ -1,5 +1,7 @@
 import { expect, test } from "./test";
 
+const totalBooks = 201;
+
 test.describe("Books list", () => {
   test.beforeEach(async ({ bookPage }) => {
     await bookPage.gotoList();
@@ -8,15 +10,17 @@ test.describe("Books list", () => {
   test("I can navigate through the list using the pagination @read", async ({ bookPage, page }) => {
     // test list display
     await expect(page).toHaveTitle("Books Store");
-    await expect(page.getByTestId("nb-books")).toHaveText("100 book(s) found");
+    await expect(page.getByTestId("nb-books")).toHaveText(`${totalBooks} book(s) found`);
     await expect(page.getByTestId("book").or(page.getByTestId("loading"))).toHaveCount(30);
 
+    const nbPages = Math.ceil(totalBooks/30);
+
     // test pagination display
-    await expect(page.getByTestId("pagination").locator("li a")).toHaveCount(8);
+    await expect(page.getByTestId("pagination").locator("li a")).toHaveCount(nbPages+4);
     await expect(page.getByTestId("pagination").locator("li a").first()).toHaveAttribute("aria-label", "Go to first page");
     await expect(page.getByTestId("pagination").locator("li a").nth(1)).toHaveAttribute("aria-label", "Go to previous page");
-    await expect(page.getByTestId("pagination").locator("li a").nth(6)).toHaveAttribute("aria-label", "Go to next page");
-    await expect(page.getByTestId("pagination").locator("li a").nth(7)).toHaveAttribute("aria-label", "Go to last page");
+    await expect(page.getByTestId("pagination").locator("li a").nth(nbPages+2)).toHaveAttribute("aria-label", "Go to next page");
+    await expect(page.getByTestId("pagination").locator("li a").nth(nbPages+3)).toHaveAttribute("aria-label", "Go to last page");
     await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", "page 1");
     await expect(page.getByLabel("Go to first page")).toBeDisabled();
     await expect(page.getByLabel("Go to previous page")).toBeDisabled();
@@ -26,8 +30,8 @@ test.describe("Books list", () => {
     // navigate through pagination
     await page.getByLabel("Go to next page").click();
     await expect(page).toHaveURL(/\/books\?page=2$/);
-    await expect(page.getByTestId("book")).toHaveCount(30);
-    await expect(await bookPage.getDefaultBook()).not.toBeVisible()
+    await expect(page.getByTestId("book").or(page.getByTestId("loading"))).toHaveCount(30);
+    await expect(await bookPage.getDefaultBook()).not.toBeVisible();
     await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", "page 2");
     await expect(page.getByLabel("Go to first page")).toBeEnabled();
     await expect(page.getByLabel("Go to previous page")).toBeEnabled();
@@ -36,8 +40,8 @@ test.describe("Books list", () => {
 
     await page.getByLabel("page 3").click();
     await expect(page).toHaveURL(/\/books\?page=3$/);
-    await expect(page.getByTestId("book")).toHaveCount(30);
-    await expect(await bookPage.getDefaultBook()).not.toBeVisible()
+    await expect(page.getByTestId("book").or(page.getByTestId("loading"))).toHaveCount(30);
+    await expect(await bookPage.getDefaultBook()).not.toBeVisible();
     await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", "page 3");
     await expect(page.getByLabel("Go to first page")).toBeEnabled();
     await expect(page.getByLabel("Go to previous page")).toBeEnabled();
@@ -46,8 +50,8 @@ test.describe("Books list", () => {
 
     await page.getByLabel("Go to previous page").click();
     await expect(page).toHaveURL(/\/books\?page=2$/);
-    await expect(page.getByTestId("book")).toHaveCount(30);
-    await expect(await bookPage.getDefaultBook()).not.toBeVisible()
+    await expect(page.getByTestId("book").or(page.getByTestId("loading"))).toHaveCount(30);
+    await expect(await bookPage.getDefaultBook()).not.toBeVisible();
     await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", "page 2");
     await expect(page.getByLabel("Go to first page")).toBeEnabled();
     await expect(page.getByLabel("Go to previous page")).toBeEnabled();
@@ -55,10 +59,10 @@ test.describe("Books list", () => {
     await expect(page.getByLabel("Go to last page")).toBeEnabled();
 
     await page.getByLabel("Go to last page").click();
-    await expect(page).toHaveURL(/\/books\?page=4$/);
-    await expect(page.getByTestId("book")).toHaveCount(10);
-    await expect(await bookPage.getDefaultBook()).not.toBeVisible()
-    await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", "page 4");
+    await expect(page).toHaveURL(new RegExp(`\/books\\?page=${nbPages}$`));
+    await expect(page.getByTestId("book").or(page.getByTestId("loading"))).not.toHaveCount(30);
+    await expect(await bookPage.getDefaultBook()).not.toBeVisible();
+    await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", `page ${nbPages}`);
     await expect(page.getByLabel("Go to first page")).toBeEnabled();
     await expect(page.getByLabel("Go to previous page")).toBeEnabled();
     await expect(page.getByLabel("Go to next page")).toBeDisabled();
@@ -66,8 +70,8 @@ test.describe("Books list", () => {
 
     await page.getByLabel("Go to first page").click();
     await expect(page).toHaveURL(/\/books\?page=1$/);
-    await expect(page.getByTestId("book")).toHaveCount(30);
-    await expect(await bookPage.getDefaultBook()).not.toBeVisible()
+    await expect(page.getByTestId("book").or(page.getByTestId("loading"))).toHaveCount(30);
+    await expect(await bookPage.getDefaultBook()).toBeVisible();
     await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", "page 1");
     await expect(page.getByLabel("Go to first page")).toBeDisabled();
     await expect(page.getByLabel("Go to previous page")).toBeDisabled();
@@ -77,8 +81,8 @@ test.describe("Books list", () => {
     // direct url should target to the right page
     await page.goto("/books?page=2");
     await page.waitForURL(/\/books\?page=2$/);
-    await expect(page.getByTestId("book")).toHaveCount(30);
-    await expect(await bookPage.getDefaultBook()).not.toBeVisible()
+    await expect(page.getByTestId("book").or(page.getByTestId("loading"))).toHaveCount(30);
+    await expect(await bookPage.getDefaultBook()).not.toBeVisible();
     await expect(page.getByTestId("pagination").locator("li a.Mui-selected")).toHaveAttribute("aria-label", "page 2");
     await expect(page.getByLabel("Go to first page")).toBeEnabled();
     await expect(page.getByLabel("Go to previous page")).toBeEnabled();
@@ -91,7 +95,7 @@ test.describe("Books list", () => {
     await bookPage.filter({ author: "Liu Cixin" });
     await expect(page).toHaveURL(/\/books\?author=Liu\+Cixin/);
     await expect(page.getByTestId("nb-books")).toHaveText("1 book(s) found");
-    await expect(page.getByTestId("book")).toHaveCount(1);
+    await expect(page.getByTestId("book").or(page.getByTestId("loading"))).toHaveCount(1);
     await expect(page.getByTestId("pagination")).toHaveCount(0);
     await expect(await bookPage.getDefaultBook()).toBeVisible()
 
@@ -99,14 +103,14 @@ test.describe("Books list", () => {
     await page.getByTestId("filter-author").clear();
     await expect(page.getByTestId("filter-author")).toHaveValue("");
     await expect(page).toHaveURL(/\/books$/);
-    await expect(page.getByTestId("nb-books")).toHaveText("100 book(s) found");
-    await expect(page.getByTestId("book")).toHaveCount(30);
+    await expect(page.getByTestId("nb-books")).toHaveText(`${totalBooks} book(s) found`);
+    await expect(page.getByTestId("book").or(page.getByTestId("loading"))).toHaveCount(30);
 
     // filter by title, author and condition
-    await bookPage.filter({ author: "Liu Cixin", title: "Foundation", condition: "Used" });
-    await expect(page).toHaveURL(/\/books\?author=Liu\+Cixin&title=Foundation&condition%5B%5D=https%3A%2F%2Fschema\.org%2FUsedCondition$/);
+    await bookPage.filter({ author: "Liu Cixin", title: "The Three-Body Problem", condition: "Used" });
+    await expect(page).toHaveURL(/\/books\?author=Liu\+Cixin&title=The\+Three-Body\+Problem&condition%5B%5D=https%3A%2F%2Fschema\.org%2FUsedCondition$/);
     await expect(page.getByTestId("nb-books")).toHaveText("1 book(s) found");
-    await expect(page.getByTestId("book")).toHaveCount(1);
+    await expect(page.getByTestId("book").or(page.getByTestId("loading"))).toHaveCount(1);
     await expect(page.getByTestId("pagination")).toHaveCount(0);
     await expect(await bookPage.getDefaultBook()).toBeVisible()
 
@@ -117,16 +121,16 @@ test.describe("Books list", () => {
     expect(await page.getByTestId("filter-condition-used").isChecked()).toBeFalsy();
     await expect(page).toHaveURL(/\/books\?author=Liu\+Cixin$/);
     await expect(page.getByTestId("nb-books")).toHaveText("1 book(s) found");
-    await expect(page.getByTestId("book")).toHaveCount(1);
+    await expect(page.getByTestId("book").or(page.getByTestId("loading"))).toHaveCount(1);
     await expect(page.getByTestId("pagination")).toHaveCount(0);
 
     // direct url should apply the filters
-    await page.goto("/books?author=Liu+Cixin&title=Foundation&condition%5B%5D=https%3A%2F%2Fschema.org%2FUsedCondition");
+    await page.goto("/books?author=Liu+Cixin&title=The+Three-Body+Problem&condition%5B%5D=https%3A%2F%2Fschema.org%2FUsedCondition");
     await expect(page.getByTestId("filter-author")).toHaveValue("Liu Cixin");
-    await expect(page.getByTestId("filter-title")).toHaveValue("Foundation");
+    await expect(page.getByTestId("filter-title")).toHaveValue("The Three-Body Problem");
     expect(await page.getByTestId("filter-condition-used").isChecked()).toBeTruthy();
     await expect(page.getByTestId("nb-books")).toHaveText("1 book(s) found");
-    await expect(page.getByTestId("book")).toHaveCount(1);
+    await expect(page.getByTestId("book").or(page.getByTestId("loading"))).toHaveCount(1);
     await expect(page.getByTestId("pagination")).toHaveCount(0);
     await expect(await bookPage.getDefaultBook()).toBeVisible()
   });

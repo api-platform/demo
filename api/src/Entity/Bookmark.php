@@ -29,6 +29,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ApiResource(
     types: ['https://schema.org/BookmarkAction'],
+    order: ['bookmarkedAt' => 'DESC'],
     operations: [
         new GetCollection(),
         new Delete(
