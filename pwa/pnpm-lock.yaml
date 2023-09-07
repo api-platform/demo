@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@api-platform/admin':
-    specifier: ^3.4.3
-    version: 3.4.3(@types/react@18.2.15)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
+    specifier: ^3.4.4
+    version: 3.4.4(@types/react@18.2.15)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
   '@api-platform/api-doc-parser':
     specifier: ^0.16.1
     version: 0.16.1
@@ -119,8 +119,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /@api-platform/admin@3.4.3(@types/react@18.2.15)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-cTQlLajMw8dMqKK/TgdJ5fb7/jMB0/iUYySx3YwWLNHftg6hhDRPtZoRfFJSkbTEPXYJDkLIdfktlKc0SKnMQA==}
+  /@api-platform/admin@3.4.4(@types/react@18.2.15)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-5asbnAISQs8U6iC7zwspI2HZzoZmFJ2fWwvr2WIOyAGNs61ZAH/c+3AiO8g8/ZhLHogpb7LMe3K//TRoQaZGBg==}
     peerDependencies:
       react: '*'
       react-dom: '*'

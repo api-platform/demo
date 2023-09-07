@@ -10,7 +10,7 @@
     "test": "playwright test"
   },
   "dependencies": {
-    "@api-platform/admin": "^3.4.3",
+    "@api-platform/admin": "^3.4.4",
     "@api-platform/api-doc-parser": "^0.16.1",
     "@auth/core": "^0.10.0",
     "@fontsource/poppins": "^5.0.5",
