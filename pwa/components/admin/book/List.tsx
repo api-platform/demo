@@ -1,9 +1,7 @@
 import { FieldGuesser, type ListGuesserProps } from "@api-platform/admin";
 import {
   TextInput,
-  Pagination,
   Datagrid,
-  type PaginationProps,
   useRecordContext,
   type UseRecordContextParams,
   Button,
@@ -30,8 +28,6 @@ const filters = [
   <ConditionInput source="condition" key="condition"/>,
 ];
 
-const PostPagination = (props: PaginationProps) => <Pagination rowsPerPageOptions={[]} {...props}/>;
-
 const ShowButton = (props: ShowButtonProps) => {
   const record = useRecordContext(props);
 
@@ -47,12 +43,12 @@ const ShowButton = (props: ShowButtonProps) => {
 };
 
 export const List = (props: ListGuesserProps) => (
-  <ReactAdminList {...props} filters={filters} pagination={<PostPagination/>} exporter={false} title="Books">
+  <ReactAdminList {...props} filters={filters} exporter={false} title="Books">
     <Datagrid>
       <FieldGuesser source="title"/>
-      <FieldGuesser source="author"/>
-      <ConditionField source="condition"/>
-      <RatingField source="rating"/>
+      <FieldGuesser source="author" sortable={false}/>
+      <ConditionField source="condition" sortable={false}/>
+      <RatingField source="rating" sortable={false}/>
       <ShowButton/>
       <EditButton/>
     </Datagrid>

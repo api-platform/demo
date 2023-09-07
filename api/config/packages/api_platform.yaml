@@ -33,7 +33,7 @@ api_platform:
 #when@prod:
 #    parameters:
 #        # The api url that is called to invalidate cached resources
-#        # Can't be set in .env file cause it's only available on prod env
+#        # Can't be set in .env file because it's only available on prod env
 #        env(SOUIN_API_URL): http://caddy/souin-api
 #
 #    api_platform:
@@ -48,23 +48,36 @@ api_platform:
 #                shared_max_age: 3600
 
 services:
-    app.filter.review.admin.search:
-        class: 'ApiPlatform\Doctrine\Orm\Filter\SearchFilter'
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: false
+
+    app.filter.review.admin.user:
+        parent: 'api_platform.doctrine.orm.search_filter'
         arguments:
-            $managerRegistry: '@doctrine'
-            $iriConverter: '@api_platform.iri_converter'
-            $propertyAccessor: '@property_accessor'
-            $logger: '@logger'
-            $properties: { user: 'exact', book: 'exact' } ]
-            $identifiersExtractor: '@api_platform.api.identifiers_extractor'
-            $nameConverter: '@?api_platform.name_converter'
+            $properties: { user: 'exact' } ]
         tags: [ 'api_platform.filter' ]
 
-    app.filter.review.admin.numeric:
-        class: 'ApiPlatform\Doctrine\Orm\Filter\NumericFilter'
+    app.filter.review.admin.book:
+        parent: 'api_platform.doctrine.orm.search_filter'
+        arguments:
+            $properties: { book: 'exact' } ]
+        tags: [ 'api_platform.filter' ]
+
+    app.filter.review.admin.rating:
+        parent: 'api_platform.doctrine.orm.numeric_filter'
+        arguments:
+            $properties: { rating: ~ } ]
+        tags: [ 'api_platform.filter' ]
+
+    # "name" is not a property, it's only a method "getName"
+    # Can't apply ApiFilter PHP attribute on method, so declare filter manually
+    app.filter.user.admin.name:
+        class: 'App\Doctrine\Orm\Filter\NameFilter'
         arguments:
             $managerRegistry: '@doctrine'
             $logger: '@logger'
-            $properties: { rating: ~ } ]
             $nameConverter: '@?api_platform.name_converter'
+            $properties: { name: 'ipartial' } ]
         tags: [ 'api_platform.filter' ]

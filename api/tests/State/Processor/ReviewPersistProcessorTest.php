@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\State\Processor;
 
 use ApiPlatform\Metadata\Operation;
+use ApiPlatform\Metadata\Post;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Review;
 use App\Entity\User;
@@ -22,7 +23,6 @@ final class ReviewPersistProcessorTest extends TestCase
     private MockObject|Security $securityMock;
     private MockObject|User $userMock;
     private MockObject|Review $objectMock;
-    private MockObject|Operation $operationMock;
     private MockObject|ClockInterface $clockMock;
     private ReviewPersistProcessor $processor;
 
@@ -33,7 +33,6 @@ final class ReviewPersistProcessorTest extends TestCase
         $this->securityMock = $this->createMock(Security::class);
         $this->userMock = $this->createMock(User::class);
         $this->objectMock = $this->createMock(Review::class);
-        $this->operationMock = $this->createMock(Operation::class);
         $this->clockMock = new MockClock();
 
         $this->processor = new ReviewPersistProcessor(
@@ -44,8 +43,10 @@ final class ReviewPersistProcessorTest extends TestCase
         );
     }
 
-    public function testItUpdatesBookmarkDataBeforeSaveAndSendMercureUpdates(): void
+    public function testItUpdatesReviewDataFromOperationBeforeSaveAndSendMercureUpdates(): void
     {
+        $operation = new Post();
+
         $expectedData = $this->objectMock;
         $expectedData->user = $this->userMock;
         $expectedData->publishedAt = $this->clockMock->now();
@@ -57,20 +58,57 @@ final class ReviewPersistProcessorTest extends TestCase
         $this->persistProcessorMock
             ->expects($this->once())
             ->method('process')
-            ->with($expectedData, $this->operationMock, [], [])
+            ->with($expectedData, $operation, [], [])
             ->willReturn($expectedData);
         $this->mercureProcessorMock
             ->expects($this->exactly(2))
             ->method('process')
             ->withConsecutive(
-                [$expectedData, $this->operationMock, [], ['item_uri_template' => '/admin/reviews/{id}{._format}']],
-                [$expectedData, $this->operationMock, [], ['item_uri_template' => '/books/{bookId}/reviews/{id}{._format}']],
+                [$expectedData, $operation, [], ['item_uri_template' => '/admin/reviews/{id}{._format}']],
+                [$expectedData, $operation, [], ['item_uri_template' => '/books/{bookId}/reviews/{id}{._format}']],
             )
             ->willReturnOnConsecutiveCalls(
                 $expectedData,
                 $expectedData,
             );
 
-        $this->assertEquals($expectedData, $this->processor->process($this->objectMock, $this->operationMock));
+        $this->assertEquals($expectedData, $this->processor->process($this->objectMock, $operation));
+    }
+
+    public function testItUpdatesReviewDataFromContextBeforeSaveAndSendMercureUpdates(): void
+    {
+        $operation = $this->createMock(Operation::class);
+
+        $previousData = new Review();
+        $previousData->publishedAt = $this->clockMock->now();
+        $previousData->user = $this->userMock;
+
+        $context = ['previous_data' => $previousData];
+
+        $expectedData = $this->objectMock;
+        $expectedData->user = $previousData->user;
+        $expectedData->publishedAt = $previousData->publishedAt;
+
+        $this->securityMock
+            ->expects($this->never())
+            ->method('getUser');
+        $this->persistProcessorMock
+            ->expects($this->once())
+            ->method('process')
+            ->with($expectedData, $operation, [], $context)
+            ->willReturn($expectedData);
+        $this->mercureProcessorMock
+            ->expects($this->exactly(2))
+            ->method('process')
+            ->withConsecutive(
+                [$expectedData, $operation, [], $context + ['item_uri_template' => '/admin/reviews/{id}{._format}']],
+                [$expectedData, $operation, [], $context + ['item_uri_template' => '/books/{bookId}/reviews/{id}{._format}']],
+            )
+            ->willReturnOnConsecutiveCalls(
+                $expectedData,
+                $expectedData,
+            );
+
+        $this->assertEquals($expectedData, $this->processor->process($this->objectMock, $operation, [], $context));
     }
 }

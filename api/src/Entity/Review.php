@@ -39,7 +39,12 @@ use Symfony\Component\Validator\Constraints as Assert;
         new GetCollection(
             uriTemplate: '/admin/reviews{._format}',
             itemUriTemplate: '/admin/reviews/{id}{._format}',
-            filters: ['app.filter.review.admin.search', 'app.filter.review.admin.numeric']
+            filters: [
+                'app.filter.review.admin.user',
+                'app.filter.review.admin.book',
+                'app.filter.review.admin.rating',
+            ],
+            paginationClientItemsPerPage: true
         ),
         new Get(
             uriTemplate: '/admin/reviews/{id}{._format}'
@@ -156,7 +161,7 @@ class Review
     #[Assert\NotNull]
     #[Groups(groups: ['Review:read', 'Review:write:admin'])]
     #[ORM\ManyToOne(targetEntity: Book::class)]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     public ?Book $book = null;
 
     /**

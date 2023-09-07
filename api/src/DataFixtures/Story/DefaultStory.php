@@ -23,9 +23,9 @@ final class DefaultStory extends Story
         // Create default book (must be created first to appear first in list)
         $defaultBook = BookFactory::createOne([
             'condition' => BookCondition::UsedCondition,
-            'book' => 'https://openlibrary.org/books/OL25840917M.json',
-            'title' => 'The Three-Body Problem',
-            'author' => 'Liu Cixin',
+            'book' => 'https://openlibrary.org/books/OL2055137M.json',
+            'title' => 'Hyperion',
+            'author' => 'Dan Simmons',
         ]);
 
         // Default book has reviews (new users are created)

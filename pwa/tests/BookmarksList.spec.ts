@@ -101,12 +101,12 @@ test.describe("Bookmarks list", () => {
   });
 
   test("I can go to the books store filtered by author @read @login", async ({ bookmarkPage, page }) => {
-    await (await bookmarkPage.getDefaultBook()).getByText("Liu Cixin").click();
-    await expect(page).toHaveURL(/\/books\?author=Liu%20Cixin/);
+    await (await bookmarkPage.getDefaultBook()).getByText("Dan Simmons").click();
+    await expect(page).toHaveURL(/\/books\?author=Dan%20Simmons/);
   });
 
   test("I can go to a book @read @login", async ({ bookmarkPage, page }) => {
-    await (await bookmarkPage.getDefaultBook()).getByText("The Three-Body Problem").click();
-    await expect(page).toHaveURL(/\/books\/.*\/the-three-body-problem-liu-cixin/);
+    await (await bookmarkPage.getDefaultBook()).getByText("Hyperion").click();
+    await expect(page).toHaveURL(/\/books\/.*\/hyperion-dan-simmons/);
   });
 });

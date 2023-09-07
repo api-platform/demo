@@ -34,7 +34,7 @@ final class BookPersistProcessorTest extends TestCase
         $this->responseMock = $this->createMock(ResponseInterface::class);
         $this->decoderMock = $this->createMock(DecoderInterface::class);
         $this->objectMock = $this->createMock(Book::class);
-        $this->objectMock->book = 'https://openlibrary.org/books/OL25840917M.json';
+        $this->objectMock->book = 'https://openlibrary.org/books/OL2055137M.json';
         $this->operationMock = $this->createMock(Operation::class);
 
         $this->processor = new BookPersistProcessor(
@@ -49,14 +49,14 @@ final class BookPersistProcessorTest extends TestCase
     {
         $expectedData = $this->objectMock;
         $expectedData->title = 'Foundation';
-        $expectedData->author = 'Liu Cixin';
+        $expectedData->author = 'Dan Simmons';
 
         $this->clientMock
             ->expects($this->exactly(2))
             ->method('request')
             ->withConsecutive(
                 [
-                    Request::METHOD_GET, 'https://openlibrary.org/books/OL25840917M.json', [
+                    Request::METHOD_GET, 'https://openlibrary.org/books/OL2055137M.json', [
                         'headers' => [
                             'Accept' => 'application/json',
                         ],
@@ -82,7 +82,7 @@ final class BookPersistProcessorTest extends TestCase
                     ],
                 ]),
                 json_encode([
-                    'name' => 'Liu Cixin',
+                    'name' => 'Dan Simmons',
                 ]),
             );
         $this->decoderMock
@@ -100,7 +100,7 @@ final class BookPersistProcessorTest extends TestCase
                 ],
                 [
                     json_encode([
-                        'name' => 'Liu Cixin',
+                        'name' => 'Dan Simmons',
                     ]),
                     'json',
                 ],
@@ -113,7 +113,7 @@ final class BookPersistProcessorTest extends TestCase
                     ],
                 ],
                 [
-                    'name' => 'Liu Cixin',
+                    'name' => 'Dan Simmons',
                 ],
             );
         $this->persistProcessorMock

@@ -64,7 +64,7 @@ final class ReviewTest extends ApiTestCase
     /**
      * @dataProvider getAdminUrls
      */
-    public function testAsAdminUserICanGetACollectionOfReviews(FactoryCollection $factory, string|callable $url, int $hydraTotalItems): void
+    public function testAsAdminUserICanGetACollectionOfReviews(FactoryCollection $factory, string|callable $url, int $hydraTotalItems, int $itemsPerPage = null): void
     {
         $factory->create();
 
@@ -83,7 +83,7 @@ final class ReviewTest extends ApiTestCase
         self::assertJsonContains([
             'hydra:totalItems' => $hydraTotalItems,
         ]);
-        self::assertCount(min($hydraTotalItems, 30), $response->toArray()['hydra:member']);
+        self::assertCount(min($itemsPerPage ?? $hydraTotalItems, 30), $response->toArray()['hydra:member']);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Review/collection.json'));
     }
 
@@ -94,10 +94,11 @@ final class ReviewTest extends ApiTestCase
             '/admin/reviews',
             35,
         ];
-        yield 'all reviews using itemsPerPage (disabled on admin)' => [
+        yield 'all reviews using itemsPerPage' => [
             ReviewFactory::new()->many(35),
             '/admin/reviews?itemsPerPage=10',
             35,
+            10,
         ];
         yield 'reviews filtered by rating' => [
             ReviewFactory::new()->sequence(function () {
@@ -127,14 +128,14 @@ final class ReviewTest extends ApiTestCase
         ];
         yield 'reviews filtered by book' => [
             ReviewFactory::new()->sequence(function () {
-                yield ['book' => BookFactory::createOne(['title' => 'The Three-Body Problem'])];
+                yield ['book' => BookFactory::createOne(['title' => 'Hyperion'])];
                 foreach (range(1, 10) as $i) {
                     yield ['book' => BookFactory::createOne()];
                 }
             }),
             static function (): string {
                 /** @var Book[] $books */
-                $books = BookFactory::findBy(['title' => 'The Three-Body Problem']);
+                $books = BookFactory::findBy(['title' => 'Hyperion']);
 
                 return '/admin/reviews?book=/books/'.$books[0]->getId();
             },
@@ -251,9 +252,10 @@ final class ReviewTest extends ApiTestCase
     {
         $book = BookFactory::createOne();
         $review = ReviewFactory::createOne(['book' => $book]);
+        $user = UserFactory::createOneAdmin();
 
         $token = $this->generateToken([
-            'email' => UserFactory::createOneAdmin()->email,
+            'email' => $user->email,
         ]);
 
         $this->client->request('PUT', '/admin/reviews/'.$review->getId(), [
@@ -273,6 +275,8 @@ final class ReviewTest extends ApiTestCase
             'body' => 'Very good book!',
             'rating' => 5,
         ]);
+        // ensure user hasn't changed
+        self::assertNotEquals($user, $review->object()->user);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Review/item.json'));
         self::assertCount(2, self::getMercureMessages());
         self::assertEquals(

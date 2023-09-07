@@ -6,6 +6,7 @@ namespace App\State\Processor;
 
 use ApiPlatform\Doctrine\Common\State\PersistProcessor;
 use ApiPlatform\Metadata\Operation;
+use ApiPlatform\Metadata\Post;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Review;
 use Psr\Clock\ClockInterface;
@@ -29,8 +30,17 @@ final readonly class ReviewPersistProcessor implements ProcessorInterface
      */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Review
     {
-        $data->user = $this->security->getUser();
-        $data->publishedAt = $this->clock->now();
+        // standard PUT
+        if (isset($context['previous_data'])) {
+            $data->user = $context['previous_data']->user;
+            $data->publishedAt = $context['previous_data']->publishedAt;
+        }
+
+        // prevent overriding user, for instance from admin
+        if ($operation instanceof Post) {
+            $data->user = $this->security->getUser();
+            $data->publishedAt = $this->clock->now();
+        }
 
         // save entity
         $data = $this->persistProcessor->process($data, $operation, $uriVariables, $context);

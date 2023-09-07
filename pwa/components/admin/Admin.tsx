@@ -19,6 +19,9 @@ import { Create as BooksCreate } from "@/components/admin/book/Create";
 import { Edit as BooksEdit } from "@/components/admin/book/Edit";
 import { List as ReviewsList } from "@/components/admin/review/List";
 import { Show as ReviewsShow } from "@/components/admin/review/Show";
+import { Edit as ReviewsEdit } from "@/components/admin/review/Edit";
+import { type Book } from "@/types/Book";
+import { type Review } from "@/types/Review";
 
 const apiDocumentationParser = (session: Session) => async () => {
   try {
@@ -109,8 +112,10 @@ const AdminWithContext = ({ session }: { session: Session }) => {
         setDocType,
       }}>
       <AdminUI session={session}>
-        <ResourceGuesser name="admin/books" list={BooksList} create={BooksCreate} edit={BooksEdit} hasShow={false}/>
-        <ResourceGuesser name="admin/reviews" list={ReviewsList} show={ReviewsShow} hasCreate={false}/>
+        <ResourceGuesser name="admin/books" list={BooksList} create={BooksCreate} edit={BooksEdit} hasShow={false}
+                         recordRepresentation={(record: Book) => `${record.title} - ${record.author}`}/>
+        <ResourceGuesser name="admin/reviews" list={ReviewsList} show={ReviewsShow} edit={ReviewsEdit} hasCreate={false}
+                         recordRepresentation={(record: Review) => record.user.name}/>
       </AdminUI>
     </DocContext.Provider>
   );

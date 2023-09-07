@@ -1,6 +1,6 @@
 import { Locator } from "@playwright/test";
-import { type FiltersProps } from "@/utils/book";
 
+import { type FiltersProps } from "@/utils/book";
 import { AbstractPage } from "./AbstractPage";
 
 interface ReviewProps {
@@ -43,7 +43,7 @@ export class BookPage extends AbstractPage {
     return this.page;
   }
 
-  public async gotoList(filters: URLSearchParams | undefined) {
+  public async gotoList(filters: URLSearchParams | undefined = undefined) {
     await this.registerMock();
 
     await this.page.goto(`/books${filters && filters.size > 0 ? `?${filters.toString()}` : ""}`);
@@ -54,9 +54,9 @@ export class BookPage extends AbstractPage {
   }
 
   public async gotoDefaultBook() {
-    await this.gotoList(new URLSearchParams("title=The+Three-Body+Problem&author=Liu+Cixin"));
-    await (await this.getDefaultBook()).getByText("The Three-Body Problem").first().click();
-    await this.page.waitForURL(/\/books\/.*\/the-three-body-problem-liu-cixin$/);
+    await this.gotoList(new URLSearchParams("title=Hyperion&author=Dan+Simmons"));
+    await (await this.getDefaultBook()).getByText("Hyperion").first().click();
+    await this.page.waitForURL(/\/books\/.*\/hyperion-dan-simmons$/);
 
     return this.page;
   }

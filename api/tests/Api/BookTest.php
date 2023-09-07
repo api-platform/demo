@@ -54,22 +54,22 @@ final class BookTest extends ApiTestCase
         ];
         yield 'books filtered by title' => [
             BookFactory::new()->sequence(function () {
-                yield ['title' => 'The Three-Body Problem'];
+                yield ['title' => 'Hyperion'];
                 foreach (range(1, 10) as $i) {
                     yield [];
                 }
             }),
-            '/books?title=three-body',
+            '/books?title=yperio',
             1,
         ];
         yield 'books filtered by author' => [
             BookFactory::new()->sequence(function () {
-                yield ['author' => 'Liu Cixin'];
+                yield ['author' => 'Dan Simmons'];
                 foreach (range(1, 10) as $i) {
                     yield [];
                 }
             }),
-            '/books?author=cixin',
+            '/books?author=simmons',
             1,
         ];
         yield 'books filtered by condition' => [
@@ -86,7 +86,7 @@ final class BookTest extends ApiTestCase
 
     public function testAsAdminUserICanGetACollectionOfBooksOrderedByTitle(): void
     {
-        BookFactory::createOne(['title' => 'The Three-Body Problem']);
+        BookFactory::createOne(['title' => 'Hyperion']);
         BookFactory::createOne(['title' => 'The Wandering Earth']);
         BookFactory::createOne(['title' => 'Ball Lightning']);
 
@@ -95,7 +95,7 @@ final class BookTest extends ApiTestCase
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertEquals('Ball Lightning', $response->toArray()['hydra:member'][0]['title']);
-        self::assertEquals('The Three-Body Problem', $response->toArray()['hydra:member'][1]['title']);
+        self::assertEquals('Hyperion', $response->toArray()['hydra:member'][1]['title']);
         self::assertEquals('The Wandering Earth', $response->toArray()['hydra:member'][2]['title']);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Book/collection.json'));
     }

@@ -37,7 +37,8 @@ use Symfony\Component\Validator\Constraints as Assert;
     types: ['https://schema.org/Book', 'https://schema.org/Offer'],
     operations: [
         new GetCollection(
-            itemUriTemplate: '/admin/books/{id}{._format}'
+            itemUriTemplate: '/admin/books/{id}{._format}',
+            paginationClientItemsPerPage: true
         ),
         new Post(
             // Mercure publish is done manually in MercureProcessor through BookPersistProcessor
@@ -98,7 +99,7 @@ class Book
      */
     #[ApiProperty(
         types: ['https://schema.org/itemOffered', 'https://purl.org/dc/terms/BibliographicResource'],
-        example: 'https://openlibrary.org/books/OL25840917M.json'
+        example: 'https://openlibrary.org/books/OL2055137M.json'
     )]
     #[Assert\NotBlank(allowNull: false)]
     #[Assert\Url(protocols: ['https'])]
@@ -114,7 +115,7 @@ class Book
     #[ApiFilter(SearchFilter::class, strategy: 'i'.SearchFilterInterface::STRATEGY_PARTIAL)]
     #[ApiProperty(
         types: ['https://schema.org/name'],
-        example: 'The Three-Body Problem'
+        example: 'Hyperion'
     )]
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Review:read:admin'])]
     #[ORM\Column(type: Types::TEXT)]
@@ -126,7 +127,7 @@ class Book
     #[ApiFilter(SearchFilter::class, strategy: 'i'.SearchFilterInterface::STRATEGY_PARTIAL)]
     #[ApiProperty(
         types: ['https://schema.org/author'],
-        example: 'Liu Cixin'
+        example: 'Dan Simmons'
     )]
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Review:read:admin'])]
     #[ORM\Column(nullable: true)]

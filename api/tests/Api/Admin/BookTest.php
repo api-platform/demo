@@ -63,7 +63,7 @@ final class BookTest extends ApiTestCase
     /**
      * @dataProvider getUrls
      */
-    public function testAsAdminUserICanGetACollectionOfBooks(FactoryCollection $factory, string $url, int $hydraTotalItems): void
+    public function testAsAdminUserICanGetACollectionOfBooks(FactoryCollection $factory, string $url, int $hydraTotalItems, int $itemsPerPage = null): void
     {
         // Cannot use Factory as data provider because BookFactory has a service dependency
         $factory->create();
@@ -79,7 +79,7 @@ final class BookTest extends ApiTestCase
         self::assertJsonContains([
             'hydra:totalItems' => $hydraTotalItems,
         ]);
-        self::assertCount(min($hydraTotalItems, 30), $response->toArray()['hydra:member']);
+        self::assertCount(min($itemsPerPage ?? $hydraTotalItems, 30), $response->toArray()['hydra:member']);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Book/collection.json'));
     }
 
@@ -90,24 +90,30 @@ final class BookTest extends ApiTestCase
             '/admin/books',
             35,
         ];
+        yield 'all books using itemsPerPage' => [
+            BookFactory::new()->many(35),
+            '/admin/books?itemsPerPage=10',
+            35,
+            10,
+        ];
         yield 'books filtered by title' => [
             BookFactory::new()->sequence(function () {
-                yield ['title' => 'The Three-Body Problem'];
+                yield ['title' => 'Hyperion'];
                 foreach (range(1, 10) as $i) {
                     yield [];
                 }
             }),
-            '/admin/books?title=three-body',
+            '/admin/books?title=yperio',
             1,
         ];
         yield 'books filtered by author' => [
             BookFactory::new()->sequence(function () {
-                yield ['author' => 'Liu Cixin'];
+                yield ['author' => 'Dan Simmons'];
                 foreach (range(1, 10) as $i) {
                     yield [];
                 }
             }),
-            '/admin/books?author=liu',
+            '/admin/books?author=simmons',
             1,
         ];
         yield 'books filtered by condition' => [
@@ -124,7 +130,7 @@ final class BookTest extends ApiTestCase
 
     public function testAsAdminUserICanGetACollectionOfBooksOrderedByTitle(): void
     {
-        BookFactory::createOne(['title' => 'The Three-Body Problem']);
+        BookFactory::createOne(['title' => 'Hyperion']);
         BookFactory::createOne(['title' => 'The Wandering Earth']);
         BookFactory::createOne(['title' => 'Ball Lightning']);
 
@@ -137,7 +143,7 @@ final class BookTest extends ApiTestCase
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertEquals('Ball Lightning', $response->toArray()['hydra:member'][0]['title']);
-        self::assertEquals('The Three-Body Problem', $response->toArray()['hydra:member'][1]['title']);
+        self::assertEquals('Hyperion', $response->toArray()['hydra:member'][1]['title']);
         self::assertEquals('The Wandering Earth', $response->toArray()['hydra:member'][2]['title']);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Book/collection.json'));
     }
@@ -573,7 +579,7 @@ final class BookTest extends ApiTestCase
      */
     public function testAsAdminUserICanDeleteABook(): void
     {
-        $book = BookFactory::createOne(['title' => 'The Three-Body Problem']);
+        $book = BookFactory::createOne(['title' => 'Hyperion']);
         self::getMercureHub()->reset();
         $id = $book->getId();
 
@@ -585,7 +591,7 @@ final class BookTest extends ApiTestCase
 
         self::assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
         self::assertEmpty($response->getContent());
-        BookFactory::assert()->notExists(['title' => 'The Three-Body Problem']);
+        BookFactory::assert()->notExists(['title' => 'Hyperion']);
         self::assertCount(2, self::getMercureMessages());
         // todo how to ensure it's a delete update
         self::assertEquals(

@@ -63,14 +63,14 @@ final class ReviewTest extends ApiTestCase
     {
         yield 'all book reviews' => [
             ReviewFactory::new()->sequence(function () {
-                $book = BookFactory::createOne(['title' => 'The Three-Body Problem']);
+                $book = BookFactory::createOne(['title' => 'Hyperion']);
                 foreach (range(1, 35) as $i) {
                     yield ['book' => $book];
                 }
             }),
             static function (): string {
                 /** @var Book[] $books */
-                $books = BookFactory::findBy(['title' => 'The Three-Body Problem']);
+                $books = BookFactory::findBy(['title' => 'Hyperion']);
 
                 return '/books/'.$books[0]->getId().'/reviews';
             },
@@ -78,14 +78,14 @@ final class ReviewTest extends ApiTestCase
         ];
         yield 'all book reviews using itemsPerPage' => [
             ReviewFactory::new()->sequence(function () {
-                $book = BookFactory::createOne(['title' => 'The Three-Body Problem']);
+                $book = BookFactory::createOne(['title' => 'Hyperion']);
                 foreach (range(1, 20) as $i) {
                     yield ['book' => $book];
                 }
             }),
             static function (): string {
                 /** @var Book[] $books */
-                $books = BookFactory::findBy(['title' => 'The Three-Body Problem']);
+                $books = BookFactory::findBy(['title' => 'Hyperion']);
 
                 return '/books/'.$books[0]->getId().'/reviews?itemsPerPage=10';
             },
@@ -94,7 +94,7 @@ final class ReviewTest extends ApiTestCase
         ];
         yield 'book reviews filtered by rating (filter is disabled for non-admin users)' => [
             ReviewFactory::new()->sequence(function () {
-                $book = BookFactory::createOne(['title' => 'The Three-Body Problem']);
+                $book = BookFactory::createOne(['title' => 'Hyperion']);
                 foreach (range(1, 100) as $i) {
                     // 33% of reviews are rated 5
                     yield ['book' => $book, 'rating' => $i % 3 ? 3 : 5];
@@ -102,7 +102,7 @@ final class ReviewTest extends ApiTestCase
             }),
             static function (): string {
                 /** @var Book[] $books */
-                $books = BookFactory::findBy(['title' => 'The Three-Body Problem']);
+                $books = BookFactory::findBy(['title' => 'Hyperion']);
 
                 return '/books/'.$books[0]->getId().'/reviews?rating=5';
             },
@@ -110,7 +110,7 @@ final class ReviewTest extends ApiTestCase
         ];
         yield 'book reviews filtered by user (filter is disabled for non-admin users)' => [
             ReviewFactory::new()->sequence(function () {
-                $book = BookFactory::createOne(['title' => 'The Three-Body Problem']);
+                $book = BookFactory::createOne(['title' => 'Hyperion']);
                 yield ['book' => $book, 'user' => UserFactory::createOne(['email' => 'user@example.com'])];
                 foreach (range(1, 34) as $i) {
                     yield ['book' => $book, 'user' => UserFactory::createOne()];
@@ -118,7 +118,7 @@ final class ReviewTest extends ApiTestCase
             }),
             static function (): string {
                 /** @var Book[] $books */
-                $books = BookFactory::findBy(['title' => 'The Three-Body Problem']);
+                $books = BookFactory::findBy(['title' => 'Hyperion']);
                 /** @var User[] $users */
                 $users = UserFactory::findBy(['email' => 'user@example.com']);
 

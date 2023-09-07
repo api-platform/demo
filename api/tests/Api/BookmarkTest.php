@@ -75,7 +75,7 @@ final class BookmarkTest extends ApiTestCase
 
     public function testAsAnonymousICannotCreateABookmark(): void
     {
-        $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL25840917M.json']);
+        $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL2055137M.json']);
 
         $this->client->request('POST', '/bookmarks', [
             'json' => [
@@ -123,7 +123,7 @@ final class BookmarkTest extends ApiTestCase
      */
     public function testAsAUserICanCreateABookmark(): void
     {
-        $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL25840917M.json']);
+        $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL2055137M.json']);
         $user = UserFactory::createOne();
         self::getMercureHub()->reset();
 
@@ -164,7 +164,7 @@ final class BookmarkTest extends ApiTestCase
 
     public function testAsAUserICannotCreateADuplicateBookmark(): void
     {
-        $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL25840917M.json']);
+        $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL2055137M.json']);
         $user = UserFactory::createOne();
         BookmarkFactory::createOne(['book' => $book, 'user' => $user]);
         self::getMercureHub()->reset();
@@ -246,7 +246,7 @@ final class BookmarkTest extends ApiTestCase
      */
     public function testAsAUserICanDeleteMyBookmark(): void
     {
-        $book = BookFactory::createOne(['title' => 'The Three-Body Problem']);
+        $book = BookFactory::createOne(['title' => 'Hyperion']);
         $bookmark = BookmarkFactory::createOne(['book' => $book]);
         self::getMercureHub()->reset();
 
