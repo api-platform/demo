@@ -1,14 +1,16 @@
-import { signIn, signOut, useSession } from "next-auth/react"
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
+import { signOut } from "@/utils/security";
+
 export const Header = () => {
   const router = useRouter();
   const { data: session } = useSession();
 
-  if (router.pathname === '/' || router.pathname.match(/^\/admin/)) return <></>;
+  if (router.pathname === "/" || router.pathname.match(/^\/admin/)) return <></>;
 
   return (
     <header className="bg-neutral-100 sticky top-0 z-10">
@@ -26,15 +28,15 @@ export const Header = () => {
           {/* @ts-ignore */}
           {!!session && !session.error && (
             <a href="#" className="font-semibold text-gray-900" role="menuitem" onClick={(e) => {
-              e.preventDefault()
-              signOut()
+              e.preventDefault();
+              signOut(session);
             }}>
               Sign out
             </a>
           ) || (
             <a href="#" className="font-semibold text-gray-900" role="menuitem" onClick={(e) => {
-              e.preventDefault()
-              signIn('keycloak')
+              e.preventDefault();
+              signIn("keycloak");
             }}>
               <PersonOutlineIcon className="w-6 h-6 mr-1"/>
               Log in

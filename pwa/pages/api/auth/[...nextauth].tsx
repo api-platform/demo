@@ -5,6 +5,7 @@ import { OIDC_CLIENT_ID, OIDC_SERVER_URL } from "@/config/keycloak";
 
 interface Session extends SessionOptions {
   accessToken: string
+  idToken: string
   error?: "RefreshAccessTokenError"
   user?: User
 }
@@ -15,6 +16,7 @@ interface User extends DefaultUser {
 
 interface JWT {
   accessToken: string
+  idToken: string
   expiresAt: number
   refreshToken: string
   error?: "RefreshAccessTokenError"
@@ -23,6 +25,7 @@ interface JWT {
 
 interface Account {
   access_token: string
+  id_token: string
   expires_in: number
   refresh_token: string
 }
@@ -36,6 +39,7 @@ export const authOptions: AuthOptions = {
         return {
           ...token,
           accessToken: account.access_token,
+          idToken: account.id_token,
           expiresAt: Math.floor(Date.now() / 1000 + account.expires_in),
           refreshToken: account.refresh_token,
         };
@@ -65,6 +69,8 @@ export const authOptions: AuthOptions = {
             // @ts-ignore
             accessToken: tokens.access_token,
             // @ts-ignore
+            idToken: tokens.id_token,
+            // @ts-ignore
             expiresAt: Math.floor(Date.now() / 1000 + tokens.expires_at),
             // Fall back to old refresh token, but note that
             // many providers may only allow using a refresh token once.
@@ -85,6 +91,7 @@ export const authOptions: AuthOptions = {
       // Save the access token in the Session for API calls
       if (token) {
         session.accessToken = token.accessToken;
+        session.idToken = token.idToken;
         session.error = token.error;
         if (session?.user && token?.sub) {
           session.user.sub = token.sub;
