@@ -13,6 +13,9 @@ test.describe("User authentication", () => {
     await page.getByText("Log in").waitFor({ state: "hidden" });
     // @ts-ignore assert declared on test.ts
     await expect(page).toBeOnLoginPage();
+    await expect(page.locator("#kc-header-wrapper")).toContainText("API Platform - Demo");
+    await expect(page.locator("#kc-form-login")).toContainText("Login as user: john.doe@example.com");
+    await expect(page.locator("#kc-form-login")).toContainText("Login as admin: chuck.norris@example.com");
     await userPage.login();
 
     await expect(page.getByText("Log in")).toHaveCount(0);
@@ -26,5 +29,13 @@ test.describe("User authentication", () => {
 
     await expect(page.getByText("Log in")).toBeVisible();
     await expect(page.getByText("Sign out")).toHaveCount(0);
+
+    // I should be logged out from Keycloak also
+    await page.getByText("Log in").click();
+    // @ts-ignore assert declared on test.ts
+    await expect(page).toBeOnLoginPage();
+    await expect(page.locator("#kc-header-wrapper")).toContainText("API Platform - Demo");
+    await expect(page.locator("#kc-form-login")).toContainText("Login as user: john.doe@example.com");
+    await expect(page.locator("#kc-form-login")).toContainText("Login as admin: chuck.norris@example.com");
   });
 });

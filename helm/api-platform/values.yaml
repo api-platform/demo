@@ -80,7 +80,10 @@ postgresql:
 keycloak:
   enabled: true
   image:
-    tag: 21-debian-11
+    repository: "chart-example.local/api-platform/keycloak"
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
   service:
     type: ClusterIP
   extraEnvVars:

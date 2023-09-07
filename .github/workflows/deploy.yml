@@ -111,6 +111,9 @@ jobs:
             --wait \
             --namespace=${{ inputs.namespace }} \
             --set=app.version=${{ github.sha }} \
+            --set=keycloak.image.repository=eu.gcr.io/${{ secrets.gke-project }}/keycloak \
+            --set=keycloak.image.tag=${{ inputs.docker-images-version }} \
+            --set=keycloak.image.pullPolicy=Always \
             --set=keycloak.auth.adminPassword=${{ secrets.keycloak-admin-password }} \
             --set=keycloak.extraEnvVars[0].name=KC_HOSTNAME_URL \
             --set-string=keycloak.extraEnvVars[0].value=https://${{ inputs.url }}/oidc/ \

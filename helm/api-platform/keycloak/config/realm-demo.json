@@ -4,6 +4,7 @@
   "enabled": true,
   "registrationAllowed": false,
   "accessCodeLifespan": 1,
+  "loginTheme": "api-platform-demo",
   "users": [
     {
       "username": "chuck.norris",
