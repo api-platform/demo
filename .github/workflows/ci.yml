@@ -94,8 +94,8 @@ jobs:
       KEYCLOAK_ADMIN_PASSWORD: 2f31e2fad93941b818449fd8d57fd019b6ce7fa5
       KEYCLOAK_HTTPS_CERTIFICATE_FILE: ./helm/api-platform/keycloak/certs/tls.crt
       KEYCLOAK_HTTPS_CERTIFICATE_KEY_FILE: ./helm/api-platform/keycloak/certs/tls.pem
-      # https://docs.docker.com/compose/environment-variables/envvars/
-      COMPOSE_FILE: docker-compose.yml:docker-compose.prod.yml
+      # https://docs.docker.com/compose/environment-variables/envvars/#compose_file
+      COMPOSE_FILE: docker-compose.yml:docker-compose.prod.yml:docker-compose.e2e.yml
     steps:
       -
         name: Checkout

@@ -50,6 +50,8 @@ jobs:
         name: Build Docker images
         uses: docker/bake-action@v3
         with:
+          # push and load may not be set together
+          # must push manually in a next step
           pull: true
           load: true
           files: |
@@ -60,22 +62,23 @@ jobs:
             *.cache-from=type=gha,scope=refs/heads/main
             *.cache-to=type=gha,scope=${{github.ref}},mode=max
       -
-        name: Docker tag latest
+        name: Docker push
+        run: |
+          docker push $PHP_DOCKER_IMAGE
+          docker push $PWA_DOCKER_IMAGE
+          docker push $CADDY_DOCKER_IMAGE
+          docker push $KEYCLOAK_DOCKER_IMAGE
+      -
+        name: Docker tag and push latest
+        if: github.event_name == 'push'
         run: |
           docker tag $PHP_DOCKER_IMAGE eu.gcr.io/${{ secrets.GKE_PROJECT }}/php:latest
           docker tag $PWA_DOCKER_IMAGE eu.gcr.io/${{ secrets.GKE_PROJECT }}/pwa:latest
           docker tag $CADDY_DOCKER_IMAGE eu.gcr.io/${{ secrets.GKE_PROJECT }}/caddy:latest
           docker tag $KEYCLOAK_DOCKER_IMAGE eu.gcr.io/${{ secrets.GKE_PROJECT }}/keycloak:latest
-      -
-        name: Docker push
-        run: |
-          docker push $PHP_DOCKER_IMAGE
           docker push eu.gcr.io/${{ secrets.GKE_PROJECT }}/php:latest
-          docker push $PWA_DOCKER_IMAGE
           docker push eu.gcr.io/${{ secrets.GKE_PROJECT }}/pwa:latest
-          docker push $CADDY_DOCKER_IMAGE
           docker push eu.gcr.io/${{ secrets.GKE_PROJECT }}/caddy:latest
-          docker push $KEYCLOAK_DOCKER_IMAGE
           docker push eu.gcr.io/${{ secrets.GKE_PROJECT }}/keycloak:latest
 
   deploy:

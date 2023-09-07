@@ -46,13 +46,9 @@ services:
 
   keycloak:
     image: ${KEYCLOAK_DOCKER_IMAGE}
+    build:
+      context: ./helm/api-platform/keycloak/
+      target: keycloak
     environment:
       KEYCLOAK_PRODUCTION: "true"
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
-      KEYCLOAK_ENABLE_HTTPS: "true"
-      KEYCLOAK_HTTPS_USE_PEM: "true"
-      KEYCLOAK_HTTPS_CERTIFICATE_FILE: /opt/bitnami/keycloak/certs/tls.crt
-      KEYCLOAK_HTTPS_CERTIFICATE_KEY_FILE: /opt/bitnami/keycloak/certs/tls.key
-    volumes:
-      - ${KEYCLOAK_HTTPS_CERTIFICATE_FILE}:/opt/bitnami/keycloak/certs/tls.crt:ro
-      - ${KEYCLOAK_HTTPS_CERTIFICATE_KEY_FILE}:/opt/bitnami/keycloak/certs/tls.key:ro
