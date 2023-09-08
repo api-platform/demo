@@ -111,7 +111,8 @@ jobs:
             --wait \
             --namespace=${{ inputs.namespace }} \
             --set=app.version=${{ github.sha }} \
-            --set=keycloak.image.repository=eu.gcr.io/${{ secrets.gke-project }}/keycloak \
+            --set=keycloak.image.registry=eu.gcr.io \
+            --set=keycloak.image.repository=${{ secrets.gke-project }}/keycloak \
             --set=keycloak.image.tag=${{ inputs.docker-images-version }} \
             --set=keycloak.image.pullPolicy=Always \
             --set=keycloak.auth.adminPassword=${{ secrets.keycloak-admin-password }} \
