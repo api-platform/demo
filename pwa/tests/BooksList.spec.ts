@@ -115,7 +115,7 @@ test.describe("Books list", () => {
     await expect(await bookPage.getDefaultBook()).toBeVisible();
 
     // click on a book author clears the filters and only apply the author filter
-    await page.getByTestId("book").first().locator("a").nth(1).click();
+    await page.getByTestId("book").first().locator("a").nth(2).click();
     await expect(page.getByTestId("filter-author")).toHaveValue("Dan Simmons");
     await expect(page.getByTestId("filter-title")).toHaveValue("");
     expect(await page.getByTestId("filter-condition-used").isChecked()).toBeFalsy();

@@ -17,7 +17,8 @@ const authProvider: AuthProvider = {
   checkError: async (error) => {
     const session = await getSession();
     const status = error.status;
-    if (!session || status === 401) {
+    // @ts-ignore
+    if (!session || session?.error === "RefreshAccessTokenError" || status === 401) {
       await signIn("keycloak");
 
       return;
@@ -26,8 +27,6 @@ const authProvider: AuthProvider = {
     if (status === 403) {
       return Promise.reject({ message: "Unauthorized user!", logoutUser: false });
     }
-
-    await signOut(session);
   },
   checkAuth: async () => {
     const session = await getSession();
