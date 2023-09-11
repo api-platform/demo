@@ -8,6 +8,10 @@ api_platform:
         [A PWA](/) and [an admin](/admin) are consuming this API.
     graphql:
         graphql_playground: false
+    formats:
+        jsonld: ['application/ld+json']
+        json: ['application/json']
+        html: ['text/html']
     mercure: ~
     http_cache:
         public: true
