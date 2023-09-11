@@ -1,9 +1,9 @@
 import { useContext, useState } from "react";
-import { AppBar, AppBarClasses, useAuthProvider, useStore } from "react-admin";
+import { AppBar, AppBarClasses, UserMenu, Logout, useStore } from "react-admin";
 import { type AppBarProps } from "react-admin";
-import { Box, Button, Menu, MenuItem, Typography } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Button, Menu, MenuItem, Typography } from "@mui/material";
 
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DocContext from "@/components/admin/DocContext";
 import HydraLogo from "@/components/admin/HydraLogo";
 import OpenApiLogo from "@/components/admin/OpenApiLogo";
@@ -62,21 +62,23 @@ const DocTypeMenuButton = () => {
   );
 };
 
-const CustomAppBar = ({ classes, userMenu, ...props }: AppBarProps) => {
-  const authProvider = useAuthProvider();
-
+const CustomAppBar = ({ ...props }: AppBarProps) => {
   return (
-    <AppBar userMenu={userMenu ?? !!authProvider} {...props}>
+    <AppBar userMenu={
+      <UserMenu>
+        <Logout redirectTo={`${window.location.origin}/books`}/>
+      </UserMenu>
+    } {...props}>
       <Typography
         variant="h6"
         color="inherit"
         className={`${AppBarClasses.title} w-[200px]`}
         id="react-admin-title"
       />
-      <Logo/>
-      <Box component="span" sx={{ flex: 0 }}/>
+      <div className="flex-1">
+        <Logo/>
+      </div>
       <DocTypeMenuButton/>
-      <Box component="span" sx={{ flex: 0.5 }}/>
     </AppBar>
   );
 };

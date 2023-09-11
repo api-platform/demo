@@ -20,13 +20,15 @@ export const Item: FunctionComponent<Props> = ({ book }) => {
   return (
     <div className="relative p-4 bg-white hover:drop-shadow-xl border-b border-gray-200 text-center" data-testid="book">
       <div className="h-40 mb-2">
-        {!!data["images"] && (
-          <Image alt={data["title"]} width={100} height={130} src={data["images"]["medium"]}
-                 className="mx-auto w-auto max-w-[150px] h-auto max-h-[165px]" priority={true}
-          />
-        ) || (
-          <span className="h-40 text-slate-300">No cover</span>
-        )}
+        <Link href={getItemPath(data, "/books/[id]/[slug]")}>
+          {!!data["images"] && (
+            <Image alt={data["title"]} width={100} height={130} src={data["images"]["medium"]}
+                   className="mx-auto w-auto max-w-[150px] h-auto max-h-[165px]" priority={true}
+            />
+          ) || (
+            <span className="text-slate-300 block h-full">No cover</span>
+          )}
+        </Link>
       </div>
       <div className="h-32 mb-2">
         <p>

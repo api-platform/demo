@@ -52,7 +52,11 @@ export const Show: NextPage<Props> = ({ data, hubURL, page }) => {
     // @ts-ignore
   >(async (data: BookmarkProps) => {
     // @ts-ignore
-    if (!session || session?.error === "RefreshAccessTokenError") return signIn("keycloak");
+    if (!session || session?.error === "RefreshAccessTokenError") {
+      await signIn("keycloak");
+
+      return;
+    }
 
     if (bookmark) {
       // @ts-ignore

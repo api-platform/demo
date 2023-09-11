@@ -1,5 +1,6 @@
 import { type FunctionComponent } from "react";
 import { Formik } from "formik";
+import * as Yup from "yup";
 import { useMutation } from "react-query";
 import { FormGroup, TextareaAutosize } from "@mui/material";
 import Rating from "@mui/material/Rating";
@@ -14,6 +15,11 @@ interface Props {
   review?: Review;
   username: string;
 }
+
+const DisplayingErrorMessagesSchema = Yup.object().shape({
+  rating: Yup.number().required('Required'),
+  body: Yup.string().required('Required'),
+});
 
 export const Form: FunctionComponent<Props> = ({ book, onSuccess, review, username }) => {
   const saveReview = async (values: Review) =>
@@ -31,6 +37,7 @@ export const Form: FunctionComponent<Props> = ({ book, onSuccess, review, userna
   return (
     <Formik
       initialValues={review ?? {}}
+      validationSchema={DisplayingErrorMessagesSchema}
       enableReinitialize={true}
       // @ts-ignore
       onSubmit={(values: Review, { setSubmitting, setStatus, setErrors, resetForm }) => {
@@ -53,7 +60,7 @@ export const Form: FunctionComponent<Props> = ({ book, onSuccess, review, userna
             onError: (error) => {
               setStatus({
                 isValid: false,
-                msg: `${error.message}`,
+                msg: `${"status" in error ? error.status : error.message}`,
               });
               if ("fields" in error) {
                 setErrors(error.fields);
@@ -68,6 +75,8 @@ export const Form: FunctionComponent<Props> = ({ book, onSuccess, review, userna
     >
       {({
         values,
+        touched,
+        errors,
         status,
         handleBlur,
         handleChange,
@@ -82,6 +91,8 @@ export const Form: FunctionComponent<Props> = ({ book, onSuccess, review, userna
               <Rating value={Number(values?.rating ?? 0)} name="rating" className="ml-2" size="small"
                       onChange={handleChange} onBlur={handleBlur} data-testid="review-rating"
               />
+              {/* @ts-ignore */}
+              {errors.rating && <span className="block text-sm text-red-500">{errors.rating}</span>}
             </p>
           </FormGroup>
           <FormGroup>
@@ -91,6 +102,8 @@ export const Form: FunctionComponent<Props> = ({ book, onSuccess, review, userna
               aria-label="Review body" name="body" value={values?.body ?? ""} placeholder="Add a review..."
               onChange={handleChange} onBlur={handleBlur} data-testid="review-body"
             />
+            {/* @ts-ignore */}
+            {errors.body && <span className="block text-sm text-red-500">{errors.body}</span>}
           </FormGroup>
           {status && status.msg && (
             <div

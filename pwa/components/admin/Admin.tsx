@@ -11,6 +11,7 @@ import { fetchHydra, HydraAdmin, hydraDataProvider, OpenApiAdmin, ResourceGuesse
 import { parseHydraDocumentation } from "@api-platform/api-doc-parser";
 
 import DocContext from "@/components/admin/DocContext";
+import authProvider from "@/components/admin/authProvider";
 import AppBar from "@/components/admin/AppBar";
 import Menu from "@/components/admin/Menu";
 import { ENTRYPOINT } from "@/config/entrypoint";
@@ -77,6 +78,8 @@ const AdminUI = ({ session, children }: { session: Session, children?: React.Rea
 
   return docType === "hydra" ? (
     <HydraAdmin
+      requireAuth
+      authProvider={authProvider}
       // @ts-ignore
       dataProvider={dataProvider.current}
       entrypoint={window.origin}
@@ -87,6 +90,8 @@ const AdminUI = ({ session, children }: { session: Session, children?: React.Rea
     </HydraAdmin>
   ) : (
     <OpenApiAdmin
+      requireAuth
+      authProvider={authProvider}
       // @ts-ignore
       dataProvider={dataProvider.current}
       entrypoint={window.origin}
@@ -125,9 +130,16 @@ const AdminWithOIDC = () => {
   // Can't use next-auth/middleware because of https://github.com/nextauthjs/next-auth/discussions/7488
   const { data: session, status } = useSession();
 
-  if (status === "loading") return <SyncLoader size={8} color="#46B6BF"/>;
+  if (status === "loading") {
+    return <SyncLoader size={8} color="#46B6BF"/>;
+  }
+
   // @ts-ignore
-  if (!session || session?.error === "RefreshAccessTokenError") return signIn("keycloak");
+  if (!session || session?.error === "RefreshAccessTokenError") {
+    (async() => await signIn("keycloak"))();
+
+    return;
+  }
 
   return <AdminWithContext session={session}/>;
 };
