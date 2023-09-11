@@ -6,8 +6,6 @@
 
 log
 
-{$CADDY_CACHE}
-
 # Matches requests for OIDC routes
 @oidc expression path('/oidc/*')
 

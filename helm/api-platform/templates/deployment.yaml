@@ -40,13 +40,6 @@ spec:
               value: {{ include "api-platform.fullname" . }}-pwa:3000
             - name: OIDC_UPSTREAM
               value: {{ .Release.Name }}-keycloak:80
-            - name: CADDY_CACHE
-              value: cache
-            - name: CADDY_GLOBAL_OPTIONS
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "api-platform.fullname" . }}
-                  key: caddy-global-options
             - name: MERCURE_EXTRA_DIRECTIVES
               valueFrom:
                 configMapKeyRef:
