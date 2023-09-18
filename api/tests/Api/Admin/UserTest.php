@@ -45,7 +45,7 @@ final class UserTest extends ApiTestCase
         $this->client->request('GET', '/admin/users', $options);
 
         self::assertResponseStatusCodeSame($expectedCode);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
@@ -123,7 +123,7 @@ final class UserTest extends ApiTestCase
         $this->client->request('GET', '/admin/users/'.$user->getId(), $options);
 
         self::assertResponseStatusCodeSame($expectedCode);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',

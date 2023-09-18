@@ -13,6 +13,7 @@ use App\Entity\Bookmark;
 use App\Repository\BookmarkRepository;
 use App\Tests\Api\Trait\MercureTrait;
 use App\Tests\Api\Trait\SecurityTrait;
+use App\Tests\Api\Trait\SerializerTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Uid\Uuid;
@@ -25,6 +26,7 @@ final class BookmarkTest extends ApiTestCase
     use MercureTrait;
     use ResetDatabase;
     use SecurityTrait;
+    use SerializerTrait;
 
     private Client $client;
 
@@ -40,7 +42,7 @@ final class BookmarkTest extends ApiTestCase
         $this->client->request('GET', '/bookmarks');
 
         self::assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
@@ -84,7 +86,7 @@ final class BookmarkTest extends ApiTestCase
         ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
@@ -109,7 +111,7 @@ final class BookmarkTest extends ApiTestCase
         ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
@@ -123,6 +125,8 @@ final class BookmarkTest extends ApiTestCase
      */
     public function testAsAUserICanCreateABookmark(): void
     {
+        $this->client = self::createClient(['debug' => true]);
+
         $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL2055137M.json']);
         $user = UserFactory::createOne();
         self::getMercureHub()->reset();
@@ -167,7 +171,6 @@ final class BookmarkTest extends ApiTestCase
         $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL2055137M.json']);
         $user = UserFactory::createOne();
         BookmarkFactory::createOne(['book' => $book, 'user' => $user]);
-        self::getMercureHub()->reset();
 
         $token = $this->generateToken([
             'email' => $user->email,
@@ -197,7 +200,7 @@ final class BookmarkTest extends ApiTestCase
         $this->client->request('DELETE', '/bookmarks/'.$bookmark->getId());
 
         self::assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
@@ -219,7 +222,7 @@ final class BookmarkTest extends ApiTestCase
         ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
@@ -246,6 +249,8 @@ final class BookmarkTest extends ApiTestCase
      */
     public function testAsAUserICanDeleteMyBookmark(): void
     {
+        $this->client = self::createClient(['debug' => true]);
+
         $book = BookFactory::createOne(['title' => 'Hyperion']);
         $bookmark = BookmarkFactory::createOne(['book' => $book]);
         self::getMercureHub()->reset();

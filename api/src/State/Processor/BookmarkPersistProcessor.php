@@ -31,8 +31,6 @@ final readonly class BookmarkPersistProcessor implements ProcessorInterface
         $data->bookmarkedAt = $this->clock->now();
 
         // save entity
-        $data = $this->persistProcessor->process($data, $operation, $uriVariables, $context);
-
-        return $data;
+        return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
     }
 }

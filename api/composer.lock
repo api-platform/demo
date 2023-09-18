@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bf5cd55bbca3c7de0fb6cc43716e910e",
+    "content-hash": "6fbd00a03543ef6b2529276db0bcf716",
     "packages": [
         {
             "name": "api-platform/core",
-            "version": "v3.2.0-alpha.2",
+            "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/core.git",
-                "reference": "504d6e3ecaceefaf9c886dc810f6aab236ca3199"
+                "reference": "36d87de21c9dd2f7bb8cdb0dab8f75873b18431d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/core/zipball/504d6e3ecaceefaf9c886dc810f6aab236ca3199",
-                "reference": "504d6e3ecaceefaf9c886dc810f6aab236ca3199",
+                "url": "https://api.github.com/repos/api-platform/core/zipball/36d87de21c9dd2f7bb8cdb0dab8f75873b18431d",
+                "reference": "36d87de21c9dd2f7bb8cdb0dab8f75873b18431d",
                 "shasum": ""
             },
             "require": {
@@ -127,6 +127,7 @@
                 "symfony/web-profiler-bundle": "To use the data collector.",
                 "webonyx/graphql-php": "To support GraphQL."
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -167,7 +168,7 @@
             ],
             "support": {
                 "issues": "https://github.com/api-platform/core/issues",
-                "source": "https://github.com/api-platform/core/tree/v3.2.0-alpha.2"
+                "source": "https://github.com/api-platform/core/tree/main"
             },
             "funding": [
                 {
@@ -175,7 +176,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-09-08T14:17:44+00:00"
+            "time": "2023-09-18T11:54:39+00:00"
         },
         {
             "name": "brick/math",
@@ -9423,7 +9424,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "api-platform/core": 15
+        "api-platform/core": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

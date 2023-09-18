@@ -15,6 +15,7 @@ use App\Entity\User;
 use App\Tests\Api\Admin\Trait\UsersDataProviderTrait;
 use App\Tests\Api\Trait\MercureTrait;
 use App\Tests\Api\Trait\SecurityTrait;
+use App\Tests\Api\Trait\SerializerTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\Update;
 use Zenstruck\Foundry\FactoryCollection;
@@ -27,6 +28,7 @@ final class ReviewTest extends ApiTestCase
     use MercureTrait;
     use ResetDatabase;
     use SecurityTrait;
+    use SerializerTrait;
     use UsersDataProviderTrait;
 
     private Client $client;
@@ -52,7 +54,7 @@ final class ReviewTest extends ApiTestCase
         $this->client->request('GET', '/admin/reviews', $options);
 
         self::assertResponseStatusCodeSame($expectedCode);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
@@ -161,7 +163,7 @@ final class ReviewTest extends ApiTestCase
         $this->client->request('GET', '/admin/reviews/'.$review->getId(), $options);
 
         self::assertResponseStatusCodeSame($expectedCode);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
@@ -219,7 +221,7 @@ final class ReviewTest extends ApiTestCase
         ]);
 
         self::assertResponseStatusCodeSame($expectedCode);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
@@ -250,6 +252,8 @@ final class ReviewTest extends ApiTestCase
      */
     public function testAsAdminUserICanUpdateAReview(): void
     {
+        $this->client = self::createClient(['debug' => true]);
+
         $book = BookFactory::createOne();
         $review = ReviewFactory::createOne(['book' => $book]);
         $user = UserFactory::createOneAdmin();
@@ -321,7 +325,7 @@ final class ReviewTest extends ApiTestCase
         $this->client->request('DELETE', '/admin/reviews/'.$review->getId(), $options);
 
         self::assertResponseStatusCodeSame($expectedCode);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
@@ -346,6 +350,8 @@ final class ReviewTest extends ApiTestCase
      */
     public function testAsAdminUserICanDeleteAReview(): void
     {
+        $this->client = self::createClient(['debug' => true]);
+
         $review = ReviewFactory::createOne(['body' => 'Best book ever!']);
         $id = $review->getId();
         $bookId = $review->book->getId();

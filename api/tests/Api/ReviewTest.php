@@ -15,6 +15,7 @@ use App\Entity\User;
 use App\Repository\ReviewRepository;
 use App\Tests\Api\Trait\MercureTrait;
 use App\Tests\Api\Trait\SecurityTrait;
+use App\Tests\Api\Trait\SerializerTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\Update;
 use Zenstruck\Foundry\FactoryCollection;
@@ -27,6 +28,7 @@ final class ReviewTest extends ApiTestCase
     use MercureTrait;
     use ResetDatabase;
     use SecurityTrait;
+    use SerializerTrait;
 
     private Client $client;
 
@@ -140,7 +142,7 @@ final class ReviewTest extends ApiTestCase
         ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
@@ -198,7 +200,6 @@ final class ReviewTest extends ApiTestCase
         $book = BookFactory::createOne();
         ReviewFactory::createMany(5, ['book' => $book]);
         $user = UserFactory::createOne();
-        self::getMercureHub()->reset();
 
         $token = $this->generateToken([
             'email' => $user->email,
@@ -213,7 +214,7 @@ final class ReviewTest extends ApiTestCase
         ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
@@ -227,6 +228,8 @@ final class ReviewTest extends ApiTestCase
      */
     public function testAsAUserICanAddAReviewOnABook(): void
     {
+        $this->client = self::createClient(['debug' => true]);
+
         $book = BookFactory::createOne();
         ReviewFactory::createMany(5, ['book' => $book]);
         $user = UserFactory::createOne();
@@ -280,7 +283,6 @@ final class ReviewTest extends ApiTestCase
         ReviewFactory::createMany(5, ['book' => $book]);
         $user = UserFactory::createOne();
         ReviewFactory::createOne(['book' => $book, 'user' => $user]);
-        self::getMercureHub()->reset();
 
         $token = $this->generateToken([
             'email' => $user->email,
@@ -311,7 +313,7 @@ final class ReviewTest extends ApiTestCase
         $this->client->request('GET', '/books/'.$book->getId().'/reviews/invalid');
 
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
@@ -327,7 +329,7 @@ final class ReviewTest extends ApiTestCase
         $this->client->request('GET', '/books/'.$review->book->getId().'/reviews/'.$review->getId());
 
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
@@ -351,7 +353,7 @@ final class ReviewTest extends ApiTestCase
         ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
@@ -380,7 +382,7 @@ final class ReviewTest extends ApiTestCase
         ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
@@ -416,6 +418,8 @@ final class ReviewTest extends ApiTestCase
      */
     public function testAsAUserICanUpdateMyBookReview(): void
     {
+        $this->client = self::createClient(['debug' => true]);
+
         $review = ReviewFactory::createOne();
         self::getMercureHub()->reset();
 
@@ -461,7 +465,7 @@ final class ReviewTest extends ApiTestCase
         $this->client->request('DELETE', '/books/'.$review->book->getId().'/reviews/'.$review->getId());
 
         self::assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
@@ -483,7 +487,7 @@ final class ReviewTest extends ApiTestCase
         ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
@@ -512,6 +516,8 @@ final class ReviewTest extends ApiTestCase
      */
     public function testAsAUserICanDeleteMyBookReview(): void
     {
+        $this->client = self::createClient(['debug' => true]);
+
         $review = ReviewFactory::createOne(['body' => 'Best book ever!']);
         self::getMercureHub()->reset();
         $id = $review->getId();
