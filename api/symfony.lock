@@ -6,14 +6,15 @@
         "version": "v1.8.1"
     },
     "api-platform/core": {
-        "version": "3.1",
+        "version": "3.2",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
-            "version": "3.0",
-            "ref": "0330386d716d3eecc52ee5ac66976e733eb8f961"
+            "version": "3.1",
+            "ref": "adf0c75f4bed8b0043a6680376323404953578c5"
         },
         "files": [
+            "config/packages/api_platform.yaml",
             "config/routes/api_platform.yaml",
             "src/ApiResource/.gitignore"
         ]
@@ -69,7 +70,7 @@
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "2.10",
-            "ref": "f0d8c9a4da17815830aac0d63e153a940ae176bb"
+            "ref": "e025a6cb69b195970543820b2f18ad21724473fa"
         },
         "files": [
             "config/packages/doctrine.yaml",
