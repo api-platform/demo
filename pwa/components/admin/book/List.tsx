@@ -4,14 +4,11 @@ import {
   Datagrid,
   useRecordContext,
   type UseRecordContextParams,
-  Button,
   List as ReactAdminList,
-  EditButton, ShowButtonProps
+  EditButton,
 } from "react-admin";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import slugify from "slugify";
 
-import { getItemPath } from "@/utils/dataAccess";
+import { ShowButton } from "@/components/admin/book/ShowButton";
 import { RatingField } from "@/components/admin/review/RatingField";
 import { ConditionInput } from "@/components/admin/book/ConditionInput";
 
@@ -27,20 +24,6 @@ const filters = [
   <TextInput source="author" key="author"/>,
   <ConditionInput source="condition" key="condition"/>,
 ];
-
-const ShowButton = (props: ShowButtonProps) => {
-  const record = useRecordContext(props);
-
-  return record ? (
-    // @ts-ignore
-    <Button label="Show" target="_blank" href={getItemPath({
-      id: record["@id"].replace(/^\/admin\/books\//, ""),
-      slug: slugify(`${record.title}-${record.author}`, {lower: true, trim: true, remove: /[*+~.(),;'"!:@]/g}),
-    }, "/books/[id]/[slug]")}>
-      <VisibilityIcon/>
-    </Button>
-  ) : null;
-};
 
 export const List = (props: ListGuesserProps) => (
   <ReactAdminList {...props} filters={filters} exporter={false} title="Books">
