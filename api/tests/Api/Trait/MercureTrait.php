@@ -26,7 +26,7 @@ trait MercureTrait
     {
         $hub = static::getMercureRegistry()->getHub($name);
         if (!$hub instanceof TraceableHub) {
-            static::fail('Debug mode must be enabled to make Mercure update assertions.');
+            static::fail('You must enable "framework.test" to make Mercure update assertions.');
         }
 
         return $hub;

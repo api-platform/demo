@@ -252,8 +252,6 @@ final class ReviewTest extends ApiTestCase
      */
     public function testAsAdminUserICanUpdateAReview(): void
     {
-        $this->client = self::createClient(['debug' => true]);
-
         $book = BookFactory::createOne();
         $review = ReviewFactory::createOne(['book' => $book]);
         $user = UserFactory::createOneAdmin();
@@ -350,8 +348,6 @@ final class ReviewTest extends ApiTestCase
      */
     public function testAsAdminUserICanDeleteAReview(): void
     {
-        $this->client = self::createClient(['debug' => true]);
-
         $review = ReviewFactory::createOne(['body' => 'Best book ever!']);
         $id = $review->getId();
         $bookId = $review->book->getId();

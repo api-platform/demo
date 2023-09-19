@@ -228,8 +228,6 @@ final class ReviewTest extends ApiTestCase
      */
     public function testAsAUserICanAddAReviewOnABook(): void
     {
-        $this->client = self::createClient(['debug' => true]);
-
         $book = BookFactory::createOne();
         ReviewFactory::createMany(5, ['book' => $book]);
         $user = UserFactory::createOne();
@@ -418,8 +416,6 @@ final class ReviewTest extends ApiTestCase
      */
     public function testAsAUserICanUpdateMyBookReview(): void
     {
-        $this->client = self::createClient(['debug' => true]);
-
         $review = ReviewFactory::createOne();
         self::getMercureHub()->reset();
 
@@ -516,8 +512,6 @@ final class ReviewTest extends ApiTestCase
      */
     public function testAsAUserICanDeleteMyBookReview(): void
     {
-        $this->client = self::createClient(['debug' => true]);
-
         $review = ReviewFactory::createOne(['body' => 'Best book ever!']);
         self::getMercureHub()->reset();
         $id = $review->getId();

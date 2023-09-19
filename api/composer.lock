@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6fbd00a03543ef6b2529276db0bcf716",
+    "content-hash": "16eb0f85fc84bad70fc65fd67faff2f3",
     "packages": [
         {
             "name": "api-platform/core",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/core.git",
-                "reference": "36d87de21c9dd2f7bb8cdb0dab8f75873b18431d"
+                "reference": "3fa0176a34a7cbc24a612b69404dc8c6be82f8a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/core/zipball/36d87de21c9dd2f7bb8cdb0dab8f75873b18431d",
-                "reference": "36d87de21c9dd2f7bb8cdb0dab8f75873b18431d",
+                "url": "https://api.github.com/repos/api-platform/core/zipball/3fa0176a34a7cbc24a612b69404dc8c6be82f8a6",
+                "reference": "3fa0176a34a7cbc24a612b69404dc8c6be82f8a6",
                 "shasum": ""
             },
             "require": {
@@ -176,7 +176,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-09-18T11:54:39+00:00"
+            "time": "2023-09-19T08:30:27+00:00"
         },
         {
             "name": "brick/math",

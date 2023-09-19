@@ -125,8 +125,6 @@ final class BookmarkTest extends ApiTestCase
      */
     public function testAsAUserICanCreateABookmark(): void
     {
-        $this->client = self::createClient(['debug' => true]);
-
         $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL2055137M.json']);
         $user = UserFactory::createOne();
         self::getMercureHub()->reset();
@@ -249,8 +247,6 @@ final class BookmarkTest extends ApiTestCase
      */
     public function testAsAUserICanDeleteMyBookmark(): void
     {
-        $this->client = self::createClient(['debug' => true]);
-
         $book = BookFactory::createOne(['title' => 'Hyperion']);
         $bookmark = BookmarkFactory::createOne(['book' => $book]);
         self::getMercureHub()->reset();

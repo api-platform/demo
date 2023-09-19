@@ -356,8 +356,6 @@ final class BookTest extends ApiTestCase
      */
     public function testAsAdminUserICanCreateABook(): void
     {
-        $this->client = self::createClient(['debug' => true]);
-
         $token = $this->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
@@ -484,8 +482,6 @@ final class BookTest extends ApiTestCase
      */
     public function testAsAdminUserICanUpdateABook(): void
     {
-        $this->client = self::createClient(['debug' => true]);
-
         $book = BookFactory::createOne([
             'book' => 'https://openlibrary.org/books/OL28346544M.json',
         ]);
@@ -585,8 +581,6 @@ final class BookTest extends ApiTestCase
      */
     public function testAsAdminUserICanDeleteABook(): void
     {
-        $this->client = self::createClient(['debug' => true]);
-
         $book = BookFactory::createOne(['title' => 'Hyperion']);
         self::getMercureHub()->reset();
         $id = $book->getId();
