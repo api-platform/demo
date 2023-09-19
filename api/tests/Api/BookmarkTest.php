@@ -41,6 +41,7 @@ final class BookmarkTest extends ApiTestCase
 
         self::assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
+        self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
@@ -85,6 +86,7 @@ final class BookmarkTest extends ApiTestCase
 
         self::assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
+        self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
@@ -109,13 +111,29 @@ final class BookmarkTest extends ApiTestCase
         ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
+        // todo waiting for https://github.com/api-platform/core/pull/5844
+//        self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
+        self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
             'hydra:title' => 'An error occurred',
             'hydra:description' => 'Item not found for "/books/'.$uuid.'".',
         ]);
+        // todo waiting for https://github.com/api-platform/core/pull/5844
+//        self::assertJsonContains([
+//            '@context' => '/contexts/ConstraintViolationList',
+//            '@type' => 'ConstraintViolationList',
+//            'hydra:title' => 'An error occurred',
+//            'hydra:description' => 'book: This value should be of type '.Book::class.'.',
+//            'violations' => [
+//                [
+//                    'propertyPath' => 'book',
+//                    'hint' => 'Item not found for "/books/'.$uuid.'".',
+//                ],
+//            ],
+//        ]);
     }
 
     /**
@@ -180,7 +198,8 @@ final class BookmarkTest extends ApiTestCase
         ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
+        self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
             '@context' => '/contexts/ConstraintViolationList',
             '@type' => 'ConstraintViolationList',
@@ -197,6 +216,7 @@ final class BookmarkTest extends ApiTestCase
 
         self::assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
+        self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
@@ -219,6 +239,7 @@ final class BookmarkTest extends ApiTestCase
 
         self::assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
+        self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',

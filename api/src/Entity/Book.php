@@ -35,6 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     uriTemplate: '/admin/books{._format}',
     types: ['https://schema.org/Book', 'https://schema.org/Offer'],
+    extraProperties: ['rfc_7807_compliant_errors' => true],
     operations: [
         new GetCollection(
             itemUriTemplate: '/admin/books/{id}{._format}',
@@ -64,11 +65,16 @@ use Symfony\Component\Validator\Constraints as Assert;
         'groups' => ['Book:read:admin', 'Enum:read'],
         'skip_null_values' => true,
     ],
-    denormalizationContext: ['groups' => ['Book:write']],
+    denormalizationContext: [
+        'groups' => ['Book:write'],
+    ],
+    // todo waiting for https://github.com/api-platform/core/pull/5844
+//    collectDenormalizationErrors: true,
     security: 'is_granted("ROLE_ADMIN")'
 )]
 #[ApiResource(
     types: ['https://schema.org/Book', 'https://schema.org/Offer'],
+    extraProperties: ['rfc_7807_compliant_errors' => true],
     operations: [
         new GetCollection(
             itemUriTemplate: '/books/{id}{._format}'

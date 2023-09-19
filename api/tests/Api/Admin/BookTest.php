@@ -52,6 +52,7 @@ final class BookTest extends ApiTestCase
 
         self::assertResponseStatusCodeSame($expectedCode);
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
+        self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
@@ -194,6 +195,7 @@ final class BookTest extends ApiTestCase
 
         self::assertResponseStatusCodeSame($expectedCode);
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
+        self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
@@ -249,6 +251,7 @@ final class BookTest extends ApiTestCase
 
         self::assertResponseStatusCodeSame($expectedCode);
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
+        self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
@@ -272,7 +275,8 @@ final class BookTest extends ApiTestCase
         ]);
 
         self::assertResponseStatusCodeSame($statusCode);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
+        self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains($expected);
     }
 
@@ -302,32 +306,62 @@ final class BookTest extends ApiTestCase
 
     public function getInvalidData(): iterable
     {
-//        yield 'empty data' => [
-//            [
-//                'book' => '',
-//                'condition' => '',
-//            ],
-//            Response::HTTP_BAD_REQUEST,
-//            [
-//                '@context' => '/contexts/Error',
-//                '@type' => 'hydra:Error',
+        yield 'empty data' => [
+            [
+                'book' => '',
+                'condition' => '',
+            ],
+            Response::HTTP_BAD_REQUEST,
+            // todo waiting for https://github.com/api-platform/core/pull/5844
+//            Response::HTTP_UNPROCESSABLE_ENTITY,
+            [
+                '@context' => '/contexts/Error',
+                '@type' => 'hydra:Error',
+                'hydra:title' => 'An error occurred',
+                'hydra:description' => 'The data must belong to a backed enumeration of type '.BookCondition::class,
+                // todo waiting for https://github.com/api-platform/core/pull/5844[
+//                '@context' => '/contexts/ConstraintViolationList',
+//                '@type' => 'ConstraintViolationList',
 //                'hydra:title' => 'An error occurred',
-//                'hydra:description' => 'The data must belong to a backed enumeration of type '.BookCondition::class,
-//            ],
-//        ];
-//        yield 'invalid condition' => [
-//            [
-//                'book' => 'https://openlibrary.org/books/OL28346544M.json',
-//                'condition' => 'invalid condition',
-//            ],
-//            Response::HTTP_BAD_REQUEST,
-//            [
-//                '@context' => '/contexts/Error',
-//                '@type' => 'hydra:Error',
+//                'hydra:description' => 'book: This value should not be blank.\ncondition: This value should be of type '.BookCondition::class.'.',
+//                'violations' => [
+//                    [
+//                        'propertyPath' => 'book',
+//                        'hint' => 'This value should not be blank.',
+//                    ],
+//                    [
+//                        'propertyPath' => 'condition',
+//                        'hint' => 'The data must belong to a backed enumeration of type '.BookCondition::class,
+//                    ],
+//                ],
+            ],
+        ];
+        yield 'invalid condition' => [
+            [
+                'book' => 'https://openlibrary.org/books/OL28346544M.json',
+                'condition' => 'invalid condition',
+            ],
+            Response::HTTP_BAD_REQUEST,
+            // todo waiting for https://github.com/api-platform/core/pull/5844
+//            Response::HTTP_UNPROCESSABLE_ENTITY,
+            [
+                '@context' => '/contexts/Error',
+                '@type' => 'hydra:Error',
+                'hydra:title' => 'An error occurred',
+                'hydra:description' => 'The data must belong to a backed enumeration of type '.BookCondition::class,
+                // todo waiting for https://github.com/api-platform/core/pull/5844
+//                '@context' => '/contexts/ConstraintViolationList',
+//                '@type' => 'ConstraintViolationList',
 //                'hydra:title' => 'An error occurred',
-//                'hydra:description' => 'The data must belong to a backed enumeration of type '.BookCondition::class,
-//            ],
-//        ];
+//                'hydra:description' => 'condition: This value should be of type '.BookCondition::class.'.',
+//                'violations' => [
+//                    [
+//                        'propertyPath' => 'condition',
+//                        'hint' => 'The data must belong to a backed enumeration of type '.BookCondition::class,
+//                    ],
+//                ],
+            ],
+        ];
         yield 'invalid book' => [
             [
                 'book' => 'invalid book',
@@ -427,6 +461,7 @@ final class BookTest extends ApiTestCase
 
         self::assertResponseStatusCodeSame($expectedCode);
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
+        self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
@@ -470,7 +505,8 @@ final class BookTest extends ApiTestCase
         ]);
 
         self::assertResponseStatusCodeSame($statusCode);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
+        self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains($expected);
     }
 
@@ -553,6 +589,7 @@ final class BookTest extends ApiTestCase
 
         self::assertResponseStatusCodeSame($expectedCode);
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
+        self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',

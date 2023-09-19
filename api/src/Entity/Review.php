@@ -35,6 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     types: ['https://schema.org/Review'],
     order: ['publishedAt' => 'DESC'],
+    extraProperties: ['rfc_7807_compliant_errors' => true],
     operations: [
         new GetCollection(
             uriTemplate: '/admin/reviews{._format}',
@@ -69,12 +70,17 @@ use Symfony\Component\Validator\Constraints as Assert;
         'skip_null_values' => true,
         'groups' => ['Review:read', 'Review:read:admin'],
     ],
-    denormalizationContext: ['groups' => ['Review:write', 'Review:write:admin']],
+    denormalizationContext: [
+        'groups' => ['Review:write', 'Review:write:admin'],
+    ],
+    // todo waiting for https://github.com/api-platform/core/pull/5844
+//    collectDenormalizationErrors: true,
     security: 'is_granted("ROLE_ADMIN")'
 )]
 #[ApiResource(
     types: ['https://schema.org/Review'],
     order: ['publishedAt' => 'DESC'],
+    extraProperties: ['rfc_7807_compliant_errors' => true],
     uriTemplate: '/books/{bookId}/reviews{._format}',
     uriVariables: [
         'bookId' => new Link(toProperty: 'book', fromClass: Book::class),
@@ -128,7 +134,11 @@ use Symfony\Component\Validator\Constraints as Assert;
         'skip_null_values' => true,
         'groups' => ['Review:read'],
     ],
-    denormalizationContext: ['groups' => ['Review:write']]
+    denormalizationContext: [
+        'groups' => ['Review:write'],
+    ],
+    // todo waiting for https://github.com/api-platform/core/pull/5844
+//    collectDenormalizationErrors: true
 )]
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
 #[ORM\UniqueConstraint(fields: ['user', 'book'])]

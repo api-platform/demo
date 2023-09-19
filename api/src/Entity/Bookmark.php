@@ -30,6 +30,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     types: ['https://schema.org/BookmarkAction'],
     order: ['bookmarkedAt' => 'DESC'],
+    extraProperties: ['rfc_7807_compliant_errors' => true],
     operations: [
         new GetCollection(),
         new Delete(
@@ -46,7 +47,11 @@ use Symfony\Component\Validator\Constraints as Assert;
             'book' => '/books/{id}{._format}',
         ],
     ],
-    denormalizationContext: ['groups' => ['Bookmark:write']],
+    denormalizationContext: [
+        'groups' => ['Bookmark:write'],
+    ],
+    // todo waiting for https://github.com/api-platform/core/pull/5844
+//    collectDenormalizationErrors: true,
     mercure: true,
     security: 'is_granted("ROLE_USER")'
 )]

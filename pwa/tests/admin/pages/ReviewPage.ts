@@ -25,7 +25,7 @@ export class ReviewPage extends AbstractPage {
       await this.page.getByLabel("Add filter").click();
       await this.page.getByRole("menu").getByText("User").waitFor({ state: "visible" });
       await this.page.getByRole("menu").getByText("User").click();
-      await this.page.getByLabel("User").fill(filters.user);
+      await this.page.getByRole("combobox", { name: "User" }).fill(filters.user);
       await this.page.getByRole("listbox").getByText(filters.user, { exact: true }).click();
       await this.page.waitForResponse(/\/reviews/);
     }

@@ -34,7 +34,7 @@ final readonly class MercureProcessor implements ProcessorInterface
      * @throws ResourceClassNotFoundException
      * @throws RuntimeException
      */
-    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
         if (isset($context['item_uri_template'])) {
             $operation = $this->resourceMetadataCollectionFactory->create($data::class)->getOperation($context['item_uri_template']);

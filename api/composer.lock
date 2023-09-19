@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "16eb0f85fc84bad70fc65fd67faff2f3",
+    "content-hash": "a07f841d2120cf530694877dc3f40aa8",
     "packages": [
         {
             "name": "api-platform/core",
-            "version": "dev-main",
+            "version": "v3.2.0-beta.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/core.git",
-                "reference": "3fa0176a34a7cbc24a612b69404dc8c6be82f8a6"
+                "reference": "747c8235790efaf9e30c83b93b7cdc037398ffe4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/core/zipball/3fa0176a34a7cbc24a612b69404dc8c6be82f8a6",
-                "reference": "3fa0176a34a7cbc24a612b69404dc8c6be82f8a6",
+                "url": "https://api.github.com/repos/api-platform/core/zipball/747c8235790efaf9e30c83b93b7cdc037398ffe4",
+                "reference": "747c8235790efaf9e30c83b93b7cdc037398ffe4",
                 "shasum": ""
             },
             "require": {
@@ -44,11 +44,10 @@
                 "elasticsearch/elasticsearch": ">=8.0,<8.4",
                 "phpspec/prophecy": "<1.15",
                 "phpunit/phpunit": "<9.5",
-                "symfony/service-contracts": "<3",
                 "symfony/var-exporter": "<6.1.1"
             },
             "require-dev": {
-                "behat/behat": "^3.1",
+                "behat/behat": "^3.11",
                 "behat/mink": "^1.9",
                 "doctrine/cache": "^1.11 || ^2.1",
                 "doctrine/common": "^3.2.2",
@@ -127,7 +126,6 @@
                 "symfony/web-profiler-bundle": "To use the data collector.",
                 "webonyx/graphql-php": "To support GraphQL."
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -168,7 +166,7 @@
             ],
             "support": {
                 "issues": "https://github.com/api-platform/core/issues",
-                "source": "https://github.com/api-platform/core/tree/main"
+                "source": "https://github.com/api-platform/core/tree/v3.2.0-beta.1"
             },
             "funding": [
                 {
@@ -176,7 +174,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-09-19T08:30:27+00:00"
+            "time": "2023-09-20T16:37:19+00:00"
         },
         {
             "name": "brick/math",
@@ -8686,16 +8684,16 @@
         },
         {
             "name": "symfony/maker-bundle",
-            "version": "v1.51.0",
+            "version": "v1.51.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/maker-bundle.git",
-                "reference": "d5684e5628d545a67ba833adcd216e7029f3e506"
+                "reference": "0890fd3cf1e2a5221f9b3c6ee1769c537aef683d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/d5684e5628d545a67ba833adcd216e7029f3e506",
-                "reference": "d5684e5628d545a67ba833adcd216e7029f3e506",
+                "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/0890fd3cf1e2a5221f9b3c6ee1769c537aef683d",
+                "reference": "0890fd3cf1e2a5221f9b3c6ee1769c537aef683d",
                 "shasum": ""
             },
             "require": {
@@ -8758,7 +8756,7 @@
             ],
             "support": {
                 "issues": "https://github.com/symfony/maker-bundle/issues",
-                "source": "https://github.com/symfony/maker-bundle/tree/v1.51.0"
+                "source": "https://github.com/symfony/maker-bundle/tree/v1.51.1"
             },
             "funding": [
                 {
@@ -8774,7 +8772,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-09-12T18:09:19+00:00"
+            "time": "2023-09-18T18:17:31+00:00"
         },
         {
             "name": "symfony/phpunit-bridge",
@@ -9424,7 +9422,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "api-platform/core": 20
+        "api-platform/core": 10
     },
     "prefer-stable": true,
     "prefer-lowest": false,

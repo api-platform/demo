@@ -64,7 +64,7 @@ test.describe("Admin reviews list @admin", () => {
     await page.getByRole("menu").getByText("Remove all filters").waitFor({ state: "visible" });
     await page.getByRole("menu").getByText("Remove all filters").click();
     await page.locator(".MuiPopover-root").click(); // close menu
-    await expect(page.getByLabel("User")).not.toBeVisible();
+    await expect(page.getByRole("combobox", { name: "User" })).not.toBeVisible();
     await expect(page.locator(".MuiTablePagination-displayedRows")).toContainText(`1-${nbItemsPerPage} of`);
     await expect(page.locator(".datagrid-body tr")).toHaveCount(nbItemsPerPage);
 
