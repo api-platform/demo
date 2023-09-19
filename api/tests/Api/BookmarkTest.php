@@ -11,7 +11,6 @@ use App\DataFixtures\Factory\BookmarkFactory;
 use App\DataFixtures\Factory\UserFactory;
 use App\Entity\Bookmark;
 use App\Repository\BookmarkRepository;
-use App\Tests\Api\Trait\MercureTrait;
 use App\Tests\Api\Trait\SecurityTrait;
 use App\Tests\Api\Trait\SerializerTrait;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +22,6 @@ use Zenstruck\Foundry\Test\ResetDatabase;
 final class BookmarkTest extends ApiTestCase
 {
     use Factories;
-    use MercureTrait;
     use ResetDatabase;
     use SecurityTrait;
     use SerializerTrait;

@@ -13,7 +13,6 @@ use App\Entity\Book;
 use App\Entity\Review;
 use App\Entity\User;
 use App\Tests\Api\Admin\Trait\UsersDataProviderTrait;
-use App\Tests\Api\Trait\MercureTrait;
 use App\Tests\Api\Trait\SecurityTrait;
 use App\Tests\Api\Trait\SerializerTrait;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,7 +24,6 @@ use Zenstruck\Foundry\Test\ResetDatabase;
 final class ReviewTest extends ApiTestCase
 {
     use Factories;
-    use MercureTrait;
     use ResetDatabase;
     use SecurityTrait;
     use SerializerTrait;
