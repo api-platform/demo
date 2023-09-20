@@ -156,6 +156,8 @@ jobs:
       -
         name: Run Playwright @write
         working-directory: pwa
+        # run all e2e tests even if @read ones fail
+        if: ${{ !cancelled() }}
         # use 1 worker to prevent conflict between scenarios
         run: pnpm exec playwright test --grep @write --workers=1
       -
