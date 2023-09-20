@@ -12,9 +12,6 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 
 	if [ "$APP_ENV" != 'prod' ]; then
 		composer install --prefer-dist --no-progress --no-interaction
-
-		echo "Making sure public / private keys for JWT exist..."
-		php bin/console lexik:jwt:generate-keypair --skip-if-exists --no-interaction
 	fi
 
 	if grep -q DATABASE_URL= .env; then

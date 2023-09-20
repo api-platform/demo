@@ -38,6 +38,8 @@ spec:
               value: :80
             - name: PWA_UPSTREAM
               value: {{ include "api-platform.fullname" . }}-pwa:3000
+            - name: OIDC_UPSTREAM
+              value: {{ .Release.Name }}-keycloak:80
             - name: MERCURE_EXTRA_DIRECTIVES
               valueFrom:
                 configMapKeyRef:
@@ -89,22 +91,17 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: {{ include "api-platform.fullname" . }}
-                  key: php-host
-            - name: JWT_PASSPHRASE
+                  key: host
+            - name: OIDC_SERVER_URL
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                   name: {{ include "api-platform.fullname" . }}
-                  key: php-jwt-passphrase
-            - name: JWT_PUBLIC_KEY
+                  key: oidc-server-url
+            - name: OIDC_SERVER_URL_INTERNAL
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                   name: {{ include "api-platform.fullname" . }}
-                  key: php-jwt-public-key
-            - name: JWT_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "api-platform.fullname" . }}
-                  key: php-jwt-secret-key
+                  key: oidc-server-url-internal
             - name: TRUSTED_HOSTS
               valueFrom:
                 configMapKeyRef:
@@ -191,22 +188,17 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: {{ include "api-platform.fullname" . }}
-                  key: php-host
-            - name: JWT_PASSPHRASE
+                  key: host
+            - name: OIDC_SERVER_URL
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                   name: {{ include "api-platform.fullname" . }}
-                  key: php-jwt-passphrase
-            - name: JWT_PUBLIC_KEY
+                  key: oidc-server-url
+            - name: OIDC_SERVER_URL_INTERNAL
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                   name: {{ include "api-platform.fullname" . }}
-                  key: php-jwt-public-key
-            - name: JWT_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "api-platform.fullname" . }}
-                  key: php-jwt-secret-key
+                  key: oidc-server-url-internal
             - name: TRUSTED_HOSTS
               valueFrom:
                 configMapKeyRef:

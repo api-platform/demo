@@ -24,7 +24,7 @@ final class Version20210420202107 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_794381C616A2B381 ON review (book_id)');
         $this->addSql('COMMENT ON COLUMN review.id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN review.book_id IS \'(DC2Type:uuid)\'');
-        $this->addSql('CREATE TABLE "user" (id UUID NOT NULL, email VARCHAR(180) NOT NULL, password VARCHAR(255) NOT NULL, roles JSON NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE "user" (id UUID NOT NULL, email VARCHAR(180) NOT NULL, roles JSON NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649E7927C74 ON "user" (email)');
         $this->addSql('COMMENT ON COLUMN "user".id IS \'(DC2Type:uuid)\'');
         $this->addSql('ALTER TABLE review ADD CONSTRAINT FK_794381C616A2B381 FOREIGN KEY (book_id) REFERENCES book (id) NOT DEFERRABLE INITIALLY IMMEDIATE');

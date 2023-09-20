@@ -41,8 +41,6 @@ final class ArchivedFilter implements FilterInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @return array{archived: array{property: string, type: string, required: false, openapi: array{description: string, name: string, type: string}}}
      */
     public function getDescription(string $resourceClass): array

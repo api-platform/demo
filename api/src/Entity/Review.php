@@ -28,6 +28,12 @@ use Symfony\Component\Validator\Constraints as Assert;
     normalizationContext: ['groups' => ['review:read']],
     denormalizationContext: ['groups' => ['review:write']],
     mercure: true,
+)]
+#[ApiResource(
+    uriTemplate: '/books/{id}/reviews',
+    types: ['https://schema.org/Review'],
+    operations: [new GetCollection()],
+    normalizationContext: ['groups' => ['review:read']],
     paginationClientItemsPerPage: true,
 )]
 #[ApiFilter(OrderFilter::class, properties: ['id', 'publicationDate'])]

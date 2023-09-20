@@ -50,6 +50,9 @@ on:
       cloudflare-zone-id:
         description: Cloudflare Zone Id
         required: true
+      keycloak-admin-password:
+        description: Keycloak Admin Password
+        required: true
 
 jobs:
   deploy:
@@ -87,26 +90,26 @@ jobs:
           helm repo add bitnami https://charts.bitnami.com/bitnami/
           helm repo add stable https://charts.helm.sh/stable/
           helm dependency build ./helm/api-platform
-      - name: Check for existing namespace
-        id: k8s-namespace
-        run: echo "namespace=$(kubectl get namespace ${{ inputs.namespace }} | tr -d '\n' 2> /dev/null)" >> $GITHUB_OUTPUT
+      - name: Lint Helm
+        run: helm lint ./helm/api-platform/
       # Release name MUST start with a letter
-      # GitHub doesn't support multilines environment variables (JWT_*_KEY)
-      - name: Deploy in new namespace
-        if: steps.k8s-namespace.outputs.namespace == ''
+      - name: Deploy
         run: |
           set -o pipefail
-          JWT_PASSPHRASE=$(openssl rand -base64 32)
-          JWT_SECRET_KEY=$(openssl genpkey -pass file:<(echo "$JWT_PASSPHRASE") -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096)
           helm upgrade ${{ inputs.release }} ./helm/api-platform \
-            --reuse-values \
             --install \
             --create-namespace \
             --debug \
             --wait \
-            --atomic \
             --namespace=${{ inputs.namespace }} \
             --set=app.version=${{ github.sha }} \
+            --set=keycloak.auth.adminPassword=${{ secrets.keycloak-admin-password }} \
+            --set=keycloak.extraEnvVars[0].name=KC_HOSTNAME_URL \
+            --set-string=keycloak.extraEnvVars[0].value=https://${{ inputs.url }}/oidc/ \
+            --set=keycloak.extraEnvVars[1].name=KC_HOSTNAME_ADMIN_URL \
+            --set-string=keycloak.extraEnvVars[1].value=https://${{ inputs.url }}/oidc/ \
+            --set=keycloak.extraEnvVars[2].name=KEYCLOAK_PRODUCTION \
+            --set-string=keycloak.extraEnvVars[2].value=true \
             --set=php.image.repository=eu.gcr.io/${{ secrets.gke-project }}/php \
             --set=php.image.tag=${{ inputs.docker-images-version }} \
             --set=php.image.pullPolicy=Always \
@@ -122,40 +125,8 @@ jobs:
             --set=external-dns.cloudflare.apiToken=${{ secrets.cloudflare-api-token }} \
             --set=external-dns.domainFilters={"${{ inputs.url }}"} \
             --set=external-dns.zoneIdFilters={${{ secrets.cloudflare-zone-id }}} \
-            --set=php.jwt.secretKey="$JWT_SECRET_KEY" \
-            --set=php.jwt.publicKey="$(openssl pkey -in <(echo "$JWT_SECRET_KEY") -passin file:<(echo "$JWT_PASSPHRASE") -pubout)" \
-            --set=php.jwt.passphrase=$JWT_PASSPHRASE \
             --set=php.corsAllowOrigin="^$(echo "${{ join(fromJSON(inputs.cors), '|') }}" | sed 's/\./\\./g')$" \
-            --set=php.host=${{ inputs.url }} \
             --set=mercure.publicUrl=https://${{ inputs.url }}/.well-known/mercure \
-            --set=mercure.jwtSecret="!ChangeThisMercureHubJWTSecretKey!" \
-            --set=postgresql.postgresqlPassword=$(openssl rand -base64 32 | tr -d "=+/") \
-            --set=mercure.extraDirectives="demo \
-            cors_origins ${{ join(fromJSON(inputs.cors), ' ') }}" \
-            | sed --unbuffered '/USER-SUPPLIED VALUES/,$d'
-      - name: Upgrade namespace
-        if: steps.k8s-namespace.outputs.namespace != ''
-        run: |
-          set -o pipefail
-          helm upgrade ${{ inputs.release }} ./helm/api-platform \
-            --reuse-values \
-            --install \
-            --create-namespace \
-            --debug \
-            --wait \
-            --atomic \
-            --namespace=${{ inputs.namespace }} \
-            --set=app.version=${{ github.sha }} \
-            --set=php.image.repository=eu.gcr.io/${{ secrets.gke-project }}/php \
-            --set=php.image.tag=${{ inputs.docker-images-version }} \
-            --set=php.image.pullPolicy=Always \
-            --set=caddy.image.repository=eu.gcr.io/${{ secrets.gke-project }}/caddy \
-            --set=caddy.image.tag=${{ inputs.docker-images-version }} \
-            --set=caddy.image.pullPolicy=Always \
-            --set=pwa.image.repository=eu.gcr.io/${{ secrets.gke-project }}/pwa \
-            --set=pwa.image.tag=${{ inputs.docker-images-version }} \
-            --set=pwa.image.pullPolicy=Always \
-            --set=php.corsAllowOrigin="^$(echo "${{ join(fromJSON(inputs.cors), '|') }}" | sed 's/\./\\./g')$" \
             --set=mercure.jwtSecret="!ChangeThisMercureHubJWTSecretKey!" \
             --set=mercure.extraDirectives="demo \
             cors_origins ${{ join(fromJSON(inputs.cors), ' ') }}" \

@@ -7,6 +7,15 @@ services:
       APP_SECRET: ${APP_SECRET}
       MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET}
 
+  consumer:
+    environment:
+      APP_SECRET: ${APP_SECRET}
+      MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET}
+
+  pwa:
+    environment:
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+
   caddy:
     environment:
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
@@ -15,3 +24,7 @@ services:
   database:
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+  keycloak:
+    environment:
+      KEYCLOAK_PRODUCTION: "true"

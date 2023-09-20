@@ -7,26 +7,27 @@ use Doctrine\ORM\EntityRepository;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
 use Zenstruck\Foundry\RepositoryProxy;
+
 use function Zenstruck\Foundry\lazy;
 
 /**
  * @extends ModelFactory<Review>
  *
- * @method        Review|Proxy create(array|callable $attributes = [])
- * @method static Review|Proxy createOne(array $attributes = [])
- * @method static Review|Proxy find(object|array|mixed $criteria)
- * @method static Review|Proxy findOrCreate(array $attributes)
- * @method static Review|Proxy first(string $sortedField = 'id')
- * @method static Review|Proxy last(string $sortedField = 'id')
- * @method static Review|Proxy random(array $attributes = [])
- * @method static Review|Proxy randomOrCreate(array $attributes = [])
+ * @method        Review|Proxy                     create(array|callable $attributes = [])
+ * @method static Review|Proxy                     createOne(array $attributes = [])
+ * @method static Review|Proxy                     find(object|array|mixed $criteria)
+ * @method static Review|Proxy                     findOrCreate(array $attributes)
+ * @method static Review|Proxy                     first(string $sortedField = 'id')
+ * @method static Review|Proxy                     last(string $sortedField = 'id')
+ * @method static Review|Proxy                     random(array $attributes = [])
+ * @method static Review|Proxy                     randomOrCreate(array $attributes = [])
  * @method static EntityRepository|RepositoryProxy repository()
- * @method static Review[]|Proxy[] all()
- * @method static Review[]|Proxy[] createMany(int $number, array|callable $attributes = [])
- * @method static Review[]|Proxy[] createSequence(iterable|callable $sequence)
- * @method static Review[]|Proxy[] findBy(array $attributes)
- * @method static Review[]|Proxy[] randomRange(int $min, int $max, array $attributes = [])
- * @method static Review[]|Proxy[] randomSet(int $number, array $attributes = [])
+ * @method static Review[]|Proxy[]                 all()
+ * @method static Review[]|Proxy[]                 createMany(int $number, array|callable $attributes = [])
+ * @method static Review[]|Proxy[]                 createSequence(iterable|callable $sequence)
+ * @method static Review[]|Proxy[]                 findBy(array $attributes)
+ * @method static Review[]|Proxy[]                 randomRange(int $min, int $max, array $attributes = [])
+ * @method static Review[]|Proxy[]                 randomSet(int $number, array $attributes = [])
  *
  * @psalm-method        Proxy<Review> create(array|callable $attributes = [])
  * @psalm-method static Proxy<Review> createOne(array $attributes = [])
@@ -62,7 +63,7 @@ final class ReviewFactory extends ModelFactory
         return [
             'body' => self::faker()->text(),
             'rating' => self::faker()->numberBetween(0, 5),
-            'book' => lazy(fn() => BookFactory::randomOrCreate()),
+            'book' => lazy(fn () => BookFactory::randomOrCreate()),
             'author' => self::faker()->name(),
             'publicationDate' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
         ];
