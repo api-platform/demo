@@ -57,6 +57,7 @@ postgresql:
   global:
     postgresql:
       auth:
+        postgresPassword: "!ThisMustBeChanged!"
         username: "example"
         password: "!ChangeMe!"
         database: "api"
@@ -120,6 +121,13 @@ keycloak:
   postgresql:
     enabled: true
     nameOverride: postgresql-keycloak
+    global:
+      postgresql:
+        auth:
+          postgresPassword: "!ThisMustBeChanged!"
+#          username: "example"
+          password: "!ChangeMe!"
+#          database: "api"
     primary:
       persistence:
         enabled: true
