@@ -1,0 +1,188 @@
+{
+    "$schema": "https:\/\/json-schema.org\/draft-07\/schema#",
+    "type": "object",
+    "additionalProperties": false,
+    "definitions": {
+        "Review:jsonld": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "@id": {
+                    "readOnly": true,
+                    "type": "string",
+                    "pattern": "^/books/.+/reviews/.+$"
+                },
+                "@type": {
+                    "readOnly": true,
+                    "type": "string",
+                    "enum": [
+                        "https://schema.org/Review"
+                    ]
+                },
+                "user": {
+                    "description": "The author of the review",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/author"
+                    },
+                    "type": "object",
+                    "$ref": "#\/definitions\/User:jsonld"
+                },
+                "book": {
+                    "description": "The IRI of the review",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/itemReviewed"
+                    },
+                    "type": "string",
+                    "format": "iri-reference",
+                    "pattern": "^/books/.+$"
+                },
+                "publishedAt": {
+                    "description": "The publication date of the review",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/datePublished"
+                    },
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "body": {
+                    "description": "The body of the review",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/reviewBody"
+                    },
+                    "type": "string"
+                },
+                "rating": {
+                    "description": "The rating of the review",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/reviewRating"
+                    },
+                    "type": "number"
+                },
+                "letter": {
+                    "description": "The letter rating of the review",
+                    "deprecated": true,
+                    "type": "string"
+                }
+            },
+            "required": [
+                "@id",
+                "@type",
+                "user",
+                "book",
+                "publishedAt",
+                "body",
+                "rating"
+            ]
+        },
+        "User:jsonld": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "@id": {
+                    "readOnly": true,
+                    "type": "string",
+                    "pattern": "^/users/.+$"
+                },
+                "@type": {
+                    "readOnly": true,
+                    "type": "string",
+                    "pattern": "^https://schema.org/Person$"
+                },
+                "sub": {
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/identifier"
+                    },
+                    "type": "string"
+                },
+                "firstName": {
+                    "description": "The givenName of the person",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/givenName"
+                    },
+                    "type": "string"
+                },
+                "lastName": {
+                    "description": "The familyName of the person",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/familyName"
+                    },
+                    "type": "string"
+                },
+                "name": {
+                    "description": "The name of the person",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/name"
+                    },
+                    "type": "string"
+                }
+            },
+            "required": [
+                "@id",
+                "@type",
+                "sub",
+                "firstName",
+                "lastName",
+                "name"
+            ]
+        }
+    },
+    "properties": {
+        "@context": {
+            "readOnly": true,
+            "type": "string",
+            "pattern": "^/contexts/Review$"
+        },
+        "@type": {
+            "readOnly": true,
+            "type": "string",
+            "pattern": "^hydra:Collection$"
+        },
+        "@id": {
+            "readOnly": true,
+            "type": "string",
+            "pattern": "^/books/.+/reviews$"
+        },
+        "hydra:member": {
+            "type": "array",
+            "items": {
+                "$ref": "#\/definitions\/Review:jsonld"
+            }
+        },
+        "hydra:totalItems": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "hydra:view": {
+            "type": "object",
+            "properties": {
+                "@id": {
+                    "type": "string",
+                    "format": "iri-reference"
+                },
+                "@type": {
+                    "type": "string"
+                },
+                "hydra:first": {
+                    "type": "string",
+                    "format": "iri-reference"
+                },
+                "hydra:last": {
+                    "type": "string",
+                    "format": "iri-reference"
+                },
+                "hydra:next": {
+                    "type": "string",
+                    "format": "iri-reference"
+                }
+            }
+        }
+    },
+    "required": [
+        "@context",
+        "@type",
+        "@id",
+        "hydra:member",
+        "hydra:totalItems",
+        "hydra:view"
+    ]
+}

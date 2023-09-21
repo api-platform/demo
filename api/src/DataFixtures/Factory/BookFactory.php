@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataFixtures\Factory;
 
 use App\Entity\Book;
+use App\Enum\BookCondition;
 use Doctrine\ORM\EntityRepository;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
@@ -45,12 +48,17 @@ use Zenstruck\Foundry\RepositoryProxy;
  */
 final class BookFactory extends ModelFactory
 {
+    private array $data;
+
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
      */
     public function __construct()
     {
         parent::__construct();
+
+        $this->data = json_decode(file_get_contents(__DIR__.'/../books.json'), true);
+        shuffle($this->data);
     }
 
     /**
@@ -59,11 +67,7 @@ final class BookFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'isbn' => self::faker()->isbn13(),
-            'title' => self::faker()->sentence(),
-            'description' => self::faker()->paragraph(),
-            'author' => self::faker()->name(),
-            'publicationDate' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
+            'condition' => self::faker()->randomElement(BookCondition::getCases()),
         ];
     }
 
@@ -73,7 +77,36 @@ final class BookFactory extends ModelFactory
     protected function initialize(): self
     {
         return $this
-            // ->afterInstantiate(function(Book $book): void {})
+             ->afterInstantiate(function (Book $book): void {
+                 if ($book->book && $book->title && $book->author) {
+                     return;
+                 }
+
+                 if (!$book->book) {
+                     $book->book = 'https://openlibrary.org/books/OL'.self::faker()->unique()->randomNumber(7, true).'M.json';
+                     $book->title ??= self::faker()->text();
+                     $book->author ??= self::faker()->name();
+
+                     return;
+                 }
+
+                 // An Open Library book URI has been specified: try to find it in the array of books
+                 $data = array_filter($this->data, static function (array $datum) use ($book) {
+                     return $book->book === $datum['book'];
+                 });
+                 if ($data) {
+                     $datum = current($data);
+                     $book->title ??= $datum['title'];
+                     // A book can have no author
+                     $book->author ??= $datum['author'] ?? self::faker()->name();
+
+                     return;
+                 }
+
+                 // No Open Library book has been found in the array of books
+                 $book->title ??= self::faker()->text();
+                 $book->author ??= self::faker()->name();
+             })
         ;
     }
 

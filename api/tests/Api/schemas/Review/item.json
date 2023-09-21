@@ -1,0 +1,125 @@
+{
+    "$schema": "https:\/\/json-schema.org\/draft-07\/schema#",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "@context": {
+            "readOnly": true,
+            "type": "string",
+            "pattern": "^/contexts/Review$"
+        },
+        "@id": {
+            "readOnly": true,
+            "type": "string",
+            "pattern": "^/books/.+/reviews/.+$"
+        },
+        "@type": {
+            "readOnly": true,
+            "type": "string",
+            "enum": [
+                "https://schema.org/Review"
+            ]
+        },
+        "user": {
+            "description": "The author of the review",
+            "externalDocs": {
+                "url": "https:\/\/schema.org\/author"
+            },
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "@id": {
+                    "readOnly": true,
+                    "type": "string",
+                    "pattern": "^/users/.+$"
+                },
+                "@type": {
+                    "readOnly": true,
+                    "type": "string",
+                    "pattern": "^https://schema.org/Person$"
+                },
+                "sub": {
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/identifier"
+                    },
+                    "type": "string"
+                },
+                "firstName": {
+                    "description": "The givenName of the person",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/givenName"
+                    },
+                    "type": "string"
+                },
+                "lastName": {
+                    "description": "The familyName of the person",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/familyName"
+                    },
+                    "type": "string"
+                },
+                "name": {
+                    "description": "The name of the person",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/name"
+                    },
+                    "type": "string"
+                }
+            },
+            "required": [
+                "@id",
+                "@type",
+                "sub",
+                "firstName",
+                "lastName",
+                "name"
+            ]
+        },
+        "book": {
+            "description": "The IRI of the review",
+            "externalDocs": {
+                "url": "https:\/\/schema.org\/itemReviewed"
+            },
+            "type": "string",
+            "format": "iri-reference",
+            "pattern": "^/books/.+$"
+        },
+        "publishedAt": {
+            "description": "The publication date of the review",
+            "externalDocs": {
+                "url": "https:\/\/schema.org\/datePublished"
+            },
+            "type": "string",
+            "format": "date-time"
+        },
+        "body": {
+            "description": "The body of the review",
+            "externalDocs": {
+                "url": "https:\/\/schema.org\/reviewBody"
+            },
+            "type": "string"
+        },
+        "rating": {
+            "description": "The rating of the review",
+            "externalDocs": {
+                "url": "https:\/\/schema.org\/reviewRating"
+            },
+            "type": "number"
+        },
+        "letter": {
+            "description": "The letter rating of the review",
+            "deprecated": true,
+            "type": "string"
+        }
+    },
+    "required": [
+        "@context",
+        "@id",
+        "@type",
+        "user",
+        "book",
+        "publishedAt",
+        "body",
+        "rating"
+    ]
+}

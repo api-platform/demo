@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  keycloak:
+    environment:
+      KEYCLOAK_ENABLE_HTTPS: "true"
+      KEYCLOAK_HTTPS_USE_PEM: "true"
+      KEYCLOAK_HTTPS_CERTIFICATE_FILE: /opt/bitnami/keycloak/certs/tls.crt
+      KEYCLOAK_HTTPS_CERTIFICATE_KEY_FILE: /opt/bitnami/keycloak/certs/tls.key
+    volumes:
+      - ${KEYCLOAK_HTTPS_CERTIFICATE_FILE}:/opt/bitnami/keycloak/certs/tls.crt:ro
+      - ${KEYCLOAK_HTTPS_CERTIFICATE_KEY_FILE}:/opt/bitnami/keycloak/certs/tls.key:ro
+
+  keycloak-config-cli:
+    extends:
+      file: docker-compose.override.yml
+      service: keycloak-config-cli

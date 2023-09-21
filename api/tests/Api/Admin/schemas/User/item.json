@@ -1,0 +1,58 @@
+{
+    "$schema": "https:\/\/json-schema.org\/draft-07\/schema#",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "@context": {
+            "readOnly": true,
+            "type": "string",
+            "pattern": "^/contexts/User$"
+        },
+        "@id": {
+            "readOnly": true,
+            "type": "string",
+            "pattern": "^/admin/users/.+$"
+        },
+        "@type": {
+            "readOnly": true,
+            "type": "string",
+            "pattern": "^https://schema.org/Person$"
+        },
+        "sub": {
+            "externalDocs": {
+                "url": "https:\/\/schema.org\/identifier"
+            },
+            "type": "string"
+        },
+        "firstName": {
+            "description": "The givenName of the person",
+            "externalDocs": {
+                "url": "https:\/\/schema.org\/givenName"
+            },
+            "type": "string"
+        },
+        "lastName": {
+            "description": "The familyName of the person",
+            "externalDocs": {
+                "url": "https:\/\/schema.org\/familyName"
+            },
+            "type": "string"
+        },
+        "name": {
+            "description": "The name of the person",
+            "externalDocs": {
+                "url": "https:\/\/schema.org\/name"
+            },
+            "type": "string"
+        }
+    },
+    "required": [
+        "@context",
+        "@id",
+        "@type",
+        "sub",
+        "firstName",
+        "lastName",
+        "name"
+    ]
+}

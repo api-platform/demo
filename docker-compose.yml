@@ -1,12 +1,8 @@
-version: "3.4"
+version: "3.8"
 
 services:
   php:
-    build:
-      context: ./api
-      target: app_php
-      cache_from:
-        - ${PHP_DOCKER_IMAGE:-api-platform/php:latest}
+    image: app_php
     depends_on:
       - database
     restart: unless-stopped
@@ -17,9 +13,8 @@ services:
       timeout: 3s
       retries: 3
       start_period: 30s
-    environment: &php-env
-      API_ENTRYPOINT_SCHEME: https
-      API_ENTRYPOINT_HOST: ${SERVER_NAME:-localhost}
+      test: ["CMD", "docker-healthcheck"]
+    environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-!ChangeMe!}@database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-15}
       TRUSTED_PROXIES: ${TRUSTED_PROXIES:-127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
       TRUSTED_HOSTS: ^${SERVER_NAME:-example\.com|localhost}|caddy$$
@@ -29,32 +24,8 @@ services:
       OIDC_SERVER_URL: ${OIDC_SERVER_URL:-https://localhost/oidc/realms/demo}
       OIDC_SERVER_URL_INTERNAL: ${OIDC_SERVER_URL_INTERNAL:-http://caddy/oidc/realms/demo}
 
-  consumer:
-    build:
-      context: ./api
-      target: app_php
-      cache_from:
-        - ${PHP_DOCKER_IMAGE:-api-platform/php:latest}
-    entrypoint: docker-php-entrypoint
-    command: bin/console messenger:consume
-    depends_on:
-      - database
-    restart: unless-stopped
-    healthcheck:
-      test: ['CMD', 'ps', 'aux', '|', 'egrep', '"\d+:\d+ php bin/console messenger:consume"']
-      interval: 10s
-      timeout: 3s
-      retries: 3
-      start_period: 30s
-    environment:
-      <<: *php-env
-
   pwa:
-    build:
-      context: ./pwa
-      target: prod
-      cache_from:
-        - ${PWA_DOCKER_IMAGE:-api-platform/pwa:latest}
+    image: app_pwa
     environment:
       NEXT_PUBLIC_ENTRYPOINT: http://caddy
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-!ChangeThisNextAuthSecret!}
@@ -64,12 +35,7 @@ services:
       OIDC_SERVER_URL: ${OIDC_SERVER_URL_INTERNAL:-http://caddy/oidc/realms/demo}
 
   caddy:
-    build:
-      context: api/
-      target: app_caddy
-      cache_from:
-        - ${PHP_DOCKER_IMAGE:-api-platform/php:latest}
-        - ${CADDY_DOCKER_IMAGE:-api-platform/caddy:latest}
+    image: app_caddy
     depends_on:
       - php
       - pwa
@@ -103,10 +69,10 @@ services:
   database:
     image: postgres:${POSTGRES_VERSION:-15}-alpine
     environment:
-      - POSTGRES_DB=${POSTGRES_DB:-app}
+      POSTGRES_DB: ${POSTGRES_DB:-app}
       # You should definitely change the password in production
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-!ChangeMe!}
-      - POSTGRES_USER=${POSTGRES_USER:-app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
+      POSTGRES_USER: ${POSTGRES_USER:-app}
     volumes:
       - db_data:/var/lib/postgresql/data
       # you may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
@@ -120,15 +86,15 @@ services:
   keycloak-database:
     image: postgres:${KEYCLOAK_POSTGRES_VERSION:-15}-alpine
     environment:
-      - POSTGRES_DB=${KEYCLOAK_POSTGRES_DB:-keycloak}
+      POSTGRES_DB: ${KEYCLOAK_POSTGRES_DB:-keycloak}
       # You should definitely change the password in production
-      - POSTGRES_PASSWORD=${KEYCLOAK_POSTGRES_PASSWORD:-!ChangeMe!}
-      - POSTGRES_USER=${KEYCLOAK_POSTGRES_USER:-keycloak}
+      POSTGRES_PASSWORD: ${KEYCLOAK_POSTGRES_PASSWORD:-!ChangeMe!}
+      POSTGRES_USER: ${KEYCLOAK_POSTGRES_USER:-keycloak}
     volumes:
       - keycloak_db_data:/var/lib/postgresql/data
 
   keycloak:
-    image: bitnami/keycloak:${KEYCLOAK_VERSION:-21-debian-11}
+    image: app_keycloak
     environment:
       KEYCLOAK_DATABASE_HOST: keycloak-database
       KEYCLOAK_DATABASE_NAME: ${KEYCLOAK_POSTGRES_DB:-keycloak}
@@ -140,26 +106,13 @@ services:
       KEYCLOAK_HTTP_RELATIVE_PATH: /oidc/
       # https://www.keycloak.org/server/hostname
       KC_HOSTNAME_URL: https://${SERVER_NAME:-localhost}/oidc/
+      KC_HOSTNAME_ADMIN_URL: https://${SERVER_NAME:-localhost}/oidc/
     depends_on:
       - keycloak-database
     ports:
       - target: 8080
         published: 8080
         protocol: tcp
-
-  keycloak-config-cli:
-    image: bitnami/keycloak-config-cli:5-debian-11
-    environment:
-      KEYCLOAK_URL: http://caddy/oidc/
-      KEYCLOAK_USER: ${KEYCLOAK_USER:-admin}
-      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD:-!ChangeMe!}
-      KEYCLOAK_AVAILABILITYCHECK_ENABLED: true
-      KEYCLOAK_AVAILABILITYCHECK_TIMEOUT: 120s
-      IMPORT_FILES_LOCATIONS: '/config/*'
-    depends_on:
-      - keycloak
-    volumes:
-      - ./helm/api-platform/keycloak/config:/config
 
 volumes:
   php_socket:

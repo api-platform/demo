@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
@@ -12,158 +13,171 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use ApiPlatform\Serializer\Filter\PropertyFilter;
-use App\Filter\ArchivedFilter;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Enum\BookCondition;
+use App\Repository\BookRepository;
+use App\State\Processor\BookPersistProcessor;
+use App\State\Processor\BookRemoveProcessor;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @see https://schema.org/Book Documentation on Schema.org
+ * A book.
+ *
+ * @see https://schema.org/Book
  */
-#[ORM\Entity]
 #[ApiResource(
-    types: ['https://schema.org/Book'],
+    uriTemplate: '/admin/books{._format}',
+    types: ['https://schema.org/Book', 'https://schema.org/Offer'],
+    extraProperties: ['rfc_7807_compliant_errors' => true],
     operations: [
-        new GetCollection(),
-        new Post(),
-        new Get(),
-        new Put(),
-        new Patch(),
-        new Delete(security: 'is_granted("ROLE_ADMIN")'),
+        new GetCollection(
+            itemUriTemplate: '/admin/books/{id}{._format}',
+            paginationClientItemsPerPage: true
+        ),
+        new Post(
+            // Mercure publish is done manually in MercureProcessor through BookPersistProcessor
+            processor: BookPersistProcessor::class,
+            itemUriTemplate: '/admin/books/{id}{._format}'
+        ),
+        new Get(
+            uriTemplate: '/admin/books/{id}{._format}'
+        ),
+        // https://github.com/api-platform/admin/issues/370
         new Put(
-            uriTemplate: '/books/{id}/generate-cover{._format}',
-            normalizationContext: ['groups' => ['book:read', 'book:cover']],
-            security: 'is_granted("ROLE_USER")',
-            input: false,
-            output: false,
-            messenger: true,
+            uriTemplate: '/admin/books/{id}{._format}',
+            // Mercure publish is done manually in MercureProcessor through BookPersistProcessor
+            processor: BookPersistProcessor::class
+        ),
+        new Delete(
+            uriTemplate: '/admin/books/{id}{._format}',
+            // Mercure publish is done manually in MercureProcessor through BookRemoveProcessor
+            processor: BookRemoveProcessor::class
         ),
     ],
-    normalizationContext: ['groups' => ['book:read']],
-    mercure: true,
-    paginationClientItemsPerPage: true
+    normalizationContext: [
+        'groups' => ['Book:read:admin', 'Enum:read'],
+        'skip_null_values' => true,
+    ],
+    denormalizationContext: [
+        'groups' => ['Book:write'],
+    ],
+    // todo waiting for https://github.com/api-platform/core/pull/5844
+//    collectDenormalizationErrors: true,
+    security: 'is_granted("ROLE_ADMIN")'
 )]
-#[ApiFilter(ArchivedFilter::class)]
-#[ApiFilter(OrderFilter::class, properties: ['id', 'title', 'author', 'isbn', 'publicationDate'])]
-#[ApiFilter(PropertyFilter::class)]
-class Book implements ArchivableInterface
+#[ApiResource(
+    types: ['https://schema.org/Book', 'https://schema.org/Offer'],
+    extraProperties: ['rfc_7807_compliant_errors' => true],
+    operations: [
+        new GetCollection(
+            itemUriTemplate: '/books/{id}{._format}'
+        ),
+        new Get(),
+    ],
+    normalizationContext: [
+        'groups' => ['Book:read', 'Enum:read'],
+        'skip_null_values' => true,
+    ]
+)]
+#[ORM\Entity(repositoryClass: BookRepository::class)]
+#[UniqueEntity(fields: ['book'])]
+class Book
 {
-    use ArchivableTrait;
-
-    #[ORM\Id]
+    /**
+     * @see https://schema.org/identifier
+     */
+    #[ApiProperty(identifier: true, types: ['https://schema.org/identifier'])]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    #[Groups(groups: ['book:read'])]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\Id]
     private ?Uuid $id = null;
 
     /**
-     * The ISBN of the book.
+     * @see https://schema.org/itemOffered
      */
-    #[ORM\Column(nullable: true)]
-    #[ApiFilter(SearchFilter::class, strategy: 'exact')]
-    #[ApiProperty(types: ['https://schema.org/isbn'])]
-    #[Assert\Isbn]
-    #[Groups(groups: ['book:read'])]
-    public ?string $isbn = null;
+    #[ApiProperty(
+        types: ['https://schema.org/itemOffered', 'https://purl.org/dc/terms/BibliographicResource'],
+        example: 'https://openlibrary.org/books/OL2055137M.json'
+    )]
+    #[Assert\NotBlank(allowNull: false)]
+    #[Assert\Url(protocols: ['https'])]
+    #[Assert\Regex(pattern: '/^https:\/\/openlibrary.org\/books\/OL\d+[A-Z]{1}\.json$/')]
+    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Book:write'])]
+    #[ORM\Column(unique: true)]
+    public ?string $book = null;
 
     /**
-     * The title of the book.
+     * @see https://schema.org/name
      */
-    #[ORM\Column]
-    #[ApiFilter(SearchFilter::class, strategy: 'ipartial')]
-    #[ApiProperty(types: ['https://schema.org/name'])]
-    #[Assert\NotBlank]
-    #[Groups(groups: ['book:read', 'review:read'])]
+    #[ApiFilter(OrderFilter::class)]
+    #[ApiFilter(SearchFilter::class, strategy: 'i'.SearchFilterInterface::STRATEGY_PARTIAL)]
+    #[ApiProperty(
+        types: ['https://schema.org/name'],
+        example: 'Hyperion'
+    )]
+    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Review:read:admin'])]
+    #[ORM\Column(type: Types::TEXT)]
     public ?string $title = null;
 
     /**
-     * A description of the item.
+     * @see https://schema.org/author
      */
-    #[ORM\Column(type: 'text')]
-    #[ApiProperty(types: ['https://schema.org/description'])]
-    #[Assert\NotBlank]
-    #[Groups(groups: ['book:read'])]
-    public ?string $description = null;
-
-    /**
-     * The author of this content or rating. Please note that author is special in that HTML 5 provides a special mechanism for indicating authorship via the rel tag. That is equivalent to this and may be used interchangeably.
-     */
-    #[ORM\Column]
-    #[ApiFilter(SearchFilter::class, strategy: 'ipartial')]
-    #[ApiProperty(types: ['https://schema.org/author'])]
-    #[Assert\NotBlank]
-    #[Groups(groups: ['book:read'])]
+    #[ApiFilter(SearchFilter::class, strategy: 'i'.SearchFilterInterface::STRATEGY_PARTIAL)]
+    #[ApiProperty(
+        types: ['https://schema.org/author'],
+        example: 'Dan Simmons'
+    )]
+    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Review:read:admin'])]
+    #[ORM\Column(nullable: true)]
     public ?string $author = null;
 
     /**
-     * The date on which the CreativeWork was created or the item was added to a DataFeed.
+     * @see https://schema.org/OfferItemCondition
      */
-    #[ORM\Column(type: 'date')]
-    #[ApiProperty(types: ['https://schema.org/dateCreated'])]
+    #[ApiFilter(SearchFilter::class, strategy: SearchFilterInterface::STRATEGY_EXACT)]
+    #[ApiProperty(
+        types: ['https://schema.org/OfferItemCondition'],
+        example: BookCondition::NewCondition->value
+    )]
     #[Assert\NotNull]
-    #[Assert\Type(\DateTimeInterface::class)]
-    #[Groups(groups: ['book:read'])]
-    public ?\DateTimeInterface $publicationDate = null;
+    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Book:write'])]
+    #[ORM\Column(name: '`condition`', type: 'string', enumType: BookCondition::class)]
+    public ?BookCondition $condition = null;
 
     /**
-     * The book's reviews.
+     * An IRI of reviews.
+     *
+     * @see https://schema.org/reviews
      */
-    #[ORM\OneToMany(mappedBy: 'book', targetEntity: Review::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
-    #[ApiProperty(types: ['https://schema.org/reviews'])]
-    #[Groups(groups: ['book:read'])]
-    private Collection $reviews;
+    #[ApiProperty(
+        types: ['https://schema.org/reviews'],
+        example: '/books/6acacc80-8321-4d83-9b02-7f2c7bf6eb1d/reviews'
+    )]
+    #[Groups(groups: ['Book:read', 'Bookmark:read'])]
+    public ?string $reviews = null;
 
     /**
-     * The book's cover base64 encoded.
+     * The overall rating, based on a collection of reviews or ratings, of the item.
+     *
+     * @see https://schema.org/aggregateRating
      */
-    #[ApiProperty(writable: false)]
-    #[Groups(groups: ['book:cover'])]
-    public ?string $cover = null;
-
-    public function __construct()
-    {
-        $this->reviews = new ArrayCollection();
-    }
+    #[ApiProperty(
+        types: ['https://schema.org/aggregateRating'],
+        example: 1
+    )]
+    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read'])]
+    public ?int $rating = null;
 
     public function getId(): ?Uuid
     {
         return $this->id;
-    }
-
-    public function addReview(Review $review, bool $updateRelation = true): void
-    {
-        if ($this->reviews->contains($review)) {
-            return;
-        }
-
-        $this->reviews->add($review);
-        if ($updateRelation) {
-            $review->setBook($this, false);
-        }
-    }
-
-    public function removeReview(Review $review, bool $updateRelation = true): void
-    {
-        $this->reviews->removeElement($review);
-        if ($updateRelation) {
-            $review->setBook(null, false);
-        }
-    }
-
-    /**
-     * @return Collection<int, Review>
-     */
-    public function getReviews(): iterable
-    {
-        return $this->reviews;
     }
 }

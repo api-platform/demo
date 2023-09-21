@@ -17,26 +17,32 @@ jobs:
       contents: 'read'
       id-token: 'write'
     steps:
-      # gcloud does not work with Python 3.10 because collections.Mappings was removed in Python 3.10.
-      - uses: actions/setup-python@v4
+      # gcloud does not work with Python 3.10 because "collections.Mappings" was removed in Python 3.10.
+      -
+        uses: actions/setup-python@v4
         with:
           python-version: 3.9.15
-      - name: Auth gcloud
+      -
+        name: Auth gcloud
         uses: google-github-actions/auth@v1
         with:
           credentials_json: ${{ secrets.GKE_SA_KEY }}
-      - name: Setup gcloud
+      -
+        name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v1
         with:
           project_id: ${{ secrets.GKE_PROJECT }}
-      - name: Configure gcloud
+      -
+        name: Configure gcloud
         run: |
           gcloud components install gke-gcloud-auth-plugin
           gcloud --quiet auth configure-docker
           gcloud container clusters get-credentials api-platform-demo --zone europe-west1-c
-      - name: Check for existing namespace
+      -
+        name: Check for existing namespace
         id: k8s-namespace
         run: echo "namespace=$(kubectl get namespace pr-${{ github.event.number }} | tr -d '\n' 2> /dev/null)" >> $GITHUB_OUTPUT
-      - name: Uninstall release
+      -
+        name: Uninstall release
         if: steps.k8s-namespace.outputs.namespace != ''
         run: kubectl delete namespace pr-${{ github.event.number }}

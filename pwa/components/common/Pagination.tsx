@@ -1,68 +1,31 @@
+import MuiPagination from "@mui/material/Pagination";
+import { PaginationItem } from "@mui/material";
 import Link from "next/link";
-import { PagedCollection } from "../../types/collection";
+
+import { type PagedCollection } from "@/types/collection";
+import { parsePage } from "@/utils/dataAccess";
 
 interface Props {
   collection: PagedCollection<unknown>;
-  // eslint-disable-next-line no-unused-vars
-  getPagePath: (path: string) => string;
+  getPagePath: (page: number) => string;
+  currentPage: number;
 }
 
-const Pagination = ({ collection, getPagePath }: Props) => {
+export const Pagination = ({ collection, getPagePath, currentPage }: Props) => {
   const view = collection && collection["hydra:view"];
-  if (!view) return null;
-
-  const {
-    "hydra:first": first,
-    "hydra:previous": previous,
-    "hydra:next": next,
-    "hydra:last": last,
-  } = view;
+  if (!view || !view["hydra:last"]) return null;
 
   return (
-    <div className="text-center">
-      <nav
-        className="text-xs font-bold inline-flex mx-auto divide-x-2 divide-gray-200 flex-row flex-wrap items-center justify-center mb-4 border-2 border-gray-200 rounded-2xl overflow-hidden"
-        aria-label="Page navigation"
-      >
-        <Link
-          href={first ? getPagePath(first) : "#"}
-          className={`text-black p-3 hover:text-cyan-500 hover:bg-cyan-50 ${
-            previous ? "" : " text-gray-500 pointer-events-none"
-          }`}
-          aria-label="First page"
-        >
-          <span aria-hidden="true">&lArr;</span> First
-        </Link>
-        <Link
-          href={previous ? getPagePath(previous) : "#"}
-          className={`text-black p-3 hover:text-cyan-500 hover:bg-cyan-50 ${
-            previous ? "" : " text-gray-500 pointer-events-none"
-          }`}
-          aria-label="Previous page"
-        >
-          <span aria-hidden="true">&larr;</span> Previous
-        </Link>
-        <Link
-          href={next ? getPagePath(next) : "#"}
-          className={`text-black p-3 hover:text-cyan-500 hover:bg-cyan-50 ${
-            next ? "" : " text-gray-500 pointer-events-none"
-          }`}
-          aria-label="Next page"
-        >
-          Next <span aria-hidden="true">&rarr;</span>
-        </Link>
-        <Link
-          href={last ? getPagePath(last) : "#"}
-          className={`text-black p-3 hover:text-cyan-500 hover:bg-cyan-50 ${
-            next ? "" : "text-gray-500 pointer-events-none"
-          }`}
-          aria-label="Last page"
-        >
-          Last <span aria-hidden="true">&rArr;</span>
-        </Link>
-      </nav>
+    <div className="flex items-center justify-between bg-white mt-2 py-3 px-6" data-testid="pagination">
+      <div className="mx-auto">
+        <div className="flex flex-1 items-center justify-between">
+          <MuiPagination count={parsePage(view["hydra:last"])} page={currentPage} siblingCount={2}
+                         showFirstButton showLastButton size="large" renderItem={(item) => (
+                           <PaginationItem component={Link} href={getPagePath(Number(item.page))} {...item}/>
+                         )}
+          />
+        </div>
+      </div>
     </div>
   );
 };
-
-export default Pagination;

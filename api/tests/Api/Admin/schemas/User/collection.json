@@ -1,0 +1,155 @@
+{
+    "$schema": "https:\/\/json-schema.org\/draft-07\/schema#",
+    "type": "object",
+    "additionalProperties": false,
+    "definitions": {
+        "User:jsonld": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "@id": {
+                    "readOnly": true,
+                    "type": "string",
+                    "pattern": "^/admin/users/.+$"
+                },
+                "@type": {
+                    "readOnly": true,
+                    "type": "string",
+                    "pattern": "^https://schema.org/Person$"
+                },
+                "sub": {
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/identifier"
+                    },
+                    "type": "string"
+                },
+                "firstName": {
+                    "description": "The givenName of the person",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/givenName"
+                    },
+                    "type": "string"
+                },
+                "lastName": {
+                    "description": "The familyName of the person",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/familyName"
+                    },
+                    "type": "string"
+                },
+                "name": {
+                    "description": "The name of the person",
+                    "externalDocs": {
+                        "url": "https:\/\/schema.org\/name"
+                    },
+                    "type": "string"
+                }
+            },
+            "required": [
+                "@id",
+                "@type",
+                "sub",
+                "firstName",
+                "lastName",
+                "name"
+            ]
+        }
+    },
+    "properties": {
+        "@context": {
+            "readOnly": true,
+            "type": "string",
+            "pattern": "^/contexts/User$"
+        },
+        "@type": {
+            "readOnly": true,
+            "type": "string",
+            "pattern": "^hydra:Collection$"
+        },
+        "@id": {
+            "readOnly": true,
+            "type": "string",
+            "pattern": "^/admin/users$"
+        },
+        "hydra:member": {
+            "type": "array",
+            "items": {
+                "$ref": "#\/definitions\/User:jsonld"
+            }
+        },
+        "hydra:totalItems": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "hydra:view": {
+            "type": "object",
+            "properties": {
+                "@id": {
+                    "type": "string",
+                    "format": "iri-reference"
+                },
+                "@type": {
+                    "type": "string"
+                },
+                "hydra:first": {
+                    "type": "string",
+                    "format": "iri-reference"
+                },
+                "hydra:last": {
+                    "type": "string",
+                    "format": "iri-reference"
+                },
+                "hydra:next": {
+                    "type": "string",
+                    "format": "iri-reference"
+                }
+            }
+        },
+        "hydra:search": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string"
+                },
+                "hydra:template": {
+                    "type": "string"
+                },
+                "hydra:variableRepresentation": {
+                    "type": "string"
+                },
+                "hydra:mapping": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "@type": {
+                                "type": "string"
+                            },
+                            "variable": {
+                                "type": "string"
+                            },
+                            "property": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "required": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "required": [
+        "@context",
+        "@type",
+        "@id",
+        "hydra:member",
+        "hydra:totalItems",
+        "hydra:view",
+        "hydra:search"
+    ]
+}

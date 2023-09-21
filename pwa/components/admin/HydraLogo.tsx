@@ -15,8 +15,8 @@ const HydraLogo = () => (
         y1="29.7524"
         x2="31.9917"
         y2="29.7524">
-        <stop offset="0" style={{ stopColor: '#F8A119' }} />
-        <stop offset="1" style={{ stopColor: '#FBBC0D' }} />
+        <stop offset="0" style={{ stopColor: "#F8A119" }}/>
+        <stop offset="1" style={{ stopColor: "#FBBC0D" }}/>
       </linearGradient>
       <path
         fill="url(#SVGID_1_)"
@@ -29,9 +29,9 @@ const HydraLogo = () => (
         y1="36.1528"
         x2="51.5151"
         y2="36.1528">
-        <stop offset="0.1455" style={{ stopColor: '#F7941E' }} />
-        <stop offset="0.6788" style={{ stopColor: '#FBBC0D' }} />
-        <stop offset="1" style={{ stopColor: '#F8A119' }} />
+        <stop offset="0.1455" style={{ stopColor: "#F7941E" }}/>
+        <stop offset="0.6788" style={{ stopColor: "#FBBC0D" }}/>
+        <stop offset="1" style={{ stopColor: "#F8A119" }}/>
       </linearGradient>
       <path
         fill="url(#SVGID_2_)"
@@ -44,9 +44,9 @@ const HydraLogo = () => (
         y1="3.144"
         x2="42.1111"
         y2="60.5359">
-        <stop offset="0.303" style={{ stopColor: '#FFDC00' }} />
-        <stop offset="0.6242" style={{ stopColor: '#BA7913' }} />
-        <stop offset="0.8242" style={{ stopColor: '#FBBC0D' }} />
+        <stop offset="0.303" style={{ stopColor: "#FFDC00" }}/>
+        <stop offset="0.6242" style={{ stopColor: "#BA7913" }}/>
+        <stop offset="0.8242" style={{ stopColor: "#FBBC0D" }}/>
       </linearGradient>
       <path
         fill="url(#SVGID_3_)"

@@ -1,13 +1,14 @@
-import { ReactNode, useState } from "react";
+import { type ReactNode, useState } from "react";
 import {
-  DehydratedState,
+  type DehydratedState,
   Hydrate,
   QueryClient,
   QueryClientProvider,
 } from "react-query";
-import Header from "./Header";
 
-const Layout = ({
+import { Header } from "@/components/common/Header";
+
+export const Layout = ({
   children,
   dehydratedState,
 }: {
@@ -18,12 +19,12 @@ const Layout = ({
 
   return (
     <>
-      <Header />
       <QueryClientProvider client={queryClient}>
-        <Hydrate state={dehydratedState}>{children}</Hydrate>
+        <Hydrate state={dehydratedState}>
+          <Header/>
+          {children}
+        </Hydrate>
       </QueryClientProvider>
     </>
   );
 };
-
-export default Layout;

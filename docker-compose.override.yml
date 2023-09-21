@@ -1,26 +1,11 @@
-version: "3.4"
+version: "3.8"
 
 # Development environment override
 services:
   php:
     build:
-      target: app_php_dev
-    volumes:
-      - ./api:/srv/app
-      - ./api/docker/php/conf.d/app.dev.ini:/usr/local/etc/php/conf.d/app.dev.ini:ro
-      # If you develop on Mac or Windows you can remove the vendor/ directory
-      #  from the bind-mount for better performance by enabling the next line:
-      #- /srv/app/vendor
-    environment:
-      # See https://xdebug.org/docs/all_settings#mode
-      XDEBUG_MODE: "${XDEBUG_MODE:-off}"
-    extra_hosts:
-      # Ensure that host.docker.internal is correctly defined on Linux
-      - host.docker.internal:host-gateway
-
-  consumer:
-    build:
-      target: app_php_dev
+      context: ./api
+      target: php_dev
     volumes:
       - ./api:/srv/app
       - ./api/docker/php/conf.d/app.dev.ini:/usr/local/etc/php/conf.d/app.dev.ini:ro
@@ -49,6 +34,9 @@ services:
       NODE_TLS_REJECT_UNAUTHORIZED: "0"
 
   caddy:
+    build:
+      context: api/
+      target: caddy_base
     volumes:
       - ./api/public:/srv/app/public:ro
       - ./api/docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
@@ -65,3 +53,24 @@ services:
 
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
+
+  keycloak:
+    build:
+      context: ./helm/api-platform/keycloak/
+      target: keycloak
+    volumes:
+      - ./helm/api-platform/keycloak/themes/api-platform-demo:/opt/bitnami/keycloak/themes/api-platform-demo
+
+  keycloak-config-cli:
+    image: bitnami/keycloak-config-cli:5-debian-11
+    environment:
+      KEYCLOAK_URL: http://caddy/oidc/
+      KEYCLOAK_USER: ${KEYCLOAK_ADMIN_USER:-admin}
+      KEYCLOAK_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-!ChangeMe!}
+      KEYCLOAK_AVAILABILITYCHECK_ENABLED: true
+      KEYCLOAK_AVAILABILITYCHECK_TIMEOUT: 120s
+      IMPORT_FILES_LOCATIONS: "/config/*"
+    depends_on:
+      - keycloak
+    volumes:
+      - ./helm/api-platform/keycloak/config:/config

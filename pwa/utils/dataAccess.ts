@@ -1,9 +1,8 @@
 import isomorphicFetch from "isomorphic-unfetch";
 import { getSession } from "next-auth/react"
-
-import { PagedCollection } from "../types/collection";
-import { Item } from "../types/item";
-import { ENTRYPOINT } from "../config/entrypoint";
+import { type Item } from "@/types/item";
+import { type PagedCollection } from "@/types/collection";
+import { ENTRYPOINT } from "@/config/entrypoint";
 
 const MIME_TYPE = "application/ld+json";
 
@@ -50,7 +49,7 @@ export const fetch = async <TData>(
     !(init.body instanceof FormData) &&
     !init.headers?.hasOwnProperty("Content-Type")
   ) {
-    init.headers = {...init.headers, "Content-Type": MIME_TYPE};
+    init.headers = {...init.headers, "Content-Type": init.method === "PATCH" ? "application/merge-patch+json" : MIME_TYPE};
   }
   if (session && !init.headers?.hasOwnProperty("Authorization")) {
     // @ts-ignore
@@ -83,21 +82,29 @@ export const fetch = async <TData>(
 };
 
 export const getItemPath = (
-  iri: string | undefined,
+  uriVariables: string | object | undefined,
   pathTemplate: string
 ): string => {
-  if (!iri) {
+  if (!uriVariables) {
     return "";
   }
 
-  const resourceId = iri.split("/").slice(-1)[0];
+  if (typeof uriVariables === "string") {
+    uriVariables = { id: uriVariables.split("/").slice(-1)[0] };
+  }
 
-  return pathTemplate.replace("[id]", resourceId);
+  // @ts-ignore
+  [...pathTemplate.matchAll(/\[([^\]]+)\]/g)].forEach((m) => {
+    // @ts-ignore
+    pathTemplate = pathTemplate.replace(m[0], uriVariables[m[1]]);
+  });
+
+  return pathTemplate;
 };
 
-export const parsePage = (resourceName: string, path: string) =>
+export const parsePage = (path: string) =>
   parseInt(
-    new RegExp(`^/${resourceName}\\?page=(\\d+)`).exec(path)?.[1] ?? "1",
+    new RegExp(/[?&]page=(\d+)/).exec(path)?.[1] ?? "1",
     10
   );
 
@@ -113,16 +120,16 @@ export const getItemPaths = async <TData extends Item>(
     const { "hydra:last": last } = view ?? {};
     const paths =
       response.data["hydra:member"]?.map((resourceData) =>
-        getItemPath(resourceData["@id"] ?? "", pathTemplate)
+        getItemPath(resourceData, pathTemplate)
       ) ?? [];
-    const lastPage = parsePage(resourceName, last ?? "");
+    const lastPage = parsePage(last ?? "");
 
     for (let page = 2; page <= lastPage; page++) {
       paths.push(
         ...((
           await fetch<PagedCollection<TData>>(`/${resourceName}?page=${page}`)
         )?.data["hydra:member"]?.map((resourceData) =>
-          getItemPath(resourceData["@id"] ?? "", pathTemplate)
+          getItemPath(resourceData, pathTemplate)
         ) ?? [])
       );
     }
@@ -145,7 +152,7 @@ export const getCollectionPaths = async <TData extends Item>(
   const view = response.data["hydra:view"];
   const { "hydra:last": last } = view ?? {};
   const paths = [pathTemplate.replace("[page]", "1")];
-  const lastPage = parsePage(resourceName, last ?? "");
+  const lastPage = parsePage(last ?? "");
 
   for (let page = 2; page <= lastPage; page++) {
     paths.push(pathTemplate.replace("[page]", page.toString()));

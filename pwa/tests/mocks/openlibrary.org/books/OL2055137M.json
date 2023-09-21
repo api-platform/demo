@@ -1,0 +1,91 @@
+{
+    "publishers": [
+        "Doubleday"
+    ],
+    "number_of_pages": 481,
+    "covers": [
+        4066031,
+        238840
+    ],
+    "physical_format": "Hardcover",
+    "lc_classifications": [
+        "PS3569.I47292 H97 1989",
+        "PS3569.I47292H97"
+    ],
+    "url": [
+        "http://www.loc.gov/catdir/samples/random043/88033407.html",
+        "http://www.loc.gov/catdir/description/random047/88033407.html"
+    ],
+    "key": "/books/OL2055137M",
+    "authors": [
+        {
+            "key": "/authors/OL235668A"
+        }
+    ],
+    "publish_places": [
+        "New York"
+    ],
+    "uri_descriptions": [
+        "Sample text",
+        "Publisher description"
+    ],
+    "edition_name": "1st ed.",
+    "pagination": "481 p. ;",
+    "classifications": {},
+    "source_records": [
+        "amazon:0385249497",
+        "marc:marc_loc_2016/BooksAll.2016.part18.utf8:175194414:820",
+        "bwb:9780385263481"
+    ],
+    "title": "Hyperion",
+    "dewey_decimal_class": [
+        "813/.54"
+    ],
+    "notes": "\"A Foundation book.\"",
+    "identifiers": {
+        "librarything": [
+            "23078"
+        ],
+        "goodreads": [
+            "1718945",
+            "2093816"
+        ]
+    },
+    "languages": [
+        {
+            "key": "/languages/eng"
+        }
+    ],
+    "lccn": [
+        "88033407"
+    ],
+    "isbn_10": [
+        "0385249497",
+        "0385263481"
+    ],
+    "publish_date": "1989",
+    "publish_country": "nyu",
+    "by_statement": "Dan Simmons.",
+    "works": [
+        {
+            "key": "/works/OL1963268W"
+        }
+    ],
+    "type": {
+        "key": "/type/edition"
+    },
+    "uris": [
+        "http://www.loc.gov/catdir/samples/random043/88033407.html",
+        "http://www.loc.gov/catdir/description/random047/88033407.html"
+    ],
+    "latest_revision": 11,
+    "revision": 11,
+    "created": {
+        "type": "/type/datetime",
+        "value": "2008-04-01T03:28:50.625462"
+    },
+    "last_modified": {
+        "type": "/type/datetime",
+        "value": "2021-09-29T01:39:35.554352"
+    }
+}

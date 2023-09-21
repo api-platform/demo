@@ -3,14 +3,30 @@
   "displayName": "API Platform - Demo",
   "enabled": true,
   "registrationAllowed": false,
+  "accessCodeLifespan": 1,
+  "loginTheme": "api-platform-demo",
   "users": [
     {
-      "username": "admin",
+      "username": "chuck.norris",
       "enabled": true,
       "emailVerified": true,
       "firstName": "Chuck",
-      "lastName": "NORRIS",
-      "email": "admin@example.com",
+      "lastName": "Norris",
+      "email": "chuck.norris@example.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Pa55w0rd"
+        }
+      ]
+    },
+    {
+      "username": "john.doe",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "John",
+      "lastName": "Doe",
+      "email": "john.doe@example.com",
       "credentials": [
         {
           "type": "password",

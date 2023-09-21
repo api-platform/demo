@@ -1,17 +1,22 @@
-import { Item } from "./item";
+import { type Item } from "@/types/item";
+import { type Thumbnails } from "@/types/Thumbnails";
 
 export class Book implements Item {
   public "@id"?: string;
 
   constructor(
-    _id?: string,
-    public isbn?: string,
-    public title?: string,
-    public description?: string,
+    public book: string,
+    public title: string,
+    public condition: string,
+    public reviews: string,
     public author?: string,
-    public publicationDate?: Date,
-    public reviews?: any,
-    public cover?: string
+    public rating?: number,
+    _id?: string,
+    public id?: string,
+    public slug?: string,
+    public images?: Thumbnails,
+    public description?: string,
+    public publicationDate?: string,
   ) {
     this["@id"] = _id;
   }

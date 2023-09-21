@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataFixtures\Factory;
 
 use App\Entity\Review;
@@ -61,11 +63,11 @@ final class ReviewFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
+            'user' => lazy(fn () => UserFactory::new()),
+            'book' => lazy(fn () => BookFactory::new()),
+            'publishedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime('-1 week')),
             'body' => self::faker()->text(),
             'rating' => self::faker()->numberBetween(0, 5),
-            'book' => lazy(fn () => BookFactory::randomOrCreate()),
-            'author' => self::faker()->name(),
-            'publicationDate' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
         ];
     }
 

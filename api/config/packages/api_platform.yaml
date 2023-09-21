@@ -8,23 +8,13 @@ api_platform:
         [A PWA](/) and [an admin](/admin) are consuming this API.
     graphql:
         graphql_playground: false
-    mapping:
-        paths: ['%kernel.project_dir%/src/Entity']
     formats:
         jsonld: ['application/ld+json']
-        jsonhal: ['application/hal+json']
-        jsonapi: ['application/vnd.api+json']
         json: ['application/json']
-        xml: ['application/xml', 'text/xml']
-        yaml: ['application/x-yaml']
-        csv: ['text/csv']
         html: ['text/html']
-    patch_formats:
-        json: ['application/merge-patch+json']
-        jsonapi: ['application/vnd.api+json']
-    # Mercure integration, remove if unwanted
     mercure: ~
-    # Good cache defaults for REST APIs
+    http_cache:
+        public: true
     defaults:
         stateless: true
         cache_headers:
@@ -43,3 +33,38 @@ api_platform:
         authorizationUrl: '%env(OIDC_SERVER_URL)%/protocol/openid-connect/auth'
         scopes:
             openid: (required) Indicates that the application intends to use OIDC to verify the user's identity
+
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: false
+
+    app.filter.review.admin.user:
+        parent: 'api_platform.doctrine.orm.search_filter'
+        arguments:
+            $properties: { user: 'exact' } ]
+        tags: [ 'api_platform.filter' ]
+
+    app.filter.review.admin.book:
+        parent: 'api_platform.doctrine.orm.search_filter'
+        arguments:
+            $properties: { book: 'exact' } ]
+        tags: [ 'api_platform.filter' ]
+
+    app.filter.review.admin.rating:
+        parent: 'api_platform.doctrine.orm.numeric_filter'
+        arguments:
+            $properties: { rating: ~ } ]
+        tags: [ 'api_platform.filter' ]
+
+    # "name" is not a property, it's only a method "getName"
+    # Can't apply ApiFilter PHP attribute on method, so declare filter manually
+    app.filter.user.admin.name:
+        class: 'App\Doctrine\Orm\Filter\NameFilter'
+        arguments:
+            $managerRegistry: '@doctrine'
+            $logger: '@logger'
+            $nameConverter: '@?api_platform.name_converter'
+            $properties: { name: 'ipartial' } ]
+        tags: [ 'api_platform.filter' ]

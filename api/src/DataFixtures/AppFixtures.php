@@ -1,19 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataFixtures;
 
-use App\DataFixtures\Story\DefaultBooksStory;
-use App\DataFixtures\Story\DefaultReviewsStory;
-use App\DataFixtures\Story\DefaultUsersStory;
+use App\DataFixtures\Story\DefaultStory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-class AppFixtures extends Fixture
+final class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        DefaultBooksStory::load();
-        DefaultReviewsStory::load();
-        DefaultUsersStory::load();
+        DefaultStory::load();
     }
 }

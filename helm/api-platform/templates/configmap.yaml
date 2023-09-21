@@ -5,7 +5,6 @@ metadata:
   labels:
     {{- include "api-platform.labels" . | nindent 4 }}
 data:
-  host: {{ (first .Values.ingress.hosts).host | quote }}
   php-app-env: {{ .Values.php.appEnv | quote }}
   php-app-debug: {{ .Values.php.appDebug | quote }}
   php-cors-allow-origin: {{ .Values.php.corsAllowOrigin | quote }}
@@ -14,6 +13,7 @@ data:
   mercure-url: "http://{{ include "api-platform.fullname" . }}/.well-known/mercure"
   mercure-public-url: {{ .Values.mercure.publicUrl | default "http://127.0.0.1/.well-known/mercure" | quote }}
   mercure-extra-directives: {{ .Values.mercure.extraDirectives | quote }}
+  caddy-global-options: {{ .Values.caddy.globalOptions | quote }}
   oidc-server-url: "https://{{ (first .Values.ingress.hosts).host }}/oidc/realms/demo"
   oidc-server-url-internal: "http://{{ include "api-platform.fullname" . }}/oidc/realms/demo"
   next-auth-url: "https://{{ (first .Values.ingress.hosts).host }}/api/auth"

@@ -4,20 +4,28 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity]
+/**
+ * @deprecated create a Book instead
+ */
 #[ApiResource(deprecationReason: 'Create a Book instead')]
+#[ORM\Entity]
 class Parchment
 {
-    #[ORM\Id]
+    /**
+     * @see https://schema.org/identifier
+     */
+    #[ApiProperty(types: ['https://schema.org/identifier'])]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\Id]
     private ?Uuid $id = null;
 
     public function getId(): ?Uuid
@@ -28,14 +36,14 @@ class Parchment
     /**
      * The title of the book.
      */
+    #[Assert\NotBlank(allowNull: false)]
     #[ORM\Column]
-    #[Assert\NotBlank]
     public ?string $title = null;
 
     /**
      * A description of the item.
      */
-    #[ORM\Column(type: 'text')]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(allowNull: false)]
+    #[ORM\Column]
     public ?string $description = null;
 }
