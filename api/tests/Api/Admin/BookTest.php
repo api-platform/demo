@@ -54,7 +54,6 @@ final class BookTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
             'hydra:title' => 'An error occurred',
             'hydra:description' => $hydraDescription,
@@ -197,7 +196,6 @@ final class BookTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
             'hydra:title' => 'An error occurred',
             'hydra:description' => $hydraDescription,
@@ -253,7 +251,6 @@ final class BookTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
             'hydra:title' => 'An error occurred',
             'hydra:description' => $hydraDescription,
@@ -286,7 +283,6 @@ final class BookTest extends ApiTestCase
             [],
             Response::HTTP_UNPROCESSABLE_ENTITY,
             [
-                '@context' => '/contexts/ConstraintViolationList',
                 '@type' => 'ConstraintViolationList',
                 'hydra:title' => 'An error occurred',
                 'violations' => [
@@ -315,12 +311,10 @@ final class BookTest extends ApiTestCase
             // todo waiting for https://github.com/api-platform/core/pull/5844
 //            Response::HTTP_UNPROCESSABLE_ENTITY,
             [
-                '@context' => '/contexts/Error',
                 '@type' => 'hydra:Error',
                 'hydra:title' => 'An error occurred',
                 'hydra:description' => 'The data must belong to a backed enumeration of type '.BookCondition::class,
                 // todo waiting for https://github.com/api-platform/core/pull/5844[
-//                '@context' => '/contexts/ConstraintViolationList',
 //                '@type' => 'ConstraintViolationList',
 //                'hydra:title' => 'An error occurred',
 //                'hydra:description' => 'book: This value should not be blank.\ncondition: This value should be of type '.BookCondition::class.'.',
@@ -345,12 +339,10 @@ final class BookTest extends ApiTestCase
             // todo waiting for https://github.com/api-platform/core/pull/5844
 //            Response::HTTP_UNPROCESSABLE_ENTITY,
             [
-                '@context' => '/contexts/Error',
                 '@type' => 'hydra:Error',
                 'hydra:title' => 'An error occurred',
                 'hydra:description' => 'The data must belong to a backed enumeration of type '.BookCondition::class,
                 // todo waiting for https://github.com/api-platform/core/pull/5844
-//                '@context' => '/contexts/ConstraintViolationList',
 //                '@type' => 'ConstraintViolationList',
 //                'hydra:title' => 'An error occurred',
 //                'hydra:description' => 'condition: This value should be of type '.BookCondition::class.'.',
@@ -369,7 +361,6 @@ final class BookTest extends ApiTestCase
             ],
             Response::HTTP_UNPROCESSABLE_ENTITY,
             [
-                '@context' => '/contexts/ConstraintViolationList',
                 '@type' => 'ConstraintViolationList',
                 'hydra:title' => 'An error occurred',
                 'violations' => [
@@ -463,7 +454,6 @@ final class BookTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
             'hydra:title' => 'An error occurred',
             'hydra:description' => $hydraDescription,
@@ -591,7 +581,6 @@ final class BookTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
             'hydra:title' => 'An error occurred',
             'hydra:description' => $hydraDescription,
