@@ -21,6 +21,7 @@ api_platform:
             vary: ['Content-Type', 'Authorization', 'Origin']
         extra_properties:
             standard_put: true
+            rfc_7807_compliant_errors: true
     oauth:
         enabled: true
         clientId: '%env(OIDC_SWAGGER_CLIENT_ID)%'

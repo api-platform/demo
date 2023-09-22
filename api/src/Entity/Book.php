@@ -35,7 +35,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     uriTemplate: '/admin/books{._format}',
     types: ['https://schema.org/Book', 'https://schema.org/Offer'],
-    extraProperties: ['rfc_7807_compliant_errors' => true],
     operations: [
         new GetCollection(
             itemUriTemplate: '/admin/books/{id}{._format}',
@@ -74,7 +73,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[ApiResource(
     types: ['https://schema.org/Book', 'https://schema.org/Offer'],
-    extraProperties: ['rfc_7807_compliant_errors' => true],
     operations: [
         new GetCollection(
             itemUriTemplate: '/books/{id}{._format}'
