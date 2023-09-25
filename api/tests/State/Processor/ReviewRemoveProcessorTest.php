@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInter
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Review;
+use App\State\Processor\MercureProcessor;
 use App\State\Processor\ReviewRemoveProcessor;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -87,7 +88,7 @@ final class ReviewRemoveProcessorTest extends TestCase
                     [],
                     [
                         'item_uri_template' => '/admin/reviews/{id}{._format}',
-                        'data' => json_encode(['@id' => '/admin/reviews/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6']),
+                        MercureProcessor::DATA => json_encode(['@id' => '/admin/reviews/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6']),
                     ],
                 ],
                 [
@@ -96,7 +97,7 @@ final class ReviewRemoveProcessorTest extends TestCase
                     [],
                     [
                         'item_uri_template' => '/books/{bookId}/reviews/{id}{._format}',
-                        'data' => json_encode(['@id' => '/books/8ad70d36-abaf-4c9b-aeaa-7ec63e6ca6f3/reviews/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6']),
+                        MercureProcessor::DATA => json_encode(['@id' => '/books/8ad70d36-abaf-4c9b-aeaa-7ec63e6ca6f3/reviews/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6']),
                     ],
                 ],
             );

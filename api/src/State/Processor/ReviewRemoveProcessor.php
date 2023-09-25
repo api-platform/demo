@@ -28,7 +28,7 @@ final readonly class ReviewRemoveProcessor implements ProcessorInterface
     /**
      * @param Review $data
      */
-    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Review
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
     {
         $object = clone $data;
 
@@ -48,11 +48,9 @@ final readonly class ReviewRemoveProcessor implements ProcessorInterface
                 $uriVariables,
                 $context + [
                     'item_uri_template' => $uriTemplate,
-                    'data' => json_encode(['@id' => $iri]),
+                    MercureProcessor::DATA => json_encode(['@id' => $iri]),
                 ]
             );
         }
-
-        return $data;
     }
 }

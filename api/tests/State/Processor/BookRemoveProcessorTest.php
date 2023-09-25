@@ -14,6 +14,7 @@ use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Book;
 use App\State\Processor\BookRemoveProcessor;
+use App\State\Processor\MercureProcessor;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -87,7 +88,7 @@ final class BookRemoveProcessorTest extends TestCase
                     [],
                     [
                         'item_uri_template' => '/admin/books/{id}{._format}',
-                        'data' => json_encode(['@id' => '/admin/books/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6']),
+                        MercureProcessor::DATA => json_encode(['@id' => '/admin/books/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6']),
                     ],
                 ],
                 [
@@ -96,7 +97,7 @@ final class BookRemoveProcessorTest extends TestCase
                     [],
                     [
                         'item_uri_template' => '/books/{id}{._format}',
-                        'data' => json_encode(['@id' => '/books/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6']),
+                        MercureProcessor::DATA => json_encode(['@id' => '/books/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6']),
                     ],
                 ],
             );

@@ -104,7 +104,7 @@ final class MercureProcessorTest extends TestCase
         $this->processor->process($this->objectMock, $this->operationMock, [], [
             'item_uri_template' => '/admin/books/{id}{._format}',
             'topics' => ['/admin/books/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6'],
-            'data' => json_encode(['bar' => 'baz']),
+            MercureProcessor::DATA => json_encode(['bar' => 'baz']),
         ]);
     }
 }
