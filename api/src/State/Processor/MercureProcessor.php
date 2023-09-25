@@ -19,6 +19,8 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 final readonly class MercureProcessor implements ProcessorInterface
 {
+    public const DATA = 'mercure_data';
+
     public function __construct(
         private SerializerInterface $serializer,
         private HubRegistry $hubRegistry,
@@ -42,8 +44,8 @@ final readonly class MercureProcessor implements ProcessorInterface
         if (!isset($context['topics'])) {
             $context['topics'] = [$this->iriConverter->getIriFromResource($data, UrlGeneratorInterface::ABS_URL, $operation)];
         }
-        if (!isset($context['data'])) {
-            $context['data'] = $this->serializer->serialize(
+        if (!isset($context[self::DATA])) {
+            $context[self::DATA] = $this->serializer->serialize(
                 $data,
                 key($this->formats),
                 ($operation->getNormalizationContext() ?? []) + (isset($context['item_uri_template']) ? [
@@ -54,7 +56,7 @@ final readonly class MercureProcessor implements ProcessorInterface
 
         $this->hubRegistry->getHub()->publish(new Update(
             topics: $context['topics'],
-            data: $context['data']
+            data: $context[self::DATA]
         ));
 
         return $data;
