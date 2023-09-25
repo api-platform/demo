@@ -35,7 +35,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     types: ['https://schema.org/Review'],
     order: ['publishedAt' => 'DESC'],
-    extraProperties: ['rfc_7807_compliant_errors' => true],
     operations: [
         new GetCollection(
             uriTemplate: '/admin/reviews{._format}',
@@ -80,7 +79,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     types: ['https://schema.org/Review'],
     order: ['publishedAt' => 'DESC'],
-    extraProperties: ['rfc_7807_compliant_errors' => true],
     uriTemplate: '/books/{bookId}/reviews{._format}',
     uriVariables: [
         'bookId' => new Link(toProperty: 'book', fromClass: Book::class),

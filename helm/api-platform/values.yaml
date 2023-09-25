@@ -125,9 +125,7 @@ keycloak:
       postgresql:
         auth:
           postgresPassword: "!ThisMustBeChanged!"
-#          username: "example"
           password: "!ChangeMe!"
-#          database: "api"
     primary:
       persistence:
         enabled: true

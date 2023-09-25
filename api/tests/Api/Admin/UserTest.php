@@ -48,7 +48,6 @@ final class UserTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
             'hydra:title' => 'An error occurred',
             'hydra:description' => $hydraDescription,
@@ -127,7 +126,6 @@ final class UserTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
             'hydra:title' => 'An error occurred',
             'hydra:description' => $hydraDescription,

@@ -23,7 +23,6 @@ use Symfony\Component\Uid\Uuid;
  */
 #[ApiResource(
     types: ['https://schema.org/Person'],
-    extraProperties: ['rfc_7807_compliant_errors' => true],
     operations: [
         new GetCollection(
             uriTemplate: '/admin/users{._format}',

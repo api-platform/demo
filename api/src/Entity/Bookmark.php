@@ -30,7 +30,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     types: ['https://schema.org/BookmarkAction'],
     order: ['bookmarkedAt' => 'DESC'],
-    extraProperties: ['rfc_7807_compliant_errors' => true],
     operations: [
         new GetCollection(),
         new Delete(
