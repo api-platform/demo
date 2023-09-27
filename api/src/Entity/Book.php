@@ -24,6 +24,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -61,11 +63,11 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
     ],
     normalizationContext: [
-        'groups' => ['Book:read:admin', 'Enum:read'],
-        'skip_null_values' => true,
+        AbstractNormalizer::GROUPS => ['Book:read:admin', 'Enum:read'],
+        AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
     ],
     denormalizationContext: [
-        'groups' => ['Book:write'],
+        AbstractNormalizer::GROUPS => ['Book:write'],
     ],
     // todo waiting for https://github.com/api-platform/core/pull/5844
 //    collectDenormalizationErrors: true,
@@ -80,8 +82,8 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Get(),
     ],
     normalizationContext: [
-        'groups' => ['Book:read', 'Enum:read'],
-        'skip_null_values' => true,
+        AbstractNormalizer::GROUPS => ['Book:read', 'Enum:read'],
+        AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
     ]
 )]
 #[ORM\Entity(repositoryClass: BookRepository::class)]

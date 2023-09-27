@@ -19,6 +19,8 @@ use App\Validator\UniqueUserBook;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -40,14 +42,14 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
     ],
     normalizationContext: [
-        'groups' => ['Bookmark:read'],
-        'skip_null_values' => true,
+        AbstractNormalizer::GROUPS => ['Bookmark:read'],
+        AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
         IriTransformerNormalizer::CONTEXT_KEY => [
             'book' => '/books/{id}{._format}',
         ],
     ],
     denormalizationContext: [
-        'groups' => ['Bookmark:write'],
+        AbstractNormalizer::GROUPS => ['Bookmark:write'],
     ],
     // todo waiting for https://github.com/api-platform/core/pull/5844
 //    collectDenormalizationErrors: true,

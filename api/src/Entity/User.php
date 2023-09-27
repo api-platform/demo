@@ -14,6 +14,8 @@ use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Uid\Uuid;
 
 /**
@@ -41,8 +43,8 @@ use Symfony\Component\Uid\Uuid;
         ),
     ],
     normalizationContext: [
-        'groups' => ['User:read'],
-        'skip_null_values' => true,
+        AbstractNormalizer::GROUPS => ['User:read'],
+        AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
     ]
 )]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
