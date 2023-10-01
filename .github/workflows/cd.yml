@@ -48,7 +48,7 @@ jobs:
           gcloud container clusters get-credentials api-platform-demo --zone europe-west1-c
       -
         name: Build Docker images
-        uses: docker/bake-action@v3
+        uses: docker/bake-action@v4
         with:
           # push and load may not be set together
           # must push manually in a next step
