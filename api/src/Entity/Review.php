@@ -24,6 +24,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -66,11 +68,11 @@ use Symfony\Component\Validator\Constraints as Assert;
             'book' => '/admin/books/{id}{._format}',
             'user' => '/admin/users/{id}{._format}',
         ],
-        'skip_null_values' => true,
-        'groups' => ['Review:read', 'Review:read:admin'],
+        AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+        AbstractNormalizer::GROUPS => ['Review:read', 'Review:read:admin'],
     ],
     denormalizationContext: [
-        'groups' => ['Review:write', 'Review:write:admin'],
+        AbstractNormalizer::GROUPS => ['Review:write', 'Review:write:admin'],
     ],
     // todo waiting for https://github.com/api-platform/core/pull/5844
 //    collectDenormalizationErrors: true,
@@ -101,7 +103,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             processor: ReviewPersistProcessor::class,
             provider: CreateProvider::class,
             itemUriTemplate: '/books/{bookId}/reviews/{id}{._format}',
-            validationContext: ['groups' => ['Default', 'Review:create']]
+            validationContext: [AbstractNormalizer::GROUPS => ['Default', 'Review:create']]
         ),
         new Patch(
             uriTemplate: '/books/{bookId}/reviews/{id}{._format}',
@@ -129,11 +131,11 @@ use Symfony\Component\Validator\Constraints as Assert;
             'book' => '/books/{id}{._format}',
             'user' => '/users/{id}{._format}',
         ],
-        'skip_null_values' => true,
-        'groups' => ['Review:read'],
+        AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+        AbstractNormalizer::GROUPS => ['Review:read'],
     ],
     denormalizationContext: [
-        'groups' => ['Review:write'],
+        AbstractNormalizer::GROUPS => ['Review:write'],
     ],
     // todo waiting for https://github.com/api-platform/core/pull/5844
 //    collectDenormalizationErrors: true
