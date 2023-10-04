@@ -137,6 +137,10 @@ final class ReviewTest extends ApiTestCase
                 'body' => 'Very good book!',
                 'rating' => 5,
             ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+                'Accept' => 'application/ld+json',
+            ],
         ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
@@ -163,6 +167,10 @@ final class ReviewTest extends ApiTestCase
         $this->client->request('POST', '/books/'.$book->getId().'/reviews', [
             'auth_bearer' => $token,
             'json' => $data,
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+                'Accept' => 'application/ld+json',
+            ],
         ]);
 
         self::assertResponseStatusCodeSame($statusCode);
@@ -209,6 +217,10 @@ final class ReviewTest extends ApiTestCase
                 'body' => 'Very good book!',
                 'rating' => 5,
             ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+                'Accept' => 'application/ld+json',
+            ],
         ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
@@ -240,6 +252,10 @@ final class ReviewTest extends ApiTestCase
             'json' => [
                 'body' => 'Very good book!',
                 'rating' => 5,
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+                'Accept' => 'application/ld+json',
             ],
         ]);
 
@@ -289,6 +305,10 @@ final class ReviewTest extends ApiTestCase
             'json' => [
                 'body' => 'Very good book!',
                 'rating' => 5,
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+                'Accept' => 'application/ld+json',
             ],
         ]);
 

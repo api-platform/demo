@@ -81,6 +81,10 @@ final class BookmarkTest extends ApiTestCase
             'json' => [
                 'book' => '/books/'.$book->getId(),
             ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+                'Accept' => 'application/ld+json',
+            ],
         ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
@@ -104,6 +108,10 @@ final class BookmarkTest extends ApiTestCase
         $this->client->request('POST', '/bookmarks', [
             'json' => [
                 'book' => '/books/'.$uuid,
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+                'Accept' => 'application/ld+json',
             ],
             'auth_bearer' => $token,
         ]);
@@ -149,6 +157,10 @@ final class BookmarkTest extends ApiTestCase
             'json' => [
                 'book' => '/books/'.$book->getId(),
             ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+                'Accept' => 'application/ld+json',
+            ],
             'auth_bearer' => $token,
         ]);
 
@@ -189,6 +201,10 @@ final class BookmarkTest extends ApiTestCase
         $this->client->request('POST', '/bookmarks', [
             'json' => [
                 'book' => '/books/'.$book->getId(),
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+                'Accept' => 'application/ld+json',
             ],
             'auth_bearer' => $token,
         ]);

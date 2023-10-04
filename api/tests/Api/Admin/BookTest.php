@@ -245,6 +245,10 @@ final class BookTest extends ApiTestCase
                 'book' => 'https://openlibrary.org/books/OL28346544M.json',
                 'condition' => BookCondition::NewCondition->value,
             ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+                'Accept' => 'application/ld+json',
+            ],
         ]);
 
         self::assertResponseStatusCodeSame($expectedCode);
@@ -269,6 +273,10 @@ final class BookTest extends ApiTestCase
         $this->client->request('POST', '/admin/books', [
             'auth_bearer' => $token,
             'json' => $data,
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+                'Accept' => 'application/ld+json',
+            ],
         ]);
 
         self::assertResponseStatusCodeSame($statusCode);
@@ -389,6 +397,10 @@ final class BookTest extends ApiTestCase
                 'book' => 'https://openlibrary.org/books/OL28346544M.json',
                 'condition' => BookCondition::NewCondition->value,
             ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+                'Accept' => 'application/ld+json',
+            ],
         ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_CREATED);
@@ -448,6 +460,10 @@ final class BookTest extends ApiTestCase
                 'book' => 'https://openlibrary.org/books/OL28346544M.json',
                 'condition' => BookCondition::NewCondition->value,
             ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+                'Accept' => 'application/ld+json',
+            ],
         ]);
 
         self::assertResponseStatusCodeSame($expectedCode);
@@ -473,6 +489,10 @@ final class BookTest extends ApiTestCase
             'json' => [
                 'condition' => BookCondition::DamagedCondition->value,
             ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+                'Accept' => 'application/ld+json',
+            ],
         ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
@@ -492,6 +512,10 @@ final class BookTest extends ApiTestCase
         $this->client->request('PUT', '/admin/books/'.$book->getId(), [
             'auth_bearer' => $token,
             'json' => $data,
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+                'Accept' => 'application/ld+json',
+            ],
         ]);
 
         self::assertResponseStatusCodeSame($statusCode);
@@ -518,11 +542,14 @@ final class BookTest extends ApiTestCase
         $this->client->request('PUT', '/admin/books/'.$book->getId(), [
             'auth_bearer' => $token,
             'json' => [
-                /* @see https://github.com/api-platform/core/blob/main/src/Serializer/ItemNormalizer.php */
-                'id' => '/books/'.$book->getId(),
+                '@id' => '/books/'.$book->getId(),
                 // Must set all data because of standard PUT
                 'book' => 'https://openlibrary.org/books/OL28346544M.json',
                 'condition' => BookCondition::DamagedCondition->value,
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+                'Accept' => 'application/ld+json',
             ],
         ]);
 
