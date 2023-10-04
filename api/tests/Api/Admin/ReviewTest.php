@@ -216,6 +216,10 @@ final class ReviewTest extends ApiTestCase
                 'body' => 'Very good book!',
                 'rating' => 5,
             ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+                'Accept' => 'application/ld+json',
+            ],
         ]);
 
         self::assertResponseStatusCodeSame($expectedCode);
@@ -239,6 +243,10 @@ final class ReviewTest extends ApiTestCase
             'json' => [
                 'body' => 'Very good book!',
                 'rating' => 5,
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+                'Accept' => 'application/ld+json',
             ],
         ]);
 
@@ -266,6 +274,10 @@ final class ReviewTest extends ApiTestCase
                 'letter' => null,
                 'body' => 'Very good book!',
                 'rating' => 5,
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+                'Accept' => 'application/ld+json',
             ],
         ]);
 
