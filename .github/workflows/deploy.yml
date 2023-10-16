@@ -117,6 +117,7 @@ jobs:
             --set=keycloak.image.pullPolicy=Always \
             --set=keycloak.auth.adminPassword=${{ secrets.keycloak-admin-password }} \
             --set=keycloak.extraEnvVars[0].name=KC_HOSTNAME_URL \
+            --set=keycloak.keycloakConfigCli.image.pullPolicy=Always \
             --set-string=keycloak.extraEnvVars[0].value=https://${{ inputs.url }}/oidc/ \
             --set=keycloak.extraEnvVars[1].name=KC_HOSTNAME_ADMIN_URL \
             --set-string=keycloak.extraEnvVars[1].value=https://${{ inputs.url }}/oidc/ \
