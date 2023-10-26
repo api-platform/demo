@@ -55,8 +55,8 @@ jobs:
           pull: true
           load: true
           files: |
-            docker-compose.yml
-            docker-compose.prod.yml
+            compose.yaml
+            compose.prod.yaml
           set: |
             *.cache-from=type=gha,scope=${{github.ref}}
             *.cache-from=type=gha,scope=refs/heads/main
