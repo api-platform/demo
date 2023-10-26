@@ -65,7 +65,7 @@ postgresql:
     pullPolicy: IfNotPresent
     image:
       repository: bitnami/postgresql
-      tag: 15
+      tag: 16
     resources:
       requests:
         memory: 50Mi
@@ -128,7 +128,7 @@ keycloak:
       pullPolicy: IfNotPresent
       image:
         repository: bitnami/postgresql
-        tag: 15
+        tag: 16
       resources:
         requests:
           memory: 50Mi
