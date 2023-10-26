@@ -22,7 +22,6 @@ jobs:
       matrix:
         image:
           - php
-          - caddy
           - pwa
       fail-fast: false
     permissions:

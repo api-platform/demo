@@ -13,5 +13,5 @@ services:
 
   keycloak-config-cli:
     extends:
-      file: docker-compose.override.yml
+      file: compose.override.yaml
       service: keycloak-config-cli
