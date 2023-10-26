@@ -7,7 +7,8 @@ api_platform:
         You may also be interested by [the GraphQL entrypoint](/graphql).
         [A PWA](/) and [an admin](/admin) are consuming this API.
     # Mercure integration, remove if unwanted
-    mercure: ~
+    mercure:
+        include_type: true
     graphql:
         graphql_playground: false
     formats:

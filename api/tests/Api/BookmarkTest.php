@@ -297,7 +297,7 @@ final class BookmarkTest extends ApiTestCase
         self::assertEquals(
             new Update(
                 topics: ['http://localhost/bookmarks/'.$id],
-                data: json_encode(['@id' => '/bookmarks/'.$id])
+                data: json_encode(['@id' => '/bookmarks/'.$id, '@type' => 'https://schema.org/BookmarkAction'])
             ),
             self::getMercureMessage()
         );
