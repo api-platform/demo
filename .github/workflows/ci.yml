@@ -128,7 +128,7 @@ jobs:
           docker compose logs
       -
         name: Load Fixtures
-        run: docker compose run --rm --env APP_ENV=dev php bin/console doctrine:fixtures:load --no-interaction
+        run: docker compose run --rm php bin/console doctrine:fixtures:load --no-interaction
       -
         name: Cache Playwright Binaries
         uses: actions/cache@v3

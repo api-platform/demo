@@ -48,9 +48,15 @@ spec:
                       name: {{ include "api-platform.fullname" . }}
                       key: php-trusted-proxies
                 - name: APP_ENV
-                  value: "dev"
+                  valueFrom:
+                    configMapKeyRef:
+                      name: {{ include "api-platform.fullname" . }}
+                      key: php-app-env
                 - name: APP_DEBUG
-                  value: "1"
+                  valueFrom:
+                    configMapKeyRef:
+                      name: {{ include "api-platform.fullname" . }}
+                      key: php-app-debug
                 - name: APP_SECRET
                   valueFrom:
                     secretKeyRef:
