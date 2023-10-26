@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.4"
 
 # Production environment override
 services:
@@ -6,10 +6,11 @@ services:
     image: ${PHP_DOCKER_IMAGE}
     build:
       context: ./api
-      target: php_prod
+      target: frankenphp_prod
     environment:
       APP_SECRET: ${APP_SECRET}
-      MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET}
+      MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
+      MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
 
   pwa:
     image: ${PWA_DOCKER_IMAGE}
@@ -18,15 +19,7 @@ services:
       target: prod
     environment:
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
-
-  caddy:
-    image: ${CADDY_DOCKER_IMAGE}
-    build:
-      context: api/
-      target: caddy_prod
-    environment:
-      MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
-      MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
+      HOSTNAME: 0.0.0.0
 
   database:
     environment:
