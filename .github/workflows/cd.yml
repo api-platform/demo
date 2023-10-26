@@ -12,7 +12,12 @@ on:
 jobs:
   build:
     name: Build
-    if: ${{ github.repository == 'api-platform/demo' && (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'deploy')) }}
+    if: |
+      github.repository == 'api-platform/demo' &&
+      (
+        (github.event_name == 'push' && github.ref_name == 'main') ||
+        (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'deploy')
+      )
     runs-on: ubuntu-latest
     env:
       PHP_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/php:${{ github.sha }}
