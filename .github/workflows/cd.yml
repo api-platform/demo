@@ -17,7 +17,6 @@ jobs:
     env:
       PHP_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/php:${{ github.sha }}
       PWA_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/pwa:${{ github.sha }}
-      CADDY_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/caddy:${{ github.sha }}
       KEYCLOAK_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/keycloak:${{ github.sha }}
     steps:
       -
@@ -55,8 +54,8 @@ jobs:
           pull: true
           load: true
           files: |
-            docker-compose.yml
-            docker-compose.prod.yml
+            compose.yaml
+            compose.prod.yaml
           set: |
             *.cache-from=type=gha,scope=${{github.ref}}
             *.cache-from=type=gha,scope=refs/heads/main
@@ -66,7 +65,6 @@ jobs:
         run: |
           docker push $PHP_DOCKER_IMAGE
           docker push $PWA_DOCKER_IMAGE
-          docker push $CADDY_DOCKER_IMAGE
           docker push $KEYCLOAK_DOCKER_IMAGE
       -
         name: Docker tag and push latest
@@ -74,11 +72,9 @@ jobs:
         run: |
           docker tag $PHP_DOCKER_IMAGE eu.gcr.io/${{ secrets.GKE_PROJECT }}/php:latest
           docker tag $PWA_DOCKER_IMAGE eu.gcr.io/${{ secrets.GKE_PROJECT }}/pwa:latest
-          docker tag $CADDY_DOCKER_IMAGE eu.gcr.io/${{ secrets.GKE_PROJECT }}/caddy:latest
           docker tag $KEYCLOAK_DOCKER_IMAGE eu.gcr.io/${{ secrets.GKE_PROJECT }}/keycloak:latest
           docker push eu.gcr.io/${{ secrets.GKE_PROJECT }}/php:latest
           docker push eu.gcr.io/${{ secrets.GKE_PROJECT }}/pwa:latest
-          docker push eu.gcr.io/${{ secrets.GKE_PROJECT }}/caddy:latest
           docker push eu.gcr.io/${{ secrets.GKE_PROJECT }}/keycloak:latest
 
   deploy:
