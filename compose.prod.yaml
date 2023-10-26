@@ -19,7 +19,6 @@ services:
       target: prod
     environment:
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
-      HOSTNAME: 0.0.0.0
 
   database:
     environment:
