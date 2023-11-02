@@ -93,13 +93,13 @@ keycloak:
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
-  resources:
-    requests:
-      memory: 300Mi
-      cpu: 50m
-    limits:
-      memory: 500Mi
-      cpu: 150m
+  # resources:
+  #   requests:
+  #     memory: 300Mi
+  #     cpu: 50m
+  #   limits:
+  #     memory: 500Mi
+  #     cpu: 150m
   service:
     type: ClusterIP
   extraEnvVars:
@@ -161,13 +161,13 @@ keycloak:
 
 external-dns:
   enabled: true
-  resources:
-    requests:
-      memory: 50Mi
-      cpu: 50m
-    limits:
-      memory: 200Mi
-      cpu: 100m
+  # resources:
+  #   requests:
+  #     memory: 50Mi
+  #     cpu: 50m
+  #   limits:
+  #     memory: 200Mi
+  #     cpu: 100m
   domainFilters:
     - chart-example.local
   provider: cloudflare
