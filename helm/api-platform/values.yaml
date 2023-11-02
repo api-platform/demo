@@ -19,6 +19,13 @@ php:
     - "172.16.0.0/12"
     - "192.168.0.0/16"
   caddyGlobalOptions: ""
+  resources:
+    requests:
+      memory: 100mMi
+      cpu: 50m
+    limits:
+      memory: 300Mi
+      cpu: 150m
 #  caddyGlobalOptions: |
 #    order cache before rewrite
 #    cache {
@@ -35,6 +42,13 @@ pwa:
     tag: ""
   appSecret: ""
   oidcClientId: api-platform-pwa
+  resources:
+    requests:
+      memory: 100Mi
+      cpu: 50m
+    limits:
+      memory: 300Mi
+      cpu: 150m
 
 # You may prefer using the managed version in production: https://mercure.rocks
 mercure:

@@ -118,6 +118,10 @@ jobs:
             --set=keycloak.auth.adminPassword=${{ secrets.keycloak-admin-password }} \
             --set=keycloak.extraEnvVars[0].name=KC_HOSTNAME_URL \
             --set=keycloak.keycloakConfigCli.image.pullPolicy=Always \
+            --set=keycloak.resources.requests.memory=300Mi \
+            --set=keycloak.resources.requests.cpu=50m \
+            --set=keycloak.resources.limits.memory=500Mi \
+            --set=keycloak.resources.limits.cpu=100m \
             --set-string=keycloak.extraEnvVars[0].value=https://${{ inputs.url }}/oidc/ \
             --set=keycloak.extraEnvVars[1].name=KC_HOSTNAME_ADMIN_URL \
             --set-string=keycloak.extraEnvVars[1].value=https://${{ inputs.url }}/oidc/ \
@@ -135,6 +139,10 @@ jobs:
             --set=external-dns.cloudflare.apiToken=${{ secrets.cloudflare-api-token }} \
             --set=external-dns.domainFilters={"${{ inputs.url }}"} \
             --set=external-dns.zoneIdFilters={${{ secrets.cloudflare-zone-id }}} \
+            --set=external-dns.resources.requests.memory=50Mi \
+            --set=external-dns.resources.requests.cpu=50m \
+            --set=external-dns.resources.limits.memory=200Mi \
+            --set=external-dns.resources.limits.cpu=100m \
             --set=php.corsAllowOrigin="^$(echo "${{ join(fromJSON(inputs.cors), '|') }}" | sed 's/\./\\./g')$" \
             --set=mercure.publicUrl=https://${{ inputs.url }}/.well-known/mercure \
             --set=mercure.jwtSecret="!ChangeThisMercureHubJWTSecretKey!" \
