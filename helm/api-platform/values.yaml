@@ -96,7 +96,7 @@ keycloak:
   resources:
     requests:
       memory: 300Mi
-      cpu: 50m
+      cpu: 200m
     limits:
       memory: 500Mi
   service:
