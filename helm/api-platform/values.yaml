@@ -99,7 +99,6 @@ keycloak:
       cpu: 50m
     limits:
       memory: 500Mi
-      cpu: 150m
   service:
     type: ClusterIP
   extraEnvVars:
