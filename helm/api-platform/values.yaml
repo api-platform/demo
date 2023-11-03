@@ -19,6 +19,12 @@ php:
     - "172.16.0.0/12"
     - "192.168.0.0/16"
   caddyGlobalOptions: ""
+  resources:
+    requests:
+      memory: 100Mi
+      cpu: 50m
+    limits:
+      memory: 300Mi
 #  caddyGlobalOptions: |
 #    order cache before rewrite
 #    cache {
@@ -35,6 +41,12 @@ pwa:
     tag: ""
   appSecret: ""
   oidcClientId: api-platform-pwa
+  resources:
+    requests:
+      memory: 100Mi
+      cpu: 50m
+    limits:
+      memory: 300Mi
 
 # You may prefer using the managed version in production: https://mercure.rocks
 mercure:
@@ -79,6 +91,12 @@ keycloak:
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
+  resources:
+    requests:
+      memory: 300Mi
+      cpu: 200m
+    limits:
+      memory: 500Mi
   service:
     type: ClusterIP
   extraEnvVars:
@@ -140,6 +158,13 @@ keycloak:
 
 external-dns:
   enabled: true
+  resources:
+    requests:
+      memory: 50Mi
+      cpu: 50m
+    limits:
+      memory: 200Mi
+      cpu: 100m
   domainFilters:
     - chart-example.local
   provider: cloudflare
