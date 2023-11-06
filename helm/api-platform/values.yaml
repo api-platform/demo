@@ -26,6 +26,9 @@ php:
       memory: 300Mi
   caddyGlobalOptions: |
     debug
+    servers {
+      metrics
+    }
 #    order cache before rewrite
 #    cache {
 #        api {
