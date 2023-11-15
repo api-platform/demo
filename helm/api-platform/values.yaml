@@ -14,14 +14,35 @@ php:
   corsAllowOrigin: "^https?://.*?\\.chart-example\\.local$"
   trustedHosts: "^127\\.0\\.0\\.1|localhost|.*\\.chart-example\\.local$"
   trustedProxies:
+    # local
     - "127.0.0.1"
     - "10.0.0.0/8"
     - "172.16.0.0/12"
     - "192.168.0.0/16"
+    # GKE
+    - "172.71.0.0/16"
+    - "34.149.0.0/16"
+    # Cloudflare
+    - "173.245.48.0/20"
+    - "103.21.244.0/22"
+    - "103.22.200.0/22"
+    - "103.31.4.0/22"
+    - "141.101.64.0/18"
+    - "108.162.192.0/18"
+    - "190.93.240.0/20"
+    - "188.114.96.0/20"
+    - "197.234.240.0/22"
+    - "198.41.128.0/17"
+    - "162.158.0.0/15"
+    - "104.16.0.0/13"
+    - "104.24.0.0/14"
+    - "172.64.0.0/13"
+    - "131.0.72.0/22"
   caddyGlobalOptions: |
     debug
     servers {
       metrics
+      trusted_proxies static 127.0.0.1 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 172.71.0.0/16 34.149.0.0/16 173.245.48.0/20 103.21.244.0/22 103.22.200.0/22 103.31.4.0/22 141.101.64.0/18 108.162.192.0/18 190.93.240.0/20 188.114.96.0/20 197.234.240.0/22 198.41.128.0/17 162.158.0.0/15 104.16.0.0/13 104.24.0.0/14 172.64.0.0/13 131.0.72.0/22
     }
 #    order cache before rewrite
 #    cache {
@@ -101,7 +122,7 @@ keycloak:
     limits:
       memory: 500Mi
   service:
-    type: ClusterIP
+    type: NodePort
   extraEnvVars:
     # Must set KC_HOSTNAME_URL to force https + relative path
     - name: KC_HOSTNAME_URL
@@ -214,7 +235,21 @@ ingress:
     # kubernetes.io/tls-acme: "true"
   hosts:
     - host: chart-example.local
-      paths: []
+      paths:
+        - path: /oidc/*
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: main-keycloak
+              port:
+                number: 80
+        - path: /*
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: main-api-platform
+              port:
+                number: 80
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:

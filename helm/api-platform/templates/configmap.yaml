@@ -15,7 +15,7 @@ data:
   mercure-extra-directives: {{ .Values.mercure.extraDirectives | quote }}
   caddy-global-options: {{ .Values.php.caddyGlobalOptions | quote }}
   oidc-server-url: "https://{{ (first .Values.ingress.hosts).host }}/oidc/realms/demo"
-  oidc-server-url-internal: "http://{{ include "api-platform.fullname" . }}/oidc/realms/demo"
+  oidc-server-url-internal: {{ printf "http://%s-keycloak/oidc/realms/demo" .Release.Name | quote }}
   next-auth-url: "https://{{ (first .Values.ingress.hosts).host }}/api/auth"
   pwa-client-id: {{ .Values.pwa.oidcClientId | quote }}
 

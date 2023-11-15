@@ -50,6 +50,16 @@ spec:
                 secretKeyRef:
                   name: {{ include "api-platform.fullname" . }}
                   key: mercure-jwt-secret
+            - name: OIDC_SERVER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: oidc-server-url
+            - name: OIDC_SERVER_URL_INTERNAL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: oidc-server-url-internal
             - name: TRUSTED_HOSTS
               valueFrom:
                 configMapKeyRef:
