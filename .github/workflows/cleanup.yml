@@ -24,7 +24,7 @@ jobs:
           python-version: 3.9.15
       -
         name: Auth gcloud
-        uses: google-github-actions/auth@v1
+        uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GKE_SA_KEY }}
       -
