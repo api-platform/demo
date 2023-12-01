@@ -5,7 +5,7 @@
 
 # Versions
 # hadolint ignore=DL3007
-FROM dunglas/frankenphp:latest-php8.2-alpine AS frankenphp_upstream
+FROM dunglas/frankenphp:latest-php8.3-alpine AS frankenphp_upstream
 FROM composer/composer:2-bin AS composer_upstream
 
 
