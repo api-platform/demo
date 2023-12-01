@@ -15,9 +15,9 @@ jobs:
     if: ${{ github.repository == 'api-platform/demo' && (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'deploy')) }}
     runs-on: ubuntu-latest
     env:
-      PHP_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/php:${{ github.sha }}
-      PWA_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/pwa:${{ github.sha }}
-      KEYCLOAK_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/keycloak:${{ github.sha }}
+      PHP_DOCKER_IMAGE: europe-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/php:${{ github.sha }}
+      PWA_DOCKER_IMAGE: europe-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/pwa:${{ github.sha }}
+      KEYCLOAK_DOCKER_IMAGE: europe-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/keycloak:${{ github.sha }}
     steps:
       -
         name: Checkout
@@ -70,12 +70,12 @@ jobs:
         name: Docker tag and push latest
         if: github.event_name == 'push'
         run: |
-          docker tag $PHP_DOCKER_IMAGE eu.gcr.io/${{ secrets.GKE_PROJECT }}/php:latest
-          docker tag $PWA_DOCKER_IMAGE eu.gcr.io/${{ secrets.GKE_PROJECT }}/pwa:latest
-          docker tag $KEYCLOAK_DOCKER_IMAGE eu.gcr.io/${{ secrets.GKE_PROJECT }}/keycloak:latest
-          docker push eu.gcr.io/${{ secrets.GKE_PROJECT }}/php:latest
-          docker push eu.gcr.io/${{ secrets.GKE_PROJECT }}/pwa:latest
-          docker push eu.gcr.io/${{ secrets.GKE_PROJECT }}/keycloak:latest
+          docker tag $PHP_DOCKER_IMAGE europe-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/php:latest
+          docker tag $PWA_DOCKER_IMAGE europe-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/pwa:latest
+          docker tag $KEYCLOAK_DOCKER_IMAGE europe-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/keycloak:latest
+          docker push europe-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/php:latest
+          docker push europe-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/pwa:latest
+          docker push europe-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/keycloak:latest
 
   deploy:
     name: Deploy

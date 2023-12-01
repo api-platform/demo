@@ -53,7 +53,7 @@ jobs:
           gcloud container clusters get-credentials api-platform-demo --zone europe-west1-c
       -
         name: Pull Docker Image
-        run: docker pull eu.gcr.io/${{ secrets.GKE_PROJECT }}/${{ matrix.image }}:latest
+        run: docker pull europe-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ matrix.image }}:latest
       -
         name: Cache Trivy
         uses: actions/cache@v3
@@ -66,7 +66,7 @@ jobs:
         name: Run Trivy Vulnerability Scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'eu.gcr.io/${{ secrets.GKE_PROJECT }}/${{ matrix.image }}:latest'
+          image-ref: 'europe-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ matrix.image }}:latest'
           exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os'

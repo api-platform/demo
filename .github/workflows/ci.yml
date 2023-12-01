@@ -83,9 +83,9 @@ jobs:
       contents: 'read'
       id-token: 'write'
     env:
-      PHP_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/php:latest
-      PWA_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/pwa:latest
-      KEYCLOAK_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/keycloak:latest
+      PHP_DOCKER_IMAGE: europe-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/php:latest
+      PWA_DOCKER_IMAGE: europe-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/pwa:latest
+      KEYCLOAK_DOCKER_IMAGE: europe-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/keycloak:latest
       APP_SECRET: ba63418865d58089f7f070e0a437b6d16b1fb970
       CADDY_MERCURE_JWT_SECRET: 33b04d361e437e0d7d715600fc24fdefba317154
       NEXTAUTH_SECRET: 77e4c3f5a6fb652b6245a5df8a704e04ad90bc7e
