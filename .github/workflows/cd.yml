@@ -18,6 +18,9 @@ jobs:
       PHP_DOCKER_IMAGE: europe-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/php:${{ github.sha }}
       PWA_DOCKER_IMAGE: europe-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/pwa:${{ github.sha }}
       KEYCLOAK_DOCKER_IMAGE: europe-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/keycloak:${{ github.sha }}
+    permissions:
+      contents: 'read'
+      id-token: 'write'
     steps:
       -
         name: Checkout
