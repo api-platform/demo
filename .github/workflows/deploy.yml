@@ -130,14 +130,16 @@ jobs:
             --set=pwa.image.tag=${{ inputs.docker-images-version }} \
             --set=pwa.image.pullPolicy=Always \
             --set=ingress.hosts[0].host=${{ inputs.url }} \
-            --set=ingress.hosts[0].paths[0].path=/oidc/* \
-            --set=ingress.hosts[0].paths[0].pathType=ImplementationSpecific \
+            --set=ingress.hosts[0].paths[0].path=/oidc/ \
+            --set=ingress.hosts[0].paths[0].pathType=Prefix \
             --set=ingress.hosts[0].paths[0].backend.service.name=${{ inputs.namespace }}-keycloak \
             --set=ingress.hosts[0].paths[0].backend.service.port.number=80 \
-            --set=ingress.hosts[0].paths[1].path=/* \
-            --set=ingress.hosts[0].paths[1].pathType=ImplementationSpecific \
+            --set=ingress.hosts[0].paths[1].path=/ \
+            --set=ingress.hosts[0].paths[1].pathType=Prefix \
             --set=ingress.hosts[0].paths[1].backend.service.name=${{ inputs.namespace }}-api-platform \
             --set=ingress.hosts[0].paths[1].backend.service.port.number=80 \
+            --set=ingress.tls[0].secretName=${{ inputs.release }}-api-platform-tls \
+            --set=ingress.tls[0].hosts[0]=${{ inputs.url }} \
             --set=external-dns.cloudflare.apiToken=${{ secrets.cloudflare-api-token }} \
             --set=external-dns.domainFilters={"${{ inputs.url }}"} \
             --set=external-dns.zoneIdFilters={${{ secrets.cloudflare-zone-id }}} \
