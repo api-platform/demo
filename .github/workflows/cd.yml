@@ -15,9 +15,9 @@ jobs:
     if: ${{ github.repository == 'api-platform/demo' && (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'deploy')) }}
     runs-on: ubuntu-latest
     env:
-      PHP_DOCKER_IMAGE: europe-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/php:${{ github.sha }}
-      PWA_DOCKER_IMAGE: europe-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/pwa:${{ github.sha }}
-      KEYCLOAK_DOCKER_IMAGE: europe-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/keycloak:${{ github.sha }}
+      PHP_DOCKER_IMAGE: europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/php:${{ github.sha }}
+      PWA_DOCKER_IMAGE: europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/pwa:${{ github.sha }}
+      KEYCLOAK_DOCKER_IMAGE: europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/keycloak:${{ github.sha }}
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -44,7 +44,7 @@ jobs:
         name: Login to GAR
         uses: docker/login-action@v3
         with:
-          registry: europe-docker.pkg.dev
+          registry: europe-west1-docker.pkg.dev
           username: oauth2accesstoken
           password: ${{ steps.auth.outputs.access_token }}
       -
@@ -72,12 +72,12 @@ jobs:
         name: Docker tag and push latest
         if: github.event_name == 'push'
         run: |
-          docker tag $PHP_DOCKER_IMAGE europe-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/php:latest
-          docker tag $PWA_DOCKER_IMAGE europe-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/pwa:latest
-          docker tag $KEYCLOAK_DOCKER_IMAGE europe-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/keycloak:latest
-          docker push europe-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/php:latest
-          docker push europe-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/pwa:latest
-          docker push europe-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/keycloak:latest
+          docker tag $PHP_DOCKER_IMAGE europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/php:latest
+          docker tag $PWA_DOCKER_IMAGE europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/pwa:latest
+          docker tag $KEYCLOAK_DOCKER_IMAGE europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/keycloak:latest
+          docker push europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/php:latest
+          docker push europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/pwa:latest
+          docker push europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/keycloak:latest
 
   deploy:
     name: Deploy
