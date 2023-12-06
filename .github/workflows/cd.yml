@@ -35,8 +35,10 @@ jobs:
           python-version: 3.9.15
       -
         name: Auth gcloud
+        id: auth
         uses: google-github-actions/auth@v2
         with:
+          token_format: access_token
           credentials_json: ${{ secrets.GKE_SA_KEY }}
       -
         name: Setup gcloud
@@ -48,6 +50,13 @@ jobs:
         run: |
           gcloud --quiet auth configure-docker
           gcloud container clusters get-credentials api-platform-demo --zone europe-west1-c
+      -
+        name: Login to GAR
+        uses: docker/login-action@v3
+        with:
+          registry: europe-docker.pkg.dev
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
       -
         name: Build Docker images
         uses: docker/bake-action@v4
