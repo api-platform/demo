@@ -14,14 +14,10 @@ php:
   corsAllowOrigin: "^https?://.*?\\.chart-example\\.local$"
   trustedHosts: "^127\\.0\\.0\\.1|localhost|.*\\.chart-example\\.local$"
   trustedProxies:
-    # local
     - "127.0.0.1"
     - "10.0.0.0/8"
     - "172.16.0.0/12"
     - "192.168.0.0/16"
-    # GKE
-    - "172.71.0.0/16"
-    - "34.149.0.0/16"
   caddyGlobalOptions: |
     debug
     servers {
@@ -215,6 +211,7 @@ service:
 ingress:
   enabled: true
   annotations: {}
+    # cert-manager.io/cluster-issuer: letsencrypt-production
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:

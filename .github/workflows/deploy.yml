@@ -126,7 +126,6 @@ jobs:
             --set=php.image.repository=europe-west1-docker.pkg.dev/${{ secrets.gke-project }}/${{ secrets.gke-project }}/php \
             --set=php.image.tag=${{ inputs.docker-images-version }} \
             --set=php.image.pullPolicy=Always \
-            --set=php.trustedHosts="^10.\\.*|.*\\.api-platform\\.com$" \
             --set=pwa.image.repository=europe-west1-docker.pkg.dev/${{ secrets.gke-project }}/${{ secrets.gke-project }}/pwa \
             --set=pwa.image.tag=${{ inputs.docker-images-version }} \
             --set=pwa.image.pullPolicy=Always \
