@@ -111,8 +111,8 @@ jobs:
             --wait \
             --namespace=${{ inputs.namespace }} \
             --set=app.version=${{ github.sha }} \
-            --set=keycloak.image.registry=europe-docker.pkg.dev \
-            --set=keycloak.image.repository=${{ secrets.gke-project }}/keycloak \
+            --set=keycloak.image.registry=europe-west1-docker.pkg.dev \
+            --set=keycloak.image.repository=${{ secrets.gke-project }}/${{ secrets.gke-project }}/keycloak \
             --set=keycloak.image.tag=${{ inputs.docker-images-version }} \
             --set=keycloak.image.pullPolicy=Always \
             --set=keycloak.auth.adminPassword=${{ secrets.keycloak-admin-password }} \
@@ -123,11 +123,11 @@ jobs:
             --set-string=keycloak.extraEnvVars[1].value=https://${{ inputs.url }}/oidc/ \
             --set=keycloak.extraEnvVars[2].name=KEYCLOAK_PRODUCTION \
             --set-string=keycloak.extraEnvVars[2].value=true \
-            --set=php.image.repository=europe-docker.pkg.dev/${{ secrets.gke-project }}/php \
+            --set=php.image.repository=europe-west1-docker.pkg.dev/${{ secrets.gke-project }}/${{ secrets.gke-project }}/php \
             --set=php.image.tag=${{ inputs.docker-images-version }} \
             --set=php.image.pullPolicy=Always \
             --set=php.trustedHosts="^10.\\.*|.*\\.api-platform\\.com$" \
-            --set=pwa.image.repository=europe-docker.pkg.dev/${{ secrets.gke-project }}/pwa \
+            --set=pwa.image.repository=europe-west1-docker.pkg.dev/${{ secrets.gke-project }}/${{ secrets.gke-project }}/pwa \
             --set=pwa.image.tag=${{ inputs.docker-images-version }} \
             --set=pwa.image.pullPolicy=Always \
             --set=ingress.hosts[0].host=${{ inputs.url }} \
