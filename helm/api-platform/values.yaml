@@ -5,7 +5,7 @@
 php:
   image:
     repository: "chart-example.local/api-platform/php"
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
   appEnv: prod
@@ -40,7 +40,7 @@ php:
 pwa:
   image:
     repository: "chart-example.local/api-platform/pwa"
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
   appSecret: ""
@@ -57,7 +57,9 @@ mercure:
   publicUrl: https://chart-example.local/.well-known/mercure
   # Change me!
   jwtSecret: "!ChangeThisMercureHubJWTSecretKey!"
-  extraDirectives: cors_origins http://chart-example.local https://chart-example.local
+  extraDirectives: |
+    demo
+    cors_origins http://chart-example.local https://chart-example.local
 
 # Full configuration: https://github.com/bitnami/charts/tree/master/bitnami/postgresql
 postgresql:
@@ -78,7 +80,7 @@ postgresql:
       enabled: true
       storageClass: standard
       size: 1Gi
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
     image:
       repository: bitnami/postgresql
       tag: 16
@@ -91,8 +93,9 @@ postgresql:
 keycloak:
   enabled: true
   image:
+    registry: europe-west1-docker.pkg.dev
     repository: "chart-example.local/api-platform/keycloak"
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: "0.1.0"
   resources:
@@ -147,7 +150,7 @@ keycloak:
         enabled: true
         storageClass: standard
         size: 1Gi
-      pullPolicy: IfNotPresent
+      pullPolicy: Always
       image:
         repository: bitnami/postgresql
         tag: 16
