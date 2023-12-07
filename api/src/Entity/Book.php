@@ -70,8 +70,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     denormalizationContext: [
         AbstractNormalizer::GROUPS => ['Book:write'],
     ],
-    // todo waiting for https://github.com/api-platform/core/pull/5844
-    //    collectDenormalizationErrors: true,
+    collectDenormalizationErrors: true,
     security: 'is_granted("ROLE_ADMIN")'
 )]
 #[ApiResource(

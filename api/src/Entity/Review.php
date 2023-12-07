@@ -75,8 +75,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     denormalizationContext: [
         AbstractNormalizer::GROUPS => ['Review:write', 'Review:write:admin'],
     ],
-    // todo waiting for https://github.com/api-platform/core/pull/5844
-    //    collectDenormalizationErrors: true,
+    collectDenormalizationErrors: true,
     security: 'is_granted("ROLE_ADMIN")'
 )]
 #[ApiResource(
@@ -138,8 +137,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     denormalizationContext: [
         AbstractNormalizer::GROUPS => ['Review:write'],
     ],
-    // todo waiting for https://github.com/api-platform/core/pull/5844
-    //    collectDenormalizationErrors: true
+    collectDenormalizationErrors: true
 )]
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
 #[ORM\UniqueConstraint(fields: ['user', 'book'])]

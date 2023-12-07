@@ -332,27 +332,17 @@ final class BookTest extends ApiTestCase
                 'book' => '',
                 'condition' => '',
             ],
-            Response::HTTP_BAD_REQUEST,
-            // todo waiting for https://github.com/api-platform/core/pull/5844
-            //            Response::HTTP_UNPROCESSABLE_ENTITY,
+            Response::HTTP_UNPROCESSABLE_ENTITY,
             [
-                '@type' => 'hydra:Error',
+                '@type' => 'ConstraintViolationList',
                 'hydra:title' => 'An error occurred',
-                'hydra:description' => 'The data must belong to a backed enumeration of type ' . BookCondition::class,
-                // todo waiting for https://github.com/api-platform/core/pull/5844[
-                //                '@type' => 'ConstraintViolationList',
-                //                'hydra:title' => 'An error occurred',
-                //                'hydra:description' => 'book: This value should not be blank.\ncondition: This value should be of type '.BookCondition::class.'.',
-                //                'violations' => [
-                //                    [
-                //                        'propertyPath' => 'book',
-                //                        'hint' => 'This value should not be blank.',
-                //                    ],
-                //                    [
-                //                        'propertyPath' => 'condition',
-                //                        'hint' => 'The data must belong to a backed enumeration of type '.BookCondition::class,
-                //                    ],
-                //                ],
+                'hydra:description' => 'condition: This value should be of type '.BookCondition::class.'.',
+                'violations' => [
+                    [
+                        'propertyPath' => 'condition',
+                        'hint' => 'The data must belong to a backed enumeration of type '.BookCondition::class,
+                    ],
+                ],
             ],
         ];
         yield 'invalid condition' => [
@@ -360,23 +350,17 @@ final class BookTest extends ApiTestCase
                 'book' => 'https://openlibrary.org/books/OL28346544M.json',
                 'condition' => 'invalid condition',
             ],
-            Response::HTTP_BAD_REQUEST,
-            // todo waiting for https://github.com/api-platform/core/pull/5844
-            //            Response::HTTP_UNPROCESSABLE_ENTITY,
+            Response::HTTP_UNPROCESSABLE_ENTITY,
             [
-                '@type' => 'hydra:Error',
+                '@type' => 'ConstraintViolationList',
                 'hydra:title' => 'An error occurred',
-                'hydra:description' => 'The data must belong to a backed enumeration of type ' . BookCondition::class,
-                // todo waiting for https://github.com/api-platform/core/pull/5844
-                //                '@type' => 'ConstraintViolationList',
-                //                'hydra:title' => 'An error occurred',
-                //                'hydra:description' => 'condition: This value should be of type '.BookCondition::class.'.',
-                //                'violations' => [
-                //                    [
-                //                        'propertyPath' => 'condition',
-                //                        'hint' => 'The data must belong to a backed enumeration of type '.BookCondition::class,
-                //                    ],
-                //                ],
+                'hydra:description' => 'condition: This value should be of type '.BookCondition::class.'.',
+                'violations' => [
+                    [
+                        'propertyPath' => 'condition',
+                        'hint' => 'The data must belong to a backed enumeration of type '.BookCondition::class,
+                    ],
+                ],
             ],
         ];
         yield 'invalid book' => [

@@ -9,6 +9,7 @@ use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\DataFixtures\Factory\BookFactory;
 use App\DataFixtures\Factory\BookmarkFactory;
 use App\DataFixtures\Factory\UserFactory;
+use App\Entity\Book;
 use App\Entity\Bookmark;
 use App\Repository\BookmarkRepository;
 use App\Tests\Api\Trait\SecurityTrait;
@@ -127,28 +128,20 @@ final class BookmarkTest extends ApiTestCase
             'auth_bearer' => $token,
         ]);
 
-        self::assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
-        // todo waiting for https://github.com/api-platform/core/pull/5844
-        //        self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'hydra:Error',
+            '@type' => 'ConstraintViolationList',
             'hydra:title' => 'An error occurred',
-            'hydra:description' => 'Item not found for "/books/' . $uuid . '".',
+            'hydra:description' => 'book: This value should be of type '.Book::class.'.',
+            'violations' => [
+                [
+                    'propertyPath' => 'book',
+                    'hint' => 'Item not found for "/books/'.$uuid.'".',
+                ],
+            ],
         ]);
-        // todo waiting for https://github.com/api-platform/core/pull/5844
-        //        self::assertJsonContains([
-        //            '@type' => 'ConstraintViolationList',
-        //            'hydra:title' => 'An error occurred',
-        //            'hydra:description' => 'book: This value should be of type '.Book::class.'.',
-        //            'violations' => [
-        //                [
-        //                    'propertyPath' => 'book',
-        //                    'hint' => 'Item not found for "/books/'.$uuid.'".',
-        //                ],
-        //            ],
-        //        ]);
     }
 
     /**
