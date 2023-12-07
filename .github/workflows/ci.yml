@@ -166,3 +166,16 @@ jobs:
         with:
           name: playwright-screenshots
           path: pwa/test-results
+
+  lint:
+    name: Docker Lint
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Lint Dockerfiles
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          recursive: true
