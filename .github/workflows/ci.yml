@@ -70,7 +70,7 @@ jobs:
         run: docker compose exec -T php bin/console -e test doctrine:schema:validate
       -
         name: Run PHPStan
-        run: docker compose exec -T php vendor/bin/phpstan --memory-limit=256M
+        run: docker compose exec -T php vendor/bin/phpstan
       -
         name: Lint PWA
         run: docker compose exec -T pwa pnpm lint
