@@ -93,3 +93,10 @@ jobs:
       cloudflare-api-token: ${{ secrets.CF_API_TOKEN }}
       cloudflare-zone-id: ${{ secrets.CF_ZONE_ID }}
       keycloak-admin-password: ${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}
+
+  check:
+    name: Check
+    needs: [ deploy ]
+    uses: ./.github/workflows/check.yml
+    with:
+      url: ${{needs.deploy.outputs.url}}

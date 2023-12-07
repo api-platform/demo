@@ -32,6 +32,9 @@ on:
       keycloak-admin-password:
         description: Keycloak Admin Password
         required: true
+    outputs:
+       url:
+         value: ${{ jobs.deploy.outputs.url }}
 
 jobs:
   deploy:
@@ -43,6 +46,8 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
+    outputs:
+       url: ${{ steps.deploy.outputs.url }}
     steps:
       -
         name: Checkout
@@ -81,6 +86,7 @@ jobs:
       # Release name MUST start with a letter
       -
         name: Deploy
+        id: deploy
         run: |
           if [ "${{ github.event_name }}" == "push" ]; then
             release=prod
@@ -91,6 +97,7 @@ jobs:
             namespace=$release
             url=$release-demo.api-platform.com
           fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
           cors="https://$url|http://localhost|https://localhost|http://localhost:3000"
           set -o pipefail
           helm upgrade $release ./helm/api-platform -f ./helm/api-platform/values.yaml \
