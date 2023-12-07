@@ -121,9 +121,6 @@ jobs:
             --set=pwa.image.repository=europe-west1-docker.pkg.dev/${{ secrets.gke-project }}/${{ secrets.gke-project }}/pwa \
             --set=pwa.image.tag=${{ inputs.docker-images-version }} \
             --set=ingress.hosts[0].host=${{ inputs.url }} \
-            --set=ingress.hosts[0].paths[0].backend.service.name=${{ inputs.release }}-keycloak \
-            --set=ingress.hosts[0].paths[1].backend.service.name=${{ inputs.release }}-api-platform \
-            --set=ingress.tls[0].secretName=${{ inputs.release }}-api-platform-tls \
             --set=ingress.tls[0].hosts[0]=${{ inputs.url }} \
             --set=external-dns.cloudflare.apiToken=${{ secrets.cloudflare-api-token }} \
             --set=external-dns.domainFilters={"${{ inputs.url }}"} \

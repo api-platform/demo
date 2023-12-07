@@ -223,23 +223,24 @@ ingress:
     # kubernetes.io/tls-acme: "true"
   hosts:
     - host: chart-example.local
-      paths:
+      oidcpaths:
         - path: /oidc/
           pathType: Prefix
-          backend:
-            service:
-              name: main-keycloak
-              port:
-                number: 80
+          #backend:
+          #  service:
+          #    name: main-keycloak
+          #    port:
+          #      number: 80
+      paths:
         - path: /
           pathType: Prefix
-          backend:
-            service:
-              name: main-api-platform
-              port:
-                number: 80
+          #backend:
+          #  service:
+          #    name: main-api-platform
+          #    port:
+          #      number: 80
   tls:
-    - secretName: chart-example-tls
+    - #secretName: chart-example-tls
       hosts:
         - chart-example.local
 
