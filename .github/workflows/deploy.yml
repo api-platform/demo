@@ -117,7 +117,7 @@ jobs:
             --set=php.corsAllowOrigin="^$(echo "$cors" | sed 's/\./\\./g')$" \
             --set=mercure.publicUrl=https://$url/.well-known/mercure \
             --set=mercure.extraDirectives="demo \
-            cors_origins $(echo "$cors" | sed 's/|/ |g')" \
+            cors_origins $(echo "$cors" | sed 's/|/ /g')" \
             | sed --unbuffered '/USER-SUPPLIED VALUES/,$d'
       -
         name: Debug kube events
