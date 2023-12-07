@@ -3,32 +3,11 @@ name: Deploy
 on:
   workflow_call:
     inputs:
-      environment:
-        type: string
-        description: GitHub Environment Name
-        default: prod
-        required: false
-      url:
-        type: string
-        description: GitHub Environment Url (without scheme)
-        required: true
       docker-images-version:
         type: string
         description: Docker Images Version
         default: latest
         required: false
-      cors:
-        type: string
-        description: CORS
-        required: true
-      release:
-        type: string
-        description: Release Name
-        required: true
-      namespace:
-        type: string
-        description: Namespace Name
-        required: true
       gke-cluster:
         type: string
         description: Google Kubernetes Engine Cluster
@@ -103,34 +82,44 @@ jobs:
       -
         name: Deploy
         run: |
+          if [ "${{ github.event_name }}" == "push" ]; then
+            release=prod
+            namespace=$release
+            url=demo.api-platform.com
+          else
+            release=pr-${{ github.event.pull_request.number }}
+            namespace=$release
+            url=$release-demo.api-platform.com
+          fi
+          cors="https://$url|http://localhost|https://localhost|http://localhost:3000"
           set -o pipefail
-          helm upgrade ${{ inputs.release }} ./helm/api-platform -f ./helm/api-platform/values.yaml \
+          helm upgrade $release ./helm/api-platform -f ./helm/api-platform/values.yaml \
             --install \
             --create-namespace \
             --debug \
             --wait \
-            --namespace=${{ inputs.namespace }} \
+            --namespace=$namespace \
             --set=app.version=${{ github.sha }} \
             --set=keycloak.image.repository=${{ secrets.gke-project }}/${{ secrets.gke-project }}/keycloak \
             --set=keycloak.image.tag=${{ inputs.docker-images-version }} \
             --set=keycloak.auth.adminPassword=${{ secrets.keycloak-admin-password }} \
-            --set-string=keycloak.extraEnvVars[0].value=https://${{ inputs.url }}/oidc/ \
-            --set-string=keycloak.extraEnvVars[1].value=https://${{ inputs.url }}/oidc/ \
+            --set-string=keycloak.extraEnvVars[0].value=https://$url/oidc/ \
+            --set-string=keycloak.extraEnvVars[1].value=https://$url/oidc/ \
             --set=php.image.repository=europe-west1-docker.pkg.dev/${{ secrets.gke-project }}/${{ secrets.gke-project }}/php \
             --set=php.image.tag=${{ inputs.docker-images-version }} \
             --set=pwa.image.repository=europe-west1-docker.pkg.dev/${{ secrets.gke-project }}/${{ secrets.gke-project }}/pwa \
             --set=pwa.image.tag=${{ inputs.docker-images-version }} \
-            --set=ingress.hosts[0].host=${{ inputs.url }} \
-            --set=ingress.tls[0].hosts[0]=${{ inputs.url }} \
+            --set=ingress.hosts[0].host=$url \
+            --set=ingress.tls[0].hosts[0]=$url \
             --set=external-dns.cloudflare.apiToken=${{ secrets.cloudflare-api-token }} \
-            --set=external-dns.domainFilters={"${{ inputs.url }}"} \
+            --set=external-dns.domainFilters={"$url"} \
             --set=external-dns.zoneIdFilters={${{ secrets.cloudflare-zone-id }}} \
-            --set=php.corsAllowOrigin="^$(echo "${{ join(fromJSON(inputs.cors), '|') }}" | sed 's/\./\\./g')$" \
-            --set=mercure.publicUrl=https://${{ inputs.url }}/.well-known/mercure \
+            --set=php.corsAllowOrigin="^$(echo "$cors" | sed 's/\./\\./g')$" \
+            --set=mercure.publicUrl=https://$url/.well-known/mercure \
             --set=mercure.extraDirectives="demo \
-            cors_origins ${{ join(fromJSON(inputs.cors), ' ') }}" \
+            cors_origins $(echo "$cors" | sed 's/|/ |g')" \
             | sed --unbuffered '/USER-SUPPLIED VALUES/,$d'
       -
         name: Debug kube events
         if: failure()
-        run: kubectl get events --namespace=${{ inputs.namespace }} --sort-by .metadata.creationTimestamp
+        run: kubectl get events --namespace=$namespace --sort-by .metadata.creationTimestamp

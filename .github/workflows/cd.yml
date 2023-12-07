@@ -82,36 +82,9 @@ jobs:
   deploy:
     name: Deploy
     needs: [ build ]
-    if: github.event_name == 'push'
     uses: ./.github/workflows/deploy.yml
     with:
-      environment: prod
-      url: demo.api-platform.com
       docker-images-version: ${{ github.sha }}
-      cors: '["https://demo.api-platform.com", "http://localhost", "https://localhost", "http://localhost:3000"]'
-      release: main
-      namespace: main
-      gke-cluster: api-platform-demo
-      gke-zone: europe-west1-c
-    secrets:
-      gke-credentials: ${{ secrets.GKE_SA_KEY }}
-      gke-project: ${{ secrets.GKE_PROJECT }}
-      cloudflare-api-token: ${{ secrets.CF_API_TOKEN }}
-      cloudflare-zone-id: ${{ secrets.CF_ZONE_ID }}
-      keycloak-admin-password: ${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}
-
-  feature-deploy:
-    name: Feature Deploy
-    needs: [ build ]
-    if: github.event_name == 'pull_request'
-    uses: ./.github/workflows/deploy.yml
-    with:
-      environment: pr-${{ github.event.pull_request.number }}
-      url: pr-${{ github.event.pull_request.number }}-demo.api-platform.com
-      docker-images-version: ${{ github.sha }}
-      cors: '["https://pr-${{ github.event.pull_request.number }}-demo.api-platform.com", "http://localhost", "https://localhost", "http://localhost:3000"]'
-      release: pr-${{ github.event.pull_request.number }}
-      namespace: pr-${{ github.event.pull_request.number }}
       gke-cluster: api-platform-demo
       gke-zone: europe-west1-c
     secrets:
