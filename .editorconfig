@@ -34,10 +34,16 @@ indent_size = 4
 [*.{yaml,yml}]
 trim_trailing_whitespace = false
 
-[helm/api-platform/**.yaml]
+[.hadolint.yaml]
 indent_size = 2
 
-[.github/workflows/*.yml]
+[.markdown-lint.yaml]
+indent_size = 2
+
+[helm/api-platform/**.{yaml,yml}]
+indent_size = 2
+
+[.github/**.{yaml,yml}]
 indent_size = 2
 
 [.gitmodules]
