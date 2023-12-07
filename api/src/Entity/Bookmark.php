@@ -17,6 +17,7 @@ use App\Serializer\IriTransformerNormalizer;
 use App\State\Processor\BookmarkPersistProcessor;
 use App\Validator\UniqueUserBook;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -66,7 +67,7 @@ class Bookmark
      */
     #[ApiProperty(identifier: true, types: ['https://schema.org/identifier'])]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
-    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\Id]
     private ?Uuid $id = null;

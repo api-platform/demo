@@ -17,6 +17,9 @@ final class BookNormalizer implements NormalizerInterface, NormalizerAwareInterf
 {
     use NormalizerAwareTrait;
 
+    /**
+     * @param ReviewRepository $repository
+     */
     public function __construct(
         private RouterInterface $router,
         #[Autowire(service: ReviewRepository::class)]

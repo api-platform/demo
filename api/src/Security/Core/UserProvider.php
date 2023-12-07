@@ -12,6 +12,9 @@ use Symfony\Component\Security\Core\User\AttributesBasedUserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
 
+/**
+ * @implements AttributesBasedUserProviderInterface<UserInterface|User>
+ */
 final readonly class UserProvider implements AttributesBasedUserProviderInterface
 {
     public function __construct(private ManagerRegistry $registry, private UserRepository $repository)

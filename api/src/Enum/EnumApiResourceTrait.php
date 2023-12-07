@@ -9,13 +9,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 trait EnumApiResourceTrait
 {
-    public function getId()
+    public function getId(): string
     {
         return $this->name;
     }
 
     #[Groups('Enum:read')]
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }
@@ -25,7 +25,7 @@ trait EnumApiResourceTrait
         return self::cases();
     }
 
-    public static function getCase(Operation $operation, array $uriVariables)
+    public static function getCase(Operation $operation, array $uriVariables): ?static
     {
         $name = $uriVariables['id'] ?? null;
 

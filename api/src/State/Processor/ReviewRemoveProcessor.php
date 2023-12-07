@@ -13,8 +13,15 @@ use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Review;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
+/**
+ * @implements ProcessorInterface<void>
+ */
 final readonly class ReviewRemoveProcessor implements ProcessorInterface
 {
+    /**
+     * @param RemoveProcessor $removeProcessor
+     * @param MercureProcessor $mercureProcessor
+     */
     public function __construct(
         #[Autowire(service: RemoveProcessor::class)]
         private ProcessorInterface $removeProcessor,
