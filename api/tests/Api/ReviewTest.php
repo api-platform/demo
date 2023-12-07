@@ -39,12 +39,14 @@ final class ReviewTest extends ApiTestCase
      * Filters are disabled on /books/{bookId}/reviews.
      *
      * @dataProvider getUrls
+     *
+     * @test
      */
-    public function testAsAnonymousICanGetACollectionOfBookReviewsWithoutFilters(FactoryCollection $factory, string|callable $url, int $hydraTotalItems, int $totalHydraMember = 30): void
+    public function asAnonymousICanGetACollectionOfBookReviewsWithoutFilters(FactoryCollection $factory, callable|string $url, int $hydraTotalItems, int $totalHydraMember = 30): void
     {
         $factory->create();
 
-        if (is_callable($url)) {
+        if (\is_callable($url)) {
             $url = $url();
         }
 
@@ -56,13 +58,13 @@ final class ReviewTest extends ApiTestCase
             'hydra:totalItems' => $hydraTotalItems,
         ]);
         self::assertCount(min($hydraTotalItems, $totalHydraMember), $response->toArray()['hydra:member']);
-        self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Review/collection.json'));
+        self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Review/collection.json'));
     }
 
-    public function getUrls(): iterable
+    public static function getUrls(): iterable
     {
         yield 'all book reviews' => [
-            ReviewFactory::new()->sequence(function () {
+            ReviewFactory::new()->sequence(static function () {
                 $book = BookFactory::createOne(['title' => 'Hyperion']);
                 foreach (range(1, 35) as $i) {
                     yield ['book' => $book];
@@ -72,12 +74,12 @@ final class ReviewTest extends ApiTestCase
                 /** @var Book[] $books */
                 $books = BookFactory::findBy(['title' => 'Hyperion']);
 
-                return '/books/'.$books[0]->getId().'/reviews';
+                return '/books/' . $books[0]->getId() . '/reviews';
             },
             35,
         ];
         yield 'all book reviews using itemsPerPage' => [
-            ReviewFactory::new()->sequence(function () {
+            ReviewFactory::new()->sequence(static function () {
                 $book = BookFactory::createOne(['title' => 'Hyperion']);
                 foreach (range(1, 20) as $i) {
                     yield ['book' => $book];
@@ -87,13 +89,13 @@ final class ReviewTest extends ApiTestCase
                 /** @var Book[] $books */
                 $books = BookFactory::findBy(['title' => 'Hyperion']);
 
-                return '/books/'.$books[0]->getId().'/reviews?itemsPerPage=10';
+                return '/books/' . $books[0]->getId() . '/reviews?itemsPerPage=10';
             },
             20,
             10,
         ];
         yield 'book reviews filtered by rating (filter is disabled for non-admin users)' => [
-            ReviewFactory::new()->sequence(function () {
+            ReviewFactory::new()->sequence(static function () {
                 $book = BookFactory::createOne(['title' => 'Hyperion']);
                 foreach (range(1, 100) as $i) {
                     // 33% of reviews are rated 5
@@ -104,12 +106,12 @@ final class ReviewTest extends ApiTestCase
                 /** @var Book[] $books */
                 $books = BookFactory::findBy(['title' => 'Hyperion']);
 
-                return '/books/'.$books[0]->getId().'/reviews?rating=5';
+                return '/books/' . $books[0]->getId() . '/reviews?rating=5';
             },
             100,
         ];
         yield 'book reviews filtered by user (filter is disabled for non-admin users)' => [
-            ReviewFactory::new()->sequence(function () {
+            ReviewFactory::new()->sequence(static function () {
                 $book = BookFactory::createOne(['title' => 'Hyperion']);
                 yield ['book' => $book, 'user' => UserFactory::createOne(['email' => 'user@example.com'])];
                 foreach (range(1, 34) as $i) {
@@ -122,17 +124,20 @@ final class ReviewTest extends ApiTestCase
                 /** @var User[] $users */
                 $users = UserFactory::findBy(['email' => 'user@example.com']);
 
-                return '/books/'.$books[0]->getId().'/reviews?user=/users/'.$users[0]->getId();
+                return '/books/' . $books[0]->getId() . '/reviews?user=/users/' . $users[0]->getId();
             },
             35,
         ];
     }
 
-    public function testAsAnonymousICannotAddAReviewOnABook(): void
+    /**
+     * @test
+     */
+    public function asAnonymousICannotAddAReviewOnABook(): void
     {
         $book = BookFactory::createOne();
 
-        $this->client->request('POST', '/books/'.$book->getId().'/reviews', [
+        $this->client->request('POST', '/books/' . $book->getId() . '/reviews', [
             'json' => [
                 'body' => 'Very good book!',
                 'rating' => 5,
@@ -155,8 +160,10 @@ final class ReviewTest extends ApiTestCase
 
     /**
      * @dataProvider getInvalidData
+     *
+     * @test
      */
-    public function testAsAUserICannotAddAReviewOnABookWithInvalidData(array $data, int $statusCode, array $expected): void
+    public function asAUserICannotAddAReviewOnABookWithInvalidData(array $data, int $statusCode, array $expected): void
     {
         $book = BookFactory::createOne();
 
@@ -164,7 +171,7 @@ final class ReviewTest extends ApiTestCase
             'email' => UserFactory::createOne()->email,
         ]);
 
-        $this->client->request('POST', '/books/'.$book->getId().'/reviews', [
+        $this->client->request('POST', '/books/' . $book->getId() . '/reviews', [
             'auth_bearer' => $token,
             'json' => $data,
             'headers' => [
@@ -179,7 +186,7 @@ final class ReviewTest extends ApiTestCase
         self::assertJsonContains($expected);
     }
 
-    public function getInvalidData(): iterable
+    public static function getInvalidData(): iterable
     {
         yield 'empty data' => [
             [],
@@ -201,7 +208,10 @@ final class ReviewTest extends ApiTestCase
         ];
     }
 
-    public function testAsAUserICannotAddAReviewWithValidDataOnAnInvalidBook(): void
+    /**
+     * @test
+     */
+    public function asAUserICannotAddAReviewWithValidDataOnAnInvalidBook(): void
     {
         $book = BookFactory::createOne();
         ReviewFactory::createMany(5, ['book' => $book]);
@@ -235,8 +245,10 @@ final class ReviewTest extends ApiTestCase
 
     /**
      * @group mercure
+     *
+     * @test
      */
-    public function testAsAUserICanAddAReviewOnABook(): void
+    public function asAUserICanAddAReviewOnABook(): void
     {
         $book = BookFactory::createOne();
         ReviewFactory::createMany(5, ['book' => $book]);
@@ -247,7 +259,7 @@ final class ReviewTest extends ApiTestCase
             'email' => $user->email,
         ]);
 
-        $response = $this->client->request('POST', '/books/'.$book->getId().'/reviews', [
+        $response = $this->client->request('POST', '/books/' . $book->getId() . '/reviews', [
             'auth_bearer' => $token,
             'json' => [
                 'body' => 'Very good book!',
@@ -262,14 +274,14 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_CREATED);
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertJsonContains([
-            'book' => '/books/'.$book->getId(),
+            'book' => '/books/' . $book->getId(),
             'user' => [
-                '@id' => '/users/'.$user->getId(),
+                '@id' => '/users/' . $user->getId(),
             ],
             'body' => 'Very good book!',
             'rating' => 5,
         ]);
-        self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Review/item.json'));
+        self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Review/item.json'));
         // if I add a review on a book with reviews, it doesn't erase the existing reviews
         $reviews = self::getContainer()->get(ReviewRepository::class)->findBy(['book' => $book->object()]);
         self::assertCount(6, $reviews);
@@ -279,17 +291,20 @@ final class ReviewTest extends ApiTestCase
         self::assertCount(2, self::getMercureMessages());
         self::assertMercureUpdateMatchesJsonSchema(
             update: self::getMercureMessage(),
-            topics: ['http://localhost/admin/reviews/'.$review->getId()],
-            jsonSchema: file_get_contents(__DIR__.'/Admin/schemas/Review/item.json')
+            topics: ['http://localhost/admin/reviews/' . $review->getId()],
+            jsonSchema: file_get_contents(__DIR__ . '/Admin/schemas/Review/item.json')
         );
         self::assertMercureUpdateMatchesJsonSchema(
             update: self::getMercureMessage(1),
-            topics: ['http://localhost/books/'.$book->getId().'/reviews/'.$review->getId()],
-            jsonSchema: file_get_contents(__DIR__.'/schemas/Review/item.json')
+            topics: ['http://localhost/books/' . $book->getId() . '/reviews/' . $review->getId()],
+            jsonSchema: file_get_contents(__DIR__ . '/schemas/Review/item.json')
         );
     }
 
-    public function testAsAUserICannotAddADuplicateReviewOnABook(): void
+    /**
+     * @test
+     */
+    public function asAUserICannotAddADuplicateReviewOnABook(): void
     {
         $book = BookFactory::createOne();
         ReviewFactory::createMany(5, ['book' => $book]);
@@ -300,7 +315,7 @@ final class ReviewTest extends ApiTestCase
             'email' => $user->email,
         ]);
 
-        $this->client->request('POST', '/books/'.$book->getId().'/reviews', [
+        $this->client->request('POST', '/books/' . $book->getId() . '/reviews', [
             'auth_bearer' => $token,
             'json' => [
                 'body' => 'Very good book!',
@@ -322,11 +337,14 @@ final class ReviewTest extends ApiTestCase
         ]);
     }
 
-    public function testAsAnonymousICannotGetAnInvalidReview(): void
+    /**
+     * @test
+     */
+    public function asAnonymousICannotGetAnInvalidReview(): void
     {
         $book = BookFactory::createOne();
 
-        $this->client->request('GET', '/books/'.$book->getId().'/reviews/invalid');
+        $this->client->request('GET', '/books/' . $book->getId() . '/reviews/invalid');
 
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
@@ -338,11 +356,14 @@ final class ReviewTest extends ApiTestCase
         ]);
     }
 
-    public function testAsAnonymousICanGetABookReview(): void
+    /**
+     * @test
+     */
+    public function asAnonymousICanGetABookReview(): void
     {
         $review = ReviewFactory::createOne();
 
-        $this->client->request('GET', '/books/'.$review->book->getId().'/reviews/'.$review->getId());
+        $this->client->request('GET', '/books/' . $review->book->getId() . '/reviews/' . $review->getId());
 
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
@@ -354,11 +375,14 @@ final class ReviewTest extends ApiTestCase
         ]);
     }
 
-    public function testAsAnonymousICannotUpdateABookReview(): void
+    /**
+     * @test
+     */
+    public function asAnonymousICannotUpdateABookReview(): void
     {
         $review = ReviewFactory::createOne();
 
-        $this->client->request('PATCH', '/books/'.$review->book->getId().'/reviews/'.$review->getId(), [
+        $this->client->request('PATCH', '/books/' . $review->book->getId() . '/reviews/' . $review->getId(), [
             'json' => [
                 'body' => 'Very good book!',
                 'rating' => 5,
@@ -378,7 +402,10 @@ final class ReviewTest extends ApiTestCase
         ]);
     }
 
-    public function testAsAUserICannotUpdateABookReviewOfAnotherUser(): void
+    /**
+     * @test
+     */
+    public function asAUserICannotUpdateABookReviewOfAnotherUser(): void
     {
         $review = ReviewFactory::createOne(['user' => UserFactory::createOne()]);
 
@@ -386,7 +413,7 @@ final class ReviewTest extends ApiTestCase
             'email' => UserFactory::createOne()->email,
         ]);
 
-        $this->client->request('PATCH', '/books/'.$review->book->getId().'/reviews/'.$review->getId(), [
+        $this->client->request('PATCH', '/books/' . $review->book->getId() . '/reviews/' . $review->getId(), [
             'auth_bearer' => $token,
             'json' => [
                 'body' => 'Very good book!',
@@ -407,7 +434,10 @@ final class ReviewTest extends ApiTestCase
         ]);
     }
 
-    public function testAsAUserICannotUpdateAnInvalidBookReview(): void
+    /**
+     * @test
+     */
+    public function asAUserICannotUpdateAnInvalidBookReview(): void
     {
         $book = BookFactory::createOne();
 
@@ -415,7 +445,7 @@ final class ReviewTest extends ApiTestCase
             'email' => UserFactory::createOne()->email,
         ]);
 
-        $this->client->request('PATCH', '/books/'.$book->getId().'/reviews/invalid', [
+        $this->client->request('PATCH', '/books/' . $book->getId() . '/reviews/invalid', [
             'auth_bearer' => $token,
             'json' => [
                 'body' => 'Very good book!',
@@ -431,8 +461,10 @@ final class ReviewTest extends ApiTestCase
 
     /**
      * @group mercure
+     *
+     * @test
      */
-    public function testAsAUserICanUpdateMyBookReview(): void
+    public function asAUserICanUpdateMyBookReview(): void
     {
         $review = ReviewFactory::createOne();
         self::getMercureHub()->reset();
@@ -441,7 +473,7 @@ final class ReviewTest extends ApiTestCase
             'email' => $review->user->email,
         ]);
 
-        $this->client->request('PATCH', '/books/'.$review->book->getId().'/reviews/'.$review->getId(), [
+        $this->client->request('PATCH', '/books/' . $review->book->getId() . '/reviews/' . $review->getId(), [
             'auth_bearer' => $token,
             'json' => [
                 'body' => 'Very good book!',
@@ -458,25 +490,28 @@ final class ReviewTest extends ApiTestCase
             'body' => 'Very good book!',
             'rating' => 5,
         ]);
-        self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Review/item.json'));
+        self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Review/item.json'));
         self::assertCount(2, self::getMercureMessages());
         self::assertMercureUpdateMatchesJsonSchema(
             update: self::getMercureMessage(),
-            topics: ['http://localhost/admin/reviews/'.$review->getId()],
-            jsonSchema: file_get_contents(__DIR__.'/Admin/schemas/Review/item.json')
+            topics: ['http://localhost/admin/reviews/' . $review->getId()],
+            jsonSchema: file_get_contents(__DIR__ . '/Admin/schemas/Review/item.json')
         );
         self::assertMercureUpdateMatchesJsonSchema(
             update: self::getMercureMessage(1),
-            topics: ['http://localhost/books/'.$review->book->getId().'/reviews/'.$review->getId()],
-            jsonSchema: file_get_contents(__DIR__.'/schemas/Review/item.json')
+            topics: ['http://localhost/books/' . $review->book->getId() . '/reviews/' . $review->getId()],
+            jsonSchema: file_get_contents(__DIR__ . '/schemas/Review/item.json')
         );
     }
 
-    public function testAsAnonymousICannotDeleteABookReview(): void
+    /**
+     * @test
+     */
+    public function asAnonymousICannotDeleteABookReview(): void
     {
         $review = ReviewFactory::createOne();
 
-        $this->client->request('DELETE', '/books/'.$review->book->getId().'/reviews/'.$review->getId());
+        $this->client->request('DELETE', '/books/' . $review->book->getId() . '/reviews/' . $review->getId());
 
         self::assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
@@ -488,7 +523,10 @@ final class ReviewTest extends ApiTestCase
         ]);
     }
 
-    public function testAsAUserICannotDeleteABookReviewOfAnotherUser(): void
+    /**
+     * @test
+     */
+    public function asAUserICannotDeleteABookReviewOfAnotherUser(): void
     {
         $review = ReviewFactory::createOne(['user' => UserFactory::createOne()]);
 
@@ -496,7 +534,7 @@ final class ReviewTest extends ApiTestCase
             'email' => UserFactory::createOne()->email,
         ]);
 
-        $this->client->request('DELETE', '/books/'.$review->book->getId().'/reviews/'.$review->getId(), [
+        $this->client->request('DELETE', '/books/' . $review->book->getId() . '/reviews/' . $review->getId(), [
             'auth_bearer' => $token,
         ]);
 
@@ -510,7 +548,10 @@ final class ReviewTest extends ApiTestCase
         ]);
     }
 
-    public function testAsAUserICannotDeleteAnInvalidBookReview(): void
+    /**
+     * @test
+     */
+    public function asAUserICannotDeleteAnInvalidBookReview(): void
     {
         $book = BookFactory::createOne();
 
@@ -518,7 +559,7 @@ final class ReviewTest extends ApiTestCase
             'email' => UserFactory::createOne()->email,
         ]);
 
-        $this->client->request('DELETE', '/books/'.$book->getId().'/reviews/invalid', [
+        $this->client->request('DELETE', '/books/' . $book->getId() . '/reviews/invalid', [
             'auth_bearer' => $token,
         ]);
 
@@ -527,8 +568,10 @@ final class ReviewTest extends ApiTestCase
 
     /**
      * @group mercure
+     *
+     * @test
      */
-    public function testAsAUserICanDeleteMyBookReview(): void
+    public function asAUserICanDeleteMyBookReview(): void
     {
         $review = ReviewFactory::createOne(['body' => 'Best book ever!']);
         self::getMercureHub()->reset();
@@ -539,7 +582,7 @@ final class ReviewTest extends ApiTestCase
             'email' => $review->user->email,
         ]);
 
-        $response = $this->client->request('DELETE', '/books/'.$bookId.'/reviews/'.$id, [
+        $response = $this->client->request('DELETE', '/books/' . $bookId . '/reviews/' . $id, [
             'auth_bearer' => $token,
         ]);
 
@@ -550,15 +593,15 @@ final class ReviewTest extends ApiTestCase
         // todo how to ensure it's a delete update
         self::assertEquals(
             new Update(
-                topics: ['http://localhost/admin/reviews/'.$id],
-                data: json_encode(['@id' => 'http://localhost/admin/reviews/'.$id])
+                topics: ['http://localhost/admin/reviews/' . $id],
+                data: json_encode(['@id' => 'http://localhost/admin/reviews/' . $id])
             ),
             self::getMercureMessage()
         );
         self::assertEquals(
             new Update(
-                topics: ['http://localhost/books/'.$bookId.'/reviews/'.$id],
-                data: json_encode(['@id' => 'http://localhost/books/'.$bookId.'/reviews/'.$id])
+                topics: ['http://localhost/books/' . $bookId . '/reviews/' . $id],
+                data: json_encode(['@id' => 'http://localhost/books/' . $bookId . '/reviews/' . $id])
             ),
             self::getMercureMessage(1)
         );

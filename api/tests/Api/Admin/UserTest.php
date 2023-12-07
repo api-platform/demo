@@ -31,8 +31,10 @@ final class UserTest extends ApiTestCase
 
     /**
      * @dataProvider getNonAdminUsers
+     *
+     * @test
      */
-    public function testAsNonAdminUserICannotGetACollectionOfUsers(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
+    public function asNonAdminUserICannotGetACollectionOfUsers(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
     {
         $options = [];
         if ($userFactory) {
@@ -56,8 +58,10 @@ final class UserTest extends ApiTestCase
 
     /**
      * @dataProvider getAdminUrls
+     *
+     * @test
      */
-    public function testAsAdminUserICanGetACollectionOfUsers(FactoryCollection $factory, string|callable $url, int $hydraTotalItems, int $itemsPerPage = null): void
+    public function asAdminUserICanGetACollectionOfUsers(FactoryCollection $factory, callable|string $url, int $hydraTotalItems, int $itemsPerPage = null): void
     {
         $factory->create();
 
@@ -65,7 +69,7 @@ final class UserTest extends ApiTestCase
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
-        if (is_callable($url)) {
+        if (\is_callable($url)) {
             $url = $url();
         }
 
@@ -77,10 +81,10 @@ final class UserTest extends ApiTestCase
             'hydra:totalItems' => $hydraTotalItems,
         ]);
         self::assertCount(min($itemsPerPage ?? $hydraTotalItems, 30), $response->toArray()['hydra:member']);
-        self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/User/collection.json'));
+        self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/User/collection.json'));
     }
 
-    public function getAdminUrls(): iterable
+    public static function getAdminUrls(): iterable
     {
         yield 'all users' => [
             UserFactory::new()->many(34),
@@ -94,7 +98,7 @@ final class UserTest extends ApiTestCase
             10,
         ];
         yield 'users filtered by name' => [
-            UserFactory::new()->sequence(function () {
+            UserFactory::new()->sequence(static function () {
                 yield ['firstName' => 'John', 'lastName' => 'DOE'];
                 foreach (range(1, 10) as $i) {
                     yield [];
@@ -107,8 +111,10 @@ final class UserTest extends ApiTestCase
 
     /**
      * @dataProvider getNonAdminUsers
+     *
+     * @test
      */
-    public function testAsNonAdminUserICannotGetAUser(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
+    public function asNonAdminUserICannotGetAUser(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
     {
         $user = UserFactory::createOne();
 
@@ -120,7 +126,7 @@ final class UserTest extends ApiTestCase
             $options['auth_bearer'] = $token;
         }
 
-        $this->client->request('GET', '/admin/users/'.$user->getId(), $options);
+        $this->client->request('GET', '/admin/users/' . $user->getId(), $options);
 
         self::assertResponseStatusCodeSame($expectedCode);
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
@@ -132,7 +138,10 @@ final class UserTest extends ApiTestCase
         ]);
     }
 
-    public function testAsAdminUserICanGetAUser(): void
+    /**
+     * @test
+     */
+    public function asAdminUserICanGetAUser(): void
     {
         $user = UserFactory::createOne();
 
@@ -140,18 +149,21 @@ final class UserTest extends ApiTestCase
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
-        $this->client->request('GET', '/admin/users/'.$user->getId(), ['auth_bearer' => $token]);
+        $this->client->request('GET', '/admin/users/' . $user->getId(), ['auth_bearer' => $token]);
 
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertJsonContains([
-            '@id' => '/admin/users/'.$user->getId(),
+            '@id' => '/admin/users/' . $user->getId(),
         ]);
         // note: email property is never exposed
-        self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/User/item.json'));
+        self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/User/item.json'));
     }
 
-    public function testAsAUserIAmUpdatedOnLogin(): void
+    /**
+     * @test
+     */
+    public function asAUserIAmUpdatedOnLogin(): void
     {
         $user = UserFactory::createOne([
             'firstName' => 'John',

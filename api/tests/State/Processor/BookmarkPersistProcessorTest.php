@@ -20,9 +20,9 @@ final class BookmarkPersistProcessorTest extends TestCase
     private MockObject|ProcessorInterface $persistProcessorMock;
     private MockObject|Security $securityMock;
     private MockObject|User $userMock;
-    private MockObject|Bookmark $objectMock;
+    private Bookmark|MockObject $objectMock;
     private MockObject|Operation $operationMock;
-    private MockObject|ClockInterface $clockMock;
+    private ClockInterface|MockObject $clockMock;
     private BookmarkPersistProcessor $processor;
 
     protected function setUp(): void
@@ -37,7 +37,10 @@ final class BookmarkPersistProcessorTest extends TestCase
         $this->processor = new BookmarkPersistProcessor($this->persistProcessorMock, $this->securityMock, $this->clockMock);
     }
 
-    public function testItUpdatesBookmarkDataBeforeSave(): void
+    /**
+     * @test
+     */
+    public function itUpdatesBookmarkDataBeforeSave(): void
     {
         $expectedData = $this->objectMock;
         $expectedData->user = $this->userMock;
@@ -46,12 +49,14 @@ final class BookmarkPersistProcessorTest extends TestCase
         $this->securityMock
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($this->userMock);
+            ->willReturn($this->userMock)
+        ;
         $this->persistProcessorMock
             ->expects($this->once())
             ->method('process')
             ->with($expectedData, $this->operationMock, [], [])
-            ->willReturn($expectedData);
+            ->willReturn($expectedData)
+        ;
 
         $this->assertEquals($expectedData, $this->processor->process($this->objectMock, $this->operationMock));
     }

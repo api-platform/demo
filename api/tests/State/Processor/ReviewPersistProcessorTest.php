@@ -23,7 +23,7 @@ final class ReviewPersistProcessorTest extends TestCase
     private MockObject|Security $securityMock;
     private MockObject|User $userMock;
     private MockObject|Review $objectMock;
-    private MockObject|ClockInterface $clockMock;
+    private ClockInterface|MockObject $clockMock;
     private ReviewPersistProcessor $processor;
 
     protected function setUp(): void
@@ -43,7 +43,10 @@ final class ReviewPersistProcessorTest extends TestCase
         );
     }
 
-    public function testItUpdatesReviewDataFromOperationBeforeSaveAndSendMercureUpdates(): void
+    /**
+     * @test
+     */
+    public function itUpdatesReviewDataFromOperationBeforeSaveAndSendMercureUpdates(): void
     {
         $operation = new Post();
 
@@ -54,12 +57,14 @@ final class ReviewPersistProcessorTest extends TestCase
         $this->securityMock
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($this->userMock);
+            ->willReturn($this->userMock)
+        ;
         $this->persistProcessorMock
             ->expects($this->once())
             ->method('process')
             ->with($expectedData, $operation, [], [])
-            ->willReturn($expectedData);
+            ->willReturn($expectedData)
+        ;
         $this->mercureProcessorMock
             ->expects($this->exactly(2))
             ->method('process')
@@ -70,12 +75,16 @@ final class ReviewPersistProcessorTest extends TestCase
             ->willReturnOnConsecutiveCalls(
                 $expectedData,
                 $expectedData,
-            );
+            )
+        ;
 
         $this->assertEquals($expectedData, $this->processor->process($this->objectMock, $operation));
     }
 
-    public function testItUpdatesReviewDataFromContextBeforeSaveAndSendMercureUpdates(): void
+    /**
+     * @test
+     */
+    public function itUpdatesReviewDataFromContextBeforeSaveAndSendMercureUpdates(): void
     {
         $operation = $this->createMock(Operation::class);
 
@@ -91,12 +100,14 @@ final class ReviewPersistProcessorTest extends TestCase
 
         $this->securityMock
             ->expects($this->never())
-            ->method('getUser');
+            ->method('getUser')
+        ;
         $this->persistProcessorMock
             ->expects($this->once())
             ->method('process')
             ->with($expectedData, $operation, [], $context)
-            ->willReturn($expectedData);
+            ->willReturn($expectedData)
+        ;
         $this->mercureProcessorMock
             ->expects($this->exactly(2))
             ->method('process')
@@ -107,7 +118,8 @@ final class ReviewPersistProcessorTest extends TestCase
             ->willReturnOnConsecutiveCalls(
                 $expectedData,
                 $expectedData,
-            );
+            )
+        ;
 
         $this->assertEquals($expectedData, $this->processor->process($this->objectMock, $operation, [], $context));
     }

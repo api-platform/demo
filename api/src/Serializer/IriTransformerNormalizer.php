@@ -21,8 +21,7 @@ final class IriTransformerNormalizer implements NormalizerInterface, NormalizerA
     public function __construct(
         private readonly IriConverterInterface $iriConverter,
         private readonly OperationMetadataFactoryInterface $operationMetadataFactory
-    ) {
-    }
+    ) {}
 
     public function normalize(mixed $object, string $format = null, array $context = []): array
     {
@@ -30,12 +29,12 @@ final class IriTransformerNormalizer implements NormalizerInterface, NormalizerA
         $data = $this->normalizer->normalize($object, $format, $context + [self::class => true]);
 
         $value = $context[self::CONTEXT_KEY];
-        if (!is_array($value)) {
+        if (!\is_array($value)) {
             $value = [$value];
         }
 
         foreach ($value as $property => $uriTemplate) {
-            if (!isset($data[$property]) || !(is_string($data[$property]) || isset($data[$property]['@id']))) {
+            if (!isset($data[$property]) || !(\is_string($data[$property]) || isset($data[$property]['@id']))) {
                 continue;
             }
 
@@ -45,7 +44,7 @@ final class IriTransformerNormalizer implements NormalizerInterface, NormalizerA
                 $this->operationMetadataFactory->create($uriTemplate)
             );
 
-            if (is_string($data[$property])) {
+            if (\is_string($data[$property])) {
                 $data[$property] = $iri;
             } elseif (isset($data[$property]['@id'])) {
                 $data[$property]['@id'] = $iri;
@@ -57,7 +56,7 @@ final class IriTransformerNormalizer implements NormalizerInterface, NormalizerA
 
     public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
     {
-        return is_object($data)
+        return \is_object($data)
             && !is_iterable($data)
             && isset($context[self::CONTEXT_KEY])
             && ItemNormalizer::FORMAT === $format

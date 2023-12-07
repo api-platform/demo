@@ -17,8 +17,8 @@ use ApiPlatform\Metadata\GetCollection;
     shortName: 'BookCondition',
     types: ['https://schema.org/OfferItemCondition'],
     operations: [
-        new GetCollection(provider: BookCondition::class.'::getCases'),
-        new Get(provider: BookCondition::class.'::getCase'),
+        new GetCollection(provider: BookCondition::class . '::getCases'),
+        new Get(provider: BookCondition::class . '::getCase'),
     ],
 )]
 enum BookCondition: string

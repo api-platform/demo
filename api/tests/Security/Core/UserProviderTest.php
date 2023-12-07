@@ -17,7 +17,7 @@ use Symfony\Component\Uid\Uuid;
 
 final class UserProviderTest extends TestCase
 {
-    private MockObject|ManagerRegistry $registryMock;
+    private ManagerRegistry|MockObject $registryMock;
     private MockObject|ObjectManager $managerMock;
     private MockObject|UserRepository $repositoryMock;
     private MockObject|User $userMock;
@@ -33,17 +33,26 @@ final class UserProviderTest extends TestCase
         $this->provider = new UserProvider($this->registryMock, $this->repositoryMock);
     }
 
-    public function testItDoesNotSupportAnInvalidClass(): void
+    /**
+     * @test
+     */
+    public function itDoesNotSupportAnInvalidClass(): void
     {
         $this->assertFalse($this->provider->supportsClass(\stdClass::class));
     }
 
-    public function testItSupportsAValidClass(): void
+    /**
+     * @test
+     */
+    public function itSupportsAValidClass(): void
     {
         $this->assertTrue($this->provider->supportsClass(User::class));
     }
 
-    public function testItCannotRefreshAnInvalidObject(): void
+    /**
+     * @test
+     */
+    public function itCannotRefreshAnInvalidObject(): void
     {
         $this->expectException(UnsupportedUserException::class);
 
@@ -52,32 +61,40 @@ final class UserProviderTest extends TestCase
             ->expects($this->once())
             ->method('getManagerForClass')
             ->with($objectMock::class)
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $this->provider->refreshUser($objectMock);
     }
 
-    public function testItRefreshesAValidObject(): void
+    /**
+     * @test
+     */
+    public function itRefreshesAValidObject(): void
     {
         $objectMock = $this->createMock(UserInterface::class);
         $this->registryMock
             ->expects($this->once())
             ->method('getManagerForClass')
             ->with($objectMock::class)
-            ->willReturn($this->managerMock);
+            ->willReturn($this->managerMock)
+        ;
         $this->managerMock
             ->expects($this->once())
             ->method('refresh')
             ->with($objectMock)
-            ->willReturn($this->managerMock);
+            ->willReturn($this->managerMock)
+        ;
 
         $this->assertSame($objectMock, $this->provider->refreshUser($objectMock));
     }
 
     /**
      * @dataProvider getInvalidAttributes
+     *
+     * @test
      */
-    public function testItCannotLoadUserIfAttributeIsMissing(array $attributes): void
+    public function itCannotLoadUserIfAttributeIsMissing(array $attributes): void
     {
         $this->expectException(UnsupportedUserException::class);
 
@@ -85,13 +102,14 @@ final class UserProviderTest extends TestCase
             ->expects($this->once())
             ->method('findOneBy')
             ->with(['email' => 'john.doe@example.com'])
-            ->willReturn($this->userMock);
+            ->willReturn($this->userMock)
+        ;
         $this->repositoryMock->expects($this->never())->method('save');
 
         $this->provider->loadUserByIdentifier('john.doe@example.com', $attributes);
     }
 
-    public function getInvalidAttributes(): iterable
+    public static function getInvalidAttributes(): iterable
     {
         yield 'missing sub' => [[]];
         yield 'missing given_name' => [[
@@ -103,17 +121,22 @@ final class UserProviderTest extends TestCase
         ]];
     }
 
-    public function testItLoadsUserFromAttributes(): void
+    /**
+     * @test
+     */
+    public function itLoadsUserFromAttributes(): void
     {
         $this->repositoryMock
             ->expects($this->once())
             ->method('findOneBy')
             ->with(['email' => 'john.doe@example.com'])
-            ->willReturn($this->userMock);
+            ->willReturn($this->userMock)
+        ;
         $this->repositoryMock
             ->expects($this->once())
             ->method('save')
-            ->with($this->userMock);
+            ->with($this->userMock)
+        ;
 
         $this->assertSame($this->userMock, $this->provider->loadUserByIdentifier('john.doe@example.com', [
             'sub' => 'ba86c94b-efeb-4452-a0b4-93ed3c889156',
@@ -122,7 +145,10 @@ final class UserProviderTest extends TestCase
         ]));
     }
 
-    public function testItCreatesAUserFromAttributes(): void
+    /**
+     * @test
+     */
+    public function itCreatesAUserFromAttributes(): void
     {
         $expectedUser = new User();
         $expectedUser->firstName = 'John';
@@ -134,11 +160,13 @@ final class UserProviderTest extends TestCase
             ->expects($this->once())
             ->method('findOneBy')
             ->with(['email' => 'john.doe@example.com'])
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
         $this->repositoryMock
             ->expects($this->once())
             ->method('save')
-            ->with($expectedUser);
+            ->with($expectedUser)
+        ;
 
         $this->assertEquals($expectedUser, $this->provider->loadUserByIdentifier('john.doe@example.com', [
             'sub' => 'ba86c94b-efeb-4452-a0b4-93ed3c889156',

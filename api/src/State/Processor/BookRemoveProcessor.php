@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 final readonly class BookRemoveProcessor implements ProcessorInterface
 {
     /**
-     * @param RemoveProcessor $removeProcessor
+     * @param RemoveProcessor  $removeProcessor
      * @param MercureProcessor $mercureProcessor
      */
     public function __construct(
@@ -29,8 +29,7 @@ final readonly class BookRemoveProcessor implements ProcessorInterface
         private ProcessorInterface $mercureProcessor,
         private ResourceMetadataCollectionFactoryInterface $resourceMetadataCollectionFactory,
         private IriConverterInterface $iriConverter
-    ) {
-    }
+    ) {}
 
     /**
      * @param Book $data

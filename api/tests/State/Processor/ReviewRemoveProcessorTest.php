@@ -24,7 +24,7 @@ final class ReviewRemoveProcessorTest extends TestCase
     private MockObject|ProcessorInterface $mercureProcessorMock;
     private MockObject|ResourceMetadataCollectionFactoryInterface $resourceMetadataCollectionFactoryMock;
     private ResourceMetadataCollection $resourceMetadataCollection;
-    private MockObject|IriConverterInterface $iriConverterMock;
+    private IriConverterInterface|MockObject $iriConverterMock;
     private MockObject|Review $objectMock;
     private MockObject|Operation $operationMock;
     private ReviewRemoveProcessor $processor;
@@ -50,12 +50,16 @@ final class ReviewRemoveProcessorTest extends TestCase
         );
     }
 
-    public function testItRemovesBookAndSendMercureUpdates(): void
+    /**
+     * @test
+     */
+    public function itRemovesBookAndSendMercureUpdates(): void
     {
         $this->removeProcessorMock
             ->expects($this->once())
             ->method('process')
-            ->with($this->objectMock, $this->operationMock, [], []);
+            ->with($this->objectMock, $this->operationMock, [], [])
+        ;
         $this->resourceMetadataCollectionFactoryMock
             ->expects($this->exactly(2))
             ->method('create')
@@ -66,7 +70,8 @@ final class ReviewRemoveProcessorTest extends TestCase
             ->willReturnOnConsecutiveCalls(
                 $this->resourceMetadataCollection,
                 $this->resourceMetadataCollection,
-            );
+            )
+        ;
         $this->iriConverterMock
             ->expects($this->exactly(2))
             ->method('getIriFromResource')
@@ -77,7 +82,8 @@ final class ReviewRemoveProcessorTest extends TestCase
             ->willReturnOnConsecutiveCalls(
                 '/admin/reviews/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6',
                 '/books/8ad70d36-abaf-4c9b-aeaa-7ec63e6ca6f3/reviews/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6',
-            );
+            )
+        ;
         $this->mercureProcessorMock
             ->expects($this->exactly(2))
             ->method('process')
@@ -100,7 +106,8 @@ final class ReviewRemoveProcessorTest extends TestCase
                         MercureProcessor::DATA => json_encode(['@id' => '/books/8ad70d36-abaf-4c9b-aeaa-7ec63e6ca6f3/reviews/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6']),
                     ],
                 ],
-            );
+            )
+        ;
 
         $this->processor->process($this->objectMock, $this->operationMock);
     }

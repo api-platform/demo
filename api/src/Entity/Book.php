@@ -71,7 +71,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         AbstractNormalizer::GROUPS => ['Book:write'],
     ],
     // todo waiting for https://github.com/api-platform/core/pull/5844
-//    collectDenormalizationErrors: true,
+    //    collectDenormalizationErrors: true,
     security: 'is_granted("ROLE_ADMIN")'
 )]
 #[ApiResource(
@@ -119,7 +119,7 @@ class Book
      * @see https://schema.org/name
      */
     #[ApiFilter(OrderFilter::class)]
-    #[ApiFilter(SearchFilter::class, strategy: 'i'.SearchFilterInterface::STRATEGY_PARTIAL)]
+    #[ApiFilter(SearchFilter::class, strategy: 'i' . SearchFilterInterface::STRATEGY_PARTIAL)]
     #[ApiProperty(
         types: ['https://schema.org/name'],
         example: 'Hyperion'
@@ -131,7 +131,7 @@ class Book
     /**
      * @see https://schema.org/author
      */
-    #[ApiFilter(SearchFilter::class, strategy: 'i'.SearchFilterInterface::STRATEGY_PARTIAL)]
+    #[ApiFilter(SearchFilter::class, strategy: 'i' . SearchFilterInterface::STRATEGY_PARTIAL)]
     #[ApiProperty(
         types: ['https://schema.org/author'],
         example: 'Dan Simmons'

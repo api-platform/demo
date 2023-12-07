@@ -24,11 +24,11 @@ final class MercureProcessorTest extends TestCase
 {
     private MockObject|SerializerInterface $serializerMock;
     private HubRegistry $hubRegistry;
-    private MockObject|HubInterface $hubMock;
-    private MockObject|IriConverterInterface $iriConverterMock;
+    private HubInterface|MockObject $hubMock;
+    private IriConverterInterface|MockObject $iriConverterMock;
     private MockObject|ResourceMetadataCollectionFactoryInterface $resourceMetadataCollectionFactoryMock;
     private ResourceMetadataCollection $resourceMetadataCollection;
-    private MockObject|Book $objectMock;
+    private Book|MockObject $objectMock;
     private MockObject|Operation $operationMock;
     private MercureProcessor $processor;
 
@@ -55,41 +55,52 @@ final class MercureProcessorTest extends TestCase
         );
     }
 
-    public function testItSendsAMercureUpdate(): void
+    /**
+     * @test
+     */
+    public function itSendsAMercureUpdate(): void
     {
         $this->resourceMetadataCollectionFactoryMock->expects($this->never())->method('create');
         $this->iriConverterMock
             ->expects($this->once())
             ->method('getIriFromResource')
             ->with($this->objectMock, UrlGeneratorInterface::ABS_URL, $this->operationMock)
-            ->willReturn('/books/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6');
+            ->willReturn('/books/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6')
+        ;
         $this->operationMock
             ->expects($this->once())
             ->method('getNormalizationContext')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
         $this->serializerMock
             ->expects($this->once())
             ->method('serialize')
             ->with($this->objectMock, 'jsonld', [])
-            ->willReturn(json_encode(['foo' => 'bar']));
+            ->willReturn(json_encode(['foo' => 'bar']))
+        ;
         $this->hubMock
             ->expects($this->once())
             ->method('publish')
             ->with($this->equalTo(new Update(
                 topics: ['/books/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6'],
                 data: json_encode(['foo' => 'bar']),
-            )));
+            )))
+        ;
 
         $this->processor->process($this->objectMock, $this->operationMock);
     }
 
-    public function testItSendsAMercureUpdateWithContextOptions(): void
+    /**
+     * @test
+     */
+    public function itSendsAMercureUpdateWithContextOptions(): void
     {
         $this->resourceMetadataCollectionFactoryMock
             ->expects($this->once())
             ->method('create')
             ->with($this->objectMock::class)
-            ->willReturn($this->resourceMetadataCollection);
+            ->willReturn($this->resourceMetadataCollection)
+        ;
         $this->iriConverterMock->expects($this->never())->method('getIriFromResource');
         $this->operationMock->expects($this->never())->method('getNormalizationContext');
         $this->serializerMock->expects($this->never())->method('serialize');
@@ -99,7 +110,8 @@ final class MercureProcessorTest extends TestCase
             ->with($this->equalTo(new Update(
                 topics: ['/admin/books/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6'],
                 data: json_encode(['bar' => 'baz']),
-            )));
+            )))
+        ;
 
         $this->processor->process($this->objectMock, $this->operationMock, [], [
             'item_uri_template' => '/admin/books/{id}{._format}',

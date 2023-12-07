@@ -63,8 +63,8 @@ final class BookmarkFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'user' => lazy(fn () => UserFactory::new()),
-            'book' => lazy(fn () => BookFactory::new()),
+            'user' => lazy(static fn () => UserFactory::new()),
+            'book' => lazy(static fn () => BookFactory::new()),
             'bookmarkedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
         ];
     }
@@ -74,9 +74,8 @@ final class BookmarkFactory extends ModelFactory
      */
     protected function initialize(): self
     {
-        return $this
-            // ->afterInstantiate(function(Bookmark $bookmark): void {})
-        ;
+        return $this;
+        // ->afterInstantiate(function(Bookmark $bookmark): void {})
     }
 
     protected static function getClass(): string

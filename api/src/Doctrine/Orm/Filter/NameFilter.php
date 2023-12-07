@@ -45,11 +45,11 @@ final class NameFilter extends AbstractFilter
         $alias = $queryBuilder->getRootAliases()[0];
         $expressions = [];
         foreach ($values as $key => $value) {
-            $parameterName = $queryNameGenerator->generateParameterName("name$key");
-            $queryBuilder->setParameter($parameterName, "%$value%");
+            $parameterName = $queryNameGenerator->generateParameterName("name{$key}");
+            $queryBuilder->setParameter($parameterName, "%{$value}%");
             $expressions[] = $queryBuilder->expr()->orX(
-                $queryBuilder->expr()->like(sprintf('%s.firstName', $alias), ":$parameterName"),
-                $queryBuilder->expr()->like(sprintf('%s.lastName', $alias), ":$parameterName")
+                $queryBuilder->expr()->like(sprintf('%s.firstName', $alias), ":{$parameterName}"),
+                $queryBuilder->expr()->like(sprintf('%s.lastName', $alias), ":{$parameterName}")
             );
         }
         $queryBuilder->andWhere($queryBuilder->expr()->andX(...$expressions));

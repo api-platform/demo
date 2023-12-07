@@ -53,7 +53,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         AbstractNormalizer::GROUPS => ['Bookmark:write'],
     ],
     // todo waiting for https://github.com/api-platform/core/pull/5844
-//    collectDenormalizationErrors: true,
+    //    collectDenormalizationErrors: true,
     mercure: true,
     security: 'is_granted("ROLE_USER")'
 )]
