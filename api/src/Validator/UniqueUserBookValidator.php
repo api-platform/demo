@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Validator;
 
 use App\Entity\Book;
+use App\Entity\Bookmark;
+use App\Entity\Review;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -21,9 +23,11 @@ final class UniqueUserBookValidator extends ConstraintValidator
         private readonly Security $security,
         private readonly ManagerRegistry $registry,
         private readonly PropertyAccessorInterface $propertyAccessor
-    ) {
-    }
+    ) {}
 
+    /**
+     * @param Bookmark|Review|null $value
+     */
     public function validate($value, Constraint $constraint): void
     {
         if (!$constraint instanceof UniqueUserBook) {

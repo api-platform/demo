@@ -14,9 +14,7 @@ use Zenstruck\Foundry\Story;
 
 final class DefaultStory extends Story
 {
-    public function __construct(private readonly DecoderInterface $decoder)
-    {
-    }
+    public function __construct(private readonly DecoderInterface $decoder) {}
 
     public function build(): void
     {
@@ -36,7 +34,7 @@ final class DefaultStory extends Story
 
         // Import books
         $books = []; // store books in array to pick 30 random ones later without the default one
-        $data = $this->decoder->decode(file_get_contents(__DIR__.'/../books.json'), 'json');
+        $data = $this->decoder->decode(file_get_contents(__DIR__ . '/../books.json'), 'json');
         foreach ($data as $datum) {
             $book = BookFactory::createOne($datum + [
                 'condition' => BookCondition::cases()[array_rand(BookCondition::cases())],

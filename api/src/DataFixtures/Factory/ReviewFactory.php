@@ -63,8 +63,8 @@ final class ReviewFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'user' => lazy(fn () => UserFactory::new()),
-            'book' => lazy(fn () => BookFactory::new()),
+            'user' => lazy(static fn () => UserFactory::new()),
+            'book' => lazy(static fn () => BookFactory::new()),
             'publishedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime('-1 week')),
             'body' => self::faker()->text(),
             'rating' => self::faker()->numberBetween(0, 5),
@@ -76,9 +76,8 @@ final class ReviewFactory extends ModelFactory
      */
     protected function initialize(): self
     {
-        return $this
-            // ->afterInstantiate(function(Review $review): void {})
-        ;
+        return $this;
+        // ->afterInstantiate(function(Review $review): void {})
     }
 
     protected static function getClass(): string

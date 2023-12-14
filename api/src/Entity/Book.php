@@ -21,6 +21,7 @@ use App\State\Processor\BookPersistProcessor;
 use App\State\Processor\BookRemoveProcessor;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -69,8 +70,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     denormalizationContext: [
         AbstractNormalizer::GROUPS => ['Book:write'],
     ],
-    // todo waiting for https://github.com/api-platform/core/pull/5844
-//    collectDenormalizationErrors: true,
+    collectDenormalizationErrors: true,
     security: 'is_granted("ROLE_ADMIN")'
 )]
 #[ApiResource(
@@ -95,7 +95,7 @@ class Book
      */
     #[ApiProperty(identifier: true, types: ['https://schema.org/identifier'])]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
-    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\Id]
     private ?Uuid $id = null;
@@ -118,7 +118,7 @@ class Book
      * @see https://schema.org/name
      */
     #[ApiFilter(OrderFilter::class)]
-    #[ApiFilter(SearchFilter::class, strategy: 'i'.SearchFilterInterface::STRATEGY_PARTIAL)]
+    #[ApiFilter(SearchFilter::class, strategy: 'i' . SearchFilterInterface::STRATEGY_PARTIAL)]
     #[ApiProperty(
         types: ['https://schema.org/name'],
         example: 'Hyperion'
@@ -130,7 +130,7 @@ class Book
     /**
      * @see https://schema.org/author
      */
-    #[ApiFilter(SearchFilter::class, strategy: 'i'.SearchFilterInterface::STRATEGY_PARTIAL)]
+    #[ApiFilter(SearchFilter::class, strategy: 'i' . SearchFilterInterface::STRATEGY_PARTIAL)]
     #[ApiProperty(
         types: ['https://schema.org/author'],
         example: 'Dan Simmons'

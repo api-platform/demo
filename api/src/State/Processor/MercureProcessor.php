@@ -17,6 +17,9 @@ use Symfony\Component\Mercure\HubRegistry;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Serializer\SerializerInterface;
 
+/**
+ * @implements ProcessorInterface<object>
+ */
 final readonly class MercureProcessor implements ProcessorInterface
 {
     public const DATA = 'mercure_data';
@@ -28,10 +31,11 @@ final readonly class MercureProcessor implements ProcessorInterface
         private ResourceMetadataCollectionFactoryInterface $resourceMetadataCollectionFactory,
         #[Autowire('%api_platform.formats%')]
         private array $formats
-    ) {
-    }
+    ) {}
 
     /**
+     * @param array{item_uri_template?: string, topics?: array, mercure_data?: string} $context
+     *
      * @throws InvalidArgumentException
      * @throws ResourceClassNotFoundException
      * @throws RuntimeException

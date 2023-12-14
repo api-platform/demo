@@ -1,0 +1,20 @@
+parameters:
+    level: 6
+    paths:
+        - bin/
+        - config/
+        - public/
+        - src/
+    excludePaths:
+        - src/DataFixtures/
+    symfony:
+        containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
+        constantHassers: false
+    scanDirectories:
+        - var/cache/dev/Symfony/Config
+    bootstrapFiles:
+        - vendor/autoload.php
+        - vendor/bin/.phpunit/phpunit/vendor/autoload.php
+        - src/Kernel.php
+    ignoreErrors:
+        - message: '#no (?:return|value) type specified in iterable type array\.#'

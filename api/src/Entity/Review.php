@@ -22,6 +22,7 @@ use App\State\Processor\ReviewRemoveProcessor;
 use App\Validator\UniqueUserBook;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -74,8 +75,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     denormalizationContext: [
         AbstractNormalizer::GROUPS => ['Review:write', 'Review:write:admin'],
     ],
-    // todo waiting for https://github.com/api-platform/core/pull/5844
-//    collectDenormalizationErrors: true,
+    collectDenormalizationErrors: true,
     security: 'is_granted("ROLE_ADMIN")'
 )]
 #[ApiResource(
@@ -137,8 +137,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     denormalizationContext: [
         AbstractNormalizer::GROUPS => ['Review:write'],
     ],
-    // todo waiting for https://github.com/api-platform/core/pull/5844
-//    collectDenormalizationErrors: true
+    collectDenormalizationErrors: true
 )]
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
 #[ORM\UniqueConstraint(fields: ['user', 'book'])]
@@ -150,7 +149,7 @@ class Review
      */
     #[ApiProperty(types: ['https://schema.org/identifier'])]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
-    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\Id]
     private ?Uuid $id = null;

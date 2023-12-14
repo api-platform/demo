@@ -19,7 +19,7 @@ final class BookNormalizerTest extends TestCase
     private MockObject|NormalizerInterface $normalizerMock;
     private MockObject|RouterInterface $routerMock;
     private MockObject|ReviewRepository $repositoryMock;
-    private MockObject|Book $objectMock;
+    private Book|MockObject $objectMock;
     private BookNormalizer $normalizer;
 
     protected function setUp(): void
@@ -33,22 +33,34 @@ final class BookNormalizerTest extends TestCase
         $this->normalizer->setNormalizer($this->normalizerMock);
     }
 
-    public function testItDoesNotSupportInvalidObjectClass(): void
+    /**
+     * @test
+     */
+    public function itDoesNotSupportInvalidObjectClass(): void
     {
         $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
-    public function testItDoesNotSupportInvalidContext(): void
+    /**
+     * @test
+     */
+    public function itDoesNotSupportInvalidContext(): void
     {
         $this->assertFalse($this->normalizer->supportsNormalization($this->objectMock, null, [BookNormalizer::class => true]));
     }
 
-    public function testItSupportsValidObjectClassAndContext(): void
+    /**
+     * @test
+     */
+    public function itSupportsValidObjectClassAndContext(): void
     {
         $this->assertTrue($this->normalizer->supportsNormalization($this->objectMock));
     }
 
-    public function testItNormalizesData(): void
+    /**
+     * @test
+     */
+    public function itNormalizesData(): void
     {
         $expectedObject = $this->objectMock;
         $expectedObject->reviews = '/books/a528046c-7ba1-4acc-bff2-b5390ab17d41/reviews';
@@ -57,17 +69,20 @@ final class BookNormalizerTest extends TestCase
         $this->objectMock
             ->expects($this->once())
             ->method('getId')
-            ->willReturn(Uuid::fromString('a528046c-7ba1-4acc-bff2-b5390ab17d41'));
+            ->willReturn(Uuid::fromString('a528046c-7ba1-4acc-bff2-b5390ab17d41'))
+        ;
         $this->routerMock
             ->expects($this->once())
             ->method('generate')
             ->with('_api_/books/{bookId}/reviews{._format}_get_collection', ['bookId' => 'a528046c-7ba1-4acc-bff2-b5390ab17d41'])
-            ->willReturn('/books/a528046c-7ba1-4acc-bff2-b5390ab17d41/reviews');
+            ->willReturn('/books/a528046c-7ba1-4acc-bff2-b5390ab17d41/reviews')
+        ;
         $this->repositoryMock
             ->expects($this->once())
             ->method('getAverageRating')
             ->with($this->objectMock)
-            ->willReturn(3);
+            ->willReturn(3)
+        ;
         $this->normalizerMock
             ->expects($this->once())
             ->method('normalize')
@@ -79,7 +94,8 @@ final class BookNormalizerTest extends TestCase
                 'condition' => BookCondition::NewCondition->value,
                 'reviews' => '/books/a528046c-7ba1-4acc-bff2-b5390ab17d41/reviews',
                 'rating' => 3,
-            ]);
+            ])
+        ;
 
         $this->assertEquals([
             'book' => 'https://openlibrary.org/books/OL2055137M.json',

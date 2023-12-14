@@ -17,23 +17,23 @@ use ApiPlatform\Metadata\GetCollection;
     shortName: 'BookCondition',
     types: ['https://schema.org/OfferItemCondition'],
     operations: [
-        new GetCollection(provider: BookCondition::class.'::getCases'),
-        new Get(provider: BookCondition::class.'::getCase'),
+        new GetCollection(provider: BookCondition::class . '::getCases'),
+        new Get(provider: BookCondition::class . '::getCase'),
     ],
 )]
 enum BookCondition: string
 {
     use EnumApiResourceTrait;
 
-    /** @var string Indicates that the item is new. */
+    /** Indicates that the item is new. */
     case NewCondition = 'https://schema.org/NewCondition';
 
-    /** @var string Indicates that the item is refurbished. */
+    /** Indicates that the item is refurbished. */
     case RefurbishedCondition = 'https://schema.org/RefurbishedCondition';
 
-    /** @var string Indicates that the item is damaged. */
+    /** Indicates that the item is damaged. */
     case DamagedCondition = 'https://schema.org/DamagedCondition';
 
-    /** @var string Indicates that the item is used. */
+    /** Indicates that the item is used. */
     case UsedCondition = 'https://schema.org/UsedCondition';
 }

@@ -28,8 +28,10 @@ final class BookTest extends ApiTestCase
 
     /**
      * @dataProvider getUrls
+     *
+     * @test
      */
-    public function testAsAnonymousICanGetACollectionOfBooks(FactoryCollection $factory, string $url, int $hydraTotalItems): void
+    public function asAnonymousICanGetACollectionOfBooks(FactoryCollection $factory, string $url, int $hydraTotalItems): void
     {
         // Cannot use Factory as data provider because BookFactory has a service dependency
         $factory->create();
@@ -42,10 +44,10 @@ final class BookTest extends ApiTestCase
             'hydra:totalItems' => $hydraTotalItems,
         ]);
         self::assertCount(min($hydraTotalItems, 30), $response->toArray()['hydra:member']);
-        self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Book/collection.json'));
+        self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Book/collection.json'));
     }
 
-    public function getUrls(): iterable
+    public static function getUrls(): iterable
     {
         yield 'all books' => [
             BookFactory::new()->many(35),
@@ -53,7 +55,7 @@ final class BookTest extends ApiTestCase
             35,
         ];
         yield 'books filtered by title' => [
-            BookFactory::new()->sequence(function () {
+            BookFactory::new()->sequence(static function () {
                 yield ['title' => 'Hyperion'];
                 foreach (range(1, 10) as $i) {
                     yield [];
@@ -63,7 +65,7 @@ final class BookTest extends ApiTestCase
             1,
         ];
         yield 'books filtered by author' => [
-            BookFactory::new()->sequence(function () {
+            BookFactory::new()->sequence(static function () {
                 yield ['author' => 'Dan Simmons'];
                 foreach (range(1, 10) as $i) {
                     yield [];
@@ -73,18 +75,21 @@ final class BookTest extends ApiTestCase
             1,
         ];
         yield 'books filtered by condition' => [
-            BookFactory::new()->sequence(function () {
+            BookFactory::new()->sequence(static function () {
                 foreach (range(1, 100) as $i) {
                     // 33% of books are damaged
                     yield ['condition' => $i % 3 ? BookCondition::NewCondition : BookCondition::DamagedCondition];
                 }
             }),
-            '/books?condition='.BookCondition::DamagedCondition->value,
+            '/books?condition=' . BookCondition::DamagedCondition->value,
             33,
         ];
     }
 
-    public function testAsAdminUserICanGetACollectionOfBooksOrderedByTitle(): void
+    /**
+     * @test
+     */
+    public function asAdminUserICanGetACollectionOfBooksOrderedByTitle(): void
     {
         BookFactory::createOne(['title' => 'Hyperion']);
         BookFactory::createOne(['title' => 'The Wandering Earth']);
@@ -97,10 +102,13 @@ final class BookTest extends ApiTestCase
         self::assertEquals('Ball Lightning', $response->toArray()['hydra:member'][0]['title']);
         self::assertEquals('Hyperion', $response->toArray()['hydra:member'][1]['title']);
         self::assertEquals('The Wandering Earth', $response->toArray()['hydra:member'][2]['title']);
-        self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Book/collection.json'));
+        self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Book/collection.json'));
     }
 
-    public function testAsAnonymousICannotGetAnInvalidBook(): void
+    /**
+     * @test
+     */
+    public function asAnonymousICannotGetAnInvalidBook(): void
     {
         BookFactory::createOne();
 
@@ -109,7 +117,10 @@ final class BookTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 
-    public function testAsAnonymousICanGetABook(): void
+    /**
+     * @test
+     */
+    public function asAnonymousICanGetABook(): void
     {
         $book = BookFactory::createOne();
         ReviewFactory::createOne(['rating' => 1, 'book' => $book]);
@@ -118,19 +129,19 @@ final class BookTest extends ApiTestCase
         ReviewFactory::createOne(['rating' => 4, 'book' => $book]);
         ReviewFactory::createOne(['rating' => 5, 'book' => $book]);
 
-        $this->client->request('GET', '/books/'.$book->getId());
+        $this->client->request('GET', '/books/' . $book->getId());
 
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertJsonContains([
-            '@id' => '/books/'.$book->getId(),
+            '@id' => '/books/' . $book->getId(),
             'book' => $book->book,
             'condition' => $book->condition->value,
             'title' => $book->title,
             'author' => $book->author,
-            'reviews' => '/books/'.$book->getId().'/reviews',
+            'reviews' => '/books/' . $book->getId() . '/reviews',
             'rating' => 3,
         ]);
-        self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Book/item.json'));
+        self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Book/item.json'));
     }
 }

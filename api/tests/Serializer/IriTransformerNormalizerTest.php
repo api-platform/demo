@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 final class IriTransformerNormalizerTest extends TestCase
 {
     private MockObject|NormalizerInterface $normalizerMock;
-    private MockObject|IriConverterInterface $iriConverterMock;
+    private IriConverterInterface|MockObject $iriConverterMock;
     private MockObject|OperationMetadataFactoryInterface $operationMetadataFactoryMock;
     private MockObject|Operation $operationMock;
     private MockObject|\stdClass $objectMock;
@@ -37,7 +37,10 @@ final class IriTransformerNormalizerTest extends TestCase
         $this->normalizer->setNormalizer($this->normalizerMock);
     }
 
-    public function testItDoesNotSupportInvalidData(): void
+    /**
+     * @test
+     */
+    public function itDoesNotSupportInvalidData(): void
     {
         $this->assertFalse($this->normalizer->supportsNormalization(null));
         $this->assertFalse($this->normalizer->supportsNormalization([]));
@@ -46,13 +49,19 @@ final class IriTransformerNormalizerTest extends TestCase
         $this->assertFalse($this->normalizer->supportsNormalization(new ArrayCollection([$this->objectMock])));
     }
 
-    public function testItDoesNotSupportInvalidContext(): void
+    /**
+     * @test
+     */
+    public function itDoesNotSupportInvalidContext(): void
     {
         $this->assertFalse($this->normalizer->supportsNormalization($this->objectMock));
         $this->assertFalse($this->normalizer->supportsNormalization($this->objectMock, null, [IriTransformerNormalizer::class => true]));
     }
 
-    public function testItDoesNotSupportInvalidFormat(): void
+    /**
+     * @test
+     */
+    public function itDoesNotSupportInvalidFormat(): void
     {
         $this->assertFalse($this->normalizer->supportsNormalization($this->objectMock, null, [
             IriTransformerNormalizer::CONTEXT_KEY => [
@@ -71,7 +80,10 @@ final class IriTransformerNormalizerTest extends TestCase
         ]));
     }
 
-    public function testItSupportsValidObjectClassAndContext(): void
+    /**
+     * @test
+     */
+    public function itSupportsValidObjectClassAndContext(): void
     {
         $this->assertTrue($this->normalizer->supportsNormalization($this->objectMock, 'jsonld', [
             IriTransformerNormalizer::CONTEXT_KEY => [
@@ -80,7 +92,10 @@ final class IriTransformerNormalizerTest extends TestCase
         ]));
     }
 
-    public function testItNormalizesData(): void
+    /**
+     * @test
+     */
+    public function itNormalizesData(): void
     {
         $this->normalizerMock
             ->expects($this->once())
@@ -98,7 +113,8 @@ final class IriTransformerNormalizerTest extends TestCase
                 'user' => [
                     '@id' => '/admin/users/b960cf9e-8f1a-4690-8923-623c1d049d41',
                 ],
-            ]);
+            ])
+        ;
         $this->operationMetadataFactoryMock
             ->expects($this->exactly(2))
             ->method('create')
@@ -109,7 +125,8 @@ final class IriTransformerNormalizerTest extends TestCase
             ->willReturnOnConsecutiveCalls(
                 $this->operationMock,
                 $this->operationMock,
-            );
+            )
+        ;
         $this->iriConverterMock
             ->expects($this->exactly(2))
             ->method('getIriFromResource')
@@ -120,7 +137,8 @@ final class IriTransformerNormalizerTest extends TestCase
             ->willReturnOnConsecutiveCalls(
                 '/books/a528046c-7ba1-4acc-bff2-b5390ab17d41',
                 '/users/b960cf9e-8f1a-4690-8923-623c1d049d41',
-            );
+            )
+        ;
 
         $this->assertEquals([
             'book' => '/books/a528046c-7ba1-4acc-bff2-b5390ab17d41',

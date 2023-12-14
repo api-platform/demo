@@ -33,7 +33,7 @@ spec:
         {{- range .hosts }}
         - {{ . | quote }}
         {{- end }}
-      secretName: {{ .secretName }}
+      secretName: {{ .secretName | default (printf "%s-tls" $fullName) }}
     {{- end }}
   {{- end }}
   rules:
@@ -46,15 +46,37 @@ spec:
             {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
             pathType: {{ .pathType }}
             {{- end }}
+            {{ $backend := default dict .backend }}
             backend:
               {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              {{ $service := default dict $backend.service }}
               service:
-                name: {{ $fullName }}
+                name: {{ $service.name | default $fullName }}
+                {{ $port := default dict $service.port }}
                 port:
-                  number: {{ $svcPort }}
+                  number: {{ $port.number | default $svcPort }}
               {{- else }}
-              serviceName: {{ $fullName }}
-              servicePort: {{ $svcPort }}
+              serviceName: {{ $backend.serviceName | default $fullName }}
+              servicePort: {{ $backend.servicePort | default $svcPort }}
+              {{- end }}
+          {{- end }}
+          {{- range .oidcpaths }}
+          - path: {{ .path }}
+            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ .pathType }}
+            {{- end }}
+            {{ $backend := default dict .backend }}
+            backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              {{ $service := default dict $backend.service }}
+              service:
+                name: {{ template "common.names.fullname" $.Subcharts.keycloak }}
+                {{ $port := default dict $service.port }}
+                port:
+                  number: {{ $port.number | default $svcPort }}
+              {{- else }}
+              serviceName: {{ template "common.names.fullname" $.Subcharts.keycloak }}
+              servicePort: {{ $backend.servicePort | default $svcPort }}
               {{- end }}
           {{- end }}
     {{- end }}

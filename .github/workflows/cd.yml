@@ -15,10 +15,12 @@ jobs:
     if: ${{ github.repository == 'api-platform/demo' && (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'deploy')) }}
     runs-on: ubuntu-latest
     env:
-      PHP_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/php:${{ github.sha }}
-      PWA_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/pwa:${{ github.sha }}
-      CADDY_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/caddy:${{ github.sha }}
-      KEYCLOAK_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/keycloak:${{ github.sha }}
+      PHP_DOCKER_IMAGE: europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/php:${{ github.sha }}
+      PWA_DOCKER_IMAGE: europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/pwa:${{ github.sha }}
+      KEYCLOAK_DOCKER_IMAGE: europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/keycloak:${{ github.sha }}
+    permissions:
+      contents: 'read'
+      id-token: 'write'
     steps:
       -
         name: Checkout
@@ -33,19 +35,18 @@ jobs:
           python-version: 3.9.15
       -
         name: Auth gcloud
-        uses: google-github-actions/auth@v1
+        id: auth
+        uses: google-github-actions/auth@v2
         with:
+          token_format: access_token
           credentials_json: ${{ secrets.GKE_SA_KEY }}
       -
-        name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v1
+        name: Login to GAR
+        uses: docker/login-action@v3
         with:
-          project_id: ${{ secrets.GKE_PROJECT }}
-      -
-        name: Configure gcloud
-        run: |
-          gcloud --quiet auth configure-docker
-          gcloud container clusters get-credentials api-platform-demo --zone europe-west1-c
+          registry: europe-west1-docker.pkg.dev
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
       -
         name: Build Docker images
         uses: docker/bake-action@v4
@@ -55,8 +56,8 @@ jobs:
           pull: true
           load: true
           files: |
-            docker-compose.yml
-            docker-compose.prod.yml
+            compose.yaml
+            compose.prod.yaml
           set: |
             *.cache-from=type=gha,scope=${{github.ref}}
             *.cache-from=type=gha,scope=refs/heads/main
@@ -66,33 +67,24 @@ jobs:
         run: |
           docker push $PHP_DOCKER_IMAGE
           docker push $PWA_DOCKER_IMAGE
-          docker push $CADDY_DOCKER_IMAGE
           docker push $KEYCLOAK_DOCKER_IMAGE
       -
         name: Docker tag and push latest
         if: github.event_name == 'push'
         run: |
-          docker tag $PHP_DOCKER_IMAGE eu.gcr.io/${{ secrets.GKE_PROJECT }}/php:latest
-          docker tag $PWA_DOCKER_IMAGE eu.gcr.io/${{ secrets.GKE_PROJECT }}/pwa:latest
-          docker tag $CADDY_DOCKER_IMAGE eu.gcr.io/${{ secrets.GKE_PROJECT }}/caddy:latest
-          docker tag $KEYCLOAK_DOCKER_IMAGE eu.gcr.io/${{ secrets.GKE_PROJECT }}/keycloak:latest
-          docker push eu.gcr.io/${{ secrets.GKE_PROJECT }}/php:latest
-          docker push eu.gcr.io/${{ secrets.GKE_PROJECT }}/pwa:latest
-          docker push eu.gcr.io/${{ secrets.GKE_PROJECT }}/caddy:latest
-          docker push eu.gcr.io/${{ secrets.GKE_PROJECT }}/keycloak:latest
+          docker tag $PHP_DOCKER_IMAGE europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/php:latest
+          docker tag $PWA_DOCKER_IMAGE europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/pwa:latest
+          docker tag $KEYCLOAK_DOCKER_IMAGE europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/keycloak:latest
+          docker push europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/php:latest
+          docker push europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/pwa:latest
+          docker push europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/keycloak:latest
 
   deploy:
     name: Deploy
     needs: [ build ]
-    if: github.event_name == 'push'
     uses: ./.github/workflows/deploy.yml
     with:
-      environment: prod
-      url: demo.api-platform.com
       docker-images-version: ${{ github.sha }}
-      cors: '["https://demo.api-platform.com", "http://localhost", "https://localhost", "http://localhost:3000"]'
-      release: main
-      namespace: main
       gke-cluster: api-platform-demo
       gke-zone: europe-west1-c
     secrets:
@@ -102,23 +94,9 @@ jobs:
       cloudflare-zone-id: ${{ secrets.CF_ZONE_ID }}
       keycloak-admin-password: ${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}
 
-  feature-deploy:
-    name: Feature Deploy
-    needs: [ build ]
-    if: github.event_name == 'pull_request'
-    uses: ./.github/workflows/deploy.yml
+  check:
+    name: Check
+    needs: [ deploy ]
+    uses: ./.github/workflows/check.yml
     with:
-      environment: pr-${{ github.event.pull_request.number }}
-      url: pr-${{ github.event.pull_request.number }}-demo.api-platform.com
-      docker-images-version: ${{ github.sha }}
-      cors: '["https://pr-${{ github.event.pull_request.number }}-demo.api-platform.com", "http://localhost", "https://localhost", "http://localhost:3000"]'
-      release: pr-${{ github.event.pull_request.number }}
-      namespace: pr-${{ github.event.pull_request.number }}
-      gke-cluster: api-platform-demo
-      gke-zone: europe-west1-c
-    secrets:
-      gke-credentials: ${{ secrets.GKE_SA_KEY }}
-      gke-project: ${{ secrets.GKE_PROJECT }}
-      cloudflare-api-token: ${{ secrets.CF_API_TOKEN }}
-      cloudflare-zone-id: ${{ secrets.CF_ZONE_ID }}
-      keycloak-admin-password: ${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}
+      url: ${{needs.deploy.outputs.url}}

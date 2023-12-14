@@ -9,6 +9,7 @@ use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\DataFixtures\Factory\BookFactory;
 use App\DataFixtures\Factory\BookmarkFactory;
 use App\DataFixtures\Factory\UserFactory;
+use App\Entity\Book;
 use App\Entity\Bookmark;
 use App\Repository\BookmarkRepository;
 use App\Tests\Api\Trait\SecurityTrait;
@@ -33,7 +34,10 @@ final class BookmarkTest extends ApiTestCase
         $this->client = self::createClient();
     }
 
-    public function testAsAnonymousICannotGetACollectionOfBookmarks(): void
+    /**
+     * @test
+     */
+    public function asAnonymousICannotGetACollectionOfBookmarks(): void
     {
         BookmarkFactory::createMany(10);
 
@@ -51,8 +55,10 @@ final class BookmarkTest extends ApiTestCase
 
     /**
      * Filters are disabled on /bookmarks.
+     *
+     * @test
      */
-    public function testAsAUserICanGetACollectionOfMyBookmarksWithoutFilters(): void
+    public function asAUserICanGetACollectionOfMyBookmarksWithoutFilters(): void
     {
         BookmarkFactory::createMany(10);
         $user = UserFactory::createOne();
@@ -70,16 +76,19 @@ final class BookmarkTest extends ApiTestCase
             'hydra:totalItems' => 35,
         ]);
         self::assertCount(30, $response->toArray()['hydra:member']);
-        self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Bookmark/collection.json'));
+        self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Bookmark/collection.json'));
     }
 
-    public function testAsAnonymousICannotCreateABookmark(): void
+    /**
+     * @test
+     */
+    public function asAnonymousICannotCreateABookmark(): void
     {
         $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL2055137M.json']);
 
         $this->client->request('POST', '/bookmarks', [
             'json' => [
-                'book' => '/books/'.$book->getId(),
+                'book' => '/books/' . $book->getId(),
             ],
             'headers' => [
                 'Content-Type' => 'application/ld+json',
@@ -97,7 +106,10 @@ final class BookmarkTest extends ApiTestCase
         ]);
     }
 
-    public function testAsAUserICannotCreateABookmarkWithInvalidData(): void
+    /**
+     * @test
+     */
+    public function asAUserICannotCreateABookmarkWithInvalidData(): void
     {
         $token = $this->generateToken([
             'email' => UserFactory::createOne()->email,
@@ -107,7 +119,7 @@ final class BookmarkTest extends ApiTestCase
 
         $this->client->request('POST', '/bookmarks', [
             'json' => [
-                'book' => '/books/'.$uuid,
+                'book' => '/books/' . $uuid,
             ],
             'headers' => [
                 'Content-Type' => 'application/ld+json',
@@ -116,34 +128,28 @@ final class BookmarkTest extends ApiTestCase
             'auth_bearer' => $token,
         ]);
 
-        self::assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
-        // todo waiting for https://github.com/api-platform/core/pull/5844
-//        self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'hydra:Error',
+            '@type' => 'ConstraintViolationList',
             'hydra:title' => 'An error occurred',
-            'hydra:description' => 'Item not found for "/books/'.$uuid.'".',
+            'hydra:description' => 'book: This value should be of type '.Book::class.'.',
+            'violations' => [
+                [
+                    'propertyPath' => 'book',
+                    'hint' => 'Item not found for "/books/'.$uuid.'".',
+                ],
+            ],
         ]);
-        // todo waiting for https://github.com/api-platform/core/pull/5844
-//        self::assertJsonContains([
-//            '@type' => 'ConstraintViolationList',
-//            'hydra:title' => 'An error occurred',
-//            'hydra:description' => 'book: This value should be of type '.Book::class.'.',
-//            'violations' => [
-//                [
-//                    'propertyPath' => 'book',
-//                    'hint' => 'Item not found for "/books/'.$uuid.'".',
-//                ],
-//            ],
-//        ]);
     }
 
     /**
      * @group mercure
+     *
+     * @test
      */
-    public function testAsAUserICanCreateABookmark(): void
+    public function asAUserICanCreateABookmark(): void
     {
         $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL2055137M.json']);
         $user = UserFactory::createOne();
@@ -155,7 +161,7 @@ final class BookmarkTest extends ApiTestCase
 
         $response = $this->client->request('POST', '/bookmarks', [
             'json' => [
-                'book' => '/books/'.$book->getId(),
+                'book' => '/books/' . $book->getId(),
             ],
             'headers' => [
                 'Content-Type' => 'application/ld+json',
@@ -168,17 +174,17 @@ final class BookmarkTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertJsonContains([
             'book' => [
-                '@id' => '/books/'.$book->getId(),
+                '@id' => '/books/' . $book->getId(),
             ],
         ]);
-        self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Bookmark/item.json'));
+        self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Bookmark/item.json'));
         $id = preg_replace('/^.*\/(.+)$/', '$1', $response->toArray()['@id']);
         $object = self::getContainer()->get(BookmarkRepository::class)->find($id);
         self::assertCount(1, self::getMercureMessages());
         self::assertEquals(
             self::getMercureMessage(),
             new Update(
-                topics: ['http://localhost/bookmarks/'.$id],
+                topics: ['http://localhost/bookmarks/' . $id],
                 data: self::serialize(
                     $object,
                     'jsonld',
@@ -188,7 +194,10 @@ final class BookmarkTest extends ApiTestCase
         );
     }
 
-    public function testAsAUserICannotCreateADuplicateBookmark(): void
+    /**
+     * @test
+     */
+    public function asAUserICannotCreateADuplicateBookmark(): void
     {
         $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL2055137M.json']);
         $user = UserFactory::createOne();
@@ -200,7 +209,7 @@ final class BookmarkTest extends ApiTestCase
 
         $this->client->request('POST', '/bookmarks', [
             'json' => [
-                'book' => '/books/'.$book->getId(),
+                'book' => '/books/' . $book->getId(),
             ],
             'headers' => [
                 'Content-Type' => 'application/ld+json',
@@ -219,11 +228,14 @@ final class BookmarkTest extends ApiTestCase
         ]);
     }
 
-    public function testAsAnonymousICannotDeleteABookmark(): void
+    /**
+     * @test
+     */
+    public function asAnonymousICannotDeleteABookmark(): void
     {
         $bookmark = BookmarkFactory::createOne();
 
-        $this->client->request('DELETE', '/bookmarks/'.$bookmark->getId());
+        $this->client->request('DELETE', '/bookmarks/' . $bookmark->getId());
 
         self::assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
@@ -235,7 +247,10 @@ final class BookmarkTest extends ApiTestCase
         ]);
     }
 
-    public function testAsAUserICannotDeleteABookmarkOfAnotherUser(): void
+    /**
+     * @test
+     */
+    public function asAUserICannotDeleteABookmarkOfAnotherUser(): void
     {
         $bookmark = BookmarkFactory::createOne(['user' => UserFactory::createOne()]);
 
@@ -243,7 +258,7 @@ final class BookmarkTest extends ApiTestCase
             'email' => UserFactory::createOne()->email,
         ]);
 
-        $this->client->request('DELETE', '/bookmarks/'.$bookmark->getId(), [
+        $this->client->request('DELETE', '/bookmarks/' . $bookmark->getId(), [
             'auth_bearer' => $token,
         ]);
 
@@ -257,7 +272,10 @@ final class BookmarkTest extends ApiTestCase
         ]);
     }
 
-    public function testAsAUserICannotDeleteAnInvalidBookmark(): void
+    /**
+     * @test
+     */
+    public function asAUserICannotDeleteAnInvalidBookmark(): void
     {
         $token = $this->generateToken([
             'email' => UserFactory::createOne()->email,
@@ -272,8 +290,10 @@ final class BookmarkTest extends ApiTestCase
 
     /**
      * @group mercure
+     *
+     * @test
      */
-    public function testAsAUserICanDeleteMyBookmark(): void
+    public function asAUserICanDeleteMyBookmark(): void
     {
         $book = BookFactory::createOne(['title' => 'Hyperion']);
         $bookmark = BookmarkFactory::createOne(['book' => $book]);
@@ -285,7 +305,7 @@ final class BookmarkTest extends ApiTestCase
             'email' => $bookmark->user->email,
         ]);
 
-        $response = $this->client->request('DELETE', '/bookmarks/'.$bookmark->getId(), [
+        $response = $this->client->request('DELETE', '/bookmarks/' . $bookmark->getId(), [
             'auth_bearer' => $token,
         ]);
 
@@ -296,8 +316,8 @@ final class BookmarkTest extends ApiTestCase
         // todo how to ensure it's a delete update
         self::assertEquals(
             new Update(
-                topics: ['http://localhost/bookmarks/'.$id],
-                data: json_encode(['@id' => '/bookmarks/'.$id])
+                topics: ['http://localhost/bookmarks/' . $id],
+                data: json_encode(['@id' => '/bookmarks/' . $id, '@type' => 'https://schema.org/BookmarkAction'])
             ),
             self::getMercureMessage()
         );

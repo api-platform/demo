@@ -13,8 +13,15 @@ use Psr\Clock\ClockInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
+/**
+ * @implements ProcessorInterface<Review>
+ */
 final readonly class ReviewPersistProcessor implements ProcessorInterface
 {
+    /**
+     * @param PersistProcessor $persistProcessor
+     * @param MercureProcessor $mercureProcessor
+     */
     public function __construct(
         #[Autowire(service: PersistProcessor::class)]
         private ProcessorInterface $persistProcessor,
@@ -22,8 +29,7 @@ final readonly class ReviewPersistProcessor implements ProcessorInterface
         private ProcessorInterface $mercureProcessor,
         private Security $security,
         private ClockInterface $clock
-    ) {
-    }
+    ) {}
 
     /**
      * @param Review $data
@@ -38,6 +44,7 @@ final readonly class ReviewPersistProcessor implements ProcessorInterface
 
         // prevent overriding user, for instance from admin
         if ($operation instanceof Post) {
+            /** @phpstan-ignore-next-line */
             $data->user = $this->security->getUser();
             $data->publishedAt = $this->clock->now();
         }

@@ -56,9 +56,9 @@ final class UserFactory extends ModelFactory
         parent::__construct();
     }
 
-    public static function createOneAdmin(array $attributes = []): User|Proxy
+    public static function createOneAdmin(array $attributes = []): Proxy|User
     {
-        return static::createOne(['roles' => ['ROLE_ADMIN']] + $attributes);
+        return self::createOne(['roles' => ['ROLE_ADMIN']] + $attributes);
     }
 
     /**
@@ -80,9 +80,8 @@ final class UserFactory extends ModelFactory
      */
     protected function initialize(): self
     {
-        return $this
-            // ->afterInstantiate(function(User $user): void {})
-        ;
+        return $this;
+        // ->afterInstantiate(function(User $user): void {})
     }
 
     protected static function getClass(): string

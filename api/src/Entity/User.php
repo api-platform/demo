@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -57,7 +58,7 @@ class User implements UserInterface
      */
     #[ApiProperty(types: ['https://schema.org/identifier'])]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
-    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\Id]
     private ?Uuid $id = null;
@@ -100,9 +101,7 @@ class User implements UserInterface
         return $this->id;
     }
 
-    public function eraseCredentials(): void
-    {
-    }
+    public function eraseCredentials(): void {}
 
     /**
      * @return array<int, string>

@@ -19,10 +19,10 @@ final class BookPersistProcessorTest extends TestCase
 {
     private MockObject|ProcessorInterface $persistProcessorMock;
     private MockObject|ProcessorInterface $mercureProcessorMock;
-    private MockObject|HttpClientInterface $clientMock;
+    private HttpClientInterface|MockObject $clientMock;
     private MockObject|ResponseInterface $responseMock;
-    private MockObject|DecoderInterface $decoderMock;
-    private MockObject|Book $objectMock;
+    private DecoderInterface|MockObject $decoderMock;
+    private Book|MockObject $objectMock;
     private MockObject|Operation $operationMock;
     private BookPersistProcessor $processor;
 
@@ -45,7 +45,10 @@ final class BookPersistProcessorTest extends TestCase
         );
     }
 
-    public function testItUpdatesBookDataBeforeSaveAndSendMercureUpdates(): void
+    /**
+     * @test
+     */
+    public function itUpdatesBookDataBeforeSaveAndSendMercureUpdates(): void
     {
         $expectedData = $this->objectMock;
         $expectedData->title = 'Foundation';
@@ -70,7 +73,8 @@ final class BookPersistProcessorTest extends TestCase
                     ],
                 ],
             )
-            ->willReturnOnConsecutiveCalls($this->responseMock, $this->responseMock);
+            ->willReturnOnConsecutiveCalls($this->responseMock, $this->responseMock)
+        ;
         $this->responseMock
             ->expects($this->exactly(2))
             ->method('getContent')
@@ -84,7 +88,8 @@ final class BookPersistProcessorTest extends TestCase
                 json_encode([
                     'name' => 'Dan Simmons',
                 ]),
-            );
+            )
+        ;
         $this->decoderMock
             ->expects($this->exactly(2))
             ->method('decode')
@@ -115,12 +120,14 @@ final class BookPersistProcessorTest extends TestCase
                 [
                     'name' => 'Dan Simmons',
                 ],
-            );
+            )
+        ;
         $this->persistProcessorMock
             ->expects($this->once())
             ->method('process')
             ->with($expectedData, $this->operationMock, [], [])
-            ->willReturn($expectedData);
+            ->willReturn($expectedData)
+        ;
         $this->mercureProcessorMock
             ->expects($this->exactly(2))
             ->method('process')
@@ -131,7 +138,8 @@ final class BookPersistProcessorTest extends TestCase
             ->willReturnOnConsecutiveCalls(
                 $expectedData,
                 $expectedData,
-            );
+            )
+        ;
 
         $this->assertEquals($expectedData, $this->processor->process($this->objectMock, $this->operationMock));
     }

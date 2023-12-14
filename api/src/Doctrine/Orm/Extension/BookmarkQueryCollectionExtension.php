@@ -16,9 +16,7 @@ use Symfony\Bundle\SecurityBundle\Security;
  */
 final readonly class BookmarkQueryCollectionExtension implements QueryCollectionExtensionInterface
 {
-    public function __construct(private Security $security)
-    {
-    }
+    public function __construct(private Security $security) {}
 
     public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, Operation $operation = null, array $context = []): void
     {
@@ -32,6 +30,7 @@ final readonly class BookmarkQueryCollectionExtension implements QueryCollection
 
         $queryBuilder
             ->andWhere(sprintf('%s.user = :user', $queryBuilder->getRootAliases()[0]))
-            ->setParameter('user', $user);
+            ->setParameter('user', $user)
+        ;
     }
 }

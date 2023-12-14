@@ -52,21 +52,21 @@ final class BooksImportCommand extends Command
         $io->progressStart($limit);
         $data = [];
         while ($offset < $limit) {
-            /* @see https://openlibrary.org/dev/docs/restful_api */
-            $uri = 'https://openlibrary.org/query?type=/type/edition&languages=/languages/eng&subjects=Science%20Fiction&authors=&covers=&title=&description=&publish_date&offset='.$offset;
+            /** @see https://openlibrary.org/dev/docs/restful_api */
+            $uri = 'https://openlibrary.org/query?type=/type/edition&languages=/languages/eng&subjects=Science%20Fiction&authors=&covers=&title=&description=&publish_date&offset=' . $offset;
             $books = $this->getData($uri);
             foreach ($books as $book) {
                 $this->logger->info('Importing book.', [
-                    'book' => 'https://openlibrary.org'.$book['key'].'.json',
+                    'book' => 'https://openlibrary.org' . $book['key'] . '.json',
                 ]);
 
                 $datum = [
-                    'book' => 'https://openlibrary.org'.$book['key'].'.json',
+                    'book' => 'https://openlibrary.org' . $book['key'] . '.json',
                     'title' => $book['title'],
                 ];
 
                 if (isset($book['authors'][0]['key'])) {
-                    $author = $this->getData('https://openlibrary.org'.$book['authors'][0]['key']);
+                    $author = $this->getData('https://openlibrary.org' . $book['authors'][0]['key']);
                     if (isset($author['name'])) {
                         $datum['author'] = $author['name'];
                     }

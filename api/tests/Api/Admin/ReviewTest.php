@@ -38,8 +38,10 @@ final class ReviewTest extends ApiTestCase
 
     /**
      * @dataProvider getNonAdminUsers
+     *
+     * @test
      */
-    public function testAsNonAdminUserICannotGetACollectionOfReviews(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
+    public function asNonAdminUserICannotGetACollectionOfReviews(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
     {
         $options = [];
         if ($userFactory) {
@@ -63,8 +65,10 @@ final class ReviewTest extends ApiTestCase
 
     /**
      * @dataProvider getAdminUrls
+     *
+     * @test
      */
-    public function testAsAdminUserICanGetACollectionOfReviews(FactoryCollection $factory, string|callable $url, int $hydraTotalItems, int $itemsPerPage = null): void
+    public function asAdminUserICanGetACollectionOfReviews(FactoryCollection $factory, callable|string $url, int $hydraTotalItems, int $itemsPerPage = null): void
     {
         $factory->create();
 
@@ -72,7 +76,7 @@ final class ReviewTest extends ApiTestCase
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
-        if (is_callable($url)) {
+        if (\is_callable($url)) {
             $url = $url();
         }
 
@@ -84,10 +88,10 @@ final class ReviewTest extends ApiTestCase
             'hydra:totalItems' => $hydraTotalItems,
         ]);
         self::assertCount(min($itemsPerPage ?? $hydraTotalItems, 30), $response->toArray()['hydra:member']);
-        self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Review/collection.json'));
+        self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Review/collection.json'));
     }
 
-    public function getAdminUrls(): iterable
+    public static function getAdminUrls(): iterable
     {
         yield 'all reviews' => [
             ReviewFactory::new()->many(35),
@@ -101,7 +105,7 @@ final class ReviewTest extends ApiTestCase
             10,
         ];
         yield 'reviews filtered by rating' => [
-            ReviewFactory::new()->sequence(function () {
+            ReviewFactory::new()->sequence(static function () {
                 foreach (range(1, 100) as $i) {
                     // 33% of reviews are rated 5
                     yield ['rating' => $i % 3 ? 3 : 5];
@@ -111,7 +115,7 @@ final class ReviewTest extends ApiTestCase
             33,
         ];
         yield 'reviews filtered by user' => [
-            ReviewFactory::new()->sequence(function () {
+            ReviewFactory::new()->sequence(static function () {
                 $user = UserFactory::createOne(['email' => 'user@example.com']);
                 yield ['user' => $user];
                 foreach (range(1, 10) as $i) {
@@ -122,12 +126,12 @@ final class ReviewTest extends ApiTestCase
                 /** @var User[] $users */
                 $users = UserFactory::findBy(['email' => 'user@example.com']);
 
-                return '/admin/reviews?user=/admin/users/'.$users[0]->getId();
+                return '/admin/reviews?user=/admin/users/' . $users[0]->getId();
             },
             1,
         ];
         yield 'reviews filtered by book' => [
-            ReviewFactory::new()->sequence(function () {
+            ReviewFactory::new()->sequence(static function () {
                 yield ['book' => BookFactory::createOne(['title' => 'Hyperion'])];
                 foreach (range(1, 10) as $i) {
                     yield ['book' => BookFactory::createOne()];
@@ -137,7 +141,7 @@ final class ReviewTest extends ApiTestCase
                 /** @var Book[] $books */
                 $books = BookFactory::findBy(['title' => 'Hyperion']);
 
-                return '/admin/reviews?book=/books/'.$books[0]->getId();
+                return '/admin/reviews?book=/books/' . $books[0]->getId();
             },
             1,
         ];
@@ -145,8 +149,10 @@ final class ReviewTest extends ApiTestCase
 
     /**
      * @dataProvider getNonAdminUsers
+     *
+     * @test
      */
-    public function testAsNonAdminUserICannotGetAReview(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
+    public function asNonAdminUserICannotGetAReview(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
     {
         $review = ReviewFactory::createOne();
 
@@ -158,7 +164,7 @@ final class ReviewTest extends ApiTestCase
             $options['auth_bearer'] = $token;
         }
 
-        $this->client->request('GET', '/admin/reviews/'.$review->getId(), $options);
+        $this->client->request('GET', '/admin/reviews/' . $review->getId(), $options);
 
         self::assertResponseStatusCodeSame($expectedCode);
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
@@ -170,7 +176,10 @@ final class ReviewTest extends ApiTestCase
         ]);
     }
 
-    public function testAsAdminUserICannotGetAnInvalidReview(): void
+    /**
+     * @test
+     */
+    public function asAdminUserICannotGetAnInvalidReview(): void
     {
         $token = $this->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
@@ -181,7 +190,10 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 
-    public function testAsAdminUserICanGetAReview(): void
+    /**
+     * @test
+     */
+    public function asAdminUserICanGetAReview(): void
     {
         $review = ReviewFactory::createOne();
 
@@ -189,17 +201,19 @@ final class ReviewTest extends ApiTestCase
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
-        $this->client->request('GET', '/admin/reviews/'.$review->getId(), ['auth_bearer' => $token]);
+        $this->client->request('GET', '/admin/reviews/' . $review->getId(), ['auth_bearer' => $token]);
 
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
-        self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Review/item.json'));
+        self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Review/item.json'));
     }
 
     /**
      * @dataProvider getNonAdminUsers
+     *
+     * @test
      */
-    public function testAsNonAdminUserICannotUpdateAReview(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
+    public function asNonAdminUserICannotUpdateAReview(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
     {
         $review = ReviewFactory::createOne();
 
@@ -211,7 +225,7 @@ final class ReviewTest extends ApiTestCase
             $options['auth_bearer'] = $token;
         }
 
-        $this->client->request('GET', '/admin/reviews/'.$review->getId(), $options + [
+        $this->client->request('GET', '/admin/reviews/' . $review->getId(), $options + [
             'json' => [
                 'body' => 'Very good book!',
                 'rating' => 5,
@@ -232,7 +246,10 @@ final class ReviewTest extends ApiTestCase
         ]);
     }
 
-    public function testAsAdminUserICannotUpdateAnInvalidReview(): void
+    /**
+     * @test
+     */
+    public function asAdminUserICannotUpdateAnInvalidReview(): void
     {
         $token = $this->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
@@ -255,8 +272,10 @@ final class ReviewTest extends ApiTestCase
 
     /**
      * @group mercure
+     *
+     * @test
      */
-    public function testAsAdminUserICanUpdateAReview(): void
+    public function asAdminUserICanUpdateAReview(): void
     {
         $book = BookFactory::createOne();
         $review = ReviewFactory::createOne(['book' => $book]);
@@ -266,11 +285,11 @@ final class ReviewTest extends ApiTestCase
             'email' => $user->email,
         ]);
 
-        $this->client->request('PUT', '/admin/reviews/'.$review->getId(), [
+        $this->client->request('PUT', '/admin/reviews/' . $review->getId(), [
             'auth_bearer' => $token,
             'json' => [
                 // Must set all data because of standard PUT
-                'book' => '/admin/books/'.$book->getId(),
+                'book' => '/admin/books/' . $book->getId(),
                 'letter' => null,
                 'body' => 'Very good book!',
                 'rating' => 5,
@@ -289,11 +308,11 @@ final class ReviewTest extends ApiTestCase
         ]);
         // ensure user hasn't changed
         self::assertNotEquals($user, $review->object()->user);
-        self::assertMatchesJsonSchema(file_get_contents(__DIR__.'/schemas/Review/item.json'));
+        self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Review/item.json'));
         self::assertCount(2, self::getMercureMessages());
         self::assertEquals(
             new Update(
-                topics: ['http://localhost/admin/reviews/'.$review->getId()],
+                topics: ['http://localhost/admin/reviews/' . $review->getId()],
                 data: self::serialize(
                     $review->object(),
                     'jsonld',
@@ -304,7 +323,7 @@ final class ReviewTest extends ApiTestCase
         );
         self::assertEquals(
             new Update(
-                topics: ['http://localhost/books/'.$review->book->getId().'/reviews/'.$review->getId()],
+                topics: ['http://localhost/books/' . $review->book->getId() . '/reviews/' . $review->getId()],
                 data: self::serialize(
                     $review->object(),
                     'jsonld',
@@ -317,8 +336,10 @@ final class ReviewTest extends ApiTestCase
 
     /**
      * @dataProvider getNonAdminUsers
+     *
+     * @test
      */
-    public function testAsNonAdminUserICannotDeleteAReview(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
+    public function asNonAdminUserICannotDeleteAReview(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
     {
         $review = ReviewFactory::createOne();
 
@@ -330,7 +351,7 @@ final class ReviewTest extends ApiTestCase
             $options['auth_bearer'] = $token;
         }
 
-        $this->client->request('DELETE', '/admin/reviews/'.$review->getId(), $options);
+        $this->client->request('DELETE', '/admin/reviews/' . $review->getId(), $options);
 
         self::assertResponseStatusCodeSame($expectedCode);
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
@@ -342,7 +363,10 @@ final class ReviewTest extends ApiTestCase
         ]);
     }
 
-    public function testAsAdminUserICannotDeleteAnInvalidReview(): void
+    /**
+     * @test
+     */
+    public function asAdminUserICannotDeleteAnInvalidReview(): void
     {
         $token = $this->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
@@ -355,8 +379,10 @@ final class ReviewTest extends ApiTestCase
 
     /**
      * @group mercure
+     *
+     * @test
      */
-    public function testAsAdminUserICanDeleteAReview(): void
+    public function asAdminUserICanDeleteAReview(): void
     {
         $review = ReviewFactory::createOne(['body' => 'Best book ever!']);
         $id = $review->getId();
@@ -366,7 +392,7 @@ final class ReviewTest extends ApiTestCase
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
-        $response = $this->client->request('DELETE', '/admin/reviews/'.$review->getId(), [
+        $response = $this->client->request('DELETE', '/admin/reviews/' . $review->getId(), [
             'auth_bearer' => $token,
         ]);
 
@@ -377,15 +403,15 @@ final class ReviewTest extends ApiTestCase
         // todo how to ensure it's a delete update
         self::assertEquals(
             new Update(
-                topics: ['http://localhost/admin/reviews/'.$id],
-                data: json_encode(['@id' => 'http://localhost/admin/reviews/'.$id])
+                topics: ['http://localhost/admin/reviews/' . $id],
+                data: json_encode(['@id' => 'http://localhost/admin/reviews/' . $id])
             ),
             self::getMercureMessage()
         );
         self::assertEquals(
             new Update(
-                topics: ['http://localhost/books/'.$bookId.'/reviews/'.$id],
-                data: json_encode(['@id' => 'http://localhost/books/'.$bookId.'/reviews/'.$id])
+                topics: ['http://localhost/books/' . $bookId . '/reviews/' . $id],
+                data: json_encode(['@id' => 'http://localhost/books/' . $bookId . '/reviews/' . $id])
             ),
             self::getMercureMessage(1)
         );

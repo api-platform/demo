@@ -1,56 +1,25 @@
-version: "3.8"
+version: "3.4"
 
 services:
   php:
-    image: app_php
+    image: ${IMAGES_PREFIX:-}app-php
     depends_on:
       - database
     restart: unless-stopped
-    volumes:
-      - php_socket:/var/run/php
-    healthcheck:
-      interval: 10s
-      timeout: 3s
-      retries: 3
-      start_period: 30s
-      test: ["CMD", "docker-healthcheck"]
-    environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-!ChangeMe!}@database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-15}
-      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
-      TRUSTED_HOSTS: ^${SERVER_NAME:-example\.com|localhost}|caddy$$
-      MERCURE_URL: ${CADDY_MERCURE_URL:-http://caddy/.well-known/mercure}
-      MERCURE_PUBLIC_URL: https://${SERVER_NAME:-localhost}/.well-known/mercure
-      MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
-      OIDC_SERVER_URL: ${OIDC_SERVER_URL:-https://localhost/oidc/realms/demo}
-      OIDC_SERVER_URL_INTERNAL: ${OIDC_SERVER_URL_INTERNAL:-http://caddy/oidc/realms/demo}
-
-  pwa:
-    image: app_pwa
-    environment:
-      NEXT_PUBLIC_ENTRYPOINT: http://caddy
-      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-!ChangeThisNextAuthSecret!}
-      NEXTAUTH_URL: ${NEXTAUTH_URL:-https://localhost/api/auth}
-      NEXTAUTH_URL_INTERNAL: http://127.0.0.1:3000/api/auth
-      OIDC_CLIENT_ID: ${OIDC_CLIENT_ID:-api-platform-pwa}
-      OIDC_SERVER_URL: ${OIDC_SERVER_URL_INTERNAL:-http://caddy/oidc/realms/demo}
-
-  caddy:
-    image: app_caddy
-    depends_on:
-      - php
-      - pwa
     environment:
       PWA_UPSTREAM: pwa:3000
       OIDC_UPSTREAM: keycloak:8080
-      SERVER_NAME: ${SERVER_NAME:-localhost}, caddy:80
+      SERVER_NAME: ${SERVER_NAME:-localhost}, php:80
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
       MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
-      MERCURE_EXTRA_DIRECTIVES: demo
-    restart: unless-stopped
-    volumes:
-      - php_socket:/var/run/php
-      - caddy_data:/data
-      - caddy_config:/config
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
+      TRUSTED_HOSTS: ^${SERVER_NAME:-example\.com|localhost}|php$$
+      DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-!ChangeMe!}@database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-16}&charset=${POSTGRES_CHARSET:-utf8}
+      MERCURE_URL: ${CADDY_MERCURE_URL:-http://php/.well-known/mercure}
+      MERCURE_PUBLIC_URL: https://${SERVER_NAME:-localhost}/.well-known/mercure
+      MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
+      OIDC_SERVER_URL: ${OIDC_SERVER_URL:-https://localhost/oidc/realms/demo}
+      OIDC_SERVER_URL_INTERNAL: ${OIDC_SERVER_URL_INTERNAL:-http://php/oidc/realms/demo}
     ports:
       # HTTP
       - target: 80
@@ -65,14 +34,24 @@ services:
         published: ${HTTP3_PORT:-443}
         protocol: udp
 
+  pwa:
+    image: ${IMAGES_PREFIX:-}app-pwa
+    environment:
+      NEXT_PUBLIC_ENTRYPOINT: http://php
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-!ChangeThisNextAuthSecret!}
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-https://localhost/api/auth}
+      NEXTAUTH_URL_INTERNAL: http://127.0.0.1:3000/api/auth
+      OIDC_CLIENT_ID: ${OIDC_CLIENT_ID:-api-platform-pwa}
+      OIDC_SERVER_URL: ${OIDC_SERVER_URL_INTERNAL:-http://php/oidc/realms/demo}
+
 ###> doctrine/doctrine-bundle ###
   database:
-    image: postgres:${POSTGRES_VERSION:-15}-alpine
+    image: postgres:${POSTGRES_VERSION:-16}-alpine
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-app}
+      - POSTGRES_DB=${POSTGRES_DB:-app}
       # You should definitely change the password in production
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
-      POSTGRES_USER: ${POSTGRES_USER:-app}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-!ChangeMe!}
+      - POSTGRES_USER=${POSTGRES_USER:-app}
     volumes:
       - db_data:/var/lib/postgresql/data
       # you may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
@@ -84,7 +63,7 @@ services:
 ###< symfony/mercure-bundle ###
 
   keycloak-database:
-    image: postgres:${KEYCLOAK_POSTGRES_VERSION:-15}-alpine
+    image: postgres:${KEYCLOAK_POSTGRES_VERSION:-16}-alpine
     environment:
       POSTGRES_DB: ${KEYCLOAK_POSTGRES_DB:-keycloak}
       # You should definitely change the password in production
@@ -115,7 +94,6 @@ services:
         protocol: tcp
 
 volumes:
-  php_socket:
   caddy_data:
   caddy_config:
 ###> doctrine/doctrine-bundle ###

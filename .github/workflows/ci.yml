@@ -26,52 +26,53 @@ jobs:
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       -
-        name: Build Docker Images
+        name: Build Docker images
         uses: docker/bake-action@v4
         with:
           pull: true
           load: true
           files: |
-            docker-compose.yml
-            docker-compose.override.yml
+            compose.yaml
+            compose.override.yaml
           set: |
             *.cache-from=type=gha,scope=${{github.ref}}
             *.cache-from=type=gha,scope=refs/heads/main
             *.cache-to=type=gha,scope=${{github.ref}},mode=max
       -
-        name: Start Services
+        name: Start services
         run: docker compose up --wait --no-build
       -
-        name: Debug Services
+        name: Debug services
         if: failure()
         run: |
           docker compose ps
           docker compose logs
       -
-        name: Check HTTP Reachability
+        name: Check HTTP reachability
         run: curl -v -o /dev/null http://localhost
       -
-        name: Check API Reachability
+        name: Check API reachability
         run: curl -vk -o /dev/null https://localhost
       -
-        name: Check PWA Reachability
+        name: Check PWA reachability
         run: "curl -vk -o /dev/null -H 'Accept: text/html' https://localhost"
       -
-        name: Create Test Database
-        run: |
-          docker compose exec -T php bin/console -e test doctrine:database:create
-          docker compose exec -T php bin/console -e test doctrine:migrations:migrate --no-interaction
+        name: Create test database
+        run: docker compose exec -T php bin/console -e test doctrine:database:create
       -
-        name: Run PHPUnit Tests
+        name: Run migrations
+        run: docker compose exec -T php bin/console -e test doctrine:migrations:migrate --no-interaction
+      -
+        name: Run PHPUnit
         run: docker compose exec -T php bin/phpunit
       -
         name: Doctrine Schema Validator
-        run: docker compose exec -T php bin/console doctrine:schema:validate
+        run: docker compose exec -T php bin/console -e test doctrine:schema:validate
       -
-        name: Run Psalm Analysis
-        run: docker compose exec -T php vendor/bin/psalm
+        name: Run PHPStan
+        run: docker compose exec -T php vendor/bin/phpstan --memory-limit=256M
       -
-        name: Run PWA Lint
+        name: Lint PWA
         run: docker compose exec -T pwa pnpm lint
 
   # run e2e tests iso-prod
@@ -82,10 +83,9 @@ jobs:
       contents: 'read'
       id-token: 'write'
     env:
-      PHP_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/php:latest
-      PWA_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/pwa:latest
-      CADDY_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/caddy:latest
-      KEYCLOAK_DOCKER_IMAGE: eu.gcr.io/${{ secrets.GKE_PROJECT }}/keycloak:latest
+      PHP_DOCKER_IMAGE: europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/php:latest
+      PWA_DOCKER_IMAGE: europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/pwa:latest
+      KEYCLOAK_DOCKER_IMAGE: europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/keycloak:latest
       APP_SECRET: ba63418865d58089f7f070e0a437b6d16b1fb970
       CADDY_MERCURE_JWT_SECRET: 33b04d361e437e0d7d715600fc24fdefba317154
       NEXTAUTH_SECRET: 77e4c3f5a6fb652b6245a5df8a704e04ad90bc7e
@@ -95,7 +95,7 @@ jobs:
       KEYCLOAK_HTTPS_CERTIFICATE_FILE: ./helm/api-platform/keycloak/certs/tls.crt
       KEYCLOAK_HTTPS_CERTIFICATE_KEY_FILE: ./helm/api-platform/keycloak/certs/tls.pem
       # https://docs.docker.com/compose/environment-variables/envvars/#compose_file
-      COMPOSE_FILE: docker-compose.yml:docker-compose.prod.yml:docker-compose.e2e.yml
+      COMPOSE_FILE: compose.yaml:compose.prod.yaml:compose.e2e.yaml
     steps:
       -
         name: Checkout
@@ -110,8 +110,8 @@ jobs:
           pull: true
           load: true
           files: |
-            docker-compose.yml
-            docker-compose.prod.yml
+            compose.yaml
+            compose.prod.yaml
           set: |
             *.cache-from=type=gha,scope=${{github.ref}}-e2e
             *.cache-from=type=gha,scope=${{github.ref}}
@@ -128,7 +128,7 @@ jobs:
           docker compose logs
       -
         name: Load Fixtures
-        run: docker compose run --rm --env APP_ENV=dev php bin/console doctrine:fixtures:load --no-interaction
+        run: docker compose run --rm php bin/console doctrine:fixtures:load --no-interaction
       -
         name: Cache Playwright Binaries
         uses: actions/cache@v3

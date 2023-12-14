@@ -29,7 +29,8 @@ class ReviewRepository extends ServiceEntityRepository
         $rating = $this->createQueryBuilder('r')
             ->select('AVG(r.rating)')
             ->where('r.book = :book')->setParameter('book', $book)
-            ->getQuery()->getSingleScalarResult();
+            ->getQuery()->getSingleScalarResult()
+        ;
 
         return $rating ? (int) $rating : null;
     }

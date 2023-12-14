@@ -34,30 +34,38 @@ final class BookmarkQueryCollectionExtensionTest extends TestCase
         $this->extension = new BookmarkQueryCollectionExtension($this->securityMock);
     }
 
-    public function testItFiltersBookmarksQueryOnCurrentUser(): void
+    /**
+     * @test
+     */
+    public function itFiltersBookmarksQueryOnCurrentUser(): void
     {
         $this->operationMock
             ->expects($this->once())
             ->method('getName')
-            ->willReturn('_api_/bookmarks{._format}_get_collection');
+            ->willReturn('_api_/bookmarks{._format}_get_collection')
+        ;
         $this->securityMock
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($this->userMock);
+            ->willReturn($this->userMock)
+        ;
         $this->queryBuilderMock
             ->expects($this->once())
             ->method('getRootAliases')
-            ->willReturn(['o']);
+            ->willReturn(['o'])
+        ;
         $this->queryBuilderMock
             ->expects($this->once())
             ->method('andWhere')
             ->with('o.user = :user')
-            ->willReturn($this->queryBuilderMock);
+            ->willReturn($this->queryBuilderMock)
+        ;
         $this->queryBuilderMock
             ->expects($this->once())
             ->method('setParameter')
             ->with('user', $this->userMock)
-            ->willReturn($this->queryBuilderMock);
+            ->willReturn($this->queryBuilderMock)
+        ;
 
         $this->extension->applyToCollection(
             $this->queryBuilderMock,
@@ -67,7 +75,10 @@ final class BookmarkQueryCollectionExtensionTest extends TestCase
         );
     }
 
-    public function testItIgnoresInvalidResourceClass(): void
+    /**
+     * @test
+     */
+    public function itIgnoresInvalidResourceClass(): void
     {
         $this->operationMock->expects($this->never())->method('getName');
         $this->securityMock->expects($this->never())->method('getUser');
@@ -83,12 +94,16 @@ final class BookmarkQueryCollectionExtensionTest extends TestCase
         );
     }
 
-    public function testItIgnoresInvalidOperation(): void
+    /**
+     * @test
+     */
+    public function itIgnoresInvalidOperation(): void
     {
         $this->operationMock
             ->expects($this->once())
             ->method('getName')
-            ->willReturn('_api_/books{._format}_get_collection');
+            ->willReturn('_api_/books{._format}_get_collection')
+        ;
         $this->securityMock->expects($this->never())->method('getUser');
         $this->queryBuilderMock->expects($this->never())->method('getRootAliases');
         $this->queryBuilderMock->expects($this->never())->method('andWhere');
@@ -102,16 +117,21 @@ final class BookmarkQueryCollectionExtensionTest extends TestCase
         );
     }
 
-    public function testItIgnoresInvalidUser(): void
+    /**
+     * @test
+     */
+    public function itIgnoresInvalidUser(): void
     {
         $this->operationMock
             ->expects($this->once())
             ->method('getName')
-            ->willReturn('_api_/bookmarks{._format}_get_collection');
+            ->willReturn('_api_/bookmarks{._format}_get_collection')
+        ;
         $this->securityMock
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
         $this->queryBuilderMock->expects($this->never())->method('getRootAliases');
         $this->queryBuilderMock->expects($this->never())->method('andWhere');
         $this->queryBuilderMock->expects($this->never())->method('setParameter');
