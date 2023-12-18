@@ -263,3 +263,11 @@ jobs:
       -
         name: Lint Helm
         run: helm lint ./helm/api-platform/
+
+      # Lint Markdown Docs
+      -
+        name: Lint changelog file
+        uses: docker://avtodev/markdown-lint:v1
+        with:
+          config: 'docs/.markdown-lint.yaml'
+          args: 'docs/**/*.md'
