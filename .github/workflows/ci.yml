@@ -131,6 +131,7 @@ jobs:
         run: docker compose run --rm php bin/console doctrine:fixtures:load --no-interaction
       -
         name: Cache Playwright Binaries
+        id: playwright-cache
         uses: actions/cache@v3
         with:
           path: ~/.cache/ms-playwright
@@ -153,9 +154,15 @@ jobs:
         working-directory: pwa
         run: pnpm install
       -
-        name: Install Playwright Browsers
+        name: Install Playwright Browsers with Deps
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         working-directory: pwa
         run: pnpm exec playwright install --with-deps
+      -
+        name: Install Playwright Browsers
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        working-directory: pwa
+        run: pnpm exec playwright install
       -
         name: Run Playwright @read
         working-directory: pwa
