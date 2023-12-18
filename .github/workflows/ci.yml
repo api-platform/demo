@@ -71,9 +71,6 @@ jobs:
       -
         name: Run PHPStan
         run: docker compose exec -T php vendor/bin/phpstan --memory-limit=256M
-      -
-        name: Lint PWA
-        run: docker compose exec -T pwa pnpm lint
 
   # run e2e tests iso-prod
   e2e-tests:
@@ -140,7 +137,7 @@ jobs:
         name: Install PNPM
         uses: pnpm/action-setup@v2
         with:
-          version: 8.6.2
+          version: 8
       -
         name: Cache PNPM
         uses: actions/cache@v3
@@ -197,7 +194,7 @@ jobs:
         with:
           recursive: true
 
-      # Lint API PHP files
+      # Lint API
       -
         name: PHP CS Fixer Cache
         uses: actions/cache@v3
@@ -220,7 +217,30 @@ jobs:
           echo "$EXTRA_ARGS" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
       -
-        name: Lint API PHP Files
+        name: Lint API
         uses: docker://oskarstark/php-cs-fixer-ga
         with:
           args: --config=api/.php-cs-fixer.dist.php -v --dry-run --stop-on-violation --using-cache=no ${{ env.PHPCS_EXTRA_ARGS }}"
+
+      # Lint PWA
+      -
+        name: Install PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      -
+        name: Cache PNPM
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.PNPM_HOME }}
+          key: ${{ runner.os }}-pnpm-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+      -
+        name: Install Dependencies
+        working-directory: pwa
+        run: pnpm install
+      -
+        name: Lint PWA
+        working-directory: pwa
+        run: pnpm lint
