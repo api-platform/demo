@@ -28,11 +28,6 @@ jobs:
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      # gcloud does not work with Python 3.10 because "collections.Mappings" was removed in Python 3.10.
-      -
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.9.15
       -
         name: Auth gcloud
         id: auth

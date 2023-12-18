@@ -17,11 +17,6 @@ jobs:
       contents: 'read'
       id-token: 'write'
     steps:
-      # gcloud does not work with Python 3.10 because "collections.Mappings" was removed in Python 3.10.
-      -
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.9.15
       -
         name: Auth gcloud
         uses: google-github-actions/auth@v2
