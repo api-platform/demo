@@ -35,9 +35,9 @@ jobs:
             compose.yaml
             compose.override.yaml
           set: |
-            *.cache-from=type=gha,scope=${{github.ref}}
+            *.cache-from=type=gha,scope=${{ github.ref }}
             *.cache-from=type=gha,scope=refs/heads/main
-            *.cache-to=type=gha,scope=${{github.ref}},mode=max
+            *.cache-to=type=gha,scope=${{ github.ref }},mode=max
       -
         name: Start services
         run: docker compose up --wait --no-build
@@ -71,9 +71,6 @@ jobs:
       -
         name: Run PHPStan
         run: docker compose exec -T php vendor/bin/phpstan --memory-limit=256M
-      -
-        name: Lint PWA
-        run: docker compose exec -T pwa pnpm lint
 
   # run e2e tests iso-prod
   e2e-tests:
@@ -113,10 +110,10 @@ jobs:
             compose.yaml
             compose.prod.yaml
           set: |
-            *.cache-from=type=gha,scope=${{github.ref}}-e2e
-            *.cache-from=type=gha,scope=${{github.ref}}
+            *.cache-from=type=gha,scope=${{ github.ref }}-e2e
+            *.cache-from=type=gha,scope=${{ github.ref }}
             *.cache-from=type=gha,scope=refs/heads/main
-            *.cache-to=type=gha,scope=${{github.ref}}-e2e,mode=max
+            *.cache-to=type=gha,scope=${{ github.ref }}-e2e,mode=max
       -
         name: Start Services
         run: docker compose up --wait --no-build
@@ -131,6 +128,7 @@ jobs:
         run: docker compose run --rm php bin/console doctrine:fixtures:load --no-interaction
       -
         name: Cache Playwright Binaries
+        id: playwright-cache
         uses: actions/cache@v3
         with:
           path: ~/.cache/ms-playwright
@@ -139,15 +137,29 @@ jobs:
         name: Install PNPM
         uses: pnpm/action-setup@v2
         with:
-          version: 8.6.2
+          version: 8
+      -
+        name: Cache PNPM
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.PNPM_HOME }}
+          key: ${{ runner.os }}-pnpm-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
       -
         name: Install Dependencies
         working-directory: pwa
         run: pnpm install
       -
-        name: Install Playwright Browsers
+        name: Install Playwright Browsers with Deps
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         working-directory: pwa
         run: pnpm exec playwright install --with-deps
+      -
+        name: Install Playwright Browsers
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        working-directory: pwa
+        run: pnpm exec playwright install
       -
         name: Run Playwright @read
         working-directory: pwa
@@ -168,14 +180,94 @@ jobs:
           path: pwa/test-results
 
   lint:
-    name: Docker Lint
+    name: Lint
     runs-on: ubuntu-latest
     steps:
       -
         name: Checkout
         uses: actions/checkout@v4
+
+      # Lint Dockerfiles
       -
         name: Lint Dockerfiles
         uses: hadolint/hadolint-action@v3.1.0
         with:
           recursive: true
+
+      # Lint API
+      -
+        name: PHP CS Fixer Cache
+        uses: actions/cache@v3
+        with:
+          path: api/.php-cs-fixer.cache
+          key: ${{ runner.OS }}-phpcsfixer-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.OS }}-phpcsfixer-
+      -
+        name: Get API changed files
+        id: api-changed-files
+        uses: tj-actions/changed-files@v38
+      -
+        name: Get Extra Arguments for PHP-CS-Fixer
+        id: phpcs-intersection
+        run: |
+          CHANGED_FILES=$(echo "${{ steps.changed-files.outputs.all_changed_and_modified_files }}" | tr ' ' '\n')
+          if ! echo "${CHANGED_FILES}" | grep -qE "^api\/(\\.php-cs-fixer(\\.dist)?\\.php|composer\\.lock)$"; then EXTRA_ARGS=$(printf -- '--path-mode=intersection\n--\n%s' "${CHANGED_FILES}"); else EXTRA_ARGS=''; fi
+          echo "PHPCS_EXTRA_ARGS<<EOF" >> $GITHUB_ENV
+          echo "$EXTRA_ARGS" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+      -
+        name: Lint API
+        uses: docker://oskarstark/php-cs-fixer-ga
+        with:
+          args: --config=api/.php-cs-fixer.dist.php -v --dry-run --stop-on-violation --using-cache=no ${{ env.PHPCS_EXTRA_ARGS }}"
+
+      # Lint PWA
+      -
+        name: Install PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      -
+        name: Cache PNPM
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.PNPM_HOME }}
+          key: ${{ runner.os }}-pnpm-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+      -
+        name: Install Dependencies
+        working-directory: pwa
+        run: pnpm install
+      -
+        name: Lint PWA
+        working-directory: pwa
+        run: pnpm lint
+
+      # Lint HELM
+      -
+        name: Cache Helm Dependencies
+        uses: actions/cache@v3
+        with:
+          path: helm/api-platform/charts/
+          key: ${{ runner.os }}-helm-dependencies-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-helm-dependencies-
+      -
+        name: Build Helm Dependencies
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami/
+          helm repo add stable https://charts.helm.sh/stable/
+          helm dependency build ./helm/api-platform
+      -
+        name: Lint Helm
+        run: helm lint ./helm/api-platform/
+
+      # Lint Markdown Docs
+      -
+        name: Lint changelog file
+        uses: docker://avtodev/markdown-lint:v1
+        with:
+          config: 'docs/.markdown-lint.yaml'
+          args: 'docs/**/*.md'

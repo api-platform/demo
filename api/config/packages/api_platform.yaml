@@ -1,6 +1,6 @@
 api_platform:
     title: API Platform's demo
-    version: 1.0.0
+    version: 3.2.0
     description: |
         This is a demo application of the [API Platform](https://api-platform.com) framework.
         [Its source code](https://github.com/api-platform/demo) includes various examples, check it out!
