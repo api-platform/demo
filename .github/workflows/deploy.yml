@@ -73,9 +73,17 @@ jobs:
           gcloud components install gke-gcloud-auth-plugin
           gcloud --quiet auth configure-docker
           gcloud container clusters get-credentials ${{ inputs.gke-cluster }} --zone ${{ inputs.gke-zone }}
+      -
+        name: Cache Helm Dependencies
+        uses: actions/cache@v3
+        with:
+          path: helm/api-platform/charts/
+          key: ${{ runner.os }}-helm-dependencies-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-helm-dependencies-
       # https://github.com/helm/helm/issues/8036
       -
-        name: Build helm dependencies
+        name: Build Helm Dependencies
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami/
           helm repo add stable https://charts.helm.sh/stable/
