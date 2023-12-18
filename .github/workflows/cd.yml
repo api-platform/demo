@@ -2,9 +2,9 @@ name: CD
 
 on:
   push:
-    branches:
-      - main
-  # Deploy if "deploy" label exists
+    tags:
+      - '*'
+  # Deploy PR if "deploy" label exists
   pull_request:
     types: [ reopened, synchronize, labeled ]
 
@@ -59,9 +59,9 @@ jobs:
             compose.yaml
             compose.prod.yaml
           set: |
-            *.cache-from=type=gha,scope=${{github.ref}}
+            *.cache-from=type=gha,scope=${{ github.ref }}
             *.cache-from=type=gha,scope=refs/heads/main
-            *.cache-to=type=gha,scope=${{github.ref}},mode=max
+            *.cache-to=type=gha,scope=${{ github.ref }},mode=max
       -
         name: Docker push
         run: |
@@ -70,11 +70,17 @@ jobs:
           docker push $KEYCLOAK_DOCKER_IMAGE
       -
         name: Docker tag and push latest
-        if: github.event_name == 'push'
+        if: github.event_name != 'pull_request'
         run: |
+          docker tag $PHP_DOCKER_IMAGE europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/php:${{ github.ref_name }}
+          docker tag $PWA_DOCKER_IMAGE europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/pwa:${{ github.ref_name }}
+          docker tag $KEYCLOAK_DOCKER_IMAGE europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/keycloak:${{ github.ref_name }}
           docker tag $PHP_DOCKER_IMAGE europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/php:latest
           docker tag $PWA_DOCKER_IMAGE europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/pwa:latest
           docker tag $KEYCLOAK_DOCKER_IMAGE europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/keycloak:latest
+          docker push europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/php:${{ github.ref_name }}
+          docker push europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/pwa:${{ github.ref_name }}
+          docker push europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/keycloak:${{ github.ref_name }}
           docker push europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/php:latest
           docker push europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/pwa:latest
           docker push europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/keycloak:latest
