@@ -19,7 +19,7 @@ export const Filters: FunctionComponent<Props> = ({ filters, mutation }) => (
     enableReinitialize={true}
     onSubmit={(values, { setSubmitting, setStatus, setErrors }) => {
       mutation.mutate(
-        values,
+        { ...values, page: 1 },
         {
           onSuccess: () => {
             setStatus({
