@@ -244,3 +244,22 @@ jobs:
         name: Lint PWA
         working-directory: pwa
         run: pnpm lint
+
+      # Lint HELM
+      -
+        name: Cache Helm Dependencies
+        uses: actions/cache@v3
+        with:
+          path: helm/api-platform/charts/
+          key: ${{ runner.os }}-helm-dependencies-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-helm-dependencies-
+      -
+        name: Build Helm Dependencies
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami/
+          helm repo add stable https://charts.helm.sh/stable/
+          helm dependency build ./helm/api-platform
+      -
+        name: Lint Helm
+        run: helm lint ./helm/api-platform/
