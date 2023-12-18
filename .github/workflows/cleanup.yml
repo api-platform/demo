@@ -8,6 +8,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
+env:
+  GKE_CLUSTER: api-platform-demo
+  GCE_ZONE: europe-west1-c
+
 jobs:
   cleanup:
     name: Uninstall K8s Release for Closed Pull Request
@@ -32,7 +36,7 @@ jobs:
         run: |
           gcloud components install gke-gcloud-auth-plugin
           gcloud --quiet auth configure-docker
-          gcloud container clusters get-credentials api-platform-demo --zone europe-west1-c
+          gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GCE_ZONE }}
       -
         name: Check for existing namespace
         id: k8s-namespace
