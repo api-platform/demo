@@ -1,21 +1,21 @@
 import { AuthProvider } from "react-admin";
-import { getSession, signIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
 
-import { signOut } from "@/utils/security";
+import { auth, signOut } from "../../app/auth";
 
 const authProvider: AuthProvider = {
   // Nothing to do here, this function will never be called
   login: async () => Promise.resolve(),
   logout: async () => {
-    const session = await getSession();
+    const session = await auth();
     if (!session) {
       return;
     }
 
-    await signOut(session);
+    await signOut(session, {callbackUrl: window.location.origin});
   },
   checkError: async (error) => {
-    const session = await getSession();
+    const session = await auth();
     const status = error.status;
     // @ts-ignore
     if (!session || session?.error === "RefreshAccessTokenError" || status === 401) {
@@ -29,7 +29,7 @@ const authProvider: AuthProvider = {
     }
   },
   checkAuth: async () => {
-    const session = await getSession();
+    const session = await auth();
     // @ts-ignore
     if (!session || session?.error === "RefreshAccessTokenError") {
       await signIn("keycloak");
@@ -42,7 +42,7 @@ const authProvider: AuthProvider = {
   getPermissions: () => Promise.resolve(),
   // @ts-ignore
   getIdentity: async () => {
-    const session = await getSession();
+    const session = await auth();
 
     return session ? Promise.resolve(session.user) : Promise.reject();
   },

@@ -10,11 +10,11 @@ import {
   AutocompleteInput,
 } from "react-admin";
 
-import { BookField } from "@/components/admin/review/BookField";
-import { RatingField } from "@/components/admin/review/RatingField";
-import { RatingInput } from "@/components/admin/review/RatingInput";
-import { type Book } from "@/types/Book";
-import { User } from "@/types/User";
+import { BookField } from "../../../components/admin/review/BookField";
+import { RatingField } from "../../../components/admin/review/RatingField";
+import { RatingInput } from "../../../components/admin/review/RatingInput";
+import { type Book } from "../../../types/Book";
+import { User } from "../../../types/User";
 
 const bookQuery = (searchText: string) => {
   const values = searchText.split(" - ").map(n => n.trim()).filter(n => n);

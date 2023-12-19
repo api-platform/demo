@@ -102,7 +102,7 @@ test.describe("Bookmarks list", () => {
 
   test("I can go to the books store filtered by author @read @login", async ({ bookmarkPage, page }) => {
     await (await bookmarkPage.getDefaultBook()).getByText("Dan Simmons").click();
-    await expect(page).toHaveURL(/\/books\?author=Dan%20Simmons/);
+    await expect(page).toHaveURL(/\/books\?author=Dan(?:%20|\+)Simmons/);
   });
 
   test("I can go to a book @read @login", async ({ bookmarkPage, page }) => {

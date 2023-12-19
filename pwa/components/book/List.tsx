@@ -1,20 +1,20 @@
+"use client";
+
 import { type NextPage } from "next";
-import Head from "next/head";
-import { useRouter } from "next/router";
-import { useMutation } from "react-query";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
 import FilterListOutlinedIcon from "@mui/icons-material/FilterListOutlined";
 import { MenuItem, Select } from "@mui/material";
 
-import { Item } from "@/components/book/Item";
-import { Filters } from "@/components/book/Filters";
-import { Pagination } from "@/components/common/Pagination";
-import { type Book } from "@/types/Book";
-import { type PagedCollection } from "@/types/collection";
-import { type FiltersProps, buildUriFromFilters } from "@/utils/book";
-import { type FetchError, type FetchResponse } from "@/utils/dataAccess";
-import { useMercure } from "@/utils/mercure";
+import { Item } from "./Item";
+import { Filters } from "./Filters";
+import { Pagination } from "../common/Pagination";
+import { type Book } from "../../types/Book";
+import { type PagedCollection } from "../../types/collection";
+import { type FiltersProps, buildUriFromFilters } from "../../utils/book";
+import { useMercure } from "../../utils/mercure";
 
-interface Props {
+export interface Props {
   data: PagedCollection<Book> | null;
   hubURL: string | null;
   filters: FiltersProps;
@@ -23,24 +23,21 @@ interface Props {
 
 const getPagePath = (page: number): string => `/books?page=${page}`;
 
-export const List: NextPage<Props> = ({ data, hubURL, filters, page }) => {
+export const List: NextPage<Props> = ({ data, hubURL, filters, page }: Props) => {
   const collection = useMercure(data, hubURL);
   const router = useRouter();
 
-  const filtersMutation = useMutation<
-    FetchResponse<PagedCollection<Book>> | undefined,
-    Error | FetchError,
-    FiltersProps
-    // @ts-ignore
-  >(async (filters) => {
-    router.push(buildUriFromFilters("/books", filters));
+  const filtersMutation = useMutation({
+    mutationFn: async (filters: FiltersProps) => {
+      router.push(buildUriFromFilters("/books", filters));
+    },
+    onError: (error) => {
+      console.error(error);
+    },
   });
 
   return (
     <div className="container mx-auto max-w-7xl items-center justify-between p-6 lg:px-8">
-      <Head>
-        <title>Books Store</title>
-      </Head>
       <div className="flex">
         <aside className="float-left w-[180px] mr-6" aria-label="Filters">
           <div className="font-semibold pb-2 border-b border-black text-lg mb-4">
@@ -62,7 +59,8 @@ export const List: NextPage<Props> = ({ data, hubURL, filters, page }) => {
                     value={filters.order?.title ?? ""}
                     displayEmpty
                     onChange={(event) => {
-                      filtersMutation.mutate({ ...filters, page: 1, order: event.target.value ? { title: event.target.value } : undefined });
+                      delete filters.page;
+                      filtersMutation.mutate({ ...filters, order: event.target.value ? { title: event.target.value } : undefined });
                     }}
                     >
                     <MenuItem value="">Relevance</MenuItem>

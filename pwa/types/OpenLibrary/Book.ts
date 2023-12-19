@@ -1,5 +1,5 @@
-import { type Description } from "@/types/OpenLibrary/Description";
-import { type Item } from "@/types/OpenLibrary/Item";
+import { type Description } from "../../types/OpenLibrary/Description";
+import { type Item } from "../../types/OpenLibrary/Item";
 
 export class Book {
   constructor(

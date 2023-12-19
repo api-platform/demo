@@ -1,34 +1,39 @@
+"use client";
+
 import { type FunctionComponent, useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
 
-import { Pagination } from "@/components/common/Pagination";
-import { type Book } from "@/types/Book";
-import { type PagedCollection } from "@/types/collection";
-import { type Review } from "@/types/Review";
-import { fetch, type FetchResponse, getItemPath } from "@/utils/dataAccess";
-import { useMercure } from "@/utils/mercure";
-import { Error } from "@/components/common/Error";
-import { Item } from "@/components/review/Item";
-import { Form } from "@/components/review/Form";
-import { Loading } from "@/components/common/Loading";
+import { Pagination } from "../common/Pagination";
+import { type Book } from "../../types/Book";
+import { type PagedCollection } from "../../types/collection";
+import { type Review } from "../../types/Review";
+import { fetchApi, type FetchResponse, getItemPath } from "../../utils/dataAccess";
+import { useMercure } from "../../utils/mercure";
+import { Error } from "../common/Error";
+import { Item } from "./Item";
+import { Form } from "./Form";
+import { Loading } from "../common/Loading";
 
 interface Props {
   book: Book;
-  page: number;
 }
 
-export const List: FunctionComponent<Props> = ({ book, page }) => {
+export const List: FunctionComponent<Props> = ({ book }) => {
   const { data: session, status } = useSession();
+  const searchParams = useSearchParams();
   const [data, setData] = useState<PagedCollection<Review> | null | undefined>();
   const [reload, toggleReload] = useState<boolean>(true);
   const [error, setError] = useState<string | undefined>();
   const [hubURL, setHubURL] = useState<string | undefined>();
   const collection = useMercure(data, hubURL);
+  const page = Number(searchParams.get("page") ?? 1);
 
   useEffect(() => {
     (async () => {
       try {
-        const response: FetchResponse<PagedCollection<Review>> | undefined = await fetch(`${book["reviews"]}?itemsPerPage=5&page=${page}`);
+        // @ts-ignore
+        const response: FetchResponse<PagedCollection<Review>> | undefined = await fetchApi(`${book["reviews"]}?itemsPerPage=5&page=${page}`, {}, session);
         if (response?.data) {
           setData(response.data);
         }
@@ -59,7 +64,7 @@ export const List: FunctionComponent<Props> = ({ book, page }) => {
             </div>
             <div className="w-full">
               <Form book={book} username={session?.user?.name ?? "John Doe"}
-                    onSuccess={(values) => {
+                    onSuccess={() => {
                       toggleReload(!reload);
                     }}
               />

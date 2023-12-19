@@ -58,7 +58,7 @@ services:
   keycloak-config-cli:
     image: bitnami/keycloak-config-cli:5-debian-11
     environment:
-      KEYCLOAK_URL: http://php/oidc/
+      KEYCLOAK_URL: http://keycloak:8080/oidc/
       KEYCLOAK_USER: ${KEYCLOAK_ADMIN_USER:-admin}
       KEYCLOAK_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-!ChangeMe!}
       KEYCLOAK_AVAILABILITYCHECK_ENABLED: "true"

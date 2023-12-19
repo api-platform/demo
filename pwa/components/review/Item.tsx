@@ -1,12 +1,12 @@
 import { type FunctionComponent, useState } from "react";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Rating from "@mui/material/Rating";
 
-import { Error } from "@/components/common/Error";
-import { type Review } from "@/types/Review";
-import { fetch, type FetchError, type FetchResponse } from "@/utils/dataAccess";
-import { Form } from "@/components/review/Form";
+import { Error } from "../common/Error";
+import { type Review } from "../../types/Review";
+import { fetchApi } from "../../utils/dataAccess";
+import { Form } from "./Form";
 
 interface Props {
   review: Review;
@@ -18,8 +18,8 @@ interface DeleteParams {
   id: string;
 }
 
-const deleteReview = async (id: string) =>
-  await fetch<Review>(id, { method: "DELETE" });
+// @ts-ignore
+const deleteReview = async (id: string, session) => await fetchApi<Review>(id, { method: "DELETE" }, session);
 
 export const Item: FunctionComponent<Props> = ({ review, onDelete, onEdit }) => {
   const { data: session } = useSession();
@@ -27,11 +27,8 @@ export const Item: FunctionComponent<Props> = ({ review, onDelete, onEdit }) => 
   const [error, setError] = useState<string | undefined>();
   const [edit, setEdit] = useState<boolean>(false);
 
-  const deleteMutation = useMutation<
-    FetchResponse<Review> | undefined,
-    Error | FetchError,
-    DeleteParams
-  >(({ id }) => deleteReview(id), {
+  const deleteMutation = useMutation({
+    mutationFn: async ({ id }: DeleteParams) => deleteReview(id, session),
     onSuccess: () => {
       if (onDelete) {
         onDelete(data);

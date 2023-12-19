@@ -1,6 +1,6 @@
-import { type Item } from "@/types/item";
-import { type User } from "@/types/User";
-import { type Book } from "@/types/Book";
+import { type Item } from "./item";
+import { type User } from "./User";
+import { type Book } from "./Book";
 
 export class Review implements Item {
   public "@id"?: string;

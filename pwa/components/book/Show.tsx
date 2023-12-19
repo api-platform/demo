@@ -1,75 +1,75 @@
+"use client";
+
 import { type NextPage } from "next";
-import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { signIn, type SignInResponse, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Rating from '@mui/material/Rating';
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
-import { type Book } from "@/types/Book";
-import { useMercure } from "@/utils/mercure";
-import { List as Reviews } from "@/components/review/List";
-import { useOpenLibraryBook } from "@/utils/book";
-import { fetch, type FetchError, type FetchResponse } from "@/utils/dataAccess";
-import { type Bookmark } from "@/types/Bookmark";
-import { type PagedCollection } from "@/types/collection";
-import { Loading } from "@/components/common/Loading";
+import { type Book } from "../../types/Book";
+import { useMercure } from "../../utils/mercure";
+import { List as Reviews } from "../../components/review/List";
+import { useOpenLibraryBook } from "../../utils/book";
+import { fetchApi, type FetchResponse } from "../../utils/dataAccess";
+import { type Bookmark } from "../../types/Bookmark";
+import { type PagedCollection } from "../../types/collection";
+import { Loading } from "../common/Loading";
 
-interface Props {
+export interface Props {
   data: Book;
   hubURL: string | null;
-  page: number;
 }
 
 interface BookmarkProps {
   book: string | undefined;
 }
 
-const saveBookmark = async (values: BookmarkProps) =>
-  await fetch<Bookmark>("/bookmarks", {
-    method: "POST",
-    body: JSON.stringify(values),
-  });
+// @ts-ignore
+const saveBookmark = async (values: BookmarkProps, session) => await fetchApi<Bookmark>("/bookmarks", {
+  method: "POST",
+  body: JSON.stringify(values),
+}, session);
 
-const deleteBookmark = async (id: string) =>
-  await fetch<Bookmark>(id, { method: "DELETE" });
+// @ts-ignore
+const deleteBookmark = async (id: string, session) => await fetchApi<Bookmark>(id, { method: "DELETE" }, session);
 
-export const Show: NextPage<Props> = ({ data, hubURL, page }) => {
+export const Show: NextPage<Props> = ({ data, hubURL }) => {
   const { data: session, status } = useSession();
   const [bookmark, setBookmark] = useState<Bookmark | null | undefined>();
   const { data: book, isLoading } = useOpenLibraryBook(data);
   const item = useMercure(data, hubURL);
 
-  const bookmarkMutation = useMutation<
-    Promise<FetchResponse<Bookmark> | SignInResponse | undefined>,
-    Error | FetchError,
-    BookmarkProps
-    // @ts-ignore
-  >(async (data: BookmarkProps) => {
-    // @ts-ignore
-    if (!session || session?.error === "RefreshAccessTokenError") {
-      await signIn("keycloak");
-
-      return;
-    }
-
-    if (bookmark) {
+  const bookmarkMutation = useMutation({
+    mutationFn: async (data: BookmarkProps) => {
       // @ts-ignore
-      await deleteBookmark(bookmark["@id"]);
-      setBookmark(null);
+      if (!session || session?.error === "RefreshAccessTokenError") {
+        await signIn("keycloak");
 
-      return;
-    }
+        return;
+      }
 
-    const response: FetchResponse<Bookmark> | undefined = await saveBookmark(data);
-    if (response && response?.data) {
-      setBookmark(response.data);
-    }
+      if (bookmark) {
+        // @ts-ignore
+        await deleteBookmark(bookmark["@id"], session);
+        setBookmark(null);
+
+        return;
+      }
+
+      const response: FetchResponse<Bookmark> | undefined = await saveBookmark(data, session);
+      if (response && response?.data) {
+        setBookmark(response.data);
+      }
+    },
+    onError: (error) => {
+      console.error(error);
+    },
   });
 
   // Check in user bookmarks if the current book has been bookmarked
@@ -79,7 +79,8 @@ export const Show: NextPage<Props> = ({ data, hubURL, page }) => {
 
     (async () => {
       try {
-        const response: FetchResponse<PagedCollection<Bookmark>> | undefined = await fetch(`/bookmarks?book=${data["@id"]}`);
+        // @ts-ignore
+        const response: FetchResponse<PagedCollection<Bookmark>> | undefined = await fetchApi(`/bookmarks?book=${data["@id"]}`, {}, session);
         if (response && response?.data && response.data["hydra:member"]?.length) {
           setBookmark(response.data["hydra:member"][0]);
         }
@@ -92,9 +93,6 @@ export const Show: NextPage<Props> = ({ data, hubURL, page }) => {
 
   return (
     <div className="container mx-auto max-w-7xl items-center justify-between p-6 lg:px-8">
-      <Head>
-        <title>{`${item["title"]}${!!item["author"] && ` - ${item["author"]}`}`}</title>
-      </Head>
       <div role="presentation" className="mb-8">
         <Breadcrumbs aria-label="breadcrumb" data-testid="book-breadcrumb">
           <Link href="/books" className="hover:underline">
@@ -156,7 +154,7 @@ export const Show: NextPage<Props> = ({ data, hubURL, page }) => {
             </div>
           </div>
           <div className="w-full border-gray-200 border-t-2 mt-8 pt-8" id="reviews">
-            <Reviews book={book} page={page}/>
+            <Reviews book={book}/>
           </div>
         </>
       ) || (

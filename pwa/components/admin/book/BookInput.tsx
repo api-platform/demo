@@ -2,11 +2,11 @@ import { SyntheticEvent, useMemo, useRef, useState } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import { debounce } from "@mui/material";
 import { TextInput, type TextInputProps, useInput } from "react-admin";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useWatch } from "react-hook-form";
 
-import { Search } from "@/types/OpenLibrary/Search";
-import { SearchDoc } from "@/types/OpenLibrary/SearchDoc";
+import { Search } from "../../../types/OpenLibrary/Search";
+import { SearchDoc } from "../../../types/OpenLibrary/SearchDoc";
 
 interface Result {
   title: string;
@@ -23,7 +23,8 @@ const fetchOpenLibrarySearch = async (query: string, signal?: AbortSignal | unde
   try {
     const response = await fetch(`https://openlibrary.org/search.json?q=${query.replace(/ - /, ' ')}&limit=10`, {
       signal,
-      method: "GET"
+      method: "GET",
+      cache: "force-cache",
     });
     const results: Search = await response.json();
 
@@ -62,9 +63,9 @@ export const BookInput = (props: BookInputProps) => {
   const [value, setValue] = useState<Result | null | undefined>(
     !!title && !!author && !!field.value ? { title: title, author: author, value: field.value } : undefined
   );
-  const { isLoading, data, isFetched } = useQuery<Result[]>(
-    ["search", searchQuery],
-    async () => {
+  const { isLoading, data, isFetched } = useQuery({
+    queryKey: ["search", searchQuery],
+    queryFn: async () => {
       if (controller.current) {
         controller.current.abort();
       }
@@ -72,10 +73,8 @@ export const BookInput = (props: BookInputProps) => {
 
       return await fetchOpenLibrarySearch(searchQuery, controller.current.signal);
     },
-    {
-      enabled: !!searchQuery,
-    }
-  );
+    enabled: !!searchQuery,
+  });
   const onInputChange = useMemo(() =>
       debounce((event: SyntheticEvent, value: string) => setSearchQuery(value), 400),
       []

@@ -1,6 +1,6 @@
 import { Locator } from "@playwright/test";
 
-import { type FiltersProps } from "@/utils/book";
+import { type FiltersProps } from "../../utils/book";
 import { AbstractPage } from "./AbstractPage";
 
 interface ReviewProps {

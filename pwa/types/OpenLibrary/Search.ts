@@ -1,4 +1,4 @@
-import { SearchDoc } from "@/types/OpenLibrary/SearchDoc";
+import { SearchDoc } from "../../types/OpenLibrary/SearchDoc";
 
 export class Search {
     constructor(

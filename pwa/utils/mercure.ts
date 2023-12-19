@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { type Item } from "@/types/item";
-import { type PagedCollection } from "@/types/collection";
-import { isItem } from "@/types/item";
-import { isPagedCollection } from "@/types/collection";
+import { type Item } from "../types/item";
+import { type PagedCollection } from "../types/collection";
+import { isItem } from "../types/item";
+import { isPagedCollection } from "../types/collection";
 
 const mercureSubscribe = <T extends Item | PagedCollection<Item> | null | undefined>(
   hubURL: string,

@@ -24,7 +24,7 @@ test.describe("Book view", () => {
   test("I can go back to the books list filtered by author through the breadcrumb @read", async ({ page }) => {
     await expect(page.getByTestId("book-breadcrumb")).toContainText("Dan Simmons");
     await page.getByTestId("book-breadcrumb").getByText("Dan Simmons").click();
-    await expect(page).toHaveURL(/\/books\?author=Dan%20Simmons/);
+    await expect(page).toHaveURL(/\/books\?author=Dan(?:%20|\+)Simmons/);
   });
 
   test("I can bookmark the book @write @login", async ({ bookPage, page }) => {
