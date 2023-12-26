@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4171d6b3bedb86fe2cd64cc3ef2bec46",
+    "content-hash": "6d68de1a4ba7a1ff1b631596a7c76a54",
     "packages": [
         {
             "name": "api-platform/core",
-            "version": "dev-fix/item_uri_template",
+            "version": "v3.2.10",
             "source": {
                 "type": "git",
-                "url": "https://github.com/vincentchalamon/core.git",
-                "reference": "b628e4fe6b35ff5ff2eb3704c9b152aa944420ee"
+                "url": "https://github.com/api-platform/core.git",
+                "reference": "05629a1229f705d1abf927d130ffd70b5dfe86bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vincentchalamon/core/zipball/b628e4fe6b35ff5ff2eb3704c9b152aa944420ee",
-                "reference": "b628e4fe6b35ff5ff2eb3704c9b152aa944420ee",
+                "url": "https://api.github.com/repos/api-platform/core/zipball/05629a1229f705d1abf927d130ffd70b5dfe86bd",
+                "reference": "05629a1229f705d1abf927d130ffd70b5dfe86bd",
                 "shasum": ""
             },
             "require": {
@@ -69,9 +69,11 @@
                 "phpstan/phpstan-doctrine": "^1.0",
                 "phpstan/phpstan-phpunit": "^1.0",
                 "phpstan/phpstan-symfony": "^1.0",
+                "phpunit/phpunit": "^9.5",
                 "psr/log": "^1.0 || ^2.0 || ^3.0",
                 "ramsey/uuid": "^3.9.7 || ^4.0",
                 "ramsey/uuid-doctrine": "^1.4 || ^2.0",
+                "sebastian/comparator": "<5.0",
                 "soyuka/contexts": "v3.3.9",
                 "soyuka/stubs-mongodb": "^1.0",
                 "symfony/asset": "^6.1 || ^7.0",
@@ -139,12 +141,7 @@
                     "ApiPlatform\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "ApiPlatform\\Tests\\": "tests/",
-                    "App\\": "tests/Fixtures/app/var/tmp/src/"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -158,26 +155,21 @@
             "description": "Build a fully-featured hypermedia or GraphQL API in minutes!",
             "homepage": "https://api-platform.com",
             "keywords": [
-                "API",
-                "GraphQL",
-                "HAL",
                 "Hydra",
                 "JSON-LD",
-                "JSONAPI",
-                "OpenAPI",
-                "REST",
-                "Swagger"
+                "api",
+                "graphql",
+                "hal",
+                "jsonapi",
+                "openapi",
+                "rest",
+                "swagger"
             ],
             "support": {
-                "source": "https://github.com/vincentchalamon/core/tree/fix/item_uri_template"
+                "issues": "https://github.com/api-platform/core/issues",
+                "source": "https://github.com/api-platform/core/tree/v3.2.10"
             },
-            "funding": [
-                {
-                    "type": "tidelift",
-                    "url": "https://tidelift.com/funding/github/packagist/api-platform/core"
-                }
-            ],
-            "time": "2023-12-01T12:10:52+00:00"
+            "time": "2023-12-23T08:37:05+00:00"
         },
         {
             "name": "brick/math",
@@ -9773,9 +9765,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "api-platform/core": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
