@@ -173,7 +173,7 @@ jobs:
         # use 1 worker to prevent conflict between scenarios
         run: pnpm exec playwright test --grep @write --workers=1
       -
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: playwright-screenshots
