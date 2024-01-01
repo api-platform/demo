@@ -206,7 +206,7 @@ jobs:
       -
         name: Get API changed files
         id: api-changed-files
-        uses: tj-actions/changed-files@v38
+        uses: tj-actions/changed-files@v41
       -
         name: Get Extra Arguments for PHP-CS-Fixer
         id: phpcs-intersection
