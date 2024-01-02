@@ -47,7 +47,7 @@ jobs:
           password: ${{ steps.auth.outputs.access_token }}
       -
         name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ${{ secrets.gke-project }}
       -
