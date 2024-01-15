@@ -9,10 +9,12 @@ use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\DataFixtures\Factory\BookFactory;
 use App\DataFixtures\Factory\ReviewFactory;
 use App\Enum\BookCondition;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Response;
 use Zenstruck\Foundry\FactoryCollection;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
+use PHPUnit\Framework\Attributes\Test;
 
 final class BookTest extends ApiTestCase
 {
@@ -26,11 +28,8 @@ final class BookTest extends ApiTestCase
         $this->client = self::createClient();
     }
 
-    /**
-     * @dataProvider getUrls
-     *
-     * @test
-     */
+    #[Test]
+    #[DataProvider(methodName: 'getUrls')]
     public function asAnonymousICanGetACollectionOfBooks(FactoryCollection $factory, string $url, int $hydraTotalItems): void
     {
         // Cannot use Factory as data provider because BookFactory has a service dependency
@@ -86,9 +85,7 @@ final class BookTest extends ApiTestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAdminUserICanGetACollectionOfBooksOrderedByTitle(): void
     {
         BookFactory::createOne(['title' => 'Hyperion']);
@@ -105,9 +102,7 @@ final class BookTest extends ApiTestCase
         self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Book/collection.json'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAnonymousICannotGetAnInvalidBook(): void
     {
         BookFactory::createOne();
@@ -117,9 +112,7 @@ final class BookTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAnonymousICanGetABook(): void
     {
         $book = BookFactory::createOne();

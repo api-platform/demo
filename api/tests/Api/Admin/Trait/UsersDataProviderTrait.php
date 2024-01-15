@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 trait UsersDataProviderTrait
 {
-    public function getNonAdminUsers(): iterable
+    public static function getNonAdminUsers(): iterable
     {
         yield [
             Response::HTTP_UNAUTHORIZED,

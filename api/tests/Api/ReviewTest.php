@@ -15,6 +15,8 @@ use App\Entity\User;
 use App\Repository\ReviewRepository;
 use App\Tests\Api\Trait\SecurityTrait;
 use App\Tests\Api\Trait\SerializerTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\Update;
 use Zenstruck\Foundry\FactoryCollection;
@@ -37,11 +39,9 @@ final class ReviewTest extends ApiTestCase
 
     /**
      * Filters are disabled on /books/{bookId}/reviews.
-     *
-     * @dataProvider getUrls
-     *
-     * @test
      */
+    #[Test]
+    #[DataProvider(methodName: 'getUrls')]
     public function asAnonymousICanGetACollectionOfBookReviewsWithoutFilters(FactoryCollection $factory, callable|string $url, int $hydraTotalItems, int $totalHydraMember = 30): void
     {
         $factory->create();
@@ -130,9 +130,7 @@ final class ReviewTest extends ApiTestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAnonymousICannotAddAReviewOnABook(): void
     {
         $book = BookFactory::createOne();
@@ -158,11 +156,8 @@ final class ReviewTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @dataProvider getInvalidData
-     *
-     * @test
-     */
+    #[Test]
+    #[DataProvider(methodName: 'getInvalidData')]
     public function asAUserICannotAddAReviewOnABookWithInvalidData(array $data, int $statusCode, array $expected): void
     {
         $book = BookFactory::createOne();
@@ -208,9 +203,7 @@ final class ReviewTest extends ApiTestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAUserICannotAddAReviewWithValidDataOnAnInvalidBook(): void
     {
         $book = BookFactory::createOne();
@@ -245,9 +238,8 @@ final class ReviewTest extends ApiTestCase
 
     /**
      * @group mercure
-     *
-     * @test
      */
+    #[Test]
     public function asAUserICanAddAReviewOnABook(): void
     {
         $book = BookFactory::createOne();
@@ -301,9 +293,7 @@ final class ReviewTest extends ApiTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAUserICannotAddADuplicateReviewOnABook(): void
     {
         $book = BookFactory::createOne();
@@ -337,9 +327,7 @@ final class ReviewTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAnonymousICannotGetAnInvalidReview(): void
     {
         $book = BookFactory::createOne();
@@ -356,9 +344,7 @@ final class ReviewTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAnonymousICanGetABookReview(): void
     {
         $review = ReviewFactory::createOne();
@@ -375,9 +361,7 @@ final class ReviewTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAnonymousICannotUpdateABookReview(): void
     {
         $review = ReviewFactory::createOne();
@@ -402,9 +386,7 @@ final class ReviewTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAUserICannotUpdateABookReviewOfAnotherUser(): void
     {
         $review = ReviewFactory::createOne(['user' => UserFactory::createOne()]);
@@ -434,9 +416,7 @@ final class ReviewTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAUserICannotUpdateAnInvalidBookReview(): void
     {
         $book = BookFactory::createOne();
@@ -461,9 +441,8 @@ final class ReviewTest extends ApiTestCase
 
     /**
      * @group mercure
-     *
-     * @test
      */
+    #[Test]
     public function asAUserICanUpdateMyBookReview(): void
     {
         $review = ReviewFactory::createOne();
@@ -504,9 +483,7 @@ final class ReviewTest extends ApiTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAnonymousICannotDeleteABookReview(): void
     {
         $review = ReviewFactory::createOne();
@@ -523,9 +500,7 @@ final class ReviewTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAUserICannotDeleteABookReviewOfAnotherUser(): void
     {
         $review = ReviewFactory::createOne(['user' => UserFactory::createOne()]);
@@ -548,9 +523,7 @@ final class ReviewTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAUserICannotDeleteAnInvalidBookReview(): void
     {
         $book = BookFactory::createOne();
@@ -568,9 +541,8 @@ final class ReviewTest extends ApiTestCase
 
     /**
      * @group mercure
-     *
-     * @test
      */
+    #[Test]
     public function asAUserICanDeleteMyBookReview(): void
     {
         $review = ReviewFactory::createOne(['body' => 'Best book ever!']);

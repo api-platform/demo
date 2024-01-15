@@ -64,7 +64,7 @@ jobs:
         run: docker compose exec -T php bin/console -e test doctrine:migrations:migrate --no-interaction
       -
         name: Run PHPUnit
-        run: docker compose exec -T php bin/phpunit
+        run: docker compose exec -T php vendor/bin/phpunit
       -
         name: Doctrine Schema Validator
         run: docker compose exec -T php bin/console -e test doctrine:schema:validate

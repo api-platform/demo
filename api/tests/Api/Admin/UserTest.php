@@ -10,10 +10,12 @@ use App\DataFixtures\Factory\UserFactory;
 use App\Repository\UserRepository;
 use App\Tests\Api\Admin\Trait\UsersDataProviderTrait;
 use App\Tests\Api\Trait\SecurityTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Uid\Uuid;
 use Zenstruck\Foundry\FactoryCollection;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
+use PHPUnit\Framework\Attributes\Test;
 
 final class UserTest extends ApiTestCase
 {
@@ -29,11 +31,8 @@ final class UserTest extends ApiTestCase
         $this->client = self::createClient();
     }
 
-    /**
-     * @dataProvider getNonAdminUsers
-     *
-     * @test
-     */
+    #[Test]
+    #[DataProvider(methodName: 'getNonAdminUsers')]
     public function asNonAdminUserICannotGetACollectionOfUsers(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
     {
         $options = [];
@@ -56,11 +55,8 @@ final class UserTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @dataProvider getAdminUrls
-     *
-     * @test
-     */
+    #[Test]
+    #[DataProvider(methodName: 'getAdminUrls')]
     public function asAdminUserICanGetACollectionOfUsers(FactoryCollection $factory, callable|string $url, int $hydraTotalItems, int $itemsPerPage = null): void
     {
         $factory->create();
@@ -109,11 +105,8 @@ final class UserTest extends ApiTestCase
         ];
     }
 
-    /**
-     * @dataProvider getNonAdminUsers
-     *
-     * @test
-     */
+    #[Test]
+    #[DataProvider(methodName: 'getNonAdminUsers')]
     public function asNonAdminUserICannotGetAUser(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
     {
         $user = UserFactory::createOne();
@@ -138,9 +131,7 @@ final class UserTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAdminUserICanGetAUser(): void
     {
         $user = UserFactory::createOne();
@@ -160,9 +151,7 @@ final class UserTest extends ApiTestCase
         self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/User/item.json'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAUserIAmUpdatedOnLogin(): void
     {
         $user = UserFactory::createOne([

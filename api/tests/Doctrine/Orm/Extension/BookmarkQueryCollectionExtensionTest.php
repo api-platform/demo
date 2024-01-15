@@ -13,6 +13,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
+use PHPUnit\Framework\Attributes\Test;
 
 final class BookmarkQueryCollectionExtensionTest extends TestCase
 {
@@ -34,9 +35,7 @@ final class BookmarkQueryCollectionExtensionTest extends TestCase
         $this->extension = new BookmarkQueryCollectionExtension($this->securityMock);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itFiltersBookmarksQueryOnCurrentUser(): void
     {
         $this->operationMock
@@ -75,9 +74,7 @@ final class BookmarkQueryCollectionExtensionTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itIgnoresInvalidResourceClass(): void
     {
         $this->operationMock->expects($this->never())->method('getName');
@@ -94,9 +91,7 @@ final class BookmarkQueryCollectionExtensionTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itIgnoresInvalidOperation(): void
     {
         $this->operationMock
@@ -117,9 +112,7 @@ final class BookmarkQueryCollectionExtensionTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itIgnoresInvalidUser(): void
     {
         $this->operationMock
