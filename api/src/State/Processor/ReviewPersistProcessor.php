@@ -14,7 +14,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
- * @implements ProcessorInterface<Review>
+ * @implements ProcessorInterface<Review, Review>
  */
 final readonly class ReviewPersistProcessor implements ProcessorInterface
 {

@@ -13,7 +13,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
- * @implements ProcessorInterface<Bookmark>
+ * @implements ProcessorInterface<Bookmark, Bookmark>
  */
 final readonly class BookmarkPersistProcessor implements ProcessorInterface
 {

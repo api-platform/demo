@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\Encoder\DecoderInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
- * @implements ProcessorInterface<Book>
+ * @implements ProcessorInterface<Book, Book>
  */
 final readonly class BookPersistProcessor implements ProcessorInterface
 {

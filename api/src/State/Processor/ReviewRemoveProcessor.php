@@ -14,7 +14,7 @@ use App\Entity\Review;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
- * @implements ProcessorInterface<void>
+ * @implements ProcessorInterface<Review, void>
  */
 final readonly class ReviewRemoveProcessor implements ProcessorInterface
 {

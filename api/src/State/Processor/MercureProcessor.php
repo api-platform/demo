@@ -18,7 +18,7 @@ use Symfony\Component\Mercure\Update;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
- * @implements ProcessorInterface<object>
+ * @implements ProcessorInterface<object, object>
  */
 final readonly class MercureProcessor implements ProcessorInterface
 {

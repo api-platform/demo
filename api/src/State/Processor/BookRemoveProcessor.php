@@ -14,7 +14,7 @@ use App\Entity\Book;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
- * @implements ProcessorInterface<void>
+ * @implements ProcessorInterface<Book, void>
  */
 final readonly class BookRemoveProcessor implements ProcessorInterface
 {
