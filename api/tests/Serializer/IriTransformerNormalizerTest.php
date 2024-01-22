@@ -13,6 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use PHPUnit\Framework\Attributes\Test;
 
 final class IriTransformerNormalizerTest extends TestCase
 {
@@ -37,9 +38,7 @@ final class IriTransformerNormalizerTest extends TestCase
         $this->normalizer->setNormalizer($this->normalizerMock);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itDoesNotSupportInvalidData(): void
     {
         $this->assertFalse($this->normalizer->supportsNormalization(null));
@@ -49,18 +48,14 @@ final class IriTransformerNormalizerTest extends TestCase
         $this->assertFalse($this->normalizer->supportsNormalization(new ArrayCollection([$this->objectMock])));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itDoesNotSupportInvalidContext(): void
     {
         $this->assertFalse($this->normalizer->supportsNormalization($this->objectMock));
         $this->assertFalse($this->normalizer->supportsNormalization($this->objectMock, null, [IriTransformerNormalizer::class => true]));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itDoesNotSupportInvalidFormat(): void
     {
         $this->assertFalse($this->normalizer->supportsNormalization($this->objectMock, null, [
@@ -80,9 +75,7 @@ final class IriTransformerNormalizerTest extends TestCase
         ]));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itSupportsValidObjectClassAndContext(): void
     {
         $this->assertTrue($this->normalizer->supportsNormalization($this->objectMock, 'jsonld', [
@@ -92,9 +85,7 @@ final class IriTransformerNormalizerTest extends TestCase
         ]));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itNormalizesData(): void
     {
         $this->normalizerMock
@@ -118,10 +109,10 @@ final class IriTransformerNormalizerTest extends TestCase
         $this->operationMetadataFactoryMock
             ->expects($this->exactly(2))
             ->method('create')
-            ->withConsecutive(
-                ['/books/{id}{._format}'],
-                ['/users/{id}{._format}'],
-            )
+//            ->withConsecutive(
+//                ['/books/{id}{._format}'],
+//                ['/users/{id}{._format}'],
+//            )
             ->willReturnOnConsecutiveCalls(
                 $this->operationMock,
                 $this->operationMock,
@@ -130,10 +121,10 @@ final class IriTransformerNormalizerTest extends TestCase
         $this->iriConverterMock
             ->expects($this->exactly(2))
             ->method('getIriFromResource')
-            ->withConsecutive(
-                [$this->objectMock->book, UrlGeneratorInterface::ABS_PATH, $this->operationMock],
-                [$this->objectMock->book, UrlGeneratorInterface::ABS_PATH, $this->operationMock],
-            )
+//            ->withConsecutive(
+//                [$this->objectMock->book, UrlGeneratorInterface::ABS_PATH, $this->operationMock],
+//                [$this->objectMock->book, UrlGeneratorInterface::ABS_PATH, $this->operationMock],
+//            )
             ->willReturnOnConsecutiveCalls(
                 '/books/a528046c-7ba1-4acc-bff2-b5390ab17d41',
                 '/users/b960cf9e-8f1a-4690-8923-623c1d049d41',

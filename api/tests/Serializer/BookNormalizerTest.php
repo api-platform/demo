@@ -13,6 +13,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Uid\Uuid;
+use PHPUnit\Framework\Attributes\Test;
 
 final class BookNormalizerTest extends TestCase
 {
@@ -33,33 +34,25 @@ final class BookNormalizerTest extends TestCase
         $this->normalizer->setNormalizer($this->normalizerMock);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itDoesNotSupportInvalidObjectClass(): void
     {
         $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itDoesNotSupportInvalidContext(): void
     {
         $this->assertFalse($this->normalizer->supportsNormalization($this->objectMock, null, [BookNormalizer::class => true]));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itSupportsValidObjectClassAndContext(): void
     {
         $this->assertTrue($this->normalizer->supportsNormalization($this->objectMock));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itNormalizesData(): void
     {
         $expectedObject = $this->objectMock;

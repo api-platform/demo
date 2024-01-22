@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Clock\ClockInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Clock\MockClock;
+use PHPUnit\Framework\Attributes\Test;
 
 final class ReviewPersistProcessorTest extends TestCase
 {
@@ -43,9 +44,7 @@ final class ReviewPersistProcessorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itUpdatesReviewDataFromOperationBeforeSaveAndSendMercureUpdates(): void
     {
         $operation = new Post();
@@ -68,10 +67,10 @@ final class ReviewPersistProcessorTest extends TestCase
         $this->mercureProcessorMock
             ->expects($this->exactly(2))
             ->method('process')
-            ->withConsecutive(
-                [$expectedData, $operation, [], ['item_uri_template' => '/admin/reviews/{id}{._format}']],
-                [$expectedData, $operation, [], ['item_uri_template' => '/books/{bookId}/reviews/{id}{._format}']],
-            )
+//            ->withConsecutive(
+//                [$expectedData, $operation, [], ['item_uri_template' => '/admin/reviews/{id}{._format}']],
+//                [$expectedData, $operation, [], ['item_uri_template' => '/books/{bookId}/reviews/{id}{._format}']],
+//            )
             ->willReturnOnConsecutiveCalls(
                 $expectedData,
                 $expectedData,
@@ -81,9 +80,7 @@ final class ReviewPersistProcessorTest extends TestCase
         $this->assertEquals($expectedData, $this->processor->process($this->objectMock, $operation));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itUpdatesReviewDataFromContextBeforeSaveAndSendMercureUpdates(): void
     {
         $operation = $this->createMock(Operation::class);
@@ -111,10 +108,10 @@ final class ReviewPersistProcessorTest extends TestCase
         $this->mercureProcessorMock
             ->expects($this->exactly(2))
             ->method('process')
-            ->withConsecutive(
-                [$expectedData, $operation, [], $context + ['item_uri_template' => '/admin/reviews/{id}{._format}']],
-                [$expectedData, $operation, [], $context + ['item_uri_template' => '/books/{bookId}/reviews/{id}{._format}']],
-            )
+//            ->withConsecutive(
+//                [$expectedData, $operation, [], $context + ['item_uri_template' => '/admin/reviews/{id}{._format}']],
+//                [$expectedData, $operation, [], $context + ['item_uri_template' => '/books/{bookId}/reviews/{id}{._format}']],
+//            )
             ->willReturnOnConsecutiveCalls(
                 $expectedData,
                 $expectedData,

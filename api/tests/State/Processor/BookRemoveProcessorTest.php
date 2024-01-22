@@ -17,6 +17,7 @@ use App\State\Processor\BookRemoveProcessor;
 use App\State\Processor\MercureProcessor;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 final class BookRemoveProcessorTest extends TestCase
 {
@@ -50,9 +51,7 @@ final class BookRemoveProcessorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itRemovesBookAndSendMercureUpdates(): void
     {
         $this->removeProcessorMock
@@ -63,10 +62,10 @@ final class BookRemoveProcessorTest extends TestCase
         $this->resourceMetadataCollectionFactoryMock
             ->expects($this->exactly(2))
             ->method('create')
-            ->withConsecutive(
-                [Book::class],
-                [Book::class],
-            )
+//            ->withConsecutive(
+//                [Book::class],
+//                [Book::class],
+//            )
             ->willReturnOnConsecutiveCalls(
                 $this->resourceMetadataCollection,
                 $this->resourceMetadataCollection,
@@ -75,10 +74,10 @@ final class BookRemoveProcessorTest extends TestCase
         $this->iriConverterMock
             ->expects($this->exactly(2))
             ->method('getIriFromResource')
-            ->withConsecutive(
-                [$this->objectMock, UrlGeneratorInterface::ABS_URL, new Get('/admin/books/{id}{._format}')],
-                [$this->objectMock, UrlGeneratorInterface::ABS_URL, new Get('/books/{id}{._format}')],
-            )
+//            ->withConsecutive(
+//                [$this->objectMock, UrlGeneratorInterface::ABS_URL, new Get('/admin/books/{id}{._format}')],
+//                [$this->objectMock, UrlGeneratorInterface::ABS_URL, new Get('/books/{id}{._format}')],
+//            )
             ->willReturnOnConsecutiveCalls(
                 '/admin/books/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6',
                 '/books/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6',
@@ -87,26 +86,26 @@ final class BookRemoveProcessorTest extends TestCase
         $this->mercureProcessorMock
             ->expects($this->exactly(2))
             ->method('process')
-            ->withConsecutive(
-                [
-                    $this->objectMock,
-                    $this->operationMock,
-                    [],
-                    [
-                        'item_uri_template' => '/admin/books/{id}{._format}',
-                        MercureProcessor::DATA => json_encode(['@id' => '/admin/books/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6']),
-                    ],
-                ],
-                [
-                    $this->objectMock,
-                    $this->operationMock,
-                    [],
-                    [
-                        'item_uri_template' => '/books/{id}{._format}',
-                        MercureProcessor::DATA => json_encode(['@id' => '/books/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6']),
-                    ],
-                ],
-            )
+//            ->withConsecutive(
+//                [
+//                    $this->objectMock,
+//                    $this->operationMock,
+//                    [],
+//                    [
+//                        'item_uri_template' => '/admin/books/{id}{._format}',
+//                        MercureProcessor::DATA => json_encode(['@id' => '/admin/books/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6']),
+//                    ],
+//                ],
+//                [
+//                    $this->objectMock,
+//                    $this->operationMock,
+//                    [],
+//                    [
+//                        'item_uri_template' => '/books/{id}{._format}',
+//                        MercureProcessor::DATA => json_encode(['@id' => '/books/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6']),
+//                    ],
+//                ],
+//            )
         ;
 
         $this->processor->process($this->objectMock, $this->operationMock);

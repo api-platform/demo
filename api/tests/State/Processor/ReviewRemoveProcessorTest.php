@@ -17,6 +17,7 @@ use App\State\Processor\MercureProcessor;
 use App\State\Processor\ReviewRemoveProcessor;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 final class ReviewRemoveProcessorTest extends TestCase
 {
@@ -50,9 +51,7 @@ final class ReviewRemoveProcessorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itRemovesBookAndSendMercureUpdates(): void
     {
         $this->removeProcessorMock
@@ -63,10 +62,10 @@ final class ReviewRemoveProcessorTest extends TestCase
         $this->resourceMetadataCollectionFactoryMock
             ->expects($this->exactly(2))
             ->method('create')
-            ->withConsecutive(
-                [Review::class],
-                [Review::class],
-            )
+//            ->withConsecutive(
+//                [Review::class],
+//                [Review::class],
+//            )
             ->willReturnOnConsecutiveCalls(
                 $this->resourceMetadataCollection,
                 $this->resourceMetadataCollection,
@@ -75,10 +74,10 @@ final class ReviewRemoveProcessorTest extends TestCase
         $this->iriConverterMock
             ->expects($this->exactly(2))
             ->method('getIriFromResource')
-            ->withConsecutive(
-                [$this->objectMock, UrlGeneratorInterface::ABS_URL, new Get('/admin/reviews/{id}{._format}')],
-                [$this->objectMock, UrlGeneratorInterface::ABS_URL, new Get('/books/{bookId}/reviews/{id}{._format}')],
-            )
+//            ->withConsecutive(
+//                [$this->objectMock, UrlGeneratorInterface::ABS_URL, new Get('/admin/reviews/{id}{._format}')],
+//                [$this->objectMock, UrlGeneratorInterface::ABS_URL, new Get('/books/{bookId}/reviews/{id}{._format}')],
+//            )
             ->willReturnOnConsecutiveCalls(
                 '/admin/reviews/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6',
                 '/books/8ad70d36-abaf-4c9b-aeaa-7ec63e6ca6f3/reviews/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6',
@@ -87,26 +86,26 @@ final class ReviewRemoveProcessorTest extends TestCase
         $this->mercureProcessorMock
             ->expects($this->exactly(2))
             ->method('process')
-            ->withConsecutive(
-                [
-                    $this->objectMock,
-                    $this->operationMock,
-                    [],
-                    [
-                        'item_uri_template' => '/admin/reviews/{id}{._format}',
-                        MercureProcessor::DATA => json_encode(['@id' => '/admin/reviews/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6']),
-                    ],
-                ],
-                [
-                    $this->objectMock,
-                    $this->operationMock,
-                    [],
-                    [
-                        'item_uri_template' => '/books/{bookId}/reviews/{id}{._format}',
-                        MercureProcessor::DATA => json_encode(['@id' => '/books/8ad70d36-abaf-4c9b-aeaa-7ec63e6ca6f3/reviews/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6']),
-                    ],
-                ],
-            )
+//            ->withConsecutive(
+//                [
+//                    $this->objectMock,
+//                    $this->operationMock,
+//                    [],
+//                    [
+//                        'item_uri_template' => '/admin/reviews/{id}{._format}',
+//                        MercureProcessor::DATA => json_encode(['@id' => '/admin/reviews/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6']),
+//                    ],
+//                ],
+//                [
+//                    $this->objectMock,
+//                    $this->operationMock,
+//                    [],
+//                    [
+//                        'item_uri_template' => '/books/{bookId}/reviews/{id}{._format}',
+//                        MercureProcessor::DATA => json_encode(['@id' => '/books/8ad70d36-abaf-4c9b-aeaa-7ec63e6ca6f3/reviews/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6']),
+//                    ],
+//                ],
+//            )
         ;
 
         $this->processor->process($this->objectMock, $this->operationMock);

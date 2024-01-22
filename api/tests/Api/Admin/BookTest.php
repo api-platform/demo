@@ -14,11 +14,13 @@ use App\Repository\BookRepository;
 use App\Tests\Api\Admin\Trait\UsersDataProviderTrait;
 use App\Tests\Api\Trait\SecurityTrait;
 use App\Tests\Api\Trait\SerializerTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\Update;
 use Zenstruck\Foundry\FactoryCollection;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
+use PHPUnit\Framework\Attributes\Test;
 
 final class BookTest extends ApiTestCase
 {
@@ -35,11 +37,8 @@ final class BookTest extends ApiTestCase
         $this->client = self::createClient();
     }
 
-    /**
-     * @dataProvider getNonAdminUsers
-     *
-     * @test
-     */
+    #[Test]
+    #[DataProvider(methodName: 'getNonAdminUsers')]
     public function asNonAdminUserICannotGetACollectionOfBooks(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
     {
         $options = [];
@@ -62,11 +61,8 @@ final class BookTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @dataProvider getUrls
-     *
-     * @test
-     */
+    #[Test]
+    #[DataProvider(methodName: 'getUrls')]
     public function asAdminUserICanGetACollectionOfBooks(FactoryCollection $factory, string $url, int $hydraTotalItems, int $itemsPerPage = null): void
     {
         // Cannot use Factory as data provider because BookFactory has a service dependency
@@ -132,9 +128,7 @@ final class BookTest extends ApiTestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAdminUserICanGetACollectionOfBooksOrderedByTitle(): void
     {
         BookFactory::createOne(['title' => 'Hyperion']);
@@ -155,11 +149,8 @@ final class BookTest extends ApiTestCase
         self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Book/collection.json'));
     }
 
-    /**
-     * @dataProvider getAllUsers
-     *
-     * @test
-     */
+    #[Test]
+    #[DataProvider(methodName: 'getAllUsers')]
     public function asAnyUserICannotGetAnInvalidBook(?UserFactory $userFactory): void
     {
         BookFactory::createOne();
@@ -184,11 +175,8 @@ final class BookTest extends ApiTestCase
         yield [UserFactory::new(['roles' => ['ROLE_ADMIN']])];
     }
 
-    /**
-     * @dataProvider getNonAdminUsers
-     *
-     * @test
-     */
+    #[Test]
+    #[DataProvider(methodName: 'getNonAdminUsers')]
     public function asNonAdminUserICannotGetABook(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
     {
         $book = BookFactory::createOne();
@@ -213,11 +201,8 @@ final class BookTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @dataProvider getNonAdminUsers
-     *
-     * @test
-     */
+    #[Test]
+    #[DataProvider(methodName: 'getNonAdminUsers')]
     public function asAdminUserICanGetABook(): void
     {
         $book = BookFactory::createOne();
@@ -240,11 +225,8 @@ final class BookTest extends ApiTestCase
         self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Book/item.json'));
     }
 
-    /**
-     * @dataProvider getNonAdminUsers
-     *
-     * @test
-     */
+    #[Test]
+    #[DataProvider(methodName: 'getNonAdminUsers')]
     public function asNonAdminUserICannotCreateABook(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
     {
         $options = [];
@@ -276,11 +258,8 @@ final class BookTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @dataProvider getInvalidDataOnCreate
-     *
-     * @test
-     */
+    #[Test]
+    #[DataProvider(methodName: 'getInvalidDataOnCreate')]
     public function asAdminUserICannotCreateABookWithInvalidData(array $data, int $statusCode, array $expected): void
     {
         $token = $this->generateToken([
@@ -302,7 +281,7 @@ final class BookTest extends ApiTestCase
         self::assertJsonContains($expected);
     }
 
-    public function getInvalidDataOnCreate(): iterable
+    public static function getInvalidDataOnCreate(): iterable
     {
         yield 'no data' => [
             [],
@@ -322,7 +301,7 @@ final class BookTest extends ApiTestCase
                 ],
             ],
         ];
-        yield from $this->getInvalidData();
+        yield from self::getInvalidData();
     }
 
     public static function getInvalidData(): iterable
@@ -385,9 +364,8 @@ final class BookTest extends ApiTestCase
     /**
      * @group apiCall
      * @group mercure
-     *
-     * @test
      */
+    #[Test]
     public function asAdminUserICanCreateABook(): void
     {
         $token = $this->generateToken([
@@ -443,11 +421,8 @@ final class BookTest extends ApiTestCase
         );
     }
 
-    /**
-     * @dataProvider getNonAdminUsers
-     *
-     * @test
-     */
+    #[Test]
+    #[DataProvider(methodName: 'getNonAdminUsers')]
     public function asNonAdminUserICannotUpdateBook(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
     {
         $book = BookFactory::createOne();
@@ -481,9 +456,7 @@ final class BookTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAdminUserICannotUpdateAnInvalidBook(): void
     {
         BookFactory::createOne();
@@ -506,11 +479,8 @@ final class BookTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 
-    /**
-     * @dataProvider getInvalidData
-     *
-     * @test
-     */
+    #[Test]
+    #[DataProvider(methodName: 'getInvalidData')]
     public function asAdminUserICannotUpdateABookWithInvalidData(array $data, int $statusCode, array $expected): void
     {
         $book = BookFactory::createOne();
@@ -537,9 +507,8 @@ final class BookTest extends ApiTestCase
     /**
      * @group apiCall
      * @group mercure
-     *
-     * @test
      */
+    #[Test]
     public function asAdminUserICanUpdateABook(): void
     {
         $book = BookFactory::createOne([
@@ -599,11 +568,8 @@ final class BookTest extends ApiTestCase
         );
     }
 
-    /**
-     * @dataProvider getNonAdminUsers
-     *
-     * @test
-     */
+    #[Test]
+    #[DataProvider(methodName: 'getNonAdminUsers')]
     public function asNonAdminUserICannotDeleteABook(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
     {
         $book = BookFactory::createOne();
@@ -628,9 +594,7 @@ final class BookTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAdminUserICannotDeleteAnInvalidBook(): void
     {
         BookFactory::createOne();
@@ -646,9 +610,8 @@ final class BookTest extends ApiTestCase
 
     /**
      * @group mercure
-     *
-     * @test
      */
+    #[Test]
     public function asAdminUserICanDeleteABook(): void
     {
         $book = BookFactory::createOne(['title' => 'Hyperion']);

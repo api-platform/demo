@@ -9,11 +9,13 @@ use App\Repository\UserRepository;
 use App\Security\Core\UserProvider;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
+use PHPUnit\Framework\Attributes\Test;
 
 final class UserProviderTest extends TestCase
 {
@@ -33,25 +35,19 @@ final class UserProviderTest extends TestCase
         $this->provider = new UserProvider($this->registryMock, $this->repositoryMock);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itDoesNotSupportAnInvalidClass(): void
     {
         $this->assertFalse($this->provider->supportsClass(\stdClass::class));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itSupportsAValidClass(): void
     {
         $this->assertTrue($this->provider->supportsClass(User::class));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itCannotRefreshAnInvalidObject(): void
     {
         $this->expectException(UnsupportedUserException::class);
@@ -67,9 +63,7 @@ final class UserProviderTest extends TestCase
         $this->provider->refreshUser($objectMock);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itRefreshesAValidObject(): void
     {
         $objectMock = $this->createMock(UserInterface::class);
@@ -89,11 +83,8 @@ final class UserProviderTest extends TestCase
         $this->assertSame($objectMock, $this->provider->refreshUser($objectMock));
     }
 
-    /**
-     * @dataProvider getInvalidAttributes
-     *
-     * @test
-     */
+    #[Test]
+    #[DataProvider(methodName: 'getInvalidAttributes')]
     public function itCannotLoadUserIfAttributeIsMissing(array $attributes): void
     {
         $this->expectException(UnsupportedUserException::class);
@@ -121,9 +112,7 @@ final class UserProviderTest extends TestCase
         ]];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itLoadsUserFromAttributes(): void
     {
         $this->repositoryMock
@@ -145,9 +134,7 @@ final class UserProviderTest extends TestCase
         ]));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itCreatesAUserFromAttributes(): void
     {
         $expectedUser = new User();

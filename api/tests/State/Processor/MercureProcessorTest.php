@@ -19,6 +19,7 @@ use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\HubRegistry;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Serializer\SerializerInterface;
+use PHPUnit\Framework\Attributes\Test;
 
 final class MercureProcessorTest extends TestCase
 {
@@ -55,9 +56,7 @@ final class MercureProcessorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itSendsAMercureUpdate(): void
     {
         $this->resourceMetadataCollectionFactoryMock->expects($this->never())->method('create');
@@ -90,9 +89,7 @@ final class MercureProcessorTest extends TestCase
         $this->processor->process($this->objectMock, $this->operationMock);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itSendsAMercureUpdateWithContextOptions(): void
     {
         $this->resourceMetadataCollectionFactoryMock

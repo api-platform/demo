@@ -15,11 +15,13 @@ use App\Entity\User;
 use App\Tests\Api\Admin\Trait\UsersDataProviderTrait;
 use App\Tests\Api\Trait\SecurityTrait;
 use App\Tests\Api\Trait\SerializerTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\Update;
 use Zenstruck\Foundry\FactoryCollection;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
+use PHPUnit\Framework\Attributes\Test;
 
 final class ReviewTest extends ApiTestCase
 {
@@ -36,11 +38,8 @@ final class ReviewTest extends ApiTestCase
         $this->client = self::createClient();
     }
 
-    /**
-     * @dataProvider getNonAdminUsers
-     *
-     * @test
-     */
+    #[Test]
+    #[DataProvider(methodName: 'getNonAdminUsers')]
     public function asNonAdminUserICannotGetACollectionOfReviews(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
     {
         $options = [];
@@ -63,11 +62,8 @@ final class ReviewTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @dataProvider getAdminUrls
-     *
-     * @test
-     */
+    #[Test]
+    #[DataProvider(methodName: 'getAdminUrls')]
     public function asAdminUserICanGetACollectionOfReviews(FactoryCollection $factory, callable|string $url, int $hydraTotalItems, int $itemsPerPage = null): void
     {
         $factory->create();
@@ -147,11 +143,8 @@ final class ReviewTest extends ApiTestCase
         ];
     }
 
-    /**
-     * @dataProvider getNonAdminUsers
-     *
-     * @test
-     */
+    #[Test]
+    #[DataProvider(methodName: 'getNonAdminUsers')]
     public function asNonAdminUserICannotGetAReview(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
     {
         $review = ReviewFactory::createOne();
@@ -176,9 +169,7 @@ final class ReviewTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAdminUserICannotGetAnInvalidReview(): void
     {
         $token = $this->generateToken([
@@ -190,9 +181,7 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAdminUserICanGetAReview(): void
     {
         $review = ReviewFactory::createOne();
@@ -208,11 +197,8 @@ final class ReviewTest extends ApiTestCase
         self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Review/item.json'));
     }
 
-    /**
-     * @dataProvider getNonAdminUsers
-     *
-     * @test
-     */
+    #[Test]
+    #[DataProvider(methodName: 'getNonAdminUsers')]
     public function asNonAdminUserICannotUpdateAReview(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
     {
         $review = ReviewFactory::createOne();
@@ -246,9 +232,7 @@ final class ReviewTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAdminUserICannotUpdateAnInvalidReview(): void
     {
         $token = $this->generateToken([
@@ -272,9 +256,8 @@ final class ReviewTest extends ApiTestCase
 
     /**
      * @group mercure
-     *
-     * @test
      */
+    #[Test]
     public function asAdminUserICanUpdateAReview(): void
     {
         $book = BookFactory::createOne();
@@ -334,11 +317,8 @@ final class ReviewTest extends ApiTestCase
         );
     }
 
-    /**
-     * @dataProvider getNonAdminUsers
-     *
-     * @test
-     */
+    #[Test]
+    #[DataProvider(methodName: 'getNonAdminUsers')]
     public function asNonAdminUserICannotDeleteAReview(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
     {
         $review = ReviewFactory::createOne();
@@ -363,9 +343,7 @@ final class ReviewTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAdminUserICannotDeleteAnInvalidReview(): void
     {
         $token = $this->generateToken([
@@ -379,9 +357,8 @@ final class ReviewTest extends ApiTestCase
 
     /**
      * @group mercure
-     *
-     * @test
      */
+    #[Test]
     public function asAdminUserICanDeleteAReview(): void
     {
         $review = ReviewFactory::createOne(['body' => 'Best book ever!']);

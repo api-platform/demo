@@ -14,6 +14,7 @@ use App\Entity\Bookmark;
 use App\Repository\BookmarkRepository;
 use App\Tests\Api\Trait\SecurityTrait;
 use App\Tests\Api\Trait\SerializerTrait;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Uid\Uuid;
@@ -34,9 +35,7 @@ final class BookmarkTest extends ApiTestCase
         $this->client = self::createClient();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAnonymousICannotGetACollectionOfBookmarks(): void
     {
         BookmarkFactory::createMany(10);
@@ -55,9 +54,8 @@ final class BookmarkTest extends ApiTestCase
 
     /**
      * Filters are disabled on /bookmarks.
-     *
-     * @test
      */
+    #[Test]
     public function asAUserICanGetACollectionOfMyBookmarksWithoutFilters(): void
     {
         BookmarkFactory::createMany(10);
@@ -79,9 +77,7 @@ final class BookmarkTest extends ApiTestCase
         self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Bookmark/collection.json'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAnonymousICannotCreateABookmark(): void
     {
         $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL2055137M.json']);
@@ -106,9 +102,7 @@ final class BookmarkTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAUserICannotCreateABookmarkWithInvalidData(): void
     {
         $token = $this->generateToken([
@@ -146,9 +140,8 @@ final class BookmarkTest extends ApiTestCase
 
     /**
      * @group mercure
-     *
-     * @test
      */
+    #[Test]
     public function asAUserICanCreateABookmark(): void
     {
         $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL2055137M.json']);
@@ -194,9 +187,7 @@ final class BookmarkTest extends ApiTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAUserICannotCreateADuplicateBookmark(): void
     {
         $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL2055137M.json']);
@@ -228,9 +219,7 @@ final class BookmarkTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAnonymousICannotDeleteABookmark(): void
     {
         $bookmark = BookmarkFactory::createOne();
@@ -247,9 +236,7 @@ final class BookmarkTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAUserICannotDeleteABookmarkOfAnotherUser(): void
     {
         $bookmark = BookmarkFactory::createOne(['user' => UserFactory::createOne()]);
@@ -272,9 +259,7 @@ final class BookmarkTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function asAUserICannotDeleteAnInvalidBookmark(): void
     {
         $token = $this->generateToken([
@@ -290,9 +275,8 @@ final class BookmarkTest extends ApiTestCase
 
     /**
      * @group mercure
-     *
-     * @test
      */
+    #[Test]
     public function asAUserICanDeleteMyBookmark(): void
     {
         $book = BookFactory::createOne(['title' => 'Hyperion']);

@@ -14,6 +14,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Clock\ClockInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Clock\MockClock;
+use PHPUnit\Framework\Attributes\Test;
 
 final class BookmarkPersistProcessorTest extends TestCase
 {
@@ -37,9 +38,7 @@ final class BookmarkPersistProcessorTest extends TestCase
         $this->processor = new BookmarkPersistProcessor($this->persistProcessorMock, $this->securityMock, $this->clockMock);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itUpdatesBookmarkDataBeforeSave(): void
     {
         $expectedData = $this->objectMock;
