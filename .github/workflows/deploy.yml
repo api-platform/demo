@@ -70,7 +70,7 @@ jobs:
           gcloud container clusters get-credentials ${{ inputs.gke-cluster }} --zone ${{ inputs.gke-zone }}
       -
         name: Cache Helm Dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: helm/api-platform/charts/
           key: ${{ runner.os }}-helm-dependencies-${{ github.run_id }}
