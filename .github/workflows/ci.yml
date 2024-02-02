@@ -71,6 +71,9 @@ jobs:
       -
         name: Run PHPStan
         run: docker compose exec -T php vendor/bin/phpstan --memory-limit=256M
+      -
+        name: Check OpenAPI
+        run: docker compose exec -T php bin/console api:openapi:export --yaml | docker run --rm -i -v $(pwd)/redocly.yaml:/spec/redocly.yaml redocly/cli lint /dev/stdin
 
   # run e2e tests iso-prod
   e2e-tests:
