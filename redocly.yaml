@@ -1,0 +1,7 @@
+# See https://redocly.com/docs/cli/configuration/rules/ for more information.
+extends:
+    - recommended
+
+rules:
+    info-license: off
+    operation-4xx-response: off
