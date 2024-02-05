@@ -172,7 +172,7 @@ final class BookTest extends ApiTestCase
     {
         yield [null];
         yield [UserFactory::new()];
-        yield [UserFactory::new(['roles' => ['ROLE_ADMIN']])];
+        yield [UserFactory::new()->withAdmin()];
     }
 
     #[Test]

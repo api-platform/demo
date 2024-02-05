@@ -14,6 +14,7 @@ use ApiPlatform\Metadata\NotExposed;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\UrlGeneratorInterface;
 use ApiPlatform\State\CreateProvider;
 use App\Repository\ReviewRepository;
 use App\Serializer\IriTransformerNormalizer;
@@ -76,7 +77,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         AbstractNormalizer::GROUPS => ['Review:write', 'Review:write:admin'],
     ],
     collectDenormalizationErrors: true,
-    security: 'is_granted("ROLE_ADMIN")'
+    security: 'is_granted("ADMIN")'
 )]
 #[ApiResource(
     types: ['https://schema.org/Review'],
@@ -98,7 +99,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             ]
         ),
         new Post(
-            security: 'is_granted("ROLE_USER")',
+            security: 'is_granted("USER")',
             // Mercure publish is done manually in MercureProcessor through ReviewPersistProcessor
             processor: ReviewPersistProcessor::class,
             provider: CreateProvider::class,
@@ -111,7 +112,7 @@ use Symfony\Component\Validator\Constraints as Assert;
                 'bookId' => new Link(toProperty: 'book', fromClass: Book::class),
                 'id' => new Link(fromClass: Review::class),
             ],
-            security: 'is_granted("ROLE_USER") and user == object.user',
+            security: 'object.user == user or is_granted("ADMIN")',
             // Mercure publish is done manually in MercureProcessor through ReviewPersistProcessor
             processor: ReviewPersistProcessor::class
         ),
@@ -121,7 +122,7 @@ use Symfony\Component\Validator\Constraints as Assert;
                 'bookId' => new Link(toProperty: 'book', fromClass: Book::class),
                 'id' => new Link(fromClass: Review::class),
             ],
-            security: 'is_granted("ROLE_USER") and user == object.user',
+            security: 'object.user == user or is_granted("ADMIN")',
             // Mercure publish is done manually in MercureProcessor through ReviewRemoveProcessor
             processor: ReviewRemoveProcessor::class
         ),

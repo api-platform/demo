@@ -30,17 +30,17 @@ use Symfony\Component\Uid\Uuid;
         new GetCollection(
             uriTemplate: '/admin/users{._format}',
             itemUriTemplate: '/admin/users/{id}{._format}',
-            security: 'is_granted("ROLE_ADMIN")',
+            security: 'is_granted("ADMIN")',
             filters: ['app.filter.user.admin.name'],
             paginationClientItemsPerPage: true
         ),
         new Get(
             uriTemplate: '/admin/users/{id}{._format}',
-            security: 'is_granted("ROLE_ADMIN")'
+            security: 'is_granted("ADMIN")'
         ),
         new Get(
             uriTemplate: '/users/{id}{._format}',
-            security: 'is_granted("ROLE_USER") and object.getUserIdentifier() === user.getUserIdentifier()'
+            security: 'user.sub === object.sub'
         ),
     ],
     normalizationContext: [

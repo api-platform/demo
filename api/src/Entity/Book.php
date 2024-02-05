@@ -71,7 +71,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         AbstractNormalizer::GROUPS => ['Book:write'],
     ],
     collectDenormalizationErrors: true,
-    security: 'is_granted("ROLE_ADMIN")'
+    security: 'is_granted("ADMIN")'
 )]
 #[ApiResource(
     types: ['https://schema.org/Book', 'https://schema.org/Offer'],
