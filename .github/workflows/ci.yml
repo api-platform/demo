@@ -132,7 +132,7 @@ jobs:
       -
         name: Cache Playwright Binaries
         id: playwright-cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright
@@ -140,10 +140,10 @@ jobs:
         name: Install PNPM
         uses: pnpm/action-setup@v2
         with:
-          version: 8
+          version: latest
       -
         name: Cache PNPM
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ env.PNPM_HOME }}
           key: ${{ runner.os }}-pnpm-${{ github.run_id }}
@@ -200,7 +200,7 @@ jobs:
       # Lint API
       -
         name: PHP CS Fixer Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: api/.php-cs-fixer.cache
           key: ${{ runner.OS }}-phpcsfixer-${{ github.sha }}
@@ -230,10 +230,10 @@ jobs:
         name: Install PNPM
         uses: pnpm/action-setup@v2
         with:
-          version: 8
+          version: latest
       -
         name: Cache PNPM
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ env.PNPM_HOME }}
           key: ${{ runner.os }}-pnpm-${{ github.run_id }}
@@ -251,7 +251,7 @@ jobs:
       # Lint HELM
       -
         name: Cache Helm Dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: helm/api-platform/charts/
           key: ${{ runner.os }}-helm-dependencies-${{ github.run_id }}
