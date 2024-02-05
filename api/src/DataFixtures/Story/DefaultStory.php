@@ -58,7 +58,6 @@ final class DefaultStory extends Story
             'email' => 'john.doe@example.com',
             'firstName' => 'John',
             'lastName' => 'Doe',
-            'roles' => ['ROLE_USER'],
         ]);
 
         // Default user has a review on the default book
@@ -87,11 +86,6 @@ final class DefaultStory extends Story
         }
 
         // Create admin user
-        UserFactory::createOne([
-            'email' => 'chuck.norris@example.com',
-            'firstName' => 'Chuck',
-            'lastName' => 'Norris',
-            'roles' => ['ROLE_ADMIN'],
-        ]);
+        UserFactory::createOneAdmin();
     }
 }

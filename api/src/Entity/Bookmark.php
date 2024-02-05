@@ -36,7 +36,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [
         new GetCollection(),
         new Delete(
-            security: 'is_granted("ROLE_USER") and object.user === user'
+            security: 'object.user == user'
         ),
         new Post(
             processor: BookmarkPersistProcessor::class
@@ -54,7 +54,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     ],
     collectDenormalizationErrors: true,
     mercure: true,
-    security: 'is_granted("ROLE_USER")'
+    security: 'is_granted("USER")'
 )]
 #[ORM\Entity(repositoryClass: BookmarkRepository::class)]
 #[ORM\UniqueConstraint(fields: ['user', 'book'])]

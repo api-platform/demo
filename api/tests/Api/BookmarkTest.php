@@ -64,6 +64,7 @@ final class BookmarkTest extends ApiTestCase
 
         $token = $this->generateToken([
             'email' => $user->email,
+            'authorize' => true,
         ]);
 
         $response = $this->client->request('GET', '/bookmarks', ['auth_bearer' => $token]);
@@ -107,6 +108,7 @@ final class BookmarkTest extends ApiTestCase
     {
         $token = $this->generateToken([
             'email' => UserFactory::createOne()->email,
+            'authorize' => true,
         ]);
 
         $uuid = Uuid::v7()->__toString();
@@ -150,6 +152,7 @@ final class BookmarkTest extends ApiTestCase
 
         $token = $this->generateToken([
             'email' => $user->email,
+            'authorize' => true,
         ]);
 
         $response = $this->client->request('POST', '/bookmarks', [
@@ -196,6 +199,7 @@ final class BookmarkTest extends ApiTestCase
 
         $token = $this->generateToken([
             'email' => $user->email,
+            'authorize' => true,
         ]);
 
         $this->client->request('POST', '/bookmarks', [
@@ -243,6 +247,7 @@ final class BookmarkTest extends ApiTestCase
 
         $token = $this->generateToken([
             'email' => UserFactory::createOne()->email,
+            'authorize' => false,
         ]);
 
         $this->client->request('DELETE', '/bookmarks/' . $bookmark->getId(), [
@@ -287,6 +292,7 @@ final class BookmarkTest extends ApiTestCase
 
         $token = $this->generateToken([
             'email' => $bookmark->user->email,
+            'authorize' => true,
         ]);
 
         $response = $this->client->request('DELETE', '/bookmarks/' . $bookmark->getId(), [

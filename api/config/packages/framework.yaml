@@ -24,8 +24,19 @@ framework:
     php_errors:
         log: true
 
+    http_client:
+        scoped_clients:
+            security.authorization.client:
+                base_uri: '%env(OIDC_SERVER_URL_INTERNAL)%/'
+
 when@test:
     framework:
         test: true
         #session:
         #    storage_factory_id: session.storage.factory.mock_file
+
+    services:
+        App\Tests\Api\Mock\:
+            resource: '../../tests/Api/Mock/'
+            autowire: true
+            autoconfigure: true

@@ -164,6 +164,7 @@ final class ReviewTest extends ApiTestCase
 
         $token = $this->generateToken([
             'email' => UserFactory::createOne()->email,
+            'authorize' => true,
         ]);
 
         $this->client->request('POST', '/books/' . $book->getId() . '/reviews', [
@@ -249,6 +250,7 @@ final class ReviewTest extends ApiTestCase
 
         $token = $this->generateToken([
             'email' => $user->email,
+            'authorize' => true,
         ]);
 
         $response = $this->client->request('POST', '/books/' . $book->getId() . '/reviews', [
@@ -303,6 +305,7 @@ final class ReviewTest extends ApiTestCase
 
         $token = $this->generateToken([
             'email' => $user->email,
+            'authorize' => true,
         ]);
 
         $this->client->request('POST', '/books/' . $book->getId() . '/reviews', [
@@ -393,6 +396,7 @@ final class ReviewTest extends ApiTestCase
 
         $token = $this->generateToken([
             'email' => UserFactory::createOne()->email,
+            'authorize' => false,
         ]);
 
         $this->client->request('PATCH', '/books/' . $review->book->getId() . '/reviews/' . $review->getId(), [
@@ -450,6 +454,7 @@ final class ReviewTest extends ApiTestCase
 
         $token = $this->generateToken([
             'email' => $review->user->email,
+            'authorize' => true,
         ]);
 
         $this->client->request('PATCH', '/books/' . $review->book->getId() . '/reviews/' . $review->getId(), [
@@ -507,6 +512,7 @@ final class ReviewTest extends ApiTestCase
 
         $token = $this->generateToken([
             'email' => UserFactory::createOne()->email,
+            'authorize' => false,
         ]);
 
         $this->client->request('DELETE', '/books/' . $review->book->getId() . '/reviews/' . $review->getId(), [
@@ -552,6 +558,7 @@ final class ReviewTest extends ApiTestCase
 
         $token = $this->generateToken([
             'email' => $review->user->email,
+            'authorize' => true,
         ]);
 
         $response = $this->client->request('DELETE', '/books/' . $bookId . '/reviews/' . $id, [
