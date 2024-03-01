@@ -139,7 +139,7 @@ jobs:
           key: ${{ runner.os }}-playwright
       -
         name: Install PNPM
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v3
         with:
           version: latest
       -
@@ -229,7 +229,7 @@ jobs:
       # Lint PWA
       -
         name: Install PNPM
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v3
         with:
           version: latest
       -
