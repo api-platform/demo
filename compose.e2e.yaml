@@ -8,8 +8,8 @@ services:
       KEYCLOAK_HTTPS_CERTIFICATE_FILE: /opt/bitnami/keycloak/certs/tls.crt
       KEYCLOAK_HTTPS_CERTIFICATE_KEY_FILE: /opt/bitnami/keycloak/certs/tls.key
     volumes:
-      - ${KEYCLOAK_HTTPS_CERTIFICATE_FILE}:/opt/bitnami/keycloak/certs/tls.crt:ro
-      - ${KEYCLOAK_HTTPS_CERTIFICATE_KEY_FILE}:/opt/bitnami/keycloak/certs/tls.key:ro
+      - ./helm/api-platform/keycloak/certs/tls.crt:/opt/bitnami/keycloak/certs/tls.crt:ro
+      - ./helm/api-platform/keycloak/certs/tls.pem:/opt/bitnami/keycloak/certs/tls.key:ro
 
   keycloak-config-cli:
     extends:
