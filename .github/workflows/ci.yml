@@ -93,8 +93,6 @@ jobs:
       POSTGRES_PASSWORD: aae5bf316ef5fe87ad806c6a9240fff68bcfdaf7
       KEYCLOAK_POSTGRES_PASSWORD: 26d7f630f1524eb210bbf496443f2038a9316e9e
       KEYCLOAK_ADMIN_PASSWORD: 2f31e2fad93941b818449fd8d57fd019b6ce7fa5
-      KEYCLOAK_HTTPS_CERTIFICATE_FILE: ./helm/api-platform/keycloak/certs/tls.crt
-      KEYCLOAK_HTTPS_CERTIFICATE_KEY_FILE: ./helm/api-platform/keycloak/certs/tls.pem
       # https://docs.docker.com/compose/environment-variables/envvars/#compose_file
       COMPOSE_FILE: compose.yaml:compose.prod.yaml:compose.e2e.yaml
     steps:

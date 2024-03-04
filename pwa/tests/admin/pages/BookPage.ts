@@ -25,7 +25,7 @@ export class BookPage extends AbstractPage {
       await this.page.getByLabel("Add filter").click();
       await this.page.getByRole("menu").getByText("Author").waitFor({ state: "visible" });
       await this.page.getByRole("menu").getByText("Author").click();
-      await this.page.getByLabel("Author").fill(filters.author);
+      await this.page.getByRole("textbox", { name: "Author" }).fill(filters.author);
       await this.page.waitForResponse(/\/books/);
     }
 
@@ -33,7 +33,7 @@ export class BookPage extends AbstractPage {
       await this.page.getByLabel("Add filter").click();
       await this.page.getByRole("menu").getByText("Title").waitFor({ state: "visible" });
       await this.page.getByRole("menu").getByText("Title").click();
-      await this.page.getByLabel("Title").fill(filters.title);
+      await this.page.getByRole("textbox", { name: "Title" }).fill(filters.title);
       await this.page.waitForResponse(/\/books/);
     }
 
