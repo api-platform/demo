@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bd12f9bc47683ea23e6712e024d6c6d3",
+    "content-hash": "af71d6bea61e25f46c265eaede5bc95e",
     "packages": [
         {
             "name": "api-platform/core",
-            "version": "v3.2.14",
+            "version": "v3.2.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/core.git",
-                "reference": "9f50aa73bfa0d08ab98f28f74a75d7f29d531bd3"
+                "reference": "42215cf81e477cbf8ff872cf3c00822c9a1b79f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/core/zipball/9f50aa73bfa0d08ab98f28f74a75d7f29d531bd3",
-                "reference": "9f50aa73bfa0d08ab98f28f74a75d7f29d531bd3",
+                "url": "https://api.github.com/repos/api-platform/core/zipball/42215cf81e477cbf8ff872cf3c00822c9a1b79f8",
+                "reference": "42215cf81e477cbf8ff872cf3c00822c9a1b79f8",
                 "shasum": ""
             },
             "require": {
@@ -168,9 +168,9 @@
             ],
             "support": {
                 "issues": "https://github.com/api-platform/core/issues",
-                "source": "https://github.com/api-platform/core/tree/v3.2.14"
+                "source": "https://github.com/api-platform/core/tree/v3.2.15"
             },
-            "time": "2024-02-20T09:52:06+00:00"
+            "time": "2024-02-29T14:55:13+00:00"
         },
         {
             "name": "brick/math",
