@@ -43,12 +43,6 @@ jobs:
         name: Start services
         run: docker compose up --wait --no-build
       -
-        name: Debug services
-        if: failure()
-        run: |
-          docker compose ps
-          docker compose logs
-      -
         name: Check HTTP reachability
         run: curl -v -o /dev/null http://localhost
       -
@@ -75,6 +69,12 @@ jobs:
       -
         name: Check OpenAPI
         run: docker compose exec -T php bin/console api:openapi:export --yaml | docker run --rm -i -v $(pwd)/redocly.yaml:/spec/redocly.yaml redocly/cli lint /dev/stdin
+      -
+        name: Debug services
+        if: failure()
+        run: |
+          docker compose ps
+          docker compose logs
 
   # run e2e tests iso-prod
   e2e-tests:
@@ -121,12 +121,6 @@ jobs:
       -
         name: Start Services
         run: docker compose up --wait --no-build
-      -
-        name: Debug Services
-        if: failure()
-        run: |
-          docker compose ps
-          docker compose logs
       -
         name: Load Fixtures
         run: docker compose run --rm php bin/console doctrine:fixtures:load --no-interaction
@@ -176,6 +170,12 @@ jobs:
         if: ${{ !cancelled() }}
         # use 1 worker to prevent conflict between scenarios
         run: pnpm exec playwright test --grep @write --workers=1
+      -
+        name: Debug Services
+        if: failure()
+        run: |
+          docker compose ps
+          docker compose logs
       -
         uses: actions/upload-artifact@v4
         if: failure()
