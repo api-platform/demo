@@ -90,6 +90,13 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
+    strategy:
+      matrix:
+        # don't run @read and @write scenarios to prevent conflict between them
+        annotation:
+          - '@read'
+          - '@write'
+      fail-fast: false
     env:
       PHP_DOCKER_IMAGE: europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/php:latest
       PWA_DOCKER_IMAGE: europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/pwa:latest
@@ -170,17 +177,10 @@ jobs:
         working-directory: pwa
         run: pnpm exec playwright install
       -
-        name: Run Playwright @read
+        name: Run Playwright
         working-directory: pwa
-        # don't run @read and @write scenarios to prevent conflict between them
-        run: pnpm exec playwright test --grep @read
-      -
-        name: Run Playwright @write
-        working-directory: pwa
-        # run all e2e tests even if @read ones fail
-        if: ${{ !cancelled() }}
-        # use 1 worker to prevent conflict between scenarios
-        run: pnpm exec playwright test --grep @write --workers=1
+        # use 1 worker to prevent conflict between scenarios (longer but safer)
+        run: pnpm exec playwright test --workers=1 --grep ${{ matrix.annotation }}
       -
         name: Debug Services
         if: failure()
