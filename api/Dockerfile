@@ -5,7 +5,7 @@
 
 # Versions
 # hadolint ignore=DL3007
-FROM dunglas/frankenphp:latest-php8.3-alpine AS frankenphp_upstream
+FROM dunglas/frankenphp:1-php8.3 AS frankenphp_upstream
 FROM composer/composer:2-bin AS composer_upstream
 
 
@@ -21,25 +21,27 @@ WORKDIR /app
 
 # persistent / runtime deps
 # hadolint ignore=DL3018
-RUN apk add --no-cache \
+RUN apt-get update; \
+	apt-get install --no-install-recommends -y \
 		acl \
 		file \
 		gettext \
 		git \
-	;
+	; \
+	rm -rf /var/lib/apt/lists/*
 
 RUN set -eux; \
-    install-php-extensions \
+	install-php-extensions \
 		apcu \
 		intl \
 		opcache \
 		zip \
-    ;
+	;
 
 ###> recipes ###
 ###> doctrine/doctrine-bundle ###
 RUN set -eux; \
-    install-php-extensions pdo_pgsql
+	install-php-extensions pdo_pgsql
 ###< doctrine/doctrine-bundle ###
 ###< recipes ###
 
@@ -67,8 +69,8 @@ RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
 RUN set -eux; \
 	install-php-extensions \
-    	xdebug \
-    ;
+		xdebug \
+	;
 
 COPY --link frankenphp/conf.d/app.dev.ini $PHP_INI_DIR/conf.d/
 
