@@ -93,7 +93,7 @@ test.describe("Books list", () => {
   test("I can filter the list @read", async ({ bookPage, page }) => {
     // filter by author
     await bookPage.filter({ author: "Dan Simmons" });
-    await expect(page).toHaveURL(/\/books\?author=Dan\+Simmons/);
+    await expect(page).toHaveURL(/\/books\?author=Dan(?:\+|%20)Simmons/);
     await expect(page.getByTestId("nb-books")).toHaveText("1 book(s) found");
     await expect(page.getByTestId("book").or(page.getByTestId("loading"))).toHaveCount(1);
     await expect(page.getByTestId("pagination")).toHaveCount(0);
@@ -112,7 +112,7 @@ test.describe("Books list", () => {
     await expect(page.getByTestId("book").or(page.getByTestId("loading"))).toHaveCount(30);
     await expect(await bookPage.getDefaultBook()).not.toBeVisible();
     await bookPage.filter({ author: "Dan Simmons" });
-    await expect(page).toHaveURL(/\/books\?author=Dan\+Simmons/);
+    await expect(page).toHaveURL(/\/books\?author=Dan(?:\+|%20)Simmons/);
     await expect(page.getByTestId("nb-books")).toHaveText("1 book(s) found");
     await expect(page.getByTestId("book").or(page.getByTestId("loading"))).toHaveCount(1);
     await expect(page.getByTestId("pagination")).toHaveCount(0);
@@ -127,7 +127,7 @@ test.describe("Books list", () => {
 
     // filter by title, author and condition
     await bookPage.filter({ author: "Dan Simmons", title: "Hyperion", condition: "Used" });
-    await expect(page).toHaveURL(/\/books\?author=Dan\+Simmons&title=Hyperion&condition%5B%5D=https%3A%2F%2Fschema\.org%2FUsedCondition$/);
+    await expect(page).toHaveURL(/\/books\?author=Dan(?:\+|%20)Simmons&title=Hyperion&condition%5B%5D=https%3A%2F%2Fschema\.org%2FUsedCondition$/);
     await expect(page.getByTestId("nb-books")).toHaveText("1 book(s) found");
     await expect(page.getByTestId("book").or(page.getByTestId("loading"))).toHaveCount(1);
     await expect(page.getByTestId("pagination")).toHaveCount(0);
@@ -138,7 +138,7 @@ test.describe("Books list", () => {
     await expect(page.getByTestId("filter-author")).toHaveValue("Dan Simmons");
     await expect(page.getByTestId("filter-title")).toHaveValue("");
     expect(await page.getByTestId("filter-condition-used").isChecked()).toBeFalsy();
-    await expect(page).toHaveURL(/\/books\?author=Dan\+Simmons$/);
+    await expect(page).toHaveURL(/\/books\?author=Dan(?:\+|%20)Simmons$/);
     await expect(page.getByTestId("nb-books")).toHaveText("1 book(s) found");
     await expect(page.getByTestId("book").or(page.getByTestId("loading"))).toHaveCount(1);
     await expect(page.getByTestId("pagination")).toHaveCount(0);
