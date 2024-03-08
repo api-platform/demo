@@ -13,6 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
+use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -83,7 +84,7 @@ final class BooksImportCommand extends Command
 
         $io->progressFinish();
 
-        $output->write($this->serializer->serialize($data, 'json'));
+        $output->write($this->serializer->serialize($data, 'json', [JsonEncode::OPTIONS => JSON_PRETTY_PRINT]));
 
         return Command::SUCCESS;
     }
