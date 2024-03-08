@@ -8,6 +8,8 @@ interface FiltersProps {
 
 export class BookPage extends AbstractPage {
   public async gotoList() {
+    await this.registerMock();
+
     await this.page.goto("/admin");
     await this.login();
     await this.page.waitForURL(/\/admin#\/admin/);
