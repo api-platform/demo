@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Tests\Api\Mock;
+declare(strict_types=1);
+
+namespace App\Tests\Api\Security\Voter\Mock;
 
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -18,6 +20,6 @@ final class NotImplementedMock extends MockHttpClient
 
     public function handleRequest(string $method, string $url): void
     {
-        throw new \UnexpectedValueException("Mock not implemented: $method/$url");
+        throw new \UnexpectedValueException("Mock not implemented: {$method}/{$url}");
     }
 }

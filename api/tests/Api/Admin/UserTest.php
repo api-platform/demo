@@ -9,7 +9,7 @@ use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\DataFixtures\Factory\UserFactory;
 use App\Repository\UserRepository;
 use App\Tests\Api\Admin\Trait\UsersDataProviderTrait;
-use App\Tests\Api\Trait\SecurityTrait;
+use App\Tests\Api\Security\TokenGenerator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Uid\Uuid;
@@ -21,7 +21,6 @@ final class UserTest extends ApiTestCase
 {
     use Factories;
     use ResetDatabase;
-    use SecurityTrait;
     use UsersDataProviderTrait;
 
     private Client $client;
@@ -37,7 +36,7 @@ final class UserTest extends ApiTestCase
     {
         $options = [];
         if ($userFactory) {
-            $token = $this->generateToken([
+            $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -61,7 +60,7 @@ final class UserTest extends ApiTestCase
     {
         $factory->create();
 
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -113,7 +112,7 @@ final class UserTest extends ApiTestCase
 
         $options = [];
         if ($userFactory) {
-            $token = $this->generateToken([
+            $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -136,7 +135,7 @@ final class UserTest extends ApiTestCase
     {
         $user = UserFactory::createOne();
 
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -161,7 +160,7 @@ final class UserTest extends ApiTestCase
         ])->disableAutoRefresh();
 
         $sub = Uuid::v7()->__toString();
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'sub' => $sub,
             'email' => $user->email,
             'given_name' => 'Chuck',

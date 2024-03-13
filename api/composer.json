@@ -34,6 +34,7 @@
         "symfony/uid": "7.0.*",
         "symfony/validator": "7.0.*",
         "symfony/yaml": "7.0.*",
+        "web-token/jwt-bundle": "^3.3",
         "web-token/jwt-library": "^3.3",
         "webonyx/graphql-php": "^15.8",
         "zenstruck/foundry": "^1.36"
@@ -109,7 +110,11 @@
         "symfony": {
             "allow-contrib": false,
             "require": "7.0.*",
-            "docker": false
+            "docker": false,
+            "endpoint": [
+                "https://api.github.com/repos/Spomky-Labs/recipes/contents/index.json?ref=main",
+                "flex://defaults"
+            ]
         }
     }
 }

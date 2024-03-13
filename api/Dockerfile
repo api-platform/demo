@@ -34,6 +34,7 @@ RUN apt-get update; \
 RUN set -eux; \
 	install-php-extensions \
 		apcu \
+		bcmath \
 		intl \
 		opcache \
 		zip \
