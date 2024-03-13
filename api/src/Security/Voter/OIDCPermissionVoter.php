@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Security\Voter;
 
 use ApiPlatform\Metadata\IriConverterInterface;
@@ -28,7 +30,8 @@ final class OIDCPermissionVoter extends Voter
         private readonly RequestStack $requestStack,
         #[Autowire('@security.access_token_extractor.header')]
         private readonly AccessTokenExtractorInterface $accessTokenExtractor,
-    ) {}
+    ) {
+    }
 
     protected function supports(string $attribute, mixed $subject): bool
     {
@@ -42,11 +45,11 @@ final class OIDCPermissionVoter extends Voter
             return false;
         }
 
-        if (is_object($subject)) {
+        if (\is_object($subject)) {
             $subject = $this->iriConverter->getIriFromResource($subject);
         }
 
-        if (!is_string($subject)) {
+        if (!\is_string($subject)) {
             throw new \InvalidArgumentException(sprintf('Invalid subject type, expected "string" or "object", got "%s".', get_debug_type($subject)));
         }
 

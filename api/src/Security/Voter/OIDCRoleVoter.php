@@ -1,13 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Security\Voter;
 
+use Jose\Component\Signature\Serializer\JWSSerializerManager;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Http\AccessToken\AccessTokenExtractorInterface;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
@@ -28,7 +32,10 @@ final class OIDCRoleVoter extends Voter
         private readonly RequestStack $requestStack,
         #[Autowire('@security.access_token_extractor.header')]
         private readonly AccessTokenExtractorInterface $accessTokenExtractor,
-    ) {}
+        #[Autowire('@jose.jws_serializer.oidc')]
+        private readonly JWSSerializerManager $jwsSerializerManager,
+    ) {
+    }
 
     protected function supports(string $attribute, mixed $subject): bool
     {
@@ -56,10 +63,16 @@ final class OIDCRoleVoter extends Voter
             ]);
 
             $roles = array_map(static fn (string $role): string => strtolower($role), $response->toArray()['realm_access']['roles'] ?? []);
-
-            return in_array(strtolower($attribute), $roles, true);
-        } catch (ExceptionInterface) {
+        } catch (HttpExceptionInterface) {
+            // OIDC server said no!
             return false;
+        } catch (ExceptionInterface) {
+            // OIDC server doesn't seem to answer: check roles in token (if present)
+            $jws = $this->jwsSerializerManager->unserialize($accessToken);
+            $claims = json_decode($jws->getPayload(), true);
+            $roles = array_map(static fn (string $role): string => strtolower($role), $claims['realm_access']['roles'] ?? []);
         }
+
+        return \in_array(strtolower($attribute), $roles, true);
     }
 }

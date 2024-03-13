@@ -83,6 +83,14 @@
       ]
     }
   ],
+  "clientScopes": [
+    {
+      "name": "roles",
+      "attributes": {
+        "include.in.token.scope": "true"
+      }
+    }
+  ],
   "clients": [
     {
       "id": "6832d039-5543-4e66-afc5-bc5057e8234d",

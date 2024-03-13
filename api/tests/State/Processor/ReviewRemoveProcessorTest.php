@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\State\Processor;
 
 use ApiPlatform\Api\IriConverterInterface;
-use ApiPlatform\Api\UrlGeneratorInterface;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Operation;
@@ -13,7 +12,6 @@ use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInter
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Review;
-use App\State\Processor\MercureProcessor;
 use App\State\Processor\ReviewRemoveProcessor;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;

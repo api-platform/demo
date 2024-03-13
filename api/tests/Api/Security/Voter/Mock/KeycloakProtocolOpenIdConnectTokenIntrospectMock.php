@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Tests\Api\Mock;
+declare(strict_types=1);
+
+namespace App\Tests\Api\Security\Voter\Mock;
 
 use Jose\Component\Signature\Serializer\CompactSerializer;
 use Jose\Component\Signature\Serializer\JWSSerializerManager;
@@ -25,7 +27,7 @@ final class KeycloakProtocolOpenIdConnectTokenIntrospectMock extends MockHttpCli
 
     private function handleRequest(string $method, string $url, array $options): ResponseInterface
     {
-        if (!('POST' === $method && $this->baseUri.'protocol/openid-connect/token/introspect' === $url)) {
+        if (!('POST' === $method && $this->baseUri . 'protocol/openid-connect/token/introspect' === $url)) {
             return $this->decorated->request($method, $url, $options);
         }
 
@@ -44,7 +46,7 @@ final class KeycloakProtocolOpenIdConnectTokenIntrospectMock extends MockHttpCli
         $claims = json_decode($jws->getPayload(), true);
 
         // "authorize" custom claim set in the test
-        if (array_key_exists('authorize', $claims)) {
+        if (\array_key_exists('authorize', $claims)) {
             return $claims['authorize'] ? $this->getValidMock($claims) : $this->getInvalidMock();
         }
 

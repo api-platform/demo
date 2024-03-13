@@ -14,7 +14,6 @@ use ApiPlatform\Metadata\NotExposed;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use ApiPlatform\Metadata\UrlGeneratorInterface;
 use ApiPlatform\State\CreateProvider;
 use App\Repository\ReviewRepository;
 use App\Serializer\IriTransformerNormalizer;

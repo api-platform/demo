@@ -18,4 +18,5 @@ return [
     DAMA\DoctrineTestBundle\DAMADoctrineTestBundle::class => ['test' => true],
     Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => ['all' => true],
     Zenstruck\Foundry\ZenstruckFoundryBundle::class => ['all' => true],
+    Jose\Bundle\JoseFramework\JoseFrameworkBundle::class => ['all' => true],
 ];

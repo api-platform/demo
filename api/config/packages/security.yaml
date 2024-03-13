@@ -1,7 +1,3 @@
-parameters:
-    app.oidc.jwk: '{"kty": "EC","d": "cT3_vKHaGOAhhmzR0Jbi1ko40dNtpjtaiWzm_7VNwLA","use": "sig","crv": "P-256","x": "n6PnJPqNK5nP-ymwwsOIqZvjiCKFNzRyqWA8KNyBsDo","y": "bQSmMlDXOmtgyS1rhsKUmqlxq-8Kw0Iw9t50cSloTMM","alg": "ES256"}'
-    app.oidc.aud: 'api-platform'
-
 security:
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
@@ -32,10 +28,14 @@ when@prod: &prod
         firewalls:
             main:
                 access_token:
-                    token_handler:
-                        oidc_user_info:
-                            claim: email
-                            base_uri: '%env(OIDC_SERVER_URL_INTERNAL)%/protocol/openid-connect/userinfo'
+                    token_handler: App\Security\Http\AccessToken\Oidc\OidcDiscoveryTokenHandler
+                    # todo support Discovery in Symfony
+#                       oidc:
+#                           claim: 'email'
+#                            base_uri: '%env(OIDC_SERVER_URL)%'
+#                            audience: '%env(OIDC_AUD)%'
+#                            cache: '@cache.app' # default
+#                            cache_ttl: 3600 # default
 
 when@dev: *prod
 
@@ -47,16 +47,7 @@ when@test:
                     token_handler:
                         oidc:
                             claim: email
-                            audience: '%app.oidc.aud%'
+                            audience: '%env(OIDC_AUD)%'
                             issuers: [ '%env(OIDC_SERVER_URL)%' ]
                             algorithm: 'ES256'
-                            key: '%app.oidc.jwk%'
-    # required by App\Tests\Api\Trait\SecurityTrait
-    parameters:
-        app.oidc.issuer: '%env(OIDC_SERVER_URL)%'
-    services:
-        app.security.jwk:
-            parent: 'security.access_token_handler.oidc.jwk'
-            public: true
-            arguments:
-                $json: '%app.oidc.jwk%'
+                            key: '%env(OIDC_JWK)%'
