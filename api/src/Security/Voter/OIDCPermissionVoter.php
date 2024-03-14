@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Security\Voter;
 
 use ApiPlatform\Metadata\IriConverterInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Http\AccessToken\AccessTokenExtractorInterface;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
@@ -30,6 +32,7 @@ final class OIDCPermissionVoter extends Voter
         private readonly RequestStack $requestStack,
         #[Autowire('@security.access_token_extractor.header')]
         private readonly AccessTokenExtractorInterface $accessTokenExtractor,
+        private ?LoggerInterface $logger = null,
     ) {
     }
 
@@ -67,7 +70,14 @@ final class OIDCPermissionVoter extends Voter
             ]);
 
             return $response->toArray()['result'] ?? false;
-        } catch (ExceptionInterface) {
+        } catch (HttpExceptionInterface) {
+            return false;
+        } catch (ExceptionInterface $e) {
+            $this->logger?->error('An error occurred while checking the permissions on OIDC server.', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
             return false;
         }
     }
