@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Security\Voter;
 
 use Jose\Component\Signature\Serializer\JWSSerializerManager;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -34,6 +35,7 @@ final class OIDCRoleVoter extends Voter
         private readonly AccessTokenExtractorInterface $accessTokenExtractor,
         #[Autowire('@jose.jws_serializer.oidc')]
         private readonly JWSSerializerManager $jwsSerializerManager,
+        private ?LoggerInterface $logger = null,
     ) {
     }
 
@@ -63,10 +65,15 @@ final class OIDCRoleVoter extends Voter
             ]);
 
             $roles = array_map(static fn (string $role): string => strtolower($role), $response->toArray()['realm_access']['roles'] ?? []);
-        } catch (HttpExceptionInterface) {
+        } catch (HttpExceptionInterface $e) {
             // OIDC server said no!
             return false;
-        } catch (ExceptionInterface) {
+        } catch (ExceptionInterface $e) {
+            $this->logger?->error('An error occurred while checking the roles on OIDC server.', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
             // OIDC server doesn't seem to answer: check roles in token (if present)
             $jws = $this->jwsSerializerManager->unserialize($accessToken);
             $claims = json_decode($jws->getPayload(), true);
