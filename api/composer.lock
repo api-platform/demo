@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b86c6b806b61dc9938b2bbf049db4c92",
+    "content-hash": "30bf2abc05f735781179f265db9f9426",
     "packages": [
         {
             "name": "api-platform/core",
@@ -588,47 +588,42 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "3.8.3",
+            "version": "4.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "db922ba9436b7b18a23d1653a0b41ff2369ca41c"
+                "reference": "9e588fe1f38a443cb17de6b86b803d9e028e2156"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/db922ba9436b7b18a23d1653a0b41ff2369ca41c",
-                "reference": "db922ba9436b7b18a23d1653a0b41ff2369ca41c",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/9e588fe1f38a443cb17de6b86b803d9e028e2156",
+                "reference": "9e588fe1f38a443cb17de6b86b803d9e028e2156",
                 "shasum": ""
             },
             "require": {
-                "composer-runtime-api": "^2",
-                "doctrine/cache": "^1.11|^2.0",
                 "doctrine/deprecations": "^0.5.3|^1",
-                "doctrine/event-manager": "^1|^2",
-                "php": "^7.4 || ^8.0",
+                "php": "^8.1",
                 "psr/cache": "^1|^2|^3",
                 "psr/log": "^1|^2|^3"
             },
             "require-dev": {
                 "doctrine/coding-standard": "12.0.0",
                 "fig/log-test": "^1",
-                "jetbrains/phpstorm-stubs": "2023.1",
+                "jetbrains/phpstorm-stubs": "2023.2",
                 "phpstan/phpstan": "1.10.58",
+                "phpstan/phpstan-phpunit": "1.3.15",
                 "phpstan/phpstan-strict-rules": "^1.5",
-                "phpunit/phpunit": "9.6.16",
+                "phpunit/phpunit": "10.5.9",
                 "psalm/plugin-phpunit": "0.18.4",
                 "slevomat/coding-standard": "8.13.1",
                 "squizlabs/php_codesniffer": "3.9.0",
-                "symfony/cache": "^5.4|^6.0|^7.0",
-                "symfony/console": "^4.4|^5.4|^6.0|^7.0",
-                "vimeo/psalm": "4.30.0"
+                "symfony/cache": "^6.3.8|^7.0",
+                "symfony/console": "^5.4|^6.3|^7.0",
+                "vimeo/psalm": "5.21.1"
             },
             "suggest": {
                 "symfony/console": "For helpful console commands such as SQL execution and import of files."
             },
-            "bin": [
-                "bin/doctrine-dbal"
-            ],
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -681,7 +676,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/dbal/issues",
-                "source": "https://github.com/doctrine/dbal/tree/3.8.3"
+                "source": "https://github.com/doctrine/dbal/tree/4.0.1"
             },
             "funding": [
                 {
@@ -697,7 +692,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-03-03T15:55:06+00:00"
+            "time": "2024-03-03T15:59:11+00:00"
         },
         {
             "name": "doctrine/deprecations",
@@ -748,16 +743,16 @@
         },
         {
             "name": "doctrine/doctrine-bundle",
-            "version": "2.11.3",
+            "version": "2.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineBundle.git",
-                "reference": "492725310ae9a1b5b20d6ae09fb5ae6404616e68"
+                "reference": "5418e811a14724068e95e0ba43353b903ada530f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineBundle/zipball/492725310ae9a1b5b20d6ae09fb5ae6404616e68",
-                "reference": "492725310ae9a1b5b20d6ae09fb5ae6404616e68",
+                "url": "https://api.github.com/repos/doctrine/DoctrineBundle/zipball/5418e811a14724068e95e0ba43353b903ada530f",
+                "reference": "5418e811a14724068e95e0ba43353b903ada530f",
                 "shasum": ""
             },
             "require": {
@@ -795,6 +790,7 @@
                 "symfony/property-info": "^5.4 || ^6.0 || ^7.0",
                 "symfony/proxy-manager-bridge": "^5.4 || ^6.0 || ^7.0",
                 "symfony/security-bundle": "^5.4 || ^6.0 || ^7.0",
+                "symfony/stopwatch": "^5.4 || ^6.0 || ^7.0",
                 "symfony/string": "^5.4 || ^6.0 || ^7.0",
                 "symfony/twig-bridge": "^5.4 || ^6.0 || ^7.0",
                 "symfony/validator": "^5.4 || ^6.0 || ^7.0",
@@ -812,7 +808,7 @@
             "type": "symfony-bundle",
             "autoload": {
                 "psr-4": {
-                    "Doctrine\\Bundle\\DoctrineBundle\\": ""
+                    "Doctrine\\Bundle\\DoctrineBundle\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -847,7 +843,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/DoctrineBundle/issues",
-                "source": "https://github.com/doctrine/DoctrineBundle/tree/2.11.3"
+                "source": "https://github.com/doctrine/DoctrineBundle/tree/2.12.0"
             },
             "funding": [
                 {
@@ -863,7 +859,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-02-10T20:56:20+00:00"
+            "time": "2024-03-19T07:20:37+00:00"
         },
         {
             "name": "doctrine/doctrine-fixtures-bundle",
@@ -1476,61 +1472,48 @@
         },
         {
             "name": "doctrine/orm",
-            "version": "2.19.0",
+            "version": "3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/orm.git",
-                "reference": "a809a71aa6a233a6c82e68ebaaf8954adc4998dc"
+                "reference": "9c560713925ac5859342e6ff370c4c997acf2fd4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/orm/zipball/a809a71aa6a233a6c82e68ebaaf8954adc4998dc",
-                "reference": "a809a71aa6a233a6c82e68ebaaf8954adc4998dc",
+                "url": "https://api.github.com/repos/doctrine/orm/zipball/9c560713925ac5859342e6ff370c4c997acf2fd4",
+                "reference": "9c560713925ac5859342e6ff370c4c997acf2fd4",
                 "shasum": ""
             },
             "require": {
                 "composer-runtime-api": "^2",
-                "doctrine/cache": "^1.12.1 || ^2.1.1",
-                "doctrine/collections": "^1.5 || ^2.1",
-                "doctrine/common": "^3.0.3",
-                "doctrine/dbal": "^2.13.1 || ^3.2",
+                "doctrine/collections": "^2.2",
+                "doctrine/dbal": "^3.8.2 || ^4",
                 "doctrine/deprecations": "^0.5.3 || ^1",
                 "doctrine/event-manager": "^1.2 || ^2",
                 "doctrine/inflector": "^1.4 || ^2.0",
                 "doctrine/instantiator": "^1.3 || ^2",
-                "doctrine/lexer": "^2 || ^3",
-                "doctrine/persistence": "^2.4 || ^3",
+                "doctrine/lexer": "^3",
+                "doctrine/persistence": "^3.3.1",
                 "ext-ctype": "*",
-                "php": "^7.1 || ^8.0",
+                "php": "^8.1",
                 "psr/cache": "^1 || ^2 || ^3",
-                "symfony/console": "^4.2 || ^5.0 || ^6.0 || ^7.0",
-                "symfony/polyfill-php72": "^1.23",
-                "symfony/polyfill-php80": "^1.16"
-            },
-            "conflict": {
-                "doctrine/annotations": "<1.13 || >= 3.0"
+                "symfony/console": "^5.4 || ^6.0 || ^7.0",
+                "symfony/var-exporter": "^6.3.9 || ^7.0"
             },
             "require-dev": {
-                "doctrine/annotations": "^1.13 || ^2",
-                "doctrine/coding-standard": "^9.0.2 || ^12.0",
-                "phpbench/phpbench": "^0.16.10 || ^1.0",
-                "phpstan/phpstan": "~1.4.10 || 1.10.59",
-                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.6",
+                "doctrine/coding-standard": "^12.0",
+                "phpbench/phpbench": "^1.0",
+                "phpstan/phpstan": "1.10.59",
+                "phpunit/phpunit": "^10.4.0",
                 "psr/log": "^1 || ^2 || ^3",
                 "squizlabs/php_codesniffer": "3.7.2",
-                "symfony/cache": "^4.4 || ^5.4 || ^6.4 || ^7.0",
-                "symfony/var-exporter": "^4.4 || ^5.4 || ^6.2 || ^7.0",
-                "symfony/yaml": "^3.4 || ^4.0 || ^5.0 || ^6.0 || ^7.0",
-                "vimeo/psalm": "4.30.0 || 5.22.2"
+                "symfony/cache": "^5.4 || ^6.2 || ^7.0",
+                "vimeo/psalm": "5.22.2"
             },
             "suggest": {
                 "ext-dom": "Provides support for XSD validation for XML mapping files",
-                "symfony/cache": "Provides cache support for Setup Tool with doctrine/cache 2.0",
-                "symfony/yaml": "If you want to use YAML Metadata Mapping Driver"
+                "symfony/cache": "Provides cache support for Setup Tool with doctrine/cache 2.0"
             },
-            "bin": [
-                "bin/doctrine"
-            ],
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -1571,9 +1554,9 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/orm/issues",
-                "source": "https://github.com/doctrine/orm/tree/2.19.0"
+                "source": "https://github.com/doctrine/orm/tree/3.1.1"
             },
-            "time": "2024-03-03T17:43:41+00:00"
+            "time": "2024-03-21T11:37:52+00:00"
         },
         {
             "name": "doctrine/persistence",
@@ -7447,16 +7430,16 @@
         },
         {
             "name": "zenstruck/foundry",
-            "version": "v1.36.1",
+            "version": "v1.37.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zenstruck/foundry.git",
-                "reference": "c32de571213e05e718eb05bfaf8d8b35cf8610df"
+                "reference": "e01d77f01d2837e568ed92d226e6e778c37319a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zenstruck/foundry/zipball/c32de571213e05e718eb05bfaf8d8b35cf8610df",
-                "reference": "c32de571213e05e718eb05bfaf8d8b35cf8610df",
+                "url": "https://api.github.com/repos/zenstruck/foundry/zipball/e01d77f01d2837e568ed92d226e6e778c37319a4",
+                "reference": "e01d77f01d2837e568ed92d226e6e778c37319a4",
                 "shasum": ""
             },
             "require": {
@@ -7479,7 +7462,7 @@
                 "doctrine/doctrine-migrations-bundle": "^2.2|^3.0",
                 "doctrine/mongodb-odm": "^2.4",
                 "doctrine/mongodb-odm-bundle": "^4.4.0|^5.0",
-                "doctrine/orm": "^2.11",
+                "doctrine/orm": "^2.11|^3.0",
                 "matthiasnoback/symfony-dependency-injection-test": "^4.1|^5.0",
                 "phpunit/phpunit": "^9.5.0",
                 "symfony/dotenv": "^5.4|^6.0|^7.0",
@@ -7527,7 +7510,7 @@
             ],
             "support": {
                 "issues": "https://github.com/zenstruck/foundry/issues",
-                "source": "https://github.com/zenstruck/foundry/tree/v1.36.1"
+                "source": "https://github.com/zenstruck/foundry/tree/v1.37.0"
             },
             "funding": [
                 {
@@ -7535,7 +7518,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-12-14T23:19:08+00:00"
+            "time": "2024-03-20T15:09:26+00:00"
         }
     ],
     "packages-dev": [
