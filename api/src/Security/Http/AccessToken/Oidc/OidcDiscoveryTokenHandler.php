@@ -33,7 +33,7 @@ final class OidcDiscoveryTokenHandler implements AccessTokenHandlerInterface
         private JWSLoader $jwsLoader,
         private readonly HttpClientInterface $securityAuthorizationClient,
         private string $claim = 'email',
-        private int $ttl = 3600,
+        private int $ttl = 600,
         private ?LoggerInterface $logger = null,
     ) {
     }

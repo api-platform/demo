@@ -29,13 +29,13 @@ when@prod: &prod
             main:
                 access_token:
                     token_handler: App\Security\Http\AccessToken\Oidc\OidcDiscoveryTokenHandler
-                    # todo support Discovery in Symfony
-#                       oidc:
-#                           claim: 'email'
+                        # todo support Discovery in Symfony
+#                        oidc:
+#                            claim: 'email'
 #                            base_uri: '%env(OIDC_SERVER_URL)%'
 #                            audience: '%env(OIDC_AUD)%'
 #                            cache: '@cache.app' # default
-#                            cache_ttl: 3600 # default
+#                            cache_ttl: 600 # default
 
 when@dev: *prod
 

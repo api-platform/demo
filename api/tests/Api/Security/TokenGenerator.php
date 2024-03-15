@@ -56,6 +56,9 @@ final readonly class TokenGenerator
         if (empty($claims['exp'])) {
             $claims['exp'] = $time + 3600;
         }
+        if (empty($claims['realm_access']) || empty($claims['realm_access']['roles'])) {
+            $claims['realm_access']['roles'] = ['chuck.norris@example.com' === ($claims['email'] ?? null) ? 'admin' : 'user'];
+        }
 
         return $this->jwsSerializerManager->serialize(
             name: 'jws_compact',

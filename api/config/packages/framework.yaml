@@ -26,6 +26,7 @@ framework:
 
     http_client:
         scoped_clients:
+            # use scoped client to ease mock on functional tests
             security.authorization.client:
                 base_uri: '%env(OIDC_SERVER_URL_INTERNAL)%/'
 
