@@ -76,7 +76,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         AbstractNormalizer::GROUPS => ['Review:write', 'Review:write:admin'],
     ],
     collectDenormalizationErrors: true,
-    security: 'is_granted("ADMIN")'
+    security: 'is_granted("OIDC_ADMIN")'
 )]
 #[ApiResource(
     types: ['https://schema.org/Review'],
@@ -98,7 +98,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             ]
         ),
         new Post(
-            security: 'is_granted("USER")',
+            security: 'is_granted("OIDC_USER")',
             // Mercure publish is done manually in MercureProcessor through ReviewPersistProcessor
             processor: ReviewPersistProcessor::class,
             provider: CreateProvider::class,
@@ -111,7 +111,7 @@ use Symfony\Component\Validator\Constraints as Assert;
                 'bookId' => new Link(toProperty: 'book', fromClass: Book::class),
                 'id' => new Link(fromClass: Review::class),
             ],
-            security: 'object.user == user or is_granted("ADMIN")',
+            security: 'object.user === user',
             // Mercure publish is done manually in MercureProcessor through ReviewPersistProcessor
             processor: ReviewPersistProcessor::class
         ),
@@ -121,7 +121,7 @@ use Symfony\Component\Validator\Constraints as Assert;
                 'bookId' => new Link(toProperty: 'book', fromClass: Book::class),
                 'id' => new Link(fromClass: Review::class),
             ],
-            security: 'object.user == user or is_granted("ADMIN")',
+            security: 'object.user === user',
             // Mercure publish is done manually in MercureProcessor through ReviewRemoveProcessor
             processor: ReviewRemoveProcessor::class
         ),
