@@ -1,5 +1,4 @@
 import Head from "next/head";
-import { type Session } from "next-auth";
 import { useContext, useRef, useState } from "react";
 import { type DataProvider, Layout, type LayoutProps, localStorageStore, resolveBrowserLocale } from "react-admin";
 import { signIn, useSession } from "next-auth/react";
@@ -10,25 +9,25 @@ import frenchMessages from "ra-language-french";
 import { fetchHydra, HydraAdmin, hydraDataProvider, OpenApiAdmin, ResourceGuesser } from "@api-platform/admin";
 import { parseHydraDocumentation } from "@api-platform/api-doc-parser";
 
-import DocContext from "@/components/admin/DocContext";
-import authProvider from "@/components/admin/authProvider";
-import AppBar from "@/components/admin/AppBar";
-import Menu from "@/components/admin/Menu";
-import { ENTRYPOINT } from "@/config/entrypoint";
-import { List as BooksList } from "@/components/admin/book/List";
-import { Create as BooksCreate } from "@/components/admin/book/Create";
-import { Edit as BooksEdit } from "@/components/admin/book/Edit";
-import { List as ReviewsList } from "@/components/admin/review/List";
-import { Show as ReviewsShow } from "@/components/admin/review/Show";
-import { Edit as ReviewsEdit } from "@/components/admin/review/Edit";
-import { type Book } from "@/types/Book";
-import { type Review } from "@/types/Review";
+import { type Session } from "../../app/auth";
+import DocContext from "../../components/admin/DocContext";
+import authProvider from "../../components/admin/authProvider";
+import AppBar from "../../components/admin/AppBar";
+import Menu from "../../components/admin/Menu";
+import { ENTRYPOINT } from "../../config/entrypoint";
+import { List as BooksList } from "../../components/admin/book/List";
+import { Create as BooksCreate } from "../../components/admin/book/Create";
+import { Edit as BooksEdit } from "../../components/admin/book/Edit";
+import { List as ReviewsList } from "../../components/admin/review/List";
+import { Show as ReviewsShow } from "../../components/admin/review/Show";
+import { Edit as ReviewsEdit } from "../../components/admin/review/Edit";
+import { type Book } from "../../types/Book";
+import { type Review } from "../../types/Review";
 
 const apiDocumentationParser = (session: Session) => async () => {
   try {
     return await parseHydraDocumentation(ENTRYPOINT, {
         headers: {
-            // @ts-ignore
             Authorization: `Bearer ${session?.accessToken}`,
         },
     });
@@ -69,7 +68,6 @@ const AdminUI = ({ session, children }: { session: Session, children?: React.Rea
     httpClient: (url: URL, options = {}) => fetchHydra(url, {
       ...options,
       headers: {
-        // @ts-ignore
         Authorization: `Bearer ${session?.accessToken}`,
       },
     }),
@@ -141,6 +139,7 @@ const AdminWithOIDC = () => {
     return;
   }
 
+  // @ts-ignore
   return <AdminWithContext session={session}/>;
 };
 

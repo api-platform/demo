@@ -1,16 +1,18 @@
+"use client";
+
 import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
-import { signOut } from "@/utils/security";
+import { signOut } from "../../app/auth";
 
 export const Header = () => {
-  const router = useRouter();
-  const { data: session } = useSession();
+  const pathname = usePathname();
+  const { data: session, status } = useSession();
 
-  if (router.pathname === "/" || router.pathname.match(/^\/admin/)) return <></>;
+  if (pathname === "/" || pathname.match(/^\/admin/)) return <></>;
 
   return (
     <header className="bg-neutral-100 sticky top-0 z-10">
@@ -26,10 +28,10 @@ export const Header = () => {
             My Bookmarks
           </Link>
           {/* @ts-ignore */}
-          {!!session && !session.error && (
+          {status === "authenticated" && (
             <a href="#" className="font-semibold text-gray-900" role="menuitem" onClick={(e) => {
               e.preventDefault();
-              signOut(session);
+              signOut(session, {callbackUrl: `${window.location.origin}/books`});
             }}>
               Sign out
             </a>

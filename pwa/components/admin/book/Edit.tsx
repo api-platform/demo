@@ -1,8 +1,8 @@
 import { EditGuesser, type EditGuesserProps } from "@api-platform/admin";
 import { TopToolbar } from 'react-admin';
 
-import { Form } from "@/components/admin/book/Form";
-import { ShowButton } from "@/components/admin/book/ShowButton";
+import { Form } from "../../../components/admin/book/Form";
+import { ShowButton } from "../../../components/admin/book/ShowButton";
 
 // @ts-ignore
 const Actions = ({ data }) => (

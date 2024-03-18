@@ -1,10 +1,10 @@
 import slugify from "slugify";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
-import { isItem } from "@/types/item";
-import { type Book } from "@/types/Book";
-import { type Book as OLBook } from "@/types/OpenLibrary/Book";
-import { type Work } from "@/types/OpenLibrary/Work";
+import { isItem } from "../types/item";
+import { type Book } from "../types/Book";
+import { type Book as OLBook } from "../types/OpenLibrary/Book";
+import { type Work } from "../types/OpenLibrary/Work";
 
 interface OrderFilter {
   title: string;
@@ -27,48 +27,53 @@ export const useOpenLibraryBook = <TData extends Book>(data: TData) => {
   data["slug"] = slugify(`${data["title"]}-${data["author"]}`, { lower: true, trim: true, remove: /[*+~.(),;'"!:@]/g });
   data["condition"] = data["condition"].substring(19, data["condition"].length-9);
 
-  return useQuery(data["book"], async () => {
-    const response = await fetch(data["book"], { method: "GET" });
-    const book: OLBook = await response.json();
+  return useQuery({
+    queryKey: [data["book"]],
+    queryFn: async () => {
+      const response = await fetch(data["book"], { cache: "force-cache" });
+      const book: OLBook = await response.json();
 
-    if (typeof book["publish_date"] !== "undefined") {
-      data["publicationDate"] = book["publish_date"];
-    }
-
-    if (typeof book["covers"] !== "undefined") {
-      data["images"] = {
-        medium: `https://covers.openlibrary.org/b/id/${book["covers"][0]}-M.jpg`,
-        large: `https://covers.openlibrary.org/b/id/${book["covers"][0]}-L.jpg`,
-      };
-    }
-
-    if (typeof book["description"] !== "undefined") {
-      data["description"] = (typeof book["description"] === "string" ? book["description"] : book["description"]["value"]).replace( /(<([^>]+)>)/ig, '');
-    }
-
-    // retrieve data from work if necessary
-    if ((!data["description"] || !data["images"]) && typeof book["works"] !== "undefined" && book["works"].length > 0) {
-      const response = await fetch(`https://openlibrary.org${book["works"][0]["key"]}.json`);
-      const work: Work = await response.json();
-
-      if (!data["description"] && typeof work["description"] !== "undefined") {
-        data["description"] = (typeof work["description"] === "string" ? work["description"] : work["description"]["value"]).replace( /(<([^>]+)>)/ig, '');
+      if (typeof book["publish_date"] !== "undefined") {
+        data["publicationDate"] = book["publish_date"];
       }
 
-      if (!data["images"] && typeof work["covers"] !== "undefined") {
+      if (typeof book["covers"] !== "undefined") {
         data["images"] = {
-          medium: `https://covers.openlibrary.org/b/id/${work["covers"][0]}-M.jpg`,
-          large: `https://covers.openlibrary.org/b/id/${work["covers"][0]}-L.jpg`,
+          medium: `https://covers.openlibrary.org/b/id/${book["covers"][0]}-M.jpg`,
+          large: `https://covers.openlibrary.org/b/id/${book["covers"][0]}-L.jpg`,
         };
       }
-    }
 
-    return data;
+      if (typeof book["description"] !== "undefined") {
+        data["description"] = (typeof book["description"] === "string" ? book["description"] : book["description"]["value"]).replace(/(<([^>]+)>)/ig, '');
+      }
+
+      // retrieve data from work if necessary
+      if ((!data["description"] || !data["images"]) && typeof book["works"] !== "undefined" && book["works"].length > 0) {
+        const response = await fetch(`https://openlibrary.org${book["works"][0]["key"]}.json`, {
+          cache: "force-cache",
+        });
+        const work: Work = await response.json();
+
+        if (!data["description"] && typeof work["description"] !== "undefined") {
+          data["description"] = (typeof work["description"] === "string" ? work["description"] : work["description"]["value"]).replace(/(<([^>]+)>)/ig, '');
+        }
+
+        if (!data["images"] && typeof work["covers"] !== "undefined") {
+          data["images"] = {
+            medium: `https://covers.openlibrary.org/b/id/${work["covers"][0]}-M.jpg`,
+            large: `https://covers.openlibrary.org/b/id/${work["covers"][0]}-L.jpg`,
+          };
+        }
+      }
+
+      return data;
+    },
   });
 };
 
 const filterObject = (object: object) => Object.fromEntries(Object.entries(object).filter(([, value]) => {
-  return typeof value === "object" ? Object.keys(value).length > 0 : value?.length > 0;
+  return typeof value === "object" ? Object.keys(value).length > 0 : value?.toString().length > 0;
 }));
 
 export const buildUriFromFilters = (uri: string, filters: FiltersProps): string => {

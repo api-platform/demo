@@ -3,10 +3,10 @@ import Link from "next/link";
 import { type FunctionComponent } from "react";
 import Rating from "@mui/material/Rating";
 
-import { type Book } from "@/types/Book";
-import { getItemPath } from "@/utils/dataAccess";
-import { useOpenLibraryBook } from "@/utils/book";
-import { Loading } from "@/components/common/Loading";
+import { type Book } from "../../types/Book";
+import { getItemPath } from "../../utils/dataAccess";
+import { useOpenLibraryBook } from "../../utils/book";
+import { Loading } from "../common/Loading";
 
 interface Props {
   book: Book;

@@ -1,8 +1,7 @@
-import isomorphicFetch from "isomorphic-unfetch";
-import { getSession } from "next-auth/react"
-import { type Item } from "@/types/item";
-import { type PagedCollection } from "@/types/collection";
-import { ENTRYPOINT } from "@/config/entrypoint";
+import { type Session } from "../app/auth";
+import { type Item } from "../types/item";
+import { type PagedCollection } from "../types/collection";
+import { ENTRYPOINT } from "../config/entrypoint";
 
 const MIME_TYPE = "application/ld+json";
 
@@ -34,12 +33,11 @@ const extractHubURL = (response: Response): null | URL => {
   return matches && matches[1] ? new URL(matches[1], ENTRYPOINT) : null;
 };
 
-export const fetch = async <TData>(
+export const fetchApi = async <TData>(
   id: string,
-  init: RequestInit = {}
+  init: RequestInit = {},
+  session?: Session|null
 ): Promise<FetchResponse<TData> | undefined> => {
-  const session = await getSession();
-
   if (typeof init.headers === "undefined") init.headers = {};
   if (!init.headers.hasOwnProperty("Accept")) {
     init.headers = {...init.headers, Accept: MIME_TYPE};
@@ -56,7 +54,7 @@ export const fetch = async <TData>(
     init.headers = { ...init.headers, Authorization: `Bearer ${session?.accessToken}` };
   }
 
-  const resp = await isomorphicFetch(ENTRYPOINT + id, init);
+  const resp = await fetch(ENTRYPOINT + id, init);
   if (resp.status === 204) return;
 
   const text = await resp.text();
@@ -107,56 +105,3 @@ export const parsePage = (path: string) =>
     new RegExp(/[?&]page=(\d+)/).exec(path)?.[1] ?? "1",
     10
   );
-
-export const getItemPaths = async <TData extends Item>(
-  response: FetchResponse<PagedCollection<TData>> | undefined,
-  resourceName: string,
-  pathTemplate: string
-) => {
-  if (!response) return [];
-
-  try {
-    const view = response.data["hydra:view"];
-    const { "hydra:last": last } = view ?? {};
-    const paths =
-      response.data["hydra:member"]?.map((resourceData) =>
-        getItemPath(resourceData, pathTemplate)
-      ) ?? [];
-    const lastPage = parsePage(last ?? "");
-
-    for (let page = 2; page <= lastPage; page++) {
-      paths.push(
-        ...((
-          await fetch<PagedCollection<TData>>(`/${resourceName}?page=${page}`)
-        )?.data["hydra:member"]?.map((resourceData) =>
-          getItemPath(resourceData, pathTemplate)
-        ) ?? [])
-      );
-    }
-
-    return paths;
-  } catch (e) {
-    console.error(e);
-
-    return [];
-  }
-};
-
-export const getCollectionPaths = async <TData extends Item>(
-  response: FetchResponse<PagedCollection<TData>> | undefined,
-  resourceName: string,
-  pathTemplate: string
-) => {
-  if (!response) return [];
-
-  const view = response.data["hydra:view"];
-  const { "hydra:last": last } = view ?? {};
-  const paths = [pathTemplate.replace("[page]", "1")];
-  const lastPage = parsePage(last ?? "");
-
-  for (let page = 2; page <= lastPage; page++) {
-    paths.push(pathTemplate.replace("[page]", page.toString()));
-  }
-
-  return paths;
-};

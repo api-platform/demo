@@ -1,17 +1,19 @@
-import NextAuth, { type AuthOptions, type SessionOptions, type DefaultUser, type TokenSet } from "next-auth";
+import { type TokenSet } from "@auth/core/types";
+import { signOut as logout, type SignOutParams } from "next-auth/react";
+import NextAuth, { type Session as DefaultSession, type User as DefaultUser } from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
 
-import { OIDC_CLIENT_ID, OIDC_SERVER_URL } from "@/config/keycloak";
+import { OIDC_CLIENT_ID, OIDC_SERVER_URL, OIDC_SERVER_URL_INTERNAL } from "../config/keycloak";
 
-interface Session extends SessionOptions {
-  accessToken: string
-  idToken: string
-  error?: "RefreshAccessTokenError"
-  user?: User
+export interface User extends DefaultUser {
+  sub?: string | null
 }
 
-interface User extends DefaultUser {
-  sub?: string | null
+export interface Session extends DefaultSession {
+  error?: "RefreshAccessTokenError"
+  accessToken: string
+  idToken: string
+  user?: User
 }
 
 interface JWT {
@@ -30,10 +32,28 @@ interface Account {
   refresh_token: string
 }
 
-export const authOptions: AuthOptions = {
+interface Profile {
+  sub: string
+}
+
+interface SignOutResponse {
+  url: string
+}
+
+export async function signOut<R extends boolean = true>(
+  session: DefaultSession,
+  options?: SignOutParams<R>
+): Promise<R extends true ? undefined : SignOutResponse> {
+  return await logout({
+    // @ts-ignore
+    callbackUrl: `${OIDC_SERVER_URL}/protocol/openid-connect/logout?id_token_hint=${session.idToken}&post_logout_redirect_uri=${options?.callbackUrl ?? window.location.origin}`,
+  });
+}
+
+export const { handlers: { GET, POST }, auth } = NextAuth({
   callbacks: {
     // @ts-ignore
-    async jwt({ token, account }: { token: JWT, account: Account }): Promise<JWT> {
+    async jwt({ token, account, profile }: { token: JWT, account: Account, profile: Profile }): Promise<JWT> {
       if (account) {
         // Save the access token and refresh token in the JWT on the initial login
         return {
@@ -42,6 +62,7 @@ export const authOptions: AuthOptions = {
           idToken: account.id_token,
           expiresAt: Math.floor(Date.now() / 1000 + account.expires_in),
           refreshToken: account.refresh_token,
+          sub: profile.sub,
         };
       } else if (Date.now() < token.expiresAt * 1000) {
         // If the access token has not expired yet, return it
@@ -49,7 +70,6 @@ export const authOptions: AuthOptions = {
       } else {
         // If the access token has expired, try to refresh it
         try {
-          // todo use .well-known
           const response = await fetch(`${OIDC_SERVER_URL}/protocol/openid-connect/token`, {
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: new URLSearchParams({
@@ -106,23 +126,32 @@ export const authOptions: AuthOptions = {
       id: 'keycloak',
       clientId: OIDC_CLIENT_ID,
       issuer: OIDC_SERVER_URL,
+
+      // user information will be extracted from the `id_token` claims, instead of making a request to the `userinfo` endpoint
+      // https://next-auth.js.org/configuration/providers/oauth
+      // @ts-ignore
+      idToken: true,
+
+      // https://github.com/nextauthjs/next-auth/issues/685#issuecomment-785212676
+      protection: "pkce",
+      client: {
+        token_endpoint_auth_method: "none",
+      },
+
+      // would love to use discovery, but can't because since next-auth:v5 token endpoint is called internally
+      // also, discovery doesn't seem to work properly: https://github.com/nextauthjs/next-auth/pull/9718
+      // wellKnown: `${OIDC_SERVER_URL}/.well-known/openid-configuration`,
+      token: `${OIDC_SERVER_URL_INTERNAL}/protocol/openid-connect/token`,
+      userinfo: `${OIDC_SERVER_URL}/protocol/openid-connect/token`,
       authorization: {
+        url: `${OIDC_SERVER_URL}/protocol/openid-connect/auth`,
         // https://authjs.dev/guides/basics/refresh-token-rotation#jwt-strategy
         params: {
           access_type: "offline",
+          scope: "openid profile email",
           prompt: "consent",
         },
       },
-      // https://github.com/nextauthjs/next-auth/issues/685#issuecomment-785212676
-      protection: "pkce",
-      // https://github.com/nextauthjs/next-auth/issues/4707
-      // @ts-ignore
-      clientSecret: null,
-      client: {
-        token_endpoint_auth_method: "none"
-      },
     }),
   ],
-};
-
-export default NextAuth(authOptions);
+});

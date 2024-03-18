@@ -2,8 +2,8 @@ import MuiPagination from "@mui/material/Pagination";
 import { PaginationItem } from "@mui/material";
 import Link from "next/link";
 
-import { type PagedCollection } from "@/types/collection";
-import { parsePage } from "@/utils/dataAccess";
+import { type PagedCollection } from "../../types/collection";
+import { parsePage } from "../../utils/dataAccess";
 
 interface Props {
   collection: PagedCollection<unknown>;

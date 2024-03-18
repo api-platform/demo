@@ -35,9 +35,7 @@ api_platform:
         pkce: true
         type: oauth2
         flow: authorizationCode
-        # todo retrieve url from .well-known
         tokenUrl: '%env(OIDC_SERVER_URL)%/protocol/openid-connect/token'
-        # todo retrieve url from .well-known
         authorizationUrl: '%env(OIDC_SERVER_URL)%/protocol/openid-connect/auth'
         scopes:
             openid: (required) Indicates that the application intends to use OIDC to verify the user's identity

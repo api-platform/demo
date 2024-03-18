@@ -19,7 +19,7 @@ services:
       context: ./pwa
       target: prod
     environment:
-      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      AUTH_SECRET: ${AUTH_SECRET}
 
   database:
     environment:

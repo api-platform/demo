@@ -1,4 +1,4 @@
-import { type Item } from "@/types/item";
+import { type Item } from "./item";
 
 export class User implements Item {
   public "@id"?: string;

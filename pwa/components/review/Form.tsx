@@ -1,13 +1,14 @@
 import { type FunctionComponent } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { FormGroup, TextareaAutosize } from "@mui/material";
 import Rating from "@mui/material/Rating";
 
-import { fetch, type FetchError, type FetchResponse } from "@/utils/dataAccess";
-import { type Book } from "@/types/Book";
-import { type Review } from "@/types/Review";
+import { fetchApi, type FetchError, type FetchResponse } from "../../utils/dataAccess";
+import { type Book } from "../../types/Book";
+import { type Review } from "../../types/Review";
+import {useSession} from "next-auth/react";
 
 interface Props {
   book: Book;
@@ -22,17 +23,20 @@ const DisplayingErrorMessagesSchema = Yup.object().shape({
 });
 
 export const Form: FunctionComponent<Props> = ({ book, onSuccess, review, username }) => {
+  const { data: session } = useSession();
   const saveReview = async (values: Review) =>
-    await fetch<Review>(!values["@id"] ? `${book["@id"]}/reviews` : values["@id"], {
+    await fetchApi<Review>(!values["@id"] ? `${book["@id"]}/reviews` : values["@id"], {
       method: !values["@id"] ? "POST" : "PATCH",
       body: JSON.stringify(values),
-    });
+      // @ts-ignore
+    }, session);
 
-  const saveMutation = useMutation<
-    FetchResponse<Review> | undefined,
-    Error | FetchError,
-    Review
-  >((values: Review) => saveReview(values));
+  const saveMutation = useMutation({
+    mutationFn: async (values: Review) => saveReview(values),
+    onError: (error) => {
+      console.error(error);
+    },
+  });
 
   return (
     <Formik
@@ -63,6 +67,7 @@ export const Form: FunctionComponent<Props> = ({ book, onSuccess, review, userna
                 msg: `${"status" in error ? error.status : error.message}`,
               });
               if ("fields" in error) {
+                // @ts-ignore
                 setErrors(error.fields);
               }
             },
