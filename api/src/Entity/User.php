@@ -64,14 +64,6 @@ class User implements UserInterface
     private ?Uuid $id = null;
 
     /**
-     * @see https://schema.org/identifier
-     */
-    #[ApiProperty(types: ['https://schema.org/identifier'])]
-    #[Groups(groups: ['User:read'])]
-    #[ORM\Column(type: UuidType::NAME, unique: true)]
-    public ?Uuid $sub = null;
-
-    /**
      * @see https://schema.org/email
      */
     #[ORM\Column(unique: true)]

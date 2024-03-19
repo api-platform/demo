@@ -33,7 +33,7 @@ final class BookTest extends ApiTestCase
 
     protected function setup(): void
     {
-        $this->client = self::createClient(['debug' => true]);
+        $this->client = self::createClient();
     }
 
     #[Test]
