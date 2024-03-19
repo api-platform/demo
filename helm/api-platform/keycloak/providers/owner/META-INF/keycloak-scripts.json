@@ -1,0 +1,9 @@
+{
+  "policies": [
+    {
+      "name": "Owner",
+      "fileName": "owner-policy.js",
+      "description": "Checks that a resource is owned by the current user"
+    }
+  ]
+}

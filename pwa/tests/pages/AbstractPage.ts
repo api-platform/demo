@@ -5,7 +5,7 @@ export abstract class AbstractPage {
   }
 
   public async login() {
-    await this.page.getByLabel("Username or email").fill("john.doe@example.com");
+    await this.page.getByLabel("Email").fill("john.doe@example.com");
     await this.page.getByLabel("Password").fill("Pa55w0rd");
     await this.page.getByRole("button", { name: "Sign In" }).click();
     if (await this.page.getByRole("button", { name: "Sign in with Keycloak" }).count()) {

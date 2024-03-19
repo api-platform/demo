@@ -17,7 +17,8 @@ export const metadata: Metadata = {
 async function getServerSideProps({ page = 1 }: Query, session: Session): Promise<ListProps> {
   try {
     const response: FetchResponse<PagedCollection<Bookmark>> | undefined = await fetchApi(`/bookmarks?page=${Number(page)}`, {
-      next: { revalidate: 3600 },
+      // next: { revalidate: 3600 },
+      cache: "no-cache",
     }, session);
     if (!response?.data) {
       throw new Error('Unable to retrieve data from /bookmarks.');

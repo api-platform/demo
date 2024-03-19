@@ -1,13 +1,9 @@
 import { type TokenSet } from "@auth/core/types";
 import { signOut as logout, type SignOutParams } from "next-auth/react";
-import NextAuth, { type Session as DefaultSession, type User as DefaultUser } from "next-auth";
+import NextAuth, { type Session as DefaultSession, type User } from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
 
 import { OIDC_CLIENT_ID, OIDC_SERVER_URL, OIDC_SERVER_URL_INTERNAL } from "../config/keycloak";
-
-export interface User extends DefaultUser {
-  sub?: string | null
-}
 
 export interface Session extends DefaultSession {
   error?: "RefreshAccessTokenError"
@@ -22,7 +18,6 @@ interface JWT {
   expiresAt: number
   refreshToken: string
   error?: "RefreshAccessTokenError"
-  sub?: any
 }
 
 interface Account {
@@ -30,10 +25,6 @@ interface Account {
   id_token: string
   expires_in: number
   refresh_token: string
-}
-
-interface Profile {
-  sub: string
 }
 
 interface SignOutResponse {
@@ -53,7 +44,7 @@ export async function signOut<R extends boolean = true>(
 export const { handlers: { GET, POST }, auth } = NextAuth({
   callbacks: {
     // @ts-ignore
-    async jwt({ token, account, profile }: { token: JWT, account: Account, profile: Profile }): Promise<JWT> {
+    async jwt({ token, account }: { token: JWT, account: Account }): Promise<JWT> {
       if (account) {
         // Save the access token and refresh token in the JWT on the initial login
         return {
@@ -62,7 +53,6 @@ export const { handlers: { GET, POST }, auth } = NextAuth({
           idToken: account.id_token,
           expiresAt: Math.floor(Date.now() / 1000 + account.expires_in),
           refreshToken: account.refresh_token,
-          sub: profile.sub,
         };
       } else if (Date.now() < token.expiresAt * 1000) {
         // If the access token has not expired yet, return it
@@ -70,7 +60,7 @@ export const { handlers: { GET, POST }, auth } = NextAuth({
       } else {
         // If the access token has expired, try to refresh it
         try {
-          const response = await fetch(`${OIDC_SERVER_URL}/protocol/openid-connect/token`, {
+          const response = await fetch(`${OIDC_SERVER_URL_INTERNAL}/protocol/openid-connect/token`, {
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: new URLSearchParams({
               client_id: OIDC_CLIENT_ID,
@@ -113,9 +103,6 @@ export const { handlers: { GET, POST }, auth } = NextAuth({
         session.accessToken = token.accessToken;
         session.idToken = token.idToken;
         session.error = token.error;
-        if (session?.user && token?.sub) {
-          session.user.sub = token.sub;
-        }
       }
 
       return session;
