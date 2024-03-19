@@ -49,12 +49,12 @@
   },
   "users": [
     {
-      "username": "chuck.norris",
+      "username": "chuck.norris@example.com",
+      "email": "chuck.norris@example.com",
       "enabled": true,
       "emailVerified": true,
       "firstName": "Chuck",
       "lastName": "Norris",
-      "email": "chuck.norris@example.com",
       "credentials": [
         {
           "type": "password",
@@ -66,12 +66,12 @@
       ]
     },
     {
-      "username": "john.doe",
+      "username": "john.doe@example.com",
+      "email": "john.doe@example.com",
       "enabled": true,
       "emailVerified": true,
       "firstName": "John",
       "lastName": "Doe",
-      "email": "john.doe@example.com",
       "credentials": [
         {
           "type": "password",
@@ -117,66 +117,23 @@
         "allowRemoteResourceManagement": true,
         "policyEnforcementMode": "ENFORCING",
         "decisionStrategy": "UNANIMOUS",
-        "resources": [
-          {
-            "name": "Admin Resource",
-            "ownerManagedAccess": false,
-            "displayName": "admin-resource",
-            "uris": [
-              "/admin/*"
-            ]
-          },
-          {
-            "name": "Bookmark Resource",
-            "ownerManagedAccess": false,
-            "displayName": "bookmark-resource",
-            "uris": [
-              "/bookmarks/*"
-            ]
-          }
-        ],
         "policies": [
           {
-            "name": "Admin Policy",
-            "description": "Defines that only admin users are allowed",
-            "type": "role",
+            "name": "Owner Policy",
+            "description": "Grants access only for users that own a resource (based on \"owner\" resource attribute)",
+            "type": "script-owner-policy.js",
             "logic": "POSITIVE",
-            "decisionStrategy": "UNANIMOUS",
-            "config": {
-              "roles": "[{\"id\":\"admin\",\"required\":true}]"
-            }
+            "decisionStrategy": "AFFIRMATIVE"
           },
           {
-            "name": "User Policy",
-            "description": "Defines that authenticated users are allowed",
-            "type": "role",
-            "logic": "POSITIVE",
-            "decisionStrategy": "UNANIMOUS",
-            "config": {
-              "roles": "[{\"id\":\"user\",\"required\":true}]"
-            }
-          },
-          {
-            "name": "admin-permission",
-            "description": "Admin Permission",
+            "name": "Review Owner Permission",
+            "description": "Ensure only users that own a review resource have access",
             "type": "resource",
             "logic": "POSITIVE",
             "decisionStrategy": "UNANIMOUS",
             "config": {
-              "defaultResourceType": "",
-              "resources": "[\"Admin Resource\"]",
-              "applyPolicies": "[\"Admin Policy\"]"
-            }
-          },
-          {
-            "name": "user-permission",
-            "description": "User Permission",
-            "type": "resource",
-            "logic": "POSITIVE",
-            "decisionStrategy": "UNANIMOUS",
-            "config": {
-              "resources": "[\"Bookmark Resource\"]",
-              "applyPolicies": "[\"User Policy\"]"
+              "defaultResourceType": "urn:api-platform-api:resources:review",
+              "applyPolicies": "[\"Owner Policy\"]"
             }
           }
         ]

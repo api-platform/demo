@@ -24,7 +24,7 @@ const fetchOpenLibrarySearch = async (query: string, signal?: AbortSignal | unde
     const response = await fetch(`https://openlibrary.org/search.json?q=${query.replace(/ - /, ' ')}&limit=10`, {
       signal,
       method: "GET",
-      cache: "force-cache",
+      next: { revalidate: 3600 },
     });
     const results: Search = await response.json();
 

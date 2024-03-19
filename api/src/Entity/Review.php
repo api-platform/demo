@@ -16,6 +16,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\State\CreateProvider;
 use App\Repository\ReviewRepository;
+use App\Security\Voter\OidcTokenPermissionVoter;
 use App\Serializer\IriTransformerNormalizer;
 use App\State\Processor\ReviewPersistProcessor;
 use App\State\Processor\ReviewRemoveProcessor;
@@ -111,7 +112,8 @@ use Symfony\Component\Validator\Constraints as Assert;
                 'bookId' => new Link(toProperty: 'book', fromClass: Book::class),
                 'id' => new Link(fromClass: Review::class),
             ],
-            security: 'object.user === user',
+            /** @see OidcTokenPermissionVoter */
+            security: 'is_granted("OIDC_USER", request.getRequestUri())',
             // Mercure publish is done manually in MercureProcessor through ReviewPersistProcessor
             processor: ReviewPersistProcessor::class
         ),
@@ -121,7 +123,8 @@ use Symfony\Component\Validator\Constraints as Assert;
                 'bookId' => new Link(toProperty: 'book', fromClass: Book::class),
                 'id' => new Link(fromClass: Review::class),
             ],
-            security: 'object.user === user',
+            /** @see OidcTokenPermissionVoter */
+            security: 'is_granted("OIDC_USER", request.getRequestUri())',
             // Mercure publish is done manually in MercureProcessor through ReviewRemoveProcessor
             processor: ReviewRemoveProcessor::class
         ),

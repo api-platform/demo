@@ -67,7 +67,7 @@ class User implements UserInterface
      * @see https://schema.org/identifier
      */
     #[ApiProperty(types: ['https://schema.org/identifier'])]
-    #[Groups(groups: ['User:read', 'Review:read'])]
+    #[Groups(groups: ['User:read'])]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     public ?Uuid $sub = null;
 

@@ -12,12 +12,11 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata|undefined> {
   const id = params.id;
-  // @ts-ignore
-  const session: Session|null = await auth();
   try {
     const response: FetchResponse<Book> | undefined = await fetchApi(`/books/${id}`, {
-      next: { revalidate: 3600 },
-    }, session);
+      // next: { revalidate: 3600 },
+      cache: "no-cache",
+    });
     if (!response?.data) {
       throw new Error(`Unable to retrieve data from /books/${id}.`);
     }
@@ -39,7 +38,8 @@ async function getServerSideProps(id: string, session: Session|null): Promise<Sh
       headers: {
         Preload: "/books/*/reviews",
       },
-      next: { revalidate: 3600 },
+      // next: { revalidate: 3600 },
+      cache: "no-cache",
     }, session);
     if (!response?.data) {
       throw new Error(`Unable to retrieve data from /books/${id}.`);

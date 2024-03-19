@@ -46,7 +46,7 @@ when@test:
                 access_token:
                     token_handler:
                         oidc:
-                            claim: email
+                            claim: 'email'
                             audience: '%env(OIDC_AUD)%'
                             issuers: [ '%env(OIDC_SERVER_URL)%' ]
                             algorithm: 'ES256'

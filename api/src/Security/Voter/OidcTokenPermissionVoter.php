@@ -37,7 +37,6 @@ final class OidcTokenPermissionVoter extends OidcVoter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        // todo find a feature requiring this voter
         return str_starts_with($attribute, 'OIDC_') && !empty($subject);
     }
 

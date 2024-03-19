@@ -12,6 +12,7 @@ php:
   appDebug: "0"
   appSecret: ""
   corsAllowOrigin: "^https?://.*?\\.chart-example\\.local$"
+  oidcClientId: api-platform-api
   trustedHosts: "^127\\.0\\.0\\.1|localhost|.*\\.chart-example\\.local$"
   trustedProxies:
     - "127.0.0.1"

@@ -7,6 +7,8 @@ import { Error } from "../common/Error";
 import { type Review } from "../../types/Review";
 import { fetchApi } from "../../utils/dataAccess";
 import { Form } from "./Form";
+import {usePermission} from "../../utils/review";
+import {useOpenLibraryBook} from "../../utils/book";
 
 interface Props {
   review: Review;
@@ -22,10 +24,12 @@ interface DeleteParams {
 const deleteReview = async (id: string, session) => await fetchApi<Review>(id, { method: "DELETE" }, session);
 
 export const Item: FunctionComponent<Props> = ({ review, onDelete, onEdit }) => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [data, setData] = useState<Review>(review);
   const [error, setError] = useState<string | undefined>();
   const [edit, setEdit] = useState<boolean>(false);
+  // @ts-ignore
+  const isGranted = usePermission(data, session);
 
   const deleteMutation = useMutation({
     mutationFn: async ({ id }: DeleteParams) => deleteReview(id, session),
@@ -79,7 +83,7 @@ export const Item: FunctionComponent<Props> = ({ review, onDelete, onEdit }) => 
               </p>
               <p className="mt-2 mb-2 text-justify">{data["body"]}</p>
               {/* @ts-ignore */}
-              {!!session && !!session?.user?.sub && !!data["user"] && data["user"]["sub"] === session.user.sub && (
+              {isGranted && (
                 <div className="text-xs text-gray-400">
                   <a href="#" className="mr-1.5 text-gray-400 hover:underline" onClick={(e) => {
                     e.preventDefault();
