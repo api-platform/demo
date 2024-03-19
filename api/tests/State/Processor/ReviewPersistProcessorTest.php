@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Review;
 use App\Entity\User;
+use App\Security\Http\Protection\ResourceHandlerInterface;
 use App\State\Processor\ReviewPersistProcessor;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -25,6 +26,7 @@ final class ReviewPersistProcessorTest extends TestCase
     private MockObject|User $userMock;
     private MockObject|Review $objectMock;
     private ClockInterface|MockObject $clockMock;
+    private ResourceHandlerInterface|MockObject $resourceHandlerMock;
     private ReviewPersistProcessor $processor;
 
     protected function setUp(): void
@@ -35,12 +37,14 @@ final class ReviewPersistProcessorTest extends TestCase
         $this->userMock = $this->createMock(User::class);
         $this->objectMock = $this->createMock(Review::class);
         $this->clockMock = new MockClock();
+        $this->resourceHandlerMock = $this->createMock(ResourceHandlerInterface::class);
 
         $this->processor = new ReviewPersistProcessor(
             $this->persistProcessorMock,
             $this->mercureProcessorMock,
             $this->securityMock,
-            $this->clockMock
+            $this->clockMock,
+            $this->resourceHandlerMock
         );
     }
 
@@ -53,6 +57,7 @@ final class ReviewPersistProcessorTest extends TestCase
         $expectedData->user = $this->userMock;
         $expectedData->publishedAt = $this->clockMock->now();
 
+        $this->userMock->email = 'john.doe@example.com';
         $this->securityMock
             ->expects($this->once())
             ->method('getUser')
@@ -63,6 +68,13 @@ final class ReviewPersistProcessorTest extends TestCase
             ->method('process')
             ->with($expectedData, $operation, [], [])
             ->willReturn($expectedData)
+        ;
+        $this->resourceHandlerMock
+            ->expects($this->once())
+            ->method('create')
+            ->with($expectedData, $this->userMock, [
+                'operation_name' => '/books/{bookId}/reviews/{id}{._format}',
+            ])
         ;
         $this->mercureProcessorMock
             ->expects($this->exactly(2))
@@ -104,6 +116,10 @@ final class ReviewPersistProcessorTest extends TestCase
             ->method('process')
             ->with($expectedData, $operation, [], $context)
             ->willReturn($expectedData)
+        ;
+        $this->resourceHandlerMock
+            ->expects($this->never())
+            ->method('create')
         ;
         $this->mercureProcessorMock
             ->expects($this->exactly(2))

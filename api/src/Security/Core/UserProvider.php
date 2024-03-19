@@ -10,7 +10,6 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\AttributesBasedUserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Uid\Uuid;
 
 /**
  * @implements AttributesBasedUserProviderInterface<UserInterface|User>
@@ -45,15 +44,6 @@ final readonly class UserProvider implements AttributesBasedUserProviderInterfac
     {
         $user = $this->repository->findOneBy(['email' => $identifier]) ?: new User();
         $user->email = $identifier;
-
-        if (!isset($attributes['sub'])) {
-            throw new UnsupportedUserException('Property "sub" is missing in token attributes.');
-        }
-        try {
-            $user->sub = Uuid::fromString($attributes['sub']);
-        } catch (\Throwable $e) {
-            throw new UnsupportedUserException($e->getMessage(), $e->getCode(), $e);
-        }
 
         if (!isset($attributes['given_name'])) {
             throw new UnsupportedUserException('Property "given_name" is missing in token attributes.');

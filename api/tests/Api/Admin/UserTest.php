@@ -12,7 +12,6 @@ use App\Tests\Api\Admin\Trait\UsersDataProviderTrait;
 use App\Tests\Api\Security\TokenGenerator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use Symfony\Component\Uid\Uuid;
 use Zenstruck\Foundry\FactoryCollection;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
@@ -27,7 +26,7 @@ final class UserTest extends ApiTestCase
 
     protected function setup(): void
     {
-        $this->client = self::createClient();
+        $this->client = self::createClient(['debug' => true]);
     }
 
     #[Test]
@@ -156,12 +155,9 @@ final class UserTest extends ApiTestCase
         $user = UserFactory::createOne([
             'firstName' => 'John',
             'lastName' => 'DOE',
-            'sub' => Uuid::fromString('b5c5bff1-5b5f-4a73-8fc8-4ea8f18586a9'),
         ])->disableAutoRefresh();
 
-        $sub = Uuid::v7()->__toString();
         $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
-            'sub' => $sub,
             'email' => $user->email,
             'given_name' => 'Chuck',
             'family_name' => 'NORRIS',
@@ -176,6 +172,5 @@ final class UserTest extends ApiTestCase
         self::assertEquals('Chuck', $user->firstName);
         self::assertEquals('NORRIS', $user->lastName);
         self::assertEquals('Chuck NORRIS', $user->getName());
-        self::assertEquals($sub, $user->sub);
     }
 }

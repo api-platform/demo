@@ -15,7 +15,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Uid\Uuid;
 
 final class UserProviderTest extends TestCase
 {
@@ -102,12 +101,8 @@ final class UserProviderTest extends TestCase
 
     public static function getInvalidAttributes(): iterable
     {
-        yield 'missing sub' => [[]];
-        yield 'missing given_name' => [[
-            'sub' => 'ba86c94b-efeb-4452-a0b4-93ed3c889156',
-        ]];
+        yield 'missing given_name' => [[]];
         yield 'missing family_name' => [[
-            'sub' => 'ba86c94b-efeb-4452-a0b4-93ed3c889156',
             'given_name' => 'John',
         ]];
     }
@@ -128,7 +123,6 @@ final class UserProviderTest extends TestCase
         ;
 
         $this->assertSame($this->userMock, $this->provider->loadUserByIdentifier('john.doe@example.com', [
-            'sub' => 'ba86c94b-efeb-4452-a0b4-93ed3c889156',
             'given_name' => 'John',
             'family_name' => 'DOE',
         ]));
@@ -140,7 +134,6 @@ final class UserProviderTest extends TestCase
         $expectedUser = new User();
         $expectedUser->firstName = 'John';
         $expectedUser->lastName = 'DOE';
-        $expectedUser->sub = Uuid::fromString('ba86c94b-efeb-4452-a0b4-93ed3c889156');
         $expectedUser->email = 'john.doe@example.com';
 
         $this->repositoryMock
@@ -156,7 +149,6 @@ final class UserProviderTest extends TestCase
         ;
 
         $this->assertEquals($expectedUser, $this->provider->loadUserByIdentifier('john.doe@example.com', [
-            'sub' => 'ba86c94b-efeb-4452-a0b4-93ed3c889156',
             'given_name' => 'John',
             'family_name' => 'DOE',
         ]));
