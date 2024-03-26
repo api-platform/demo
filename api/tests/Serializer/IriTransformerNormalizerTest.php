@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Serializer;
 
 use ApiPlatform\Api\IriConverterInterface;
-use ApiPlatform\Api\UrlGeneratorInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Operation\Factory\OperationMetadataFactoryInterface;
 use App\Serializer\IriTransformerNormalizer;

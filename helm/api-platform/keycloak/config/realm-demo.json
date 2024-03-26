@@ -1,43 +1,148 @@
 {
   "realm": "demo",
   "displayName": "API Platform - Demo",
+  "accessCodeLifespan": 1,
   "enabled": true,
   "registrationAllowed": false,
-  "accessCodeLifespan": 1,
+  "loginWithEmailAllowed": true,
   "loginTheme": "api-platform-demo",
+  "roles": {
+    "realm": [
+      {
+        "name": "admin",
+        "description": "Admin role (includes 'user' role)",
+        "composite": true,
+        "composites": {
+          "realm": [
+            "user"
+          ]
+        },
+        "clientRole": false
+      },
+      {
+        "id": "0a34f93f-a81a-4edd-b6a2-7ed3d06a392c",
+        "name": "user",
+        "description": "User role (default role on an authenticated user)",
+        "composite": false,
+        "clientRole": false
+      }
+    ],
+    "client": {
+      "api-platform-api": [
+        {
+          "name": "uma_protection",
+          "composite": false,
+          "clientRole": true,
+          "containerId": "6832d039-5543-4e66-afc5-bc5057e8234d"
+        }
+      ],
+      "api-platform-pwa": [],
+      "api-platform-swagger": []
+    }
+  },
+  "defaultRole": {
+    "id": "0a34f93f-a81a-4edd-b6a2-7ed3d06a392c",
+    "name": "user",
+    "description": "User role (default role on an authenticated user)",
+    "composite": false,
+    "clientRole": false
+  },
   "users": [
     {
-      "username": "chuck.norris",
+      "username": "chuck.norris@example.com",
+      "email": "chuck.norris@example.com",
       "enabled": true,
       "emailVerified": true,
       "firstName": "Chuck",
       "lastName": "Norris",
-      "email": "chuck.norris@example.com",
       "credentials": [
         {
           "type": "password",
           "value": "Pa55w0rd"
         }
+      ],
+      "realmRoles": [
+        "admin"
       ]
     },
     {
-      "username": "john.doe",
+      "username": "john.doe@example.com",
+      "email": "john.doe@example.com",
       "enabled": true,
       "emailVerified": true,
       "firstName": "John",
       "lastName": "Doe",
-      "email": "john.doe@example.com",
       "credentials": [
         {
           "type": "password",
           "value": "Pa55w0rd"
         }
+      ],
+      "realmRoles": [
+        "user"
       ]
+    }
+  ],
+  "clientScopes": [
+    {
+      "name": "roles",
+      "attributes": {
+        "include.in.token.scope": "true"
+      }
     }
   ],
   "clients": [
     {
+      "id": "6832d039-5543-4e66-afc5-bc5057e8234d",
+      "clientId": "api-platform-api",
+      "description": "Confidential client to check authorizations (RBAC)",
+      "name": "API Platform API",
+      "enabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "sEocbxCy7iFS8NzYzWyQ71QgxTDZ9fnU",
+      "redirectUris": [
+        "/*"
+      ],
+      "webOrigins": [
+        "/*"
+      ],
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": true,
+      "authorizationServicesEnabled": true,
+      "publicClient": false,
+      "protocol": "openid-connect",
+      "fullScopeAllowed": true,
+      "authorizationSettings": {
+        "allowRemoteResourceManagement": true,
+        "policyEnforcementMode": "ENFORCING",
+        "decisionStrategy": "UNANIMOUS",
+        "policies": [
+          {
+            "name": "Owner Policy",
+            "description": "Grants access only for users that own a resource (based on \"owner\" resource attribute)",
+            "type": "script-owner-policy.js",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE"
+          },
+          {
+            "name": "Review Owner Permission",
+            "description": "Ensure only users that own a review resource have access",
+            "type": "resource",
+            "logic": "POSITIVE",
+            "decisionStrategy": "UNANIMOUS",
+            "config": {
+              "defaultResourceType": "urn:api-platform-api:resources:review",
+              "applyPolicies": "[\"Owner Policy\"]"
+            }
+          }
+        ]
+      }
+    },
+    {
       "clientId": "api-platform-swagger",
+      "name": "API Platform Swagger UI",
+      "description": "Public client for Swagger UI",
       "enabled": true,
       "redirectUris": ["*"],
       "webOrigins": ["*"],
@@ -45,6 +150,8 @@
     },
     {
       "clientId": "api-platform-pwa",
+      "name": "API Platform PWA",
+      "description": "Public client for the PWA",
       "enabled": true,
       "redirectUris": ["*"],
       "webOrigins": ["*"],

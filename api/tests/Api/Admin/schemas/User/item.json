@@ -18,12 +18,6 @@
             "type": "string",
             "pattern": "^https://schema.org/Person$"
         },
-        "sub": {
-            "externalDocs": {
-                "url": "https:\/\/schema.org\/identifier"
-            },
-            "type": "string"
-        },
         "firstName": {
             "description": "The givenName of the person",
             "externalDocs": {
@@ -50,7 +44,6 @@
         "@context",
         "@id",
         "@type",
-        "sub",
         "firstName",
         "lastName",
         "name"

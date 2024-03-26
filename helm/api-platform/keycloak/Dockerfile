@@ -16,3 +16,4 @@ FROM bitnami/keycloak:23-debian-11 AS keycloak_upstream
 FROM keycloak_upstream AS keycloak
 
 COPY --link themes/api-platform-demo /opt/bitnami/keycloak/themes/api-platform-demo
+COPY --link providers/owner-policy.jar /opt/bitnami/keycloak/providers/owner-policy.jar

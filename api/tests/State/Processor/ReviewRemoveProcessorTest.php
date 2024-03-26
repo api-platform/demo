@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\State\Processor;
 
 use ApiPlatform\Api\IriConverterInterface;
-use ApiPlatform\Api\UrlGeneratorInterface;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Operation;
@@ -13,7 +12,8 @@ use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInter
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Review;
-use App\State\Processor\MercureProcessor;
+use App\Entity\User;
+use App\Security\Http\Protection\ResourceHandlerInterface;
 use App\State\Processor\ReviewRemoveProcessor;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -28,6 +28,7 @@ final class ReviewRemoveProcessorTest extends TestCase
     private IriConverterInterface|MockObject $iriConverterMock;
     private MockObject|Review $objectMock;
     private MockObject|Operation $operationMock;
+    private ResourceHandlerInterface|MockObject $resourceHandlerMock;
     private ReviewRemoveProcessor $processor;
 
     protected function setUp(): void
@@ -35,6 +36,7 @@ final class ReviewRemoveProcessorTest extends TestCase
         $this->removeProcessorMock = $this->createMock(ProcessorInterface::class);
         $this->mercureProcessorMock = $this->createMock(ProcessorInterface::class);
         $this->resourceMetadataCollectionFactoryMock = $this->createMock(ResourceMetadataCollectionFactoryInterface::class);
+        $this->resourceHandlerMock = $this->createMock(ResourceHandlerInterface::class);
         $this->resourceMetadataCollection = new ResourceMetadataCollection(Review::class, [
             new ApiResource(operations: [new Get('/admin/reviews/{id}{._format}')]),
             new ApiResource(operations: [new Get('/books/{bookId}/reviews/{id}{._format}')]),
@@ -47,7 +49,8 @@ final class ReviewRemoveProcessorTest extends TestCase
             $this->removeProcessorMock,
             $this->mercureProcessorMock,
             $this->resourceMetadataCollectionFactoryMock,
-            $this->iriConverterMock
+            $this->iriConverterMock,
+            $this->resourceHandlerMock
         );
     }
 
@@ -82,6 +85,15 @@ final class ReviewRemoveProcessorTest extends TestCase
                 '/admin/reviews/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6',
                 '/books/8ad70d36-abaf-4c9b-aeaa-7ec63e6ca6f3/reviews/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6',
             )
+        ;
+        $this->objectMock->user = $this->createMock(User::class);
+        $this->objectMock->user->email = 'john.doe@example.com';
+        $this->resourceHandlerMock
+            ->expects($this->once())
+            ->method('delete')
+            ->with($this->objectMock, $this->objectMock->user, [
+                'operation_name' => '/books/{bookId}/reviews/{id}{._format}',
+            ])
         ;
         $this->mercureProcessorMock
             ->expects($this->exactly(2))

@@ -12,7 +12,7 @@ use App\DataFixtures\Factory\UserFactory;
 use App\Entity\Book;
 use App\Entity\Bookmark;
 use App\Repository\BookmarkRepository;
-use App\Tests\Api\Trait\SecurityTrait;
+use App\Tests\Api\Security\TokenGenerator;
 use App\Tests\Api\Trait\SerializerTrait;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,7 +25,6 @@ final class BookmarkTest extends ApiTestCase
 {
     use Factories;
     use ResetDatabase;
-    use SecurityTrait;
     use SerializerTrait;
 
     private Client $client;
@@ -62,8 +61,9 @@ final class BookmarkTest extends ApiTestCase
         $user = UserFactory::createOne();
         BookmarkFactory::createMany(35, ['user' => $user]);
 
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => $user->email,
+            'authorize' => true,
         ]);
 
         $response = $this->client->request('GET', '/bookmarks', ['auth_bearer' => $token]);
@@ -105,8 +105,9 @@ final class BookmarkTest extends ApiTestCase
     #[Test]
     public function asAUserICannotCreateABookmarkWithInvalidData(): void
     {
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => UserFactory::createOne()->email,
+            'authorize' => true,
         ]);
 
         $uuid = Uuid::v7()->__toString();
@@ -148,8 +149,9 @@ final class BookmarkTest extends ApiTestCase
         $user = UserFactory::createOne();
         self::getMercureHub()->reset();
 
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => $user->email,
+            'authorize' => true,
         ]);
 
         $response = $this->client->request('POST', '/bookmarks', [
@@ -194,8 +196,9 @@ final class BookmarkTest extends ApiTestCase
         $user = UserFactory::createOne();
         BookmarkFactory::createOne(['book' => $book, 'user' => $user]);
 
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => $user->email,
+            'authorize' => true,
         ]);
 
         $this->client->request('POST', '/bookmarks', [
@@ -241,8 +244,9 @@ final class BookmarkTest extends ApiTestCase
     {
         $bookmark = BookmarkFactory::createOne(['user' => UserFactory::createOne()]);
 
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => UserFactory::createOne()->email,
+            'authorize' => false,
         ]);
 
         $this->client->request('DELETE', '/bookmarks/' . $bookmark->getId(), [
@@ -262,7 +266,7 @@ final class BookmarkTest extends ApiTestCase
     #[Test]
     public function asAUserICannotDeleteAnInvalidBookmark(): void
     {
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => UserFactory::createOne()->email,
         ]);
 
@@ -285,8 +289,9 @@ final class BookmarkTest extends ApiTestCase
 
         $id = $bookmark->getId();
 
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => $bookmark->user->email,
+            'authorize' => true,
         ]);
 
         $response = $this->client->request('DELETE', '/bookmarks/' . $bookmark->getId(), [

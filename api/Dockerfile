@@ -27,12 +27,14 @@ RUN apt-get update; \
 		file \
 		gettext \
 		git \
+		zip \
 	; \
 	rm -rf /var/lib/apt/lists/*
 
 RUN set -eux; \
 	install-php-extensions \
 		apcu \
+		bcmath \
 		intl \
 		opcache \
 		zip \

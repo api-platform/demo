@@ -30,17 +30,17 @@ use Symfony\Component\Uid\Uuid;
         new GetCollection(
             uriTemplate: '/admin/users{._format}',
             itemUriTemplate: '/admin/users/{id}{._format}',
-            security: 'is_granted("ROLE_ADMIN")',
+            security: 'is_granted("OIDC_ADMIN")',
             filters: ['app.filter.user.admin.name'],
             paginationClientItemsPerPage: true
         ),
         new Get(
             uriTemplate: '/admin/users/{id}{._format}',
-            security: 'is_granted("ROLE_ADMIN")'
+            security: 'is_granted("OIDC_ADMIN")'
         ),
         new Get(
             uriTemplate: '/users/{id}{._format}',
-            security: 'is_granted("ROLE_USER") and object.getUserIdentifier() === user.getUserIdentifier()'
+            security: 'object === user'
         ),
     ],
     normalizationContext: [
@@ -62,14 +62,6 @@ class User implements UserInterface
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\Id]
     private ?Uuid $id = null;
-
-    /**
-     * @see https://schema.org/identifier
-     */
-    #[ApiProperty(types: ['https://schema.org/identifier'])]
-    #[Groups(groups: ['User:read', 'Review:read'])]
-    #[ORM\Column(type: UuidType::NAME, unique: true)]
-    public ?Uuid $sub = null;
 
     /**
      * @see https://schema.org/email

@@ -61,6 +61,11 @@ spec:
                 configMapKeyRef:
                   name: {{ include "api-platform.fullname" . }}
                   key: pwa-client-id
+            - name: OIDC_AUTHORIZATION_CLIENT_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: pwa-authorization-client-id
           ports:
             - name: http
               containerPort: 3000

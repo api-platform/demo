@@ -22,3 +22,11 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+when@test:
+    services:
+        App\Tests\Api\Security\:
+            resource: '../tests/Api/Security/'
+            autowire: true
+            autoconfigure: true
+            public: true

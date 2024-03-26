@@ -1,0 +1,44 @@
+jose:
+    jws:
+        serializers:
+            oidc:
+                serializers: ['jws_compact']
+                is_public: true
+        loaders:
+            oidc:
+                serializers: ['jws_compact']
+                signature_algorithms: ['HS256', 'RS256', 'ES256']
+                header_checkers: ['alg', 'iat', 'nbf', 'exp', 'aud', 'iss']
+                is_public: true
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Jose\Component\Checker\AlgorithmChecker:
+        arguments:
+            $supportedAlgorithms: ['HS256', 'RS256', 'ES256']
+        tags:
+            - name: 'jose.checker.header'
+              alias: 'alg'
+    Jose\Component\Checker\AudienceChecker:
+        arguments:
+            $audience: '%env(OIDC_AUD)%'
+        tags:
+            - name: 'jose.checker.header'
+              alias: 'aud'
+    Jose\Component\Checker\IssuerChecker:
+        arguments:
+            $issuers: ['%env(OIDC_SERVER_URL)%']
+        tags:
+            - name: 'jose.checker.header'
+              alias: 'iss'
+
+when@test:
+    jose:
+        jws:
+            builders:
+                oidc:
+                    signature_algorithms: ['HS256', 'RS256', 'ES256']
+                    is_public: true
