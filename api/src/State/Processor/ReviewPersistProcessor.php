@@ -29,7 +29,8 @@ final readonly class ReviewPersistProcessor implements ProcessorInterface
         private ProcessorInterface $mercureProcessor,
         private Security $security,
         private ClockInterface $clock
-    ) {}
+    ) {
+    }
 
     /**
      * @param Review $data

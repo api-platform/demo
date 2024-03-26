@@ -15,9 +15,9 @@ use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Book;
 use App\State\Processor\BookRemoveProcessor;
 use App\State\Processor\MercureProcessor;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 final class BookRemoveProcessorTest extends TestCase
 {

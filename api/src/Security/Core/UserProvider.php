@@ -17,7 +17,9 @@ use Symfony\Component\Uid\Uuid;
  */
 final readonly class UserProvider implements AttributesBasedUserProviderInterface
 {
-    public function __construct(private ManagerRegistry $registry, private UserRepository $repository) {}
+    public function __construct(private ManagerRegistry $registry, private UserRepository $repository)
+    {
+    }
 
     public function refreshUser(UserInterface $user): UserInterface
     {

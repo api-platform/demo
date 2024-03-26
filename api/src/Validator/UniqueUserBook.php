@@ -11,7 +11,7 @@ final class UniqueUserBook extends Constraint
 {
     public string $message = 'The book is already related to the current user.';
 
-    public function __construct(array $options = null, string $message = null, array $groups = null, mixed $payload = null)
+    public function __construct(?array $options = null, ?string $message = null, ?array $groups = null, mixed $payload = null)
     {
         parent::__construct($options ?? [], $groups, $payload);
 

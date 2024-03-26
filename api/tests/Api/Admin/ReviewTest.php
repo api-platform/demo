@@ -16,12 +16,12 @@ use App\Tests\Api\Admin\Trait\UsersDataProviderTrait;
 use App\Tests\Api\Trait\SecurityTrait;
 use App\Tests\Api\Trait\SerializerTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\Update;
 use Zenstruck\Foundry\FactoryCollection;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
-use PHPUnit\Framework\Attributes\Test;
 
 final class ReviewTest extends ApiTestCase
 {
@@ -64,7 +64,7 @@ final class ReviewTest extends ApiTestCase
 
     #[Test]
     #[DataProvider(methodName: 'getAdminUrls')]
-    public function asAdminUserICanGetACollectionOfReviews(FactoryCollection $factory, callable|string $url, int $hydraTotalItems, int $itemsPerPage = null): void
+    public function asAdminUserICanGetACollectionOfReviews(FactoryCollection $factory, callable|string $url, int $hydraTotalItems, ?int $itemsPerPage = null): void
     {
         $factory->create();
 

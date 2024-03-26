@@ -14,7 +14,9 @@ use Zenstruck\Foundry\Story;
 
 final class DefaultStory extends Story
 {
-    public function __construct(private readonly DecoderInterface $decoder) {}
+    public function __construct(private readonly DecoderInterface $decoder)
+    {
+    }
 
     public function build(): void
     {

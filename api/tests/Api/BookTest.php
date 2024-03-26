@@ -10,11 +10,11 @@ use App\DataFixtures\Factory\BookFactory;
 use App\DataFixtures\Factory\ReviewFactory;
 use App\Enum\BookCondition;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;
 use Zenstruck\Foundry\FactoryCollection;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
-use PHPUnit\Framework\Attributes\Test;
 
 final class BookTest extends ApiTestCase
 {

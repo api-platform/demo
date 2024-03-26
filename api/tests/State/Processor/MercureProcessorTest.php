@@ -13,13 +13,13 @@ use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInter
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use App\Entity\Book;
 use App\State\Processor\MercureProcessor;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\HubRegistry;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Serializer\SerializerInterface;
-use PHPUnit\Framework\Attributes\Test;
 
 final class MercureProcessorTest extends TestCase
 {

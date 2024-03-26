@@ -15,12 +15,12 @@ use App\Tests\Api\Admin\Trait\UsersDataProviderTrait;
 use App\Tests\Api\Trait\SecurityTrait;
 use App\Tests\Api\Trait\SerializerTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\Update;
 use Zenstruck\Foundry\FactoryCollection;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
-use PHPUnit\Framework\Attributes\Test;
 
 final class BookTest extends ApiTestCase
 {
@@ -63,7 +63,7 @@ final class BookTest extends ApiTestCase
 
     #[Test]
     #[DataProvider(methodName: 'getUrls')]
-    public function asAdminUserICanGetACollectionOfBooks(FactoryCollection $factory, string $url, int $hydraTotalItems, int $itemsPerPage = null): void
+    public function asAdminUserICanGetACollectionOfBooks(FactoryCollection $factory, string $url, int $hydraTotalItems, ?int $itemsPerPage = null): void
     {
         // Cannot use Factory as data provider because BookFactory has a service dependency
         $factory->create();
@@ -315,11 +315,11 @@ final class BookTest extends ApiTestCase
             [
                 '@type' => 'ConstraintViolationList',
                 'hydra:title' => 'An error occurred',
-                'hydra:description' => 'condition: This value should be of type '.BookCondition::class.'.',
+                'hydra:description' => 'condition: This value should be of type ' . BookCondition::class . '.',
                 'violations' => [
                     [
                         'propertyPath' => 'condition',
-                        'hint' => 'The data must belong to a backed enumeration of type '.BookCondition::class,
+                        'hint' => 'The data must belong to a backed enumeration of type ' . BookCondition::class,
                     ],
                 ],
             ],
@@ -333,11 +333,11 @@ final class BookTest extends ApiTestCase
             [
                 '@type' => 'ConstraintViolationList',
                 'hydra:title' => 'An error occurred',
-                'hydra:description' => 'condition: This value should be of type '.BookCondition::class.'.',
+                'hydra:description' => 'condition: This value should be of type ' . BookCondition::class . '.',
                 'violations' => [
                     [
                         'propertyPath' => 'condition',
-                        'hint' => 'The data must belong to a backed enumeration of type '.BookCondition::class,
+                        'hint' => 'The data must belong to a backed enumeration of type ' . BookCondition::class,
                     ],
                 ],
             ],

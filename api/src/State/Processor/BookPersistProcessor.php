@@ -29,7 +29,8 @@ final readonly class BookPersistProcessor implements ProcessorInterface
         private ProcessorInterface $mercureProcessor,
         private HttpClientInterface $client,
         private DecoderInterface $decoder
-    ) {}
+    ) {
+    }
 
     /**
      * @param Book $data

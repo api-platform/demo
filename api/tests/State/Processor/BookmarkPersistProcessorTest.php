@@ -9,12 +9,12 @@ use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Bookmark;
 use App\Entity\User;
 use App\State\Processor\BookmarkPersistProcessor;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Clock\ClockInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Clock\MockClock;
-use PHPUnit\Framework\Attributes\Test;
 
 final class BookmarkPersistProcessorTest extends TestCase
 {

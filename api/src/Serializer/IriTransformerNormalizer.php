@@ -21,9 +21,10 @@ final class IriTransformerNormalizer implements NormalizerInterface, NormalizerA
     public function __construct(
         private readonly IriConverterInterface $iriConverter,
         private readonly OperationMetadataFactoryInterface $operationMetadataFactory
-    ) {}
+    ) {
+    }
 
-    public function normalize(mixed $object, string $format = null, array $context = []): array
+    public function normalize(mixed $object, ?string $format = null, array $context = []): array
     {
         /** @var array $data */
         $data = $this->normalizer->normalize($object, $format, $context + [self::class => true]);
@@ -54,7 +55,7 @@ final class IriTransformerNormalizer implements NormalizerInterface, NormalizerA
         return $data;
     }
 
-    public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
         return \is_object($data)
             && !is_iterable($data)

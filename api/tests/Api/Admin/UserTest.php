@@ -11,11 +11,11 @@ use App\Repository\UserRepository;
 use App\Tests\Api\Admin\Trait\UsersDataProviderTrait;
 use App\Tests\Api\Trait\SecurityTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Uid\Uuid;
 use Zenstruck\Foundry\FactoryCollection;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
-use PHPUnit\Framework\Attributes\Test;
 
 final class UserTest extends ApiTestCase
 {
@@ -57,7 +57,7 @@ final class UserTest extends ApiTestCase
 
     #[Test]
     #[DataProvider(methodName: 'getAdminUrls')]
-    public function asAdminUserICanGetACollectionOfUsers(FactoryCollection $factory, callable|string $url, int $hydraTotalItems, int $itemsPerPage = null): void
+    public function asAdminUserICanGetACollectionOfUsers(FactoryCollection $factory, callable|string $url, int $hydraTotalItems, ?int $itemsPerPage = null): void
     {
         $factory->create();
 

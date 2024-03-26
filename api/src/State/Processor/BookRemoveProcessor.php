@@ -29,7 +29,8 @@ final readonly class BookRemoveProcessor implements ProcessorInterface
         private ProcessorInterface $mercureProcessor,
         private ResourceMetadataCollectionFactoryInterface $resourceMetadataCollectionFactory,
         private IriConverterInterface $iriConverter
-    ) {}
+    ) {
+    }
 
     /**
      * @param Book $data

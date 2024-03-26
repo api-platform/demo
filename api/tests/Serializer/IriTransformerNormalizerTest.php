@@ -10,10 +10,10 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Operation\Factory\OperationMetadataFactoryInterface;
 use App\Serializer\IriTransformerNormalizer;
 use Doctrine\Common\Collections\ArrayCollection;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use PHPUnit\Framework\Attributes\Test;
 
 final class IriTransformerNormalizerTest extends TestCase
 {
