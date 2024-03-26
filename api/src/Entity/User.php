@@ -101,7 +101,9 @@ class User implements UserInterface
         return $this->id;
     }
 
-    public function eraseCredentials(): void {}
+    public function eraseCredentials(): void
+    {
+    }
 
     /**
      * @return array<int, string>

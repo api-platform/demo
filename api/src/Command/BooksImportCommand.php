@@ -84,7 +84,7 @@ final class BooksImportCommand extends Command
 
         $io->progressFinish();
 
-        $output->write($this->serializer->serialize($data, 'json', [JsonEncode::OPTIONS => JSON_PRETTY_PRINT]));
+        $output->write($this->serializer->serialize($data, 'json', [JsonEncode::OPTIONS => \JSON_PRETTY_PRINT]));
 
         return Command::SUCCESS;
     }

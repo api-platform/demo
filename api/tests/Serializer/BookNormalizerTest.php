@@ -8,12 +8,12 @@ use App\Entity\Book;
 use App\Enum\BookCondition;
 use App\Repository\ReviewRepository;
 use App\Serializer\BookNormalizer;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Uid\Uuid;
-use PHPUnit\Framework\Attributes\Test;
 
 final class BookNormalizerTest extends TestCase
 {

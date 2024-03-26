@@ -31,7 +31,8 @@ final readonly class MercureProcessor implements ProcessorInterface
         private ResourceMetadataCollectionFactoryInterface $resourceMetadataCollectionFactory,
         #[Autowire('%api_platform.formats%')]
         private array $formats
-    ) {}
+    ) {
+    }
 
     /**
      * @param array{item_uri_template?: string, topics?: array, mercure_data?: string} $context

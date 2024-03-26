@@ -9,11 +9,11 @@ use ApiPlatform\Metadata\Operation;
 use App\Doctrine\Orm\Extension\BookmarkQueryCollectionExtension;
 use App\Entity\Bookmark;
 use Doctrine\ORM\QueryBuilder;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
-use PHPUnit\Framework\Attributes\Test;
 
 final class BookmarkQueryCollectionExtensionTest extends TestCase
 {

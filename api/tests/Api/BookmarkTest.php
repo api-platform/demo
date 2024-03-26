@@ -128,11 +128,11 @@ final class BookmarkTest extends ApiTestCase
         self::assertJsonContains([
             '@type' => 'ConstraintViolationList',
             'hydra:title' => 'An error occurred',
-            'hydra:description' => 'book: This value should be of type '.Book::class.'.',
+            'hydra:description' => 'book: This value should be of type ' . Book::class . '.',
             'violations' => [
                 [
                     'propertyPath' => 'book',
-                    'hint' => 'Item not found for "/books/'.$uuid.'".',
+                    'hint' => 'Item not found for "/books/' . $uuid . '".',
                 ],
             ],
         ]);

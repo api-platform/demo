@@ -25,7 +25,8 @@ final readonly class BookmarkPersistProcessor implements ProcessorInterface
         private ProcessorInterface $persistProcessor,
         private Security $security,
         private ClockInterface $clock
-    ) {}
+    ) {
+    }
 
     /**
      * @param Bookmark $data

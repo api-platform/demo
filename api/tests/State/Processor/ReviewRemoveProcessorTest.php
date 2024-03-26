@@ -15,9 +15,9 @@ use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Review;
 use App\State\Processor\MercureProcessor;
 use App\State\Processor\ReviewRemoveProcessor;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 final class ReviewRemoveProcessorTest extends TestCase
 {

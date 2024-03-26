@@ -23,7 +23,8 @@ final class UniqueUserBookValidator extends ConstraintValidator
         private readonly Security $security,
         private readonly ManagerRegistry $registry,
         private readonly PropertyAccessorInterface $propertyAccessor
-    ) {}
+    ) {
+    }
 
     /**
      * @param Bookmark|Review|null $value

@@ -19,7 +19,7 @@ trait SerializerTrait
         static::fail('A client must have Serializer enabled to make serialization. Did you forget to require symfony/serializer?');
     }
 
-    public static function getOperationNormalizationContext(string $resourceClass, string $operationName = null): array
+    public static function getOperationNormalizationContext(string $resourceClass, ?string $operationName = null): array
     {
         if ($resourceMetadataFactoryCollection = static::getContainer()->get('api_platform.metadata.resource.metadata_collection_factory')) {
             $operation = $resourceMetadataFactoryCollection->create($resourceClass)->getOperation($operationName);
