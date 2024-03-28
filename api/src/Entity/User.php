@@ -85,9 +85,6 @@ class User implements UserInterface
     #[ORM\Column]
     public ?string $lastName = null;
 
-    #[ORM\Column(type: 'json')]
-    public array $roles = [];
-
     public function getId(): ?Uuid
     {
         return $this->id;
@@ -102,7 +99,7 @@ class User implements UserInterface
      */
     public function getRoles(): array
     {
-        return $this->roles;
+        return ['ROLE_USER'];
     }
 
     public function getUserIdentifier(): string
