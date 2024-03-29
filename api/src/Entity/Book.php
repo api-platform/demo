@@ -120,7 +120,7 @@ class Book
     #[ApiFilter(OrderFilter::class)]
     #[ApiFilter(SearchFilter::class, strategy: 'i' . SearchFilterInterface::STRATEGY_PARTIAL)]
     #[ApiProperty(
-        types: ['https://schema.org/name'],
+        iris: ['https://schema.org/name'],
         example: 'Hyperion'
     )]
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Review:read:admin'])]
