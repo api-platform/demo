@@ -628,18 +628,17 @@ final class BookTest extends ApiTestCase
         self::assertEmpty($response->getContent());
         BookFactory::assert()->notExists(['title' => 'Hyperion']);
         self::assertCount(2, self::getMercureMessages());
-        // todo how to ensure it's a delete update
         self::assertEquals(
             new Update(
                 topics: ['http://localhost/admin/books/' . $id],
-                data: json_encode(['@id' => 'http://localhost/admin/books/' . $id])
+                data: json_encode(['@id' => 'http://localhost/admin/books/' . $id]),
             ),
             self::getMercureMessage()
         );
         self::assertEquals(
             new Update(
                 topics: ['http://localhost/books/' . $id],
-                data: json_encode(['@id' => 'http://localhost/books/' . $id])
+                data: json_encode(['@id' => 'http://localhost/books/' . $id]),
             ),
             self::getMercureMessage(1)
         );

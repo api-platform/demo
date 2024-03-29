@@ -182,7 +182,7 @@ final class BookmarkTest extends ApiTestCase
                     $object,
                     'jsonld',
                     self::getOperationNormalizationContext(Bookmark::class, '/bookmarks/{id}{._format}')
-                )
+                ),
             )
         );
     }
@@ -297,11 +297,10 @@ final class BookmarkTest extends ApiTestCase
         self::assertEmpty($response->getContent());
         BookmarkFactory::assert()->notExists(['book' => $book]);
         self::assertCount(1, self::getMercureMessages());
-        // todo how to ensure it's a delete update
         self::assertEquals(
             new Update(
                 topics: ['http://localhost/bookmarks/' . $id],
-                data: json_encode(['@id' => '/bookmarks/' . $id, '@type' => 'https://schema.org/BookmarkAction'])
+                data: json_encode(['@id' => '/bookmarks/' . $id, '@type' => 'https://schema.org/BookmarkAction']),
             ),
             self::getMercureMessage()
         );

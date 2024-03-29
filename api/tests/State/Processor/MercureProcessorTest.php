@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\State\Processor;
 
 use ApiPlatform\Api\IriConverterInterface;
-use ApiPlatform\Api\UrlGeneratorInterface;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Operation;
@@ -63,8 +62,9 @@ final class MercureProcessorTest extends TestCase
         $this->iriConverterMock
             ->expects($this->once())
             ->method('getIriFromResource')
-            ->with($this->objectMock, UrlGeneratorInterface::ABS_URL, $this->operationMock)
-            ->willReturn('/books/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6')
+            ->willReturnOnConsecutiveCalls(
+                'https://example.com/books/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6',
+            )
         ;
         $this->operationMock
             ->expects($this->once())
@@ -81,7 +81,7 @@ final class MercureProcessorTest extends TestCase
             ->expects($this->once())
             ->method('publish')
             ->with($this->equalTo(new Update(
-                topics: ['/books/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6'],
+                topics: ['https://example.com/books/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6'],
                 data: json_encode(['foo' => 'bar']),
             )))
         ;
@@ -105,14 +105,14 @@ final class MercureProcessorTest extends TestCase
             ->expects($this->once())
             ->method('publish')
             ->with($this->equalTo(new Update(
-                topics: ['/admin/books/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6'],
+                topics: ['https://example.com/admin/books/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6'],
                 data: json_encode(['bar' => 'baz']),
             )))
         ;
 
         $this->processor->process($this->objectMock, $this->operationMock, [], [
             'item_uri_template' => '/admin/books/{id}{._format}',
-            'topics' => ['/admin/books/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6'],
+            'topics' => ['https://example.com/admin/books/9aff4b91-31cf-4e91-94b0-1d52bbe23fe6'],
             MercureProcessor::DATA => json_encode(['bar' => 'baz']),
         ]);
     }
