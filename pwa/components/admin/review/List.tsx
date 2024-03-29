@@ -10,9 +10,9 @@ import {
   AutocompleteInput,
 } from "react-admin";
 
-import { BookField } from "../../../components/admin/review/BookField";
-import { RatingField } from "../../../components/admin/review/RatingField";
-import { RatingInput } from "../../../components/admin/review/RatingInput";
+import { BookField } from "./BookField";
+import { RatingField } from "./RatingField";
+import { RatingInput } from "./RatingInput";
 import { type Book } from "../../../types/Book";
 import { User } from "../../../types/User";
 

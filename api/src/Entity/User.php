@@ -121,7 +121,7 @@ class User implements UserInterface
     /**
      * @see https://schema.org/name
      */
-    #[ApiProperty(types: ['https://schema.org/name'])]
+    #[ApiProperty(iris: ['https://schema.org/name'])]
     #[Groups(groups: ['User:read', 'Review:read'])]
     public function getName(): ?string
     {

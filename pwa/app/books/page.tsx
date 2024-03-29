@@ -46,7 +46,6 @@ async function getServerSideProps(query: Query, session: Session|null): Promise<
   try {
     const response: FetchResponse<PagedCollection<Book>> | undefined = await fetchApi(buildUriFromFilters("/books", filters), {
       cache: "force-cache",
-      next: { revalidate: 3600 },
     }, session);
     if (!response?.data) {
       throw new Error('Unable to retrieve data from /books.');

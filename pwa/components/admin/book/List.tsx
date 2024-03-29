@@ -8,9 +8,9 @@ import {
   EditButton,
 } from "react-admin";
 
-import { ShowButton } from "../../../components/admin/book/ShowButton";
-import { RatingField } from "../../../components/admin/review/RatingField";
-import { ConditionInput } from "../../../components/admin/book/ConditionInput";
+import { ShowButton } from "./ShowButton";
+import { RatingField } from "../review/RatingField";
+import { ConditionInput } from "./ConditionInput";
 
 const ConditionField = (props: UseRecordContextParams) => {
   const record = useRecordContext(props);
