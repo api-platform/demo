@@ -35,7 +35,7 @@ final readonly class MercureProcessor implements ProcessorInterface
     }
 
     /**
-     * @param array{item_uri_template?: string, topics?: array, mercure_data?: string} $context
+     * @param array{id?: string, type?: string, private?: bool, retry?: int, item_uri_template?: string, topics?: array, mercure_data?: string} $context
      *
      * @throws InvalidArgumentException
      * @throws ResourceClassNotFoundException
@@ -61,7 +61,11 @@ final readonly class MercureProcessor implements ProcessorInterface
 
         $this->hubRegistry->getHub()->publish(new Update(
             topics: $context['topics'],
-            data: $context[self::DATA]
+            data: $context[self::DATA],
+            id: $context['id'] ?? null,
+            type: $context['type'] ?? null,
+            private: $context['private'] ?? false,
+            retry: $context['retry'] ?? null,
         ));
 
         return $data;

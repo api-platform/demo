@@ -376,18 +376,17 @@ final class ReviewTest extends ApiTestCase
         self::assertEmpty($response->getContent());
         ReviewFactory::assert()->notExists(['body' => 'Best book ever!']);
         self::assertCount(2, self::getMercureMessages());
-        // todo how to ensure it's a delete update
         self::assertEquals(
             new Update(
                 topics: ['http://localhost/admin/reviews/' . $id],
-                data: json_encode(['@id' => 'http://localhost/admin/reviews/' . $id])
+                data: json_encode(['@id' => 'http://localhost/admin/reviews/' . $id]),
             ),
             self::getMercureMessage()
         );
         self::assertEquals(
             new Update(
                 topics: ['http://localhost/books/' . $bookId . '/reviews/' . $id],
-                data: json_encode(['@id' => 'http://localhost/books/' . $bookId . '/reviews/' . $id])
+                data: json_encode(['@id' => 'http://localhost/books/' . $bookId . '/reviews/' . $id]),
             ),
             self::getMercureMessage(1)
         );
