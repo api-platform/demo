@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DataFixtures\Factory;
 
 use App\Entity\Review;
+use App\Security\Http\Protection\ResourceHandlerInterface;
 use Doctrine\ORM\EntityRepository;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
@@ -52,8 +53,9 @@ final class ReviewFactory extends ModelFactory
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
      */
-    public function __construct()
-    {
+    public function __construct(
+        private readonly ?ResourceHandlerInterface $resourceHandler = null,
+    ) {
         parent::__construct();
     }
 
@@ -76,7 +78,21 @@ final class ReviewFactory extends ModelFactory
      */
     protected function initialize(): self
     {
-        return $this;
+        return $this
+            // create the resource on the OIDC server
+            ->afterPersist(function (Review $object): void {
+                if (!$this->resourceHandler) {
+                    return;
+                }
+
+                // project specification: only create resource on OIDC server for known users (john.doe and chuck.norris)
+                if (\in_array($object->user?->email, ['john.doe@example.com', 'chuck.norris@example.com'], true)) {
+                    $this->resourceHandler->create($object, $object->user, [
+                        'operation_name' => '/books/{bookId}/reviews/{id}{._format}',
+                    ]);
+                }
+            })
+        ;
         // ->afterInstantiate(function(Review $review): void {})
     }
 

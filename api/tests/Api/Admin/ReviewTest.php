@@ -13,7 +13,7 @@ use App\Entity\Book;
 use App\Entity\Review;
 use App\Entity\User;
 use App\Tests\Api\Admin\Trait\UsersDataProviderTrait;
-use App\Tests\Api\Trait\SecurityTrait;
+use App\Tests\Api\Security\TokenGenerator;
 use App\Tests\Api\Trait\SerializerTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -27,7 +27,6 @@ final class ReviewTest extends ApiTestCase
 {
     use Factories;
     use ResetDatabase;
-    use SecurityTrait;
     use SerializerTrait;
     use UsersDataProviderTrait;
 
@@ -44,7 +43,7 @@ final class ReviewTest extends ApiTestCase
     {
         $options = [];
         if ($userFactory) {
-            $token = $this->generateToken([
+            $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -68,7 +67,7 @@ final class ReviewTest extends ApiTestCase
     {
         $factory->create();
 
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -151,7 +150,7 @@ final class ReviewTest extends ApiTestCase
 
         $options = [];
         if ($userFactory) {
-            $token = $this->generateToken([
+            $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -172,7 +171,7 @@ final class ReviewTest extends ApiTestCase
     #[Test]
     public function asAdminUserICannotGetAnInvalidReview(): void
     {
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -186,7 +185,7 @@ final class ReviewTest extends ApiTestCase
     {
         $review = ReviewFactory::createOne();
 
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -205,7 +204,7 @@ final class ReviewTest extends ApiTestCase
 
         $options = [];
         if ($userFactory) {
-            $token = $this->generateToken([
+            $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -235,7 +234,7 @@ final class ReviewTest extends ApiTestCase
     #[Test]
     public function asAdminUserICannotUpdateAnInvalidReview(): void
     {
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -264,7 +263,7 @@ final class ReviewTest extends ApiTestCase
         $review = ReviewFactory::createOne(['book' => $book]);
         $user = UserFactory::createOneAdmin();
 
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => $user->email,
         ]);
 
@@ -325,7 +324,7 @@ final class ReviewTest extends ApiTestCase
 
         $options = [];
         if ($userFactory) {
-            $token = $this->generateToken([
+            $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
             $options['auth_bearer'] = $token;
@@ -346,7 +345,7 @@ final class ReviewTest extends ApiTestCase
     #[Test]
     public function asAdminUserICannotDeleteAnInvalidReview(): void
     {
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
@@ -365,7 +364,7 @@ final class ReviewTest extends ApiTestCase
         $id = $review->getId();
         $bookId = $review->book->getId();
 
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 

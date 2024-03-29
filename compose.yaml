@@ -38,10 +38,10 @@ services:
       NEXT_PUBLIC_ENTRYPOINT: http://php
       AUTH_SECRET: ${AUTH_SECRET:-!ChangeThisNextAuthSecret!}
       AUTH_URL: ${AUTH_URL:-https://localhost/api/auth}
-      AUTH_URL_INTERNAL: http://127.0.0.1:3000/api/auth
       OIDC_CLIENT_ID: ${OIDC_CLIENT_ID:-api-platform-pwa}
       OIDC_SERVER_URL: ${OIDC_SERVER_URL:-https://localhost/oidc/realms/demo}
       OIDC_SERVER_URL_INTERNAL: ${OIDC_SERVER_URL_INTERNAL:-http://keycloak:8080/oidc/realms/demo}
+      OIDC_AUTHORIZATION_CLIENT_ID: ${OIDC_AUTHORIZATION_CLIENT_ID:-api-platform-api}
       NEXT_SHARP_PATH: /srv/app/node_modules/sharp
 
 ###> doctrine/doctrine-bundle ###
@@ -86,6 +86,8 @@ services:
       # https://www.keycloak.org/server/hostname
       KC_HOSTNAME_URL: https://${SERVER_NAME:-localhost}/oidc/
       KC_HOSTNAME_ADMIN_URL: https://${SERVER_NAME:-localhost}/oidc/
+      # https://www.keycloak.org/server/features
+      KC_FEATURES: "scripts"
     depends_on:
       - keycloak-database
     ports:

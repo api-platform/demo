@@ -51,7 +51,7 @@ export const useOpenLibraryBook = <TData extends Book>(data: TData) => {
       // retrieve data from work if necessary
       if ((!data["description"] || !data["images"]) && typeof book["works"] !== "undefined" && book["works"].length > 0) {
         const response = await fetch(`https://openlibrary.org${book["works"][0]["key"]}.json`, {
-          cache: "force-cache",
+          next: { revalidate: 3600 },
         });
         const work: Work = await response.json();
 

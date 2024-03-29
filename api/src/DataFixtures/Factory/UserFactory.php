@@ -6,7 +6,6 @@ namespace App\DataFixtures\Factory;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityRepository;
-use Symfony\Component\Uid\Uuid;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
 use Zenstruck\Foundry\RepositoryProxy;
@@ -58,7 +57,16 @@ final class UserFactory extends ModelFactory
 
     public static function createOneAdmin(array $attributes = []): Proxy|User
     {
-        return self::createOne(['roles' => ['ROLE_ADMIN']] + $attributes);
+        return self::new($attributes)->withAdmin()->create();
+    }
+
+    public function withAdmin(): self
+    {
+        return $this->addState([
+            'email' => 'chuck.norris@example.com',
+            'firstName' => 'Chuck',
+            'lastName' => 'Norris',
+        ]);
     }
 
     /**
@@ -67,11 +75,9 @@ final class UserFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'sub' => Uuid::v7(),
             'email' => self::faker()->unique()->email(),
             'firstName' => self::faker()->firstName(),
             'lastName' => self::faker()->lastName(),
-            'roles' => ['ROLE_USER'],
         ];
     }
 

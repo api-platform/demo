@@ -13,7 +13,7 @@ use App\Entity\Book;
 use App\Entity\Review;
 use App\Entity\User;
 use App\Repository\ReviewRepository;
-use App\Tests\Api\Trait\SecurityTrait;
+use App\Tests\Api\Security\TokenGenerator;
 use App\Tests\Api\Trait\SerializerTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -27,7 +27,6 @@ final class ReviewTest extends ApiTestCase
 {
     use Factories;
     use ResetDatabase;
-    use SecurityTrait;
     use SerializerTrait;
 
     private Client $client;
@@ -162,8 +161,9 @@ final class ReviewTest extends ApiTestCase
     {
         $book = BookFactory::createOne();
 
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => UserFactory::createOne()->email,
+            'authorize' => true,
         ]);
 
         $this->client->request('POST', '/books/' . $book->getId() . '/reviews', [
@@ -210,7 +210,7 @@ final class ReviewTest extends ApiTestCase
         ReviewFactory::createMany(5, ['book' => $book]);
         $user = UserFactory::createOne();
 
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => $user->email,
         ]);
 
@@ -247,8 +247,9 @@ final class ReviewTest extends ApiTestCase
         $user = UserFactory::createOne();
         self::getMercureHub()->reset();
 
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => $user->email,
+            'authorize' => true,
         ]);
 
         $response = $this->client->request('POST', '/books/' . $book->getId() . '/reviews', [
@@ -301,8 +302,9 @@ final class ReviewTest extends ApiTestCase
         $user = UserFactory::createOne();
         ReviewFactory::createOne(['book' => $book, 'user' => $user]);
 
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => $user->email,
+            'authorize' => true,
         ]);
 
         $this->client->request('POST', '/books/' . $book->getId() . '/reviews', [
@@ -391,8 +393,9 @@ final class ReviewTest extends ApiTestCase
     {
         $review = ReviewFactory::createOne(['user' => UserFactory::createOne()]);
 
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => UserFactory::createOne()->email,
+            'authorize' => false,
         ]);
 
         $this->client->request('PATCH', '/books/' . $review->book->getId() . '/reviews/' . $review->getId(), [
@@ -421,7 +424,7 @@ final class ReviewTest extends ApiTestCase
     {
         $book = BookFactory::createOne();
 
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => UserFactory::createOne()->email,
         ]);
 
@@ -448,8 +451,9 @@ final class ReviewTest extends ApiTestCase
         $review = ReviewFactory::createOne();
         self::getMercureHub()->reset();
 
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => $review->user->email,
+            'authorize' => true,
         ]);
 
         $this->client->request('PATCH', '/books/' . $review->book->getId() . '/reviews/' . $review->getId(), [
@@ -505,8 +509,9 @@ final class ReviewTest extends ApiTestCase
     {
         $review = ReviewFactory::createOne(['user' => UserFactory::createOne()]);
 
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => UserFactory::createOne()->email,
+            'authorize' => false,
         ]);
 
         $this->client->request('DELETE', '/books/' . $review->book->getId() . '/reviews/' . $review->getId(), [
@@ -528,7 +533,7 @@ final class ReviewTest extends ApiTestCase
     {
         $book = BookFactory::createOne();
 
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => UserFactory::createOne()->email,
         ]);
 
@@ -550,8 +555,9 @@ final class ReviewTest extends ApiTestCase
         $id = $review->getId();
         $bookId = $review->book->getId();
 
-        $token = $this->generateToken([
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => $review->user->email,
+            'authorize' => true,
         ]);
 
         $response = $this->client->request('DELETE', '/books/' . $bookId . '/reviews/' . $id, [

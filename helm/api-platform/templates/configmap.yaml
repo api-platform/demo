@@ -18,6 +18,7 @@ data:
   oidc-server-url-internal: "http://{{ template "common.names.fullname" .Subcharts.keycloak }}/oidc/realms/demo"
   next-auth-url: "https://{{ (first .Values.ingress.hosts).host }}/api/auth"
   pwa-client-id: {{ .Values.pwa.oidcClientId | quote }}
+  pwa-authorization-client-id: {{ .Values.php.oidcClientId | quote }}
 
 ---
 
