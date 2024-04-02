@@ -41,6 +41,8 @@ RUN pnpm fetch --prod
 
 COPY --link . .
 
+ARG AUTH_SECRET
+
 RUN	pnpm install --frozen-lockfile --offline --prod && \
 	pnpm run build
 
