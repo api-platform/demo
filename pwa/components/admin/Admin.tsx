@@ -1,3 +1,5 @@
+"use client";
+
 import Head from "next/head";
 import { useContext, useRef, useState } from "react";
 import { type DataProvider, Layout, type LayoutProps, localStorageStore, resolveBrowserLocale } from "react-admin";
