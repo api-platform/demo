@@ -5,7 +5,7 @@ test.describe("User authentication", () => {
     await bookPage.gotoList();
   });
 
-  test("I can log in @login", async ({ userPage, page }) => {
+  test("I can log in Books Store @login", async ({ userPage, page }) => {
     await expect(page.getByText("Log in")).toBeVisible();
     await expect(page.getByText("Sign out")).toHaveCount(0);
 
@@ -22,7 +22,7 @@ test.describe("User authentication", () => {
     await expect(page.getByText("Sign out")).toBeVisible();
   });
 
-  test("I can sign out @login", async ({ userPage, page }) => {
+  test("I can sign out of Books Store @login", async ({ userPage, page }) => {
     await page.getByText("Log in").click();
     await userPage.login();
     await page.getByText("Sign out").click();
