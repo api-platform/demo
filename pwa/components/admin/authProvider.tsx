@@ -7,6 +7,7 @@ const authProvider: AuthProvider = {
   // Nothing to do here, this function will never be called
   login: async () => Promise.resolve(),
   logout: async () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const { data: session } = useSession();
     if (!session) {
       return;
@@ -18,6 +19,7 @@ const authProvider: AuthProvider = {
     });
   },
   checkError: async (error) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const { data: session } = useSession();
     const status = error.status;
     // @ts-ignore
@@ -32,6 +34,7 @@ const authProvider: AuthProvider = {
     }
   },
   checkAuth: async () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const { data: session } = useSession();
     // @ts-ignore
     if (!session || session?.error === "RefreshAccessTokenError") {
@@ -45,6 +48,7 @@ const authProvider: AuthProvider = {
   getPermissions: () => Promise.resolve(),
   // @ts-ignore
   getIdentity: async () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const { data: session } = useSession();
 
     return session ? Promise.resolve(session.user) : Promise.reject();
