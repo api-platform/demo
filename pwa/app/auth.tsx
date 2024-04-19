@@ -1,5 +1,4 @@
 import { type TokenSet } from "@auth/core/types";
-import { signOut as logout, type SignOutParams } from "next-auth/react";
 import NextAuth, { type Session as DefaultSession, type User } from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
 
@@ -25,20 +24,6 @@ interface Account {
   id_token: string
   expires_in: number
   refresh_token: string
-}
-
-interface SignOutResponse {
-  url: string
-}
-
-export async function signOut<R extends boolean = true>(
-  session: DefaultSession,
-  options?: SignOutParams<R>
-): Promise<R extends true ? undefined : SignOutResponse> {
-  return await logout({
-    // @ts-ignore
-    callbackUrl: `${OIDC_SERVER_URL}/protocol/openid-connect/logout?id_token_hint=${session.idToken}&post_logout_redirect_uri=${options?.callbackUrl ?? window.location.origin}`,
-  });
 }
 
 export const { handlers: { GET, POST }, auth } = NextAuth({

@@ -1,7 +1,8 @@
 import { AuthProvider } from "react-admin";
-import { signIn } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 
-import { auth, signOut } from "../../app/auth";
+import { auth } from "../../app/auth";
+import { OIDC_SERVER_URL } from "../../config/keycloak";
 
 const authProvider: AuthProvider = {
   // Nothing to do here, this function will never be called
@@ -12,7 +13,10 @@ const authProvider: AuthProvider = {
       return;
     }
 
-    await signOut(session, {callbackUrl: window.location.origin});
+    await signOut(/*{
+      // @ts-ignore
+      callbackUrl: `${OIDC_SERVER_URL}/protocol/openid-connect/logout?id_token_hint=${session.idToken}&post_logout_redirect_uri=${window.location.origin}`,
+    }*/);
   },
   checkError: async (error) => {
     const session = await auth();

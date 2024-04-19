@@ -1,12 +1,12 @@
 "use client";
 
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
-import { signOut } from "../../app/auth";
+import { OIDC_SERVER_URL } from "../../config/keycloak";
 
 export const Header = () => {
   const pathname = usePathname();
@@ -31,7 +31,10 @@ export const Header = () => {
           {status === "authenticated" && (
             <a href="#" className="font-semibold text-gray-900" role="menuitem" onClick={(e) => {
               e.preventDefault();
-              signOut(session, {callbackUrl: `${window.location.origin}/books`});
+              signOut({
+                // @ts-ignore
+                callbackUrl: `${OIDC_SERVER_URL}/protocol/openid-connect/logout?id_token_hint=${session.idToken}&post_logout_redirect_uri=${window.location.origin}/books`,
+              });
             }}>
               Sign out
             </a>

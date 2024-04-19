@@ -50,6 +50,9 @@ importers:
       next-auth:
         specifier: 5.0.0-beta.16
         version: 5.0.0-beta.16(next@14.2.2(@babel/core@7.24.4)(@playwright/test@1.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)
+      picocolors:
+        specifier: ^1.0.0
+        version: 1.0.0
       postcss:
         specifier: ^8.4.38
         version: 8.4.38
