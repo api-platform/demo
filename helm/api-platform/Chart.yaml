@@ -26,14 +26,14 @@ appVersion: 3.3.0
 
 dependencies:
   - name: postgresql
-    version: ~13.1.5
+    version: ~15.2.5
     repository: https://charts.bitnami.com/bitnami/
     condition: postgresql.enabled
   - name: external-dns
-    version: ~6.27.0
+    version: ~7.2.0
     repository: https://charts.bitnami.com/bitnami/
     condition: external-dns.enabled
   - name: keycloak
-    version: ~17.1.2
+    version: ~21.0.3
     repository: https://charts.bitnami.com/bitnami/
     condition: keycloak.enabled
