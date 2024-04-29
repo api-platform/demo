@@ -43,6 +43,9 @@ jobs:
           username: oauth2accesstoken
           password: ${{ steps.auth.outputs.access_token }}
       -
+        name: Generate AUTH_SECRET
+        run: echo "AUTH_SECRET=$(openssl rand -hex 32)" >> $GITHUB_ENV
+      -
         name: Build Docker images
         uses: docker/bake-action@v4
         with:
