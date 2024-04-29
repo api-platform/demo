@@ -6,6 +6,7 @@ metadata:
     {{- include "api-platform.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": "post-install,post-upgrade"
+    "helm.sh/hook-weight": "6" # post keycloak-config-cli job
     "helm.sh/hook-delete-policy": "before-hook-creation"
 spec:
   template:
