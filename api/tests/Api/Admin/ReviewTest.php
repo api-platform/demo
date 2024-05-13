@@ -262,6 +262,7 @@ final class ReviewTest extends ApiTestCase
         $book = BookFactory::createOne();
         $review = ReviewFactory::createOne(['book' => $book]);
         $user = UserFactory::createOneAdmin();
+        self::getMercureHub()->reset();
 
         $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => $user->email,
@@ -291,10 +292,10 @@ final class ReviewTest extends ApiTestCase
         // ensure user hasn't changed
         self::assertNotEquals($user, $review->object()->user);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Review/item.json'));
-        self::assertCount(2, self::getMercureMessages());
+        self::assertCount(1, self::getMercureMessages());
         self::assertEquals(
             new Update(
-                topics: ['http://localhost/admin/reviews/' . $review->getId()],
+                topics: ['http://localhost/admin/reviews/' . $review->getId(), 'http://localhost/books/' . $review->book->getId() . '/reviews/' . $review->getId()],
                 data: self::serialize(
                     $review->object(),
                     'jsonld',
@@ -302,17 +303,6 @@ final class ReviewTest extends ApiTestCase
                 ),
             ),
             self::getMercureMessage()
-        );
-        self::assertEquals(
-            new Update(
-                topics: ['http://localhost/books/' . $review->book->getId() . '/reviews/' . $review->getId()],
-                data: self::serialize(
-                    $review->object(),
-                    'jsonld',
-                    self::getOperationNormalizationContext(Review::class, '/books/{bookId}/reviews/{id}{._format}')
-                ),
-            ),
-            self::getMercureMessage(1)
         );
     }
 
@@ -363,6 +353,7 @@ final class ReviewTest extends ApiTestCase
         $review = ReviewFactory::createOne(['body' => 'Best book ever!']);
         $id = $review->getId();
         $bookId = $review->book->getId();
+        self::getMercureHub()->reset();
 
         $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => UserFactory::createOneAdmin()->email,
@@ -375,20 +366,13 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
         self::assertEmpty($response->getContent());
         ReviewFactory::assert()->notExists(['body' => 'Best book ever!']);
-        self::assertCount(2, self::getMercureMessages());
+        self::assertCount(1, self::getMercureMessages());
         self::assertEquals(
             new Update(
-                topics: ['http://localhost/admin/reviews/' . $id],
-                data: json_encode(['@id' => 'http://localhost/admin/reviews/' . $id]),
+                topics: ['http://localhost/admin/reviews/' . $id, 'http://localhost/books/' . $bookId . '/reviews/' . $id],
+                data: json_encode(['@id' => '/admin/reviews/' . $id, '@type' => 'https://schema.org/Review']),
             ),
             self::getMercureMessage()
-        );
-        self::assertEquals(
-            new Update(
-                topics: ['http://localhost/books/' . $bookId . '/reviews/' . $id],
-                data: json_encode(['@id' => 'http://localhost/books/' . $bookId . '/reviews/' . $id]),
-            ),
-            self::getMercureMessage(1)
         );
     }
 }

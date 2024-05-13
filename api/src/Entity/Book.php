@@ -15,6 +15,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\UrlGeneratorInterface;
 use App\Enum\BookCondition;
 use App\Repository\BookRepository;
 use App\State\Processor\BookPersistProcessor;
@@ -44,7 +45,6 @@ use Symfony\Component\Validator\Constraints as Assert;
             paginationClientItemsPerPage: true
         ),
         new Post(
-            // Mercure publish is done manually in MercureProcessor through BookPersistProcessor
             processor: BookPersistProcessor::class,
             itemUriTemplate: '/admin/books/{id}{._format}'
         ),
@@ -54,12 +54,10 @@ use Symfony\Component\Validator\Constraints as Assert;
         // https://github.com/api-platform/admin/issues/370
         new Put(
             uriTemplate: '/admin/books/{id}{._format}',
-            // Mercure publish is done manually in MercureProcessor through BookPersistProcessor
             processor: BookPersistProcessor::class
         ),
         new Delete(
             uriTemplate: '/admin/books/{id}{._format}',
-            // Mercure publish is done manually in MercureProcessor through BookRemoveProcessor
             processor: BookRemoveProcessor::class
         ),
     ],
@@ -71,7 +69,13 @@ use Symfony\Component\Validator\Constraints as Assert;
         AbstractNormalizer::GROUPS => ['Book:write'],
     ],
     collectDenormalizationErrors: true,
-    security: 'is_granted("OIDC_ADMIN")'
+    security: 'is_granted("OIDC_ADMIN")',
+    mercure: [
+        'topics' => [
+            '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/admin/books/{id}{._format}"))',
+            '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/books/{id}{._format}"))',
+        ],
+    ]
 )]
 #[ApiResource(
     types: ['https://schema.org/Book', 'https://schema.org/Offer'],

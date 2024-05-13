@@ -21,13 +21,10 @@ final readonly class ReviewPersistProcessor implements ProcessorInterface
 {
     /**
      * @param PersistProcessor $persistProcessor
-     * @param MercureProcessor $mercureProcessor
      */
     public function __construct(
         #[Autowire(service: PersistProcessor::class)]
         private ProcessorInterface $persistProcessor,
-        #[Autowire(service: MercureProcessor::class)]
-        private ProcessorInterface $mercureProcessor,
         private Security $security,
         private ClockInterface $clock,
         private ResourceHandlerInterface $resourceHandler,
@@ -63,18 +60,6 @@ final readonly class ReviewPersistProcessor implements ProcessorInterface
                     'operation_name' => '/books/{bookId}/reviews/{id}{._format}',
                 ]);
             }
-        }
-
-        // publish on Mercure
-        foreach (['/admin/reviews/{id}{._format}', '/books/{bookId}/reviews/{id}{._format}'] as $uriTemplate) {
-            $this->mercureProcessor->process(
-                $data,
-                $operation,
-                $uriVariables,
-                $context + [
-                    'item_uri_template' => $uriTemplate,
-                ]
-            );
         }
 
         return $data;

@@ -14,6 +14,7 @@ use ApiPlatform\Metadata\NotExposed;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\UrlGeneratorInterface;
 use ApiPlatform\State\CreateProvider;
 use App\Repository\ReviewRepository;
 use App\Security\Voter\OidcTokenPermissionVoter;
@@ -56,12 +57,10 @@ use Symfony\Component\Validator\Constraints as Assert;
         // https://github.com/api-platform/admin/issues/370
         new Put(
             uriTemplate: '/admin/reviews/{id}{._format}',
-            // Mercure publish is done manually in MercureProcessor through ReviewPersistProcessor
             processor: ReviewPersistProcessor::class
         ),
         new Delete(
             uriTemplate: '/admin/reviews/{id}{._format}',
-            // Mercure publish is done manually in MercureProcessor through ReviewRemoveProcessor
             processor: ReviewRemoveProcessor::class
         ),
     ],
@@ -77,7 +76,13 @@ use Symfony\Component\Validator\Constraints as Assert;
         AbstractNormalizer::GROUPS => ['Review:write', 'Review:write:admin'],
     ],
     collectDenormalizationErrors: true,
-    security: 'is_granted("OIDC_ADMIN")'
+    security: 'is_granted("OIDC_ADMIN")',
+    mercure: [
+        'topics' => [
+            '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/admin/reviews/{id}{._format}"))',
+            '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/books/{bookId}/reviews/{id}{._format}"))',
+        ],
+    ]
 )]
 #[ApiResource(
     types: ['https://schema.org/Review'],
@@ -100,7 +105,6 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
         new Post(
             security: 'is_granted("OIDC_USER")',
-            // Mercure publish is done manually in MercureProcessor through ReviewPersistProcessor
             processor: ReviewPersistProcessor::class,
             provider: CreateProvider::class,
             itemUriTemplate: '/books/{bookId}/reviews/{id}{._format}',
@@ -114,7 +118,6 @@ use Symfony\Component\Validator\Constraints as Assert;
             ],
             /** @see OidcTokenPermissionVoter */
             security: 'is_granted("OIDC_USER", request.getRequestUri())',
-            // Mercure publish is done manually in MercureProcessor through ReviewPersistProcessor
             processor: ReviewPersistProcessor::class
         ),
         new Delete(
@@ -125,7 +128,6 @@ use Symfony\Component\Validator\Constraints as Assert;
             ],
             /** @see OidcTokenPermissionVoter */
             security: 'is_granted("OIDC_USER", request.getRequestUri())',
-            // Mercure publish is done manually in MercureProcessor through ReviewRemoveProcessor
             processor: ReviewRemoveProcessor::class
         ),
     ],

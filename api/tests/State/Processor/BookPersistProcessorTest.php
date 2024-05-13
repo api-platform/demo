@@ -18,7 +18,6 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 final class BookPersistProcessorTest extends TestCase
 {
     private MockObject|ProcessorInterface $persistProcessorMock;
-    private MockObject|ProcessorInterface $mercureProcessorMock;
     private HttpClientInterface|MockObject $clientMock;
     private MockObject|ResponseInterface $responseMock;
     private DecoderInterface|MockObject $decoderMock;
@@ -29,7 +28,6 @@ final class BookPersistProcessorTest extends TestCase
     protected function setUp(): void
     {
         $this->persistProcessorMock = $this->createMock(ProcessorInterface::class);
-        $this->mercureProcessorMock = $this->createMock(ProcessorInterface::class);
         $this->clientMock = $this->createMock(HttpClientInterface::class);
         $this->responseMock = $this->createMock(ResponseInterface::class);
         $this->decoderMock = $this->createMock(DecoderInterface::class);
@@ -39,7 +37,6 @@ final class BookPersistProcessorTest extends TestCase
 
         $this->processor = new BookPersistProcessor(
             $this->persistProcessorMock,
-            $this->mercureProcessorMock,
             $this->clientMock,
             $this->decoderMock
         );
@@ -125,18 +122,6 @@ final class BookPersistProcessorTest extends TestCase
             ->method('process')
             ->with($expectedData, $this->operationMock, [], [])
             ->willReturn($expectedData)
-        ;
-        $this->mercureProcessorMock
-            ->expects($this->exactly(2))
-            ->method('process')
-//            ->withConsecutive(
-//                [$expectedData, $this->operationMock, [], ['item_uri_template' => '/admin/books/{id}{._format}']],
-//                [$expectedData, $this->operationMock, [], ['item_uri_template' => '/books/{id}{._format}']],
-//            )
-            ->willReturnOnConsecutiveCalls(
-                $expectedData,
-                $expectedData,
-            )
         ;
 
         $this->assertEquals($expectedData, $this->processor->process($this->objectMock, $this->operationMock));

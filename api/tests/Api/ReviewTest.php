@@ -281,16 +281,11 @@ final class ReviewTest extends ApiTestCase
         $id = preg_replace('/^.*\/(.+)$/', '$1', $response->toArray()['@id']);
         /** @var Review $review */
         $review = self::getContainer()->get(ReviewRepository::class)->find($id);
-        self::assertCount(2, self::getMercureMessages());
+        self::assertCount(1, self::getMercureMessages());
         self::assertMercureUpdateMatchesJsonSchema(
             update: self::getMercureMessage(),
-            topics: ['http://localhost/admin/reviews/' . $review->getId()],
+            topics: ['http://localhost/admin/reviews/' . $review->getId(), 'http://localhost/books/' . $book->getId() . '/reviews/' . $review->getId()],
             jsonSchema: file_get_contents(__DIR__ . '/Admin/schemas/Review/item.json')
-        );
-        self::assertMercureUpdateMatchesJsonSchema(
-            update: self::getMercureMessage(1),
-            topics: ['http://localhost/books/' . $book->getId() . '/reviews/' . $review->getId()],
-            jsonSchema: file_get_contents(__DIR__ . '/schemas/Review/item.json')
         );
     }
 
@@ -474,16 +469,11 @@ final class ReviewTest extends ApiTestCase
             'rating' => 5,
         ]);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Review/item.json'));
-        self::assertCount(2, self::getMercureMessages());
+        self::assertCount(1, self::getMercureMessages());
         self::assertMercureUpdateMatchesJsonSchema(
             update: self::getMercureMessage(),
-            topics: ['http://localhost/admin/reviews/' . $review->getId()],
+            topics: ['http://localhost/admin/reviews/' . $review->getId(), 'http://localhost/books/' . $review->book->getId() . '/reviews/' . $review->getId()],
             jsonSchema: file_get_contents(__DIR__ . '/Admin/schemas/Review/item.json')
-        );
-        self::assertMercureUpdateMatchesJsonSchema(
-            update: self::getMercureMessage(1),
-            topics: ['http://localhost/books/' . $review->book->getId() . '/reviews/' . $review->getId()],
-            jsonSchema: file_get_contents(__DIR__ . '/schemas/Review/item.json')
         );
     }
 
@@ -567,20 +557,13 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
         self::assertEmpty($response->getContent());
         ReviewFactory::assert()->notExists(['body' => 'Best book ever!']);
-        self::assertCount(2, self::getMercureMessages());
+        self::assertCount(1, self::getMercureMessages());
         self::assertEquals(
             new Update(
-                topics: ['http://localhost/admin/reviews/' . $id],
-                data: json_encode(['@id' => 'http://localhost/admin/reviews/' . $id]),
+                topics: ['http://localhost/admin/reviews/' . $id, 'http://localhost/books/' . $bookId . '/reviews/' . $id],
+                data: json_encode(['@id' => '/admin/reviews/' . $id, '@type' => 'https://schema.org/Review']),
             ),
             self::getMercureMessage()
-        );
-        self::assertEquals(
-            new Update(
-                topics: ['http://localhost/books/' . $bookId . '/reviews/' . $id],
-                data: json_encode(['@id' => 'http://localhost/books/' . $bookId . '/reviews/' . $id]),
-            ),
-            self::getMercureMessage(1)
         );
     }
 }

@@ -20,13 +20,10 @@ final readonly class BookPersistProcessor implements ProcessorInterface
 {
     /**
      * @param PersistProcessor $persistProcessor
-     * @param MercureProcessor $mercureProcessor
      */
     public function __construct(
         #[Autowire(service: PersistProcessor::class)]
         private ProcessorInterface $persistProcessor,
-        #[Autowire(service: MercureProcessor::class)]
-        private ProcessorInterface $mercureProcessor,
         private HttpClientInterface $client,
         private DecoderInterface $decoder
     ) {
@@ -49,21 +46,7 @@ final readonly class BookPersistProcessor implements ProcessorInterface
         }
 
         // save entity
-        $data = $this->persistProcessor->process($data, $operation, $uriVariables, $context);
-
-        // publish on Mercure
-        foreach (['/admin/books/{id}{._format}', '/books/{id}{._format}'] as $uriTemplate) {
-            $this->mercureProcessor->process(
-                $data,
-                $operation,
-                $uriVariables,
-                $context + [
-                    'item_uri_template' => $uriTemplate,
-                ]
-            );
-        }
-
-        return $data;
+        return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
     }
 
     private function getData(string $uri): array

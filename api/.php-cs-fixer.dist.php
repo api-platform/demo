@@ -33,7 +33,6 @@ return (new PhpCsFixer\Config())
         'phpdoc_to_comment' => false,
         'void_return' => true,
         'concat_space' => ['spacing' => 'one'],
-        'braces' => ['allow_single_line_closure' => true],
         'nullable_type_declaration' => true,
     ])
     ->setFinder($finder)

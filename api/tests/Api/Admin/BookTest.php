@@ -395,10 +395,10 @@ final class BookTest extends ApiTestCase
         $id = preg_replace('/^.*\/(.+)$/', '$1', $response->toArray()['@id']);
         /** @var Book $book */
         $book = self::getContainer()->get(BookRepository::class)->find($id);
-        self::assertCount(2, self::getMercureMessages());
+        self::assertCount(1, self::getMercureMessages());
         self::assertEquals(
             new Update(
-                topics: ['http://localhost/admin/books/' . $book->getId()],
+                topics: ['http://localhost/admin/books/' . $book->getId(), 'http://localhost/books/' . $book->getId()],
                 data: self::serialize(
                     $book,
                     'jsonld',
@@ -406,17 +406,6 @@ final class BookTest extends ApiTestCase
                 ),
             ),
             self::getMercureMessage()
-        );
-        self::assertEquals(
-            new Update(
-                topics: ['http://localhost/books/' . $book->getId()],
-                data: self::serialize(
-                    $book,
-                    'jsonld',
-                    self::getOperationNormalizationContext(Book::class, '/books/{id}{._format}')
-                ),
-            ),
-            self::getMercureMessage(1)
         );
     }
 
@@ -542,10 +531,10 @@ final class BookTest extends ApiTestCase
             'author' => 'Isaac Asimov',
         ]);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Book/item.json'));
-        self::assertCount(2, self::getMercureMessages());
+        self::assertCount(1, self::getMercureMessages());
         self::assertEquals(
             new Update(
-                topics: ['http://localhost/admin/books/' . $book->getId()],
+                topics: ['http://localhost/admin/books/' . $book->getId(), 'http://localhost/books/' . $book->getId()],
                 data: self::serialize(
                     $book->object(),
                     'jsonld',
@@ -553,17 +542,6 @@ final class BookTest extends ApiTestCase
                 ),
             ),
             self::getMercureMessage()
-        );
-        self::assertEquals(
-            new Update(
-                topics: ['http://localhost/books/' . $book->getId()],
-                data: self::serialize(
-                    $book->object(),
-                    'jsonld',
-                    self::getOperationNormalizationContext(Book::class, '/books/{id}{._format}')
-                ),
-            ),
-            self::getMercureMessage(1)
         );
     }
 
@@ -626,20 +604,13 @@ final class BookTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
         self::assertEmpty($response->getContent());
         BookFactory::assert()->notExists(['title' => 'Hyperion']);
-        self::assertCount(2, self::getMercureMessages());
+        self::assertCount(1, self::getMercureMessages());
         self::assertEquals(
             new Update(
-                topics: ['http://localhost/admin/books/' . $id],
-                data: json_encode(['@id' => 'http://localhost/admin/books/' . $id]),
+                topics: ['http://localhost/admin/books/' . $id, 'http://localhost/books/' . $id],
+                data: json_encode(['@id' => '/admin/books/' . $id, '@type' => ['https://schema.org/Book', 'https://schema.org/Offer']]),
             ),
             self::getMercureMessage()
-        );
-        self::assertEquals(
-            new Update(
-                topics: ['http://localhost/books/' . $id],
-                data: json_encode(['@id' => 'http://localhost/books/' . $id]),
-            ),
-            self::getMercureMessage(1)
         );
     }
 }

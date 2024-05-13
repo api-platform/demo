@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace App\State\Processor;
 
 use ApiPlatform\Doctrine\Common\State\RemoveProcessor;
-use ApiPlatform\Metadata\IriConverterInterface;
 use ApiPlatform\Metadata\Operation;
-use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
-use ApiPlatform\Metadata\UrlGeneratorInterface;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Review;
 use App\Security\Http\Protection\ResourceHandlerInterface;
@@ -20,16 +17,11 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 final readonly class ReviewRemoveProcessor implements ProcessorInterface
 {
     /**
-     * @param RemoveProcessor  $removeProcessor
-     * @param MercureProcessor $mercureProcessor
+     * @param RemoveProcessor $removeProcessor
      */
     public function __construct(
         #[Autowire(service: RemoveProcessor::class)]
         private ProcessorInterface $removeProcessor,
-        #[Autowire(service: MercureProcessor::class)]
-        private ProcessorInterface $mercureProcessor,
-        private ResourceMetadataCollectionFactoryInterface $resourceMetadataCollectionFactory,
-        private IriConverterInterface $iriConverter,
         private ResourceHandlerInterface $resourceHandler,
     ) {
     }
@@ -49,24 +41,6 @@ final readonly class ReviewRemoveProcessor implements ProcessorInterface
             $this->resourceHandler->delete($object, $object->user, [
                 'operation_name' => '/books/{bookId}/reviews/{id}{._format}',
             ]);
-        }
-
-        // publish on Mercure
-        foreach (['/admin/reviews/{id}{._format}', '/books/{bookId}/reviews/{id}{._format}'] as $uriTemplate) {
-            $iri = $this->iriConverter->getIriFromResource(
-                $object,
-                UrlGeneratorInterface::ABS_URL,
-                $this->resourceMetadataCollectionFactory->create(Review::class)->getOperation($uriTemplate)
-            );
-            $this->mercureProcessor->process(
-                $object,
-                $operation,
-                $uriVariables,
-                $context + [
-                    'item_uri_template' => $uriTemplate,
-                    MercureProcessor::DATA => json_encode(['@id' => $iri]),
-                ]
-            );
         }
     }
 }
