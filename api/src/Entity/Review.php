@@ -174,7 +174,7 @@ class Review
     #[ApiProperty(types: ['https://schema.org/itemReviewed'])]
     #[Assert\NotNull]
     #[Groups(groups: ['Review:read', 'Review:write:admin'])]
-    #[ORM\ManyToOne(targetEntity: Book::class)]
+    #[ORM\ManyToOne(targetEntity: Book::class, inversedBy: 'reviews')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     public ?Book $book = null;
 

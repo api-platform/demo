@@ -11,14 +11,11 @@ use App\Serializer\BookNormalizer;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Uid\Uuid;
 
 final class BookNormalizerTest extends TestCase
 {
     private MockObject|NormalizerInterface $normalizerMock;
-    private MockObject|RouterInterface $routerMock;
     private MockObject|ReviewRepository $repositoryMock;
     private Book|MockObject $objectMock;
     private BookNormalizer $normalizer;
@@ -26,11 +23,10 @@ final class BookNormalizerTest extends TestCase
     protected function setUp(): void
     {
         $this->normalizerMock = $this->createMock(NormalizerInterface::class);
-        $this->routerMock = $this->createMock(RouterInterface::class);
         $this->repositoryMock = $this->createMock(ReviewRepository::class);
         $this->objectMock = $this->createMock(Book::class);
 
-        $this->normalizer = new BookNormalizer($this->routerMock, $this->repositoryMock);
+        $this->normalizer = new BookNormalizer($this->repositoryMock);
         $this->normalizer->setNormalizer($this->normalizerMock);
     }
 
@@ -56,20 +52,8 @@ final class BookNormalizerTest extends TestCase
     public function itNormalizesData(): void
     {
         $expectedObject = $this->objectMock;
-        $expectedObject->reviews = '/books/a528046c-7ba1-4acc-bff2-b5390ab17d41/reviews';
         $expectedObject->rating = 3;
 
-        $this->objectMock
-            ->expects($this->once())
-            ->method('getId')
-            ->willReturn(Uuid::fromString('a528046c-7ba1-4acc-bff2-b5390ab17d41'))
-        ;
-        $this->routerMock
-            ->expects($this->once())
-            ->method('generate')
-            ->with('_api_/books/{bookId}/reviews{._format}_get_collection', ['bookId' => 'a528046c-7ba1-4acc-bff2-b5390ab17d41'])
-            ->willReturn('/books/a528046c-7ba1-4acc-bff2-b5390ab17d41/reviews')
-        ;
         $this->repositoryMock
             ->expects($this->once())
             ->method('getAverageRating')

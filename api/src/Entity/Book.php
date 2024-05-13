@@ -20,6 +20,8 @@ use App\Enum\BookCondition;
 use App\Repository\BookRepository;
 use App\State\Processor\BookPersistProcessor;
 use App\State\Processor\BookRemoveProcessor;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
@@ -159,14 +161,18 @@ class Book
     /**
      * An IRI of reviews.
      *
+     * @var Collection<int, Review>
+     *
      * @see https://schema.org/reviews
      */
     #[ApiProperty(
         types: ['https://schema.org/reviews'],
-        example: '/books/6acacc80-8321-4d83-9b02-7f2c7bf6eb1d/reviews'
+        example: '/books/6acacc80-8321-4d83-9b02-7f2c7bf6eb1d/reviews',
+        uriTemplate: '/books/{bookId}/reviews{._format}'
     )]
     #[Groups(groups: ['Book:read', 'Bookmark:read'])]
-    public ?string $reviews = null;
+    #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'book')]
+    public Collection $reviews;
 
     /**
      * The overall rating, based on a collection of reviews or ratings, of the item.
@@ -179,6 +185,11 @@ class Book
     )]
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read'])]
     public ?int $rating = null;
+
+    public function __construct()
+    {
+        $this->reviews = new ArrayCollection();
+    }
 
     public function getId(): ?Uuid
     {
