@@ -10,7 +10,6 @@ use Doctrine\ORM\EntityRepository;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
 use Zenstruck\Foundry\RepositoryProxy;
-
 use function Zenstruck\Foundry\lazy;
 
 /**
