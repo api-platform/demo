@@ -21,7 +21,6 @@ use Symfony\Component\Clock\MockClock;
 final class ReviewPersistProcessorTest extends TestCase
 {
     private MockObject|ProcessorInterface $persistProcessorMock;
-    private MockObject|ProcessorInterface $mercureProcessorMock;
     private MockObject|Security $securityMock;
     private MockObject|User $userMock;
     private MockObject|Review $objectMock;
@@ -32,7 +31,6 @@ final class ReviewPersistProcessorTest extends TestCase
     protected function setUp(): void
     {
         $this->persistProcessorMock = $this->createMock(ProcessorInterface::class);
-        $this->mercureProcessorMock = $this->createMock(ProcessorInterface::class);
         $this->securityMock = $this->createMock(Security::class);
         $this->userMock = $this->createMock(User::class);
         $this->objectMock = $this->createMock(Review::class);
@@ -41,7 +39,6 @@ final class ReviewPersistProcessorTest extends TestCase
 
         $this->processor = new ReviewPersistProcessor(
             $this->persistProcessorMock,
-            $this->mercureProcessorMock,
             $this->securityMock,
             $this->clockMock,
             $this->resourceHandlerMock
@@ -76,18 +73,6 @@ final class ReviewPersistProcessorTest extends TestCase
                 'operation_name' => '/books/{bookId}/reviews/{id}{._format}',
             ])
         ;
-        $this->mercureProcessorMock
-            ->expects($this->exactly(2))
-            ->method('process')
-//            ->withConsecutive(
-//                [$expectedData, $operation, [], ['item_uri_template' => '/admin/reviews/{id}{._format}']],
-//                [$expectedData, $operation, [], ['item_uri_template' => '/books/{bookId}/reviews/{id}{._format}']],
-//            )
-            ->willReturnOnConsecutiveCalls(
-                $expectedData,
-                $expectedData,
-            )
-        ;
 
         $this->assertEquals($expectedData, $this->processor->process($this->objectMock, $operation));
     }
@@ -120,18 +105,6 @@ final class ReviewPersistProcessorTest extends TestCase
         $this->resourceHandlerMock
             ->expects($this->never())
             ->method('create')
-        ;
-        $this->mercureProcessorMock
-            ->expects($this->exactly(2))
-            ->method('process')
-//            ->withConsecutive(
-//                [$expectedData, $operation, [], $context + ['item_uri_template' => '/admin/reviews/{id}{._format}']],
-//                [$expectedData, $operation, [], $context + ['item_uri_template' => '/books/{bookId}/reviews/{id}{._format}']],
-//            )
-            ->willReturnOnConsecutiveCalls(
-                $expectedData,
-                $expectedData,
-            )
         ;
 
         $this->assertEquals($expectedData, $this->processor->process($this->objectMock, $operation, [], $context));

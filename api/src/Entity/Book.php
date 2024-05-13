@@ -15,10 +15,13 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\UrlGeneratorInterface;
 use App\Enum\BookCondition;
 use App\Repository\BookRepository;
 use App\State\Processor\BookPersistProcessor;
 use App\State\Processor\BookRemoveProcessor;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
@@ -44,7 +47,6 @@ use Symfony\Component\Validator\Constraints as Assert;
             paginationClientItemsPerPage: true
         ),
         new Post(
-            // Mercure publish is done manually in MercureProcessor through BookPersistProcessor
             processor: BookPersistProcessor::class,
             itemUriTemplate: '/admin/books/{id}{._format}'
         ),
@@ -54,12 +56,10 @@ use Symfony\Component\Validator\Constraints as Assert;
         // https://github.com/api-platform/admin/issues/370
         new Put(
             uriTemplate: '/admin/books/{id}{._format}',
-            // Mercure publish is done manually in MercureProcessor through BookPersistProcessor
             processor: BookPersistProcessor::class
         ),
         new Delete(
             uriTemplate: '/admin/books/{id}{._format}',
-            // Mercure publish is done manually in MercureProcessor through BookRemoveProcessor
             processor: BookRemoveProcessor::class
         ),
     ],
@@ -71,7 +71,13 @@ use Symfony\Component\Validator\Constraints as Assert;
         AbstractNormalizer::GROUPS => ['Book:write'],
     ],
     collectDenormalizationErrors: true,
-    security: 'is_granted("OIDC_ADMIN")'
+    security: 'is_granted("OIDC_ADMIN")',
+    mercure: [
+        'topics' => [
+            '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/admin/books/{id}{._format}"))',
+            '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/books/{id}{._format}"))',
+        ],
+    ]
 )]
 #[ApiResource(
     types: ['https://schema.org/Book', 'https://schema.org/Offer'],
@@ -155,14 +161,18 @@ class Book
     /**
      * An IRI of reviews.
      *
+     * @var Collection<int, Review>
+     *
      * @see https://schema.org/reviews
      */
     #[ApiProperty(
         types: ['https://schema.org/reviews'],
-        example: '/books/6acacc80-8321-4d83-9b02-7f2c7bf6eb1d/reviews'
+        example: '/books/6acacc80-8321-4d83-9b02-7f2c7bf6eb1d/reviews',
+        uriTemplate: '/books/{bookId}/reviews{._format}'
     )]
     #[Groups(groups: ['Book:read', 'Bookmark:read'])]
-    public ?string $reviews = null;
+    #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'book')]
+    public Collection $reviews;
 
     /**
      * The overall rating, based on a collection of reviews or ratings, of the item.
@@ -175,6 +185,11 @@ class Book
     )]
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read'])]
     public ?int $rating = null;
+
+    public function __construct()
+    {
+        $this->reviews = new ArrayCollection();
+    }
 
     public function getId(): ?Uuid
     {
