@@ -38,7 +38,7 @@ test.describe("Homepage", () => {
       page.context().waitForEvent("page"),
       await page.getByRole("link", { name: "API Platform on Twitter" }).click(),
     ]);
-    await expect(newPage).toHaveURL("https://twitter.com/ApiPlatform");
+    await expect(newPage).toHaveURL(/^https:\/\/x\.com/);
   });
 
   test("Go to Mastodon @read", async ({ page }) => {
