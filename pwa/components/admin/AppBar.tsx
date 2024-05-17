@@ -10,7 +10,7 @@ import DocContext from "../../components/admin/DocContext";
 import HydraLogo from "../../components/admin/HydraLogo";
 import OpenApiLogo from "../../components/admin/OpenApiLogo";
 import Logo from "../../components/admin/Logo";
-import {OIDC_SERVER_URL} from "../../config/keycloak";
+import {NEXT_PUBLIC_OIDC_SERVER_URL} from "../../config/keycloak";
 
 const DocTypeMenuButton = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -75,7 +75,7 @@ const Logout = forwardRef((props, ref: ForwardedRef<any>) => {
 
   const handleClick = () => signOut({
     // @ts-ignore
-    callbackUrl: `${OIDC_SERVER_URL}/protocol/openid-connect/logout?id_token_hint=${session.idToken}&post_logout_redirect_uri=${window.location.origin}`,
+    callbackUrl: `${NEXT_PUBLIC_OIDC_SERVER_URL}/protocol/openid-connect/logout?id_token_hint=${session.idToken}&post_logout_redirect_uri=${window.location.origin}`,
   });
 
   return (

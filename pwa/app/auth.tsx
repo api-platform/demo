@@ -2,7 +2,7 @@ import { type TokenSet } from "@auth/core/types";
 import NextAuth, { type Session as DefaultSession, type User } from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
 
-import { OIDC_CLIENT_ID, OIDC_SERVER_URL, OIDC_SERVER_URL_INTERNAL } from "../config/keycloak";
+import { NEXT_PUBLIC_OIDC_CLIENT_ID, NEXT_PUBLIC_OIDC_SERVER_URL, NEXT_PUBLIC_OIDC_SERVER_URL_INTERNAL } from "../config/keycloak";
 
 export interface Session extends DefaultSession {
   error?: "RefreshAccessTokenError"
@@ -45,10 +45,10 @@ export const { handlers: { GET, POST }, auth } = NextAuth({
       } else {
         // If the access token has expired, try to refresh it
         try {
-          const response = await fetch(`${OIDC_SERVER_URL_INTERNAL}/protocol/openid-connect/token`, {
+          const response = await fetch(`${NEXT_PUBLIC_OIDC_SERVER_URL_INTERNAL}/protocol/openid-connect/token`, {
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: new URLSearchParams({
-              client_id: OIDC_CLIENT_ID,
+              client_id: NEXT_PUBLIC_OIDC_CLIENT_ID,
               grant_type: "refresh_token",
               refresh_token: token.refreshToken,
             }),
@@ -96,8 +96,8 @@ export const { handlers: { GET, POST }, auth } = NextAuth({
   providers: [
     KeycloakProvider({
       id: 'keycloak',
-      clientId: OIDC_CLIENT_ID,
-      issuer: OIDC_SERVER_URL,
+      clientId: NEXT_PUBLIC_OIDC_CLIENT_ID,
+      issuer: NEXT_PUBLIC_OIDC_SERVER_URL,
 
       // user information will be extracted from the `id_token` claims, instead of making a request to the `userinfo` endpoint
       // https://next-auth.js.org/configuration/providers/oauth
@@ -113,10 +113,10 @@ export const { handlers: { GET, POST }, auth } = NextAuth({
       // would love to use discovery, but can't because since next-auth:v5 token endpoint is called internally
       // also, discovery doesn't seem to work properly: https://github.com/nextauthjs/next-auth/pull/9718
       // wellKnown: `${OIDC_SERVER_URL}/.well-known/openid-configuration`,
-      token: `${OIDC_SERVER_URL_INTERNAL}/protocol/openid-connect/token`,
-      userinfo: `${OIDC_SERVER_URL}/protocol/openid-connect/token`,
+      token: `${NEXT_PUBLIC_OIDC_SERVER_URL_INTERNAL}/protocol/openid-connect/token`,
+      userinfo: `${NEXT_PUBLIC_OIDC_SERVER_URL}/protocol/openid-connect/token`,
       authorization: {
-        url: `${OIDC_SERVER_URL}/protocol/openid-connect/auth`,
+        url: `${NEXT_PUBLIC_OIDC_SERVER_URL}/protocol/openid-connect/auth`,
         // https://authjs.dev/guides/basics/refresh-token-rotation#jwt-strategy
         params: {
           access_type: "offline",

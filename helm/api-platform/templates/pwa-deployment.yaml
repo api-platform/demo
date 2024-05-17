@@ -46,22 +46,22 @@ spec:
                 secretKeyRef:
                   name: {{ include "api-platform.fullname" . }}
                   key: next-auth-secret
-            - name: OIDC_SERVER_URL
+            - name: NEXT_PUBLIC_OIDC_SERVER_URL
               valueFrom:
                 configMapKeyRef:
                   name: {{ include "api-platform.fullname" . }}
                   key: oidc-server-url
-            - name: OIDC_SERVER_URL_INTERNAL
+            - name: NEXT_PUBLIC_OIDC_SERVER_URL_INTERNAL
               valueFrom:
                 configMapKeyRef:
                   name: {{ include "api-platform.fullname" . }}
                   key: oidc-server-url-internal
-            - name: OIDC_CLIENT_ID
+            - name: NEXT_PUBLIC_OIDC_CLIENT_ID
               valueFrom:
                 configMapKeyRef:
                   name: {{ include "api-platform.fullname" . }}
                   key: pwa-client-id
-            - name: OIDC_AUTHORIZATION_CLIENT_ID
+            - name: NEXT_PUBLIC_OIDC_AUTHORIZATION_CLIENT_ID
               valueFrom:
                 configMapKeyRef:
                   name: {{ include "api-platform.fullname" . }}
