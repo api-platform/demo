@@ -120,7 +120,8 @@ jobs:
             --set=external-dns.cloudflare.apiToken=${{ secrets.cloudflare-api-token }} \
             --set=external-dns.domainFilters={"$url"} \
             --set=external-dns.zoneIdFilters={${{ secrets.cloudflare-zone-id }}} \
-            --set=php.corsAllowOrigin="^$(echo "$cors" | sed 's/\./\\./g')$" \
+            --set=php.corsAllowOrigin="^$(echo "$cors" | sed 's/\./\\\\./g')$" \
+            --set=php.trustedHosts="^127\\.0\\.0\\.1|localhost|$(echo "$url" | sed 's/\./\\\\./g')$" \
             --set=mercure.publicUrl=https://$url/.well-known/mercure \
             --set=mercure.extraDirectives="demo \
             cors_origins $(echo "$cors" | sed 's/|/ /g')" \
