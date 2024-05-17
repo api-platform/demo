@@ -80,7 +80,9 @@ use Symfony\Component\Validator\Constraints as Assert;
     mercure: [
         'topics' => [
             '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/admin/reviews/{id}{._format}"))',
+            '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/admin/reviews{._format}"))',
             '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/books/{bookId}/reviews/{id}{._format}"))',
+            '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/books/{bookId}/reviews{._format}"))',
         ],
     ]
 )]
@@ -142,7 +144,15 @@ use Symfony\Component\Validator\Constraints as Assert;
     denormalizationContext: [
         AbstractNormalizer::GROUPS => ['Review:write'],
     ],
-    collectDenormalizationErrors: true
+    collectDenormalizationErrors: true,
+    mercure: [
+        'topics' => [
+            '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/admin/reviews/{id}{._format}"))',
+            '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/admin/reviews{._format}"))',
+            '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/books/{bookId}/reviews/{id}{._format}"))',
+            '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/books/{bookId}/reviews{._format}"))',
+        ],
+    ]
 )]
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
 #[ORM\UniqueConstraint(fields: ['user', 'book'])]

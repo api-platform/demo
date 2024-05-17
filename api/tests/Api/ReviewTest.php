@@ -53,6 +53,7 @@ final class ReviewTest extends ApiTestCase
 
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertEquals('<https://localhost/.well-known/mercure>; rel="mercure"', $response->getHeaders()['link'][1]);
         self::assertJsonContains([
             'hydra:totalItems' => $hydraTotalItems,
         ]);
@@ -266,6 +267,7 @@ final class ReviewTest extends ApiTestCase
 
         self::assertResponseStatusCodeSame(Response::HTTP_CREATED);
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertEquals('<https://localhost/.well-known/mercure>; rel="mercure"', $response->getHeaders(false)['link'][1]);
         self::assertJsonContains([
             'book' => '/books/' . $book->getId(),
             'user' => [
@@ -284,7 +286,12 @@ final class ReviewTest extends ApiTestCase
         self::assertCount(1, self::getMercureMessages());
         self::assertMercureUpdateMatchesJsonSchema(
             update: self::getMercureMessage(),
-            topics: ['http://localhost/admin/reviews/' . $review->getId(), 'http://localhost/books/' . $book->getId() . '/reviews/' . $review->getId()],
+            topics: [
+                'http://localhost/admin/reviews/' . $review->getId(),
+                'http://localhost/admin/reviews',
+                'http://localhost/books/' . $book->getId() . '/reviews/' . $review->getId(),
+                'http://localhost/books/' . $book->getId() . '/reviews',
+            ],
             jsonSchema: file_get_contents(__DIR__ . '/Admin/schemas/Review/item.json')
         );
     }
@@ -451,7 +458,7 @@ final class ReviewTest extends ApiTestCase
             'authorize' => true,
         ]);
 
-        $this->client->request('PATCH', '/books/' . $review->book->getId() . '/reviews/' . $review->getId(), [
+        $response = $this->client->request('PATCH', '/books/' . $review->book->getId() . '/reviews/' . $review->getId(), [
             'auth_bearer' => $token,
             'json' => [
                 'body' => 'Very good book!',
@@ -464,6 +471,7 @@ final class ReviewTest extends ApiTestCase
 
         self::assertResponseStatusCodeSame(Response::HTTP_OK);
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertEquals('<https://localhost/.well-known/mercure>; rel="mercure"', $response->getHeaders(false)['link'][1]);
         self::assertJsonContains([
             'body' => 'Very good book!',
             'rating' => 5,
@@ -472,7 +480,12 @@ final class ReviewTest extends ApiTestCase
         self::assertCount(1, self::getMercureMessages());
         self::assertMercureUpdateMatchesJsonSchema(
             update: self::getMercureMessage(),
-            topics: ['http://localhost/admin/reviews/' . $review->getId(), 'http://localhost/books/' . $review->book->getId() . '/reviews/' . $review->getId()],
+            topics: [
+                'http://localhost/admin/reviews/' . $review->getId(),
+                'http://localhost/admin/reviews',
+                'http://localhost/books/' . $review->book->getId() . '/reviews/' . $review->getId(),
+                'http://localhost/books/' . $review->book->getId() . '/reviews',
+            ],
             jsonSchema: file_get_contents(__DIR__ . '/Admin/schemas/Review/item.json')
         );
     }
@@ -560,7 +573,12 @@ final class ReviewTest extends ApiTestCase
         self::assertCount(1, self::getMercureMessages());
         self::assertEquals(
             new Update(
-                topics: ['http://localhost/admin/reviews/' . $id, 'http://localhost/books/' . $bookId . '/reviews/' . $id],
+                topics: [
+                    'http://localhost/admin/reviews/' . $id,
+                    'http://localhost/admin/reviews',
+                    'http://localhost/books/' . $bookId . '/reviews/' . $id,
+                    'http://localhost/books/' . $bookId . '/reviews',
+                ],
                 data: json_encode(['@id' => '/admin/reviews/' . $id, '@type' => 'https://schema.org/Review']),
             ),
             self::getMercureMessage()

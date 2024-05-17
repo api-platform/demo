@@ -138,7 +138,7 @@ final class UserTest extends ApiTestCase
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
-        $this->client->request('GET', '/admin/users/' . $user->getId(), ['auth_bearer' => $token]);
+        $response = $this->client->request('GET', '/admin/users/' . $user->getId(), ['auth_bearer' => $token]);
 
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');

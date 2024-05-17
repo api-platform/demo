@@ -79,6 +79,7 @@ final class ReviewTest extends ApiTestCase
 
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertEquals('<https://localhost/.well-known/mercure>; rel="mercure"', $response->getHeaders()['link'][1]);
         self::assertJsonContains([
             'hydra:totalItems' => $hydraTotalItems,
         ]);
@@ -189,10 +190,11 @@ final class ReviewTest extends ApiTestCase
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
-        $this->client->request('GET', '/admin/reviews/' . $review->getId(), ['auth_bearer' => $token]);
+        $response = $this->client->request('GET', '/admin/reviews/' . $review->getId(), ['auth_bearer' => $token]);
 
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertEquals('<https://localhost/.well-known/mercure>; rel="mercure"', $response->getHeaders(false)['link'][1]);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Review/item.json'));
     }
 
@@ -268,7 +270,7 @@ final class ReviewTest extends ApiTestCase
             'email' => $user->email,
         ]);
 
-        $this->client->request('PUT', '/admin/reviews/' . $review->getId(), [
+        $response = $this->client->request('PUT', '/admin/reviews/' . $review->getId(), [
             'auth_bearer' => $token,
             'json' => [
                 // Must set all data because of standard PUT
@@ -285,6 +287,7 @@ final class ReviewTest extends ApiTestCase
 
         self::assertResponseStatusCodeSame(Response::HTTP_OK);
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertEquals('<https://localhost/.well-known/mercure>; rel="mercure"', $response->getHeaders(false)['link'][1]);
         self::assertJsonContains([
             'body' => 'Very good book!',
             'rating' => 5,
@@ -295,7 +298,12 @@ final class ReviewTest extends ApiTestCase
         self::assertCount(1, self::getMercureMessages());
         self::assertEquals(
             new Update(
-                topics: ['http://localhost/admin/reviews/' . $review->getId(), 'http://localhost/books/' . $review->book->getId() . '/reviews/' . $review->getId()],
+                topics: [
+                    'http://localhost/admin/reviews/' . $review->getId(),
+                    'http://localhost/admin/reviews',
+                    'http://localhost/books/' . $review->book->getId() . '/reviews/' . $review->getId(),
+                    'http://localhost/books/' . $review->book->getId() . '/reviews',
+                ],
                 data: self::serialize(
                     $review->object(),
                     'jsonld',
@@ -369,7 +377,12 @@ final class ReviewTest extends ApiTestCase
         self::assertCount(1, self::getMercureMessages());
         self::assertEquals(
             new Update(
-                topics: ['http://localhost/admin/reviews/' . $id, 'http://localhost/books/' . $bookId . '/reviews/' . $id],
+                topics: [
+                    'http://localhost/admin/reviews/' . $id,
+                    'http://localhost/admin/reviews',
+                    'http://localhost/books/' . $bookId . '/reviews/' . $id,
+                    'http://localhost/books/' . $bookId . '/reviews',
+                ],
                 data: json_encode(['@id' => '/admin/reviews/' . $id, '@type' => 'https://schema.org/Review']),
             ),
             self::getMercureMessage()
