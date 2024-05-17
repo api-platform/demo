@@ -57,7 +57,7 @@ export const Item: FunctionComponent<Props> = ({ review, onDelete, onEdit }) => 
       )}
       <div key={data["@id"]} className="mb-5 flex" data-testid="review">
         <div className="font-semibold text-gray-600 text-xl w-[50px] h-[50px] px-3 py-1 mr-3 rounded-full bg-gray-200 flex items-center justify-center">
-          {data["user"]["name"].substring(0, 1)}
+          {data.user?.name?.substring(0, 1) ?? "John Doe"}
         </div>
         <div className="w-full">
           {edit && (
@@ -74,7 +74,7 @@ export const Item: FunctionComponent<Props> = ({ review, onDelete, onEdit }) => 
           ) || (
             <>
               <p>
-                <span className="text-lg font-semibold">{data["user"]["name"]}</span>
+                <span className="text-lg font-semibold">{data.user?.name ?? "John Doe"}</span>
                 <span className="text-xs text-gray-400 ml-3">
                   <span className="mr-2">・</span>
                   {new Date(data["publishedAt"]).toLocaleDateString()}
