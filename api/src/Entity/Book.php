@@ -90,6 +90,12 @@ use Symfony\Component\Validator\Constraints as Assert;
     normalizationContext: [
         AbstractNormalizer::GROUPS => ['Book:read', 'Enum:read'],
         AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+    ],
+    mercure: [
+        'topics' => [
+            '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/admin/books/{id}{._format}"))',
+            '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/books/{id}{._format}"))',
+        ],
     ]
 )]
 #[ORM\Entity(repositoryClass: BookRepository::class)]

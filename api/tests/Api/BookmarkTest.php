@@ -70,6 +70,7 @@ final class BookmarkTest extends ApiTestCase
 
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertEquals('<https://localhost/.well-known/mercure>; rel="mercure"', $response->getHeaders(false)['link'][1]);
         self::assertJsonContains([
             'hydra:totalItems' => 35,
         ]);
@@ -167,6 +168,7 @@ final class BookmarkTest extends ApiTestCase
 
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertEquals('<https://localhost/.well-known/mercure>; rel="mercure"', $response->getHeaders(false)['link'][1]);
         self::assertJsonContains([
             'book' => [
                 '@id' => '/books/' . $book->getId(),
