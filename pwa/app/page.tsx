@@ -132,7 +132,7 @@ export default function Page() {
           Follow us
         </h2>
         <HelpButton
-          url="https://twitter.com/ApiPlatform"
+          url="https://x.com/ApiPlatform"
           title="API Platform on Twitter"
         >
           <svg
