@@ -54,7 +54,7 @@ services:
       - ./helm/api-platform/keycloak/themes/api-platform-demo:/opt/bitnami/keycloak/themes/api-platform-demo
 
   keycloak-config-cli:
-    image: bitnami/keycloak-config-cli:5-debian-11
+    image: bitnami/keycloak-config-cli:5-debian-12
     environment:
       KEYCLOAK_URL: http://keycloak:8080/oidc/
       KEYCLOAK_USER: ${KEYCLOAK_ADMIN_USER:-admin}

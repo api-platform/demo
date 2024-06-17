@@ -12,6 +12,8 @@ use App\Enum\BookCondition;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
 use Zenstruck\Foundry\Story;
 
+use function Zenstruck\Foundry\faker;
+
 final class DefaultStory extends Story
 {
     public function __construct(private readonly DecoderInterface $decoder)
@@ -31,7 +33,7 @@ final class DefaultStory extends Story
         // Default book has reviews (new users are created)
         ReviewFactory::createMany(30, [
             'book' => $defaultBook,
-            'publishedAt' => \DateTimeImmutable::createFromMutable(ReviewFactory::faker()->dateTime('-1 week')),
+            'publishedAt' => \DateTimeImmutable::createFromMutable(faker()->dateTime('-1 week')),
         ]);
 
         // Import books
@@ -46,7 +48,7 @@ final class DefaultStory extends Story
             if ($number = random_int(0, 5)) {
                 ReviewFactory::createMany($number, [
                     'book' => $book,
-                    'publishedAt' => \DateTimeImmutable::createFromMutable(ReviewFactory::faker()->dateTime('-1 week')),
+                    'publishedAt' => \DateTimeImmutable::createFromMutable(faker()->dateTime('-1 week')),
                 ]);
             }
 
@@ -81,7 +83,7 @@ final class DefaultStory extends Story
             BookmarkFactory::createOne([
                 'user' => $defaultUser,
                 'book' => $books[$key],
-                'bookmarkedAt' => \DateTimeImmutable::createFromMutable(BookmarkFactory::faker()->dateTime('-1 week')),
+                'bookmarkedAt' => \DateTimeImmutable::createFromMutable(faker()->dateTime('-1 week')),
             ]);
         }
 
