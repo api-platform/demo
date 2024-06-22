@@ -24,6 +24,10 @@ doctrine:
                 alias: App
         controller_resolver:
             auto_mapping: true
+        dql:
+            string_functions:
+                DATE: App\Doctrine\DateStringDQL
+                SUBSTRING: App\Doctrine\SubstringDQL
 
 when@test:
     doctrine:

@@ -9,8 +9,11 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Book;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
+use Symfony\Component\Validator\Exception\ValidatorException;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
@@ -25,8 +28,17 @@ final readonly class BookPersistProcessor implements ProcessorInterface
         #[Autowire(service: PersistProcessor::class)]
         private ProcessorInterface $persistProcessor,
         private HttpClientInterface $client,
-        private DecoderInterface $decoder
+        private DecoderInterface $decoder,
+        private ValidatorInterface $validator
     ) {
+    }
+
+    private function errorResponse(string $message, int $code)
+    {
+        return new JsonResponse([
+            'status' => 'failed',
+            'error' => $message
+        ], $code);
     }
 
     /**
@@ -34,6 +46,7 @@ final readonly class BookPersistProcessor implements ProcessorInterface
      */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Book
     {
+
         $book = $this->getData($data->book);
         $data->title = $book['title'];
 
@@ -44,7 +57,6 @@ final readonly class BookPersistProcessor implements ProcessorInterface
                 $data->author = $author['name'];
             }
         }
-
         // save entity
         return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
     }

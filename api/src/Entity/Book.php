@@ -17,6 +17,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\UrlGeneratorInterface;
 use App\Enum\BookCondition;
+use App\Enum\BookPromotionStatus;
 use App\Repository\BookRepository;
 use App\State\Processor\BookPersistProcessor;
 use App\State\Processor\BookRemoveProcessor;
@@ -100,6 +101,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 #[UniqueEntity(fields: ['book'])]
+#[UniqueEntity(fields: ['slug'], message: 'This slug is already in use.')]
 class Book
 {
     /**
@@ -200,5 +202,48 @@ class Book
     public function getId(): ?Uuid
     {
         return $this->id;
+    }
+
+      /**
+     * @ORM\Column(type="string", columnDefinition="ENUM('None', 'Basic', 'Pro')")
+     * @Assert\NotBlank
+     */
+    #[Assert\NotNull(message: 'Promotion status cannot be null')]
+    #[Assert\Choice(choices: [BookPromotionStatus::None, BookPromotionStatus::Basic, BookPromotionStatus::Pro], message: 'Invalid promotion status.')]
+    #[Groups(groups: ['Book:read:admin', 'Book:write'])]
+    #[ORM\Column(name: '`promotion_status`', type: 'string', enumType: BookPromotionStatus::class)]
+    private ?BookPromotionStatus $promotionStatus = BookPromotionStatus::None;
+
+    // Getter and Setter for promotionStatus
+    public function getPromotionStatus(): BookPromotionStatus
+    {
+        return $this->promotionStatus;
+    }
+
+    public function setPromotionStatus(BookPromotionStatus $promotionStatus): self
+    {
+        $this->promotionStatus = $promotionStatus;
+        return $this;
+    }
+
+    /**
+     * @ORM\Column(type="string", unique=true)
+     */
+    #[Assert\NotNull(message: 'Slug cannot be null')]
+    #[Assert\Length(min: 5, minMessage: 'Slug must be at least 5 characters long')]
+    #[Assert\Regex(pattern: '/^[a-z0-9-]+$/', message: 'Slug can only contain lowercase Latin letters, numbers, or hyphens')]
+    #[Groups(groups: ['Book:read', 'Book:write', 'Book:read:admin'])]
+    #[ORM\Column(name: '`slug`', type: 'string')]
+    private string $slug;
+
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+        return $this;
     }
 }

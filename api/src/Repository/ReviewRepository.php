@@ -35,6 +35,34 @@ class ReviewRepository extends ServiceEntityRepository
         return $rating ? (int) $rating : null;
     }
 
+    public function findHighestReviewDay(): ?string
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->select('DATE(r.publishedAt) as dayDate, COUNT(r.id) as review_count')
+            ->groupBy('dayDate')
+            ->orderBy('review_count', 'DESC')
+            ->addOrderBy('dayDate', 'DESC')
+            ->setMaxResults(1);
+
+        $result = $qb->getQuery()->getOneOrNullResult();
+
+        return $result['dayDate'] ?? null;
+    }
+
+    public function findHighestReviewMonth(): ?string
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->select('SUBSTRING(r.publishedAt) as monthDate, COUNT(r.id) as review_count')
+            ->groupBy('monthDate')
+            ->orderBy('review_count', 'DESC')
+            ->addOrderBy('monthDate', 'DESC')
+            ->setMaxResults(1);
+
+        $result = $qb->getQuery()->getOneOrNullResult();
+
+        return $result['monthDate'] ?? null;
+    }
+
     public function save(Review $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
