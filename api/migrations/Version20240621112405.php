@@ -20,7 +20,6 @@ final class Version20240621112405 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        // this up() migration is auto-generated, please modify it to your needs
         $this->addSql("ALTER TABLE book ADD promotion_status VARCHAR(255) DEFAULT 'None' NOT NULL");
 
         // Convert isPromoted values to promotionStatus

@@ -22,16 +22,16 @@ final class Version20240621112857 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE book ADD slug VARCHAR(255)');
 
-        // Step 2: Populate the `slug` column with default values
+        // Populate the `slug` column with default values
         $books = $this->connection->fetchAllAssociative('SELECT id FROM book');
         foreach ($books as $book) {
             $this->addSql('UPDATE book SET slug = ? WHERE id = ?', ['book-' . $book['id'], $book['id']]);
         }
 
-        // Step 3: Alter the `slug` column to be NOT NULL
+        // Alter the `slug` column to be NOT NULL
         $this->addSql('ALTER TABLE book ALTER COLUMN slug SET NOT NULL');
 
-        // Step 4: Add a unique constraint to the `slug` column
+        // Add a unique constraint to the `slug` column
         $this->addSql('CREATE UNIQUE INDEX UNIQ_CBE5A331989D9B62 ON book (slug)');
     }
 

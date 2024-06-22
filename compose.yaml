@@ -92,7 +92,7 @@ services:
       - keycloak-database
     ports:
       - target: 8080
-        published: 8080
+        published: 8081
         protocol: tcp
 
 volumes:

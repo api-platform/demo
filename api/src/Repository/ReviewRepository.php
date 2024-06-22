@@ -45,8 +45,8 @@ class ReviewRepository extends ServiceEntityRepository
             ->setMaxResults(1);
 
         $result = $qb->getQuery()->getOneOrNullResult();
-
-        return $result['dayDate'] ?? null;
+        $review_count = $result['review_count'];
+        return $result['dayDate'] . " with $review_count reviews";
     }
 
     public function findHighestReviewMonth(): ?string
@@ -59,8 +59,8 @@ class ReviewRepository extends ServiceEntityRepository
             ->setMaxResults(1);
 
         $result = $qb->getQuery()->getOneOrNullResult();
-
-        return $result['monthDate'] ?? null;
+        $review_count = $result['review_count'];
+        return $result['monthDate'] . " with $review_count reviews";
     }
 
     public function save(Review $entity, bool $flush = false): void
