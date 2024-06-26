@@ -30,7 +30,7 @@ final readonly class ResourceResourceHandler implements ResourceHandlerInterface
             operationName: $context['operation_name'] ?? null,
             httpOperation: true,
         );
-        $shortName = strtolower(preg_replace('~(?<=\\w)([A-Z])~', '-$1', $operation->getShortName()));
+        $shortName = strtolower(preg_replace('~(?<=\w)([A-Z])~', '-$1', $operation->getShortName()));
         $resourceIri = $this->iriConverter->getIriFromResource(
             resource: $resource,
             referenceType: UrlGeneratorInterface::ABS_PATH,
@@ -56,7 +56,7 @@ final readonly class ResourceResourceHandler implements ResourceHandlerInterface
             operationName: $context['operation_name'] ?? null,
             httpOperation: true,
         );
-        $shortName = strtolower(preg_replace('~(?<=\\w)([A-Z])~', '-$1', $operation->getShortName()));
+        $shortName = strtolower(preg_replace('~(?<=\w)([A-Z])~', '-$1', $operation->getShortName()));
         $resourceIri = $this->iriConverter->getIriFromResource(
             resource: $resource,
             referenceType: UrlGeneratorInterface::ABS_PATH,
