@@ -4,23 +4,11 @@ declare(strict_types=1);
 
 namespace App\Enum;
 
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-
 /**
  * A list of possible conditions for the item.
  *
  * @see https://schema.org/OfferItemCondition
  */
-#[ApiResource(
-    shortName: 'BookCondition',
-    types: ['https://schema.org/OfferItemCondition'],
-    operations: [
-        new GetCollection(provider: BookCondition::class . '::getCases'),
-        new Get(provider: BookCondition::class . '::getCase'),
-    ],
-)]
 enum BookCondition: string
 {
     use EnumApiResourceTrait;
