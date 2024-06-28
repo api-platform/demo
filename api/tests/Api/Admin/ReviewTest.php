@@ -293,7 +293,7 @@ final class ReviewTest extends ApiTestCase
             'rating' => 5,
         ]);
         // ensure user hasn't changed
-        self::assertNotEquals($user, $review->object()->user);
+        self::assertNotEquals($user, $review->_real()->user);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Review/item.json'));
         self::assertCount(1, self::getMercureMessages());
         self::assertEquals(
@@ -305,7 +305,7 @@ final class ReviewTest extends ApiTestCase
                     'http://localhost/books/' . $review->book->getId() . '/reviews',
                 ],
                 data: self::serialize(
-                    $review->object(),
+                    $review->_real(),
                     'jsonld',
                     self::getOperationNormalizationContext(Review::class, '/admin/reviews/{id}{._format}')
                 ),

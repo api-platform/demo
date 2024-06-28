@@ -6,47 +6,51 @@ namespace App\DataFixtures\Factory;
 
 use App\Entity\Book;
 use App\Enum\BookCondition;
-use Doctrine\ORM\EntityRepository;
-use Zenstruck\Foundry\ModelFactory;
-use Zenstruck\Foundry\Proxy;
-use Zenstruck\Foundry\RepositoryProxy;
+use App\Repository\BookRepository;
+use Zenstruck\Foundry\FactoryCollection;
+use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
+use Zenstruck\Foundry\Persistence\Proxy;
+use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
 /**
- * @extends ModelFactory<Book>
+ * @method        Book|Proxy                                     create(array|callable $attributes = [])
+ * @method static Book|Proxy                                     createOne(array $attributes = [])
+ * @method static Book|Proxy                                     find(object|array|mixed $criteria)
+ * @method static Book|Proxy                                     findOrCreate(array $attributes)
+ * @method static Book|Proxy                                     first(string $sortedField = 'id')
+ * @method static Book|Proxy                                     last(string $sortedField = 'id')
+ * @method static Book|Proxy                                     random(array $attributes = [])
+ * @method static Book|Proxy                                     randomOrCreate(array $attributes = [])
+ * @method static Book[]|Proxy[]                                 all()
+ * @method static Book[]|Proxy[]                                 createMany(int $number, array|callable $attributes = [])
+ * @method static Book[]|Proxy[]                                 createSequence(iterable|callable $sequence)
+ * @method static Book[]|Proxy[]                                 findBy(array $attributes)
+ * @method static Book[]|Proxy[]                                 randomRange(int $min, int $max, array $attributes = [])
+ * @method static Book[]|Proxy[]                                 randomSet(int $number, array $attributes = [])
+ * @method        FactoryCollection<Book|Proxy>                  many(int $min, int|null $max = null)
+ * @method        FactoryCollection<Book|Proxy>                  sequence(iterable|callable $sequence)
+ * @method static ProxyRepositoryDecorator<Book, BookRepository> repository()
  *
- * @method        Book|Proxy                       create(array|callable $attributes = [])
- * @method static Book|Proxy                       createOne(array $attributes = [])
- * @method static Book|Proxy                       find(object|array|mixed $criteria)
- * @method static Book|Proxy                       findOrCreate(array $attributes)
- * @method static Book|Proxy                       first(string $sortedField = 'id')
- * @method static Book|Proxy                       last(string $sortedField = 'id')
- * @method static Book|Proxy                       random(array $attributes = [])
- * @method static Book|Proxy                       randomOrCreate(array $attributes = [])
- * @method static EntityRepository|RepositoryProxy repository()
- * @method static Book[]|Proxy[]                   all()
- * @method static Book[]|Proxy[]                   createMany(int $number, array|callable $attributes = [])
- * @method static Book[]|Proxy[]                   createSequence(iterable|callable $sequence)
- * @method static Book[]|Proxy[]                   findBy(array $attributes)
- * @method static Book[]|Proxy[]                   randomRange(int $min, int $max, array $attributes = [])
- * @method static Book[]|Proxy[]                   randomSet(int $number, array $attributes = [])
+ * @phpstan-method Book&Proxy<Book> create(array|callable $attributes = [])
+ * @phpstan-method static Book&Proxy<Book> createOne(array $attributes = [])
+ * @phpstan-method static Book&Proxy<Book> find(object|array|mixed $criteria)
+ * @phpstan-method static Book&Proxy<Book> findOrCreate(array $attributes)
+ * @phpstan-method static Book&Proxy<Book> first(string $sortedField = 'id')
+ * @phpstan-method static Book&Proxy<Book> last(string $sortedField = 'id')
+ * @phpstan-method static Book&Proxy<Book> random(array $attributes = [])
+ * @phpstan-method static Book&Proxy<Book> randomOrCreate(array $attributes = [])
+ * @phpstan-method static list<Book&Proxy<Book>> all()
+ * @phpstan-method static list<Book&Proxy<Book>> createMany(int $number, array|callable $attributes = [])
+ * @phpstan-method static list<Book&Proxy<Book>> createSequence(iterable|callable $sequence)
+ * @phpstan-method static list<Book&Proxy<Book>> findBy(array $attributes)
+ * @phpstan-method static list<Book&Proxy<Book>> randomRange(int $min, int $max, array $attributes = [])
+ * @phpstan-method static list<Book&Proxy<Book>> randomSet(int $number, array $attributes = [])
+ * @phpstan-method FactoryCollection<Book&Proxy<Book>> many(int $min, int|null $max = null)
+ * @phpstan-method FactoryCollection<Book&Proxy<Book>> sequence(iterable|callable $sequence)
  *
- * @psalm-method        Proxy<Book> create(array|callable $attributes = [])
- * @psalm-method static Proxy<Book> createOne(array $attributes = [])
- * @psalm-method static Proxy<Book> find(object|array|mixed $criteria)
- * @psalm-method static Proxy<Book> findOrCreate(array $attributes)
- * @psalm-method static Proxy<Book> first(string $sortedField = 'id')
- * @psalm-method static Proxy<Book> last(string $sortedField = 'id')
- * @psalm-method static Proxy<Book> random(array $attributes = [])
- * @psalm-method static Proxy<Book> randomOrCreate(array $attributes = [])
- * @psalm-method static RepositoryProxy<Book> repository()
- * @psalm-method static list<Proxy<Book>> all()
- * @psalm-method static list<Proxy<Book>> createMany(int $number, array|callable $attributes = [])
- * @psalm-method static list<Proxy<Book>> createSequence(iterable|callable $sequence)
- * @psalm-method static list<Proxy<Book>> findBy(array $attributes)
- * @psalm-method static list<Proxy<Book>> randomRange(int $min, int $max, array $attributes = [])
- * @psalm-method static list<Proxy<Book>> randomSet(int $number, array $attributes = [])
+ * @extends PersistentProxyObjectFactory<Book>
  */
-final class BookFactory extends ModelFactory
+final class BookFactory extends PersistentProxyObjectFactory
 {
     private array $data;
 
@@ -64,7 +68,7 @@ final class BookFactory extends ModelFactory
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
      */
-    protected function getDefaults(): array
+    protected function defaults(): array
     {
         return [
             'condition' => self::faker()->randomElement(BookCondition::getCases()),
@@ -74,7 +78,7 @@ final class BookFactory extends ModelFactory
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
      */
-    protected function initialize(): self
+    protected function initialize(): static
     {
         return $this
             ->afterInstantiate(function (Book $book): void {
@@ -110,7 +114,7 @@ final class BookFactory extends ModelFactory
         ;
     }
 
-    protected static function getClass(): string
+    public static function class(): string
     {
         return Book::class;
     }

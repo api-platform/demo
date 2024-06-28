@@ -5,50 +5,54 @@ declare(strict_types=1);
 namespace App\DataFixtures\Factory;
 
 use App\Entity\Review;
+use App\Repository\ReviewRepository;
 use App\Security\Http\Protection\ResourceHandlerInterface;
-use Doctrine\ORM\EntityRepository;
-use Zenstruck\Foundry\ModelFactory;
-use Zenstruck\Foundry\Proxy;
-use Zenstruck\Foundry\RepositoryProxy;
+use Zenstruck\Foundry\FactoryCollection;
+use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
+use Zenstruck\Foundry\Persistence\Proxy;
+use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
 use function Zenstruck\Foundry\lazy;
 
 /**
- * @extends ModelFactory<Review>
+ * @method        Review|Proxy                                       create(array|callable $attributes = [])
+ * @method static Review|Proxy                                       createOne(array $attributes = [])
+ * @method static Review|Proxy                                       find(object|array|mixed $criteria)
+ * @method static Review|Proxy                                       findOrCreate(array $attributes)
+ * @method static Review|Proxy                                       first(string $sortedField = 'id')
+ * @method static Review|Proxy                                       last(string $sortedField = 'id')
+ * @method static Review|Proxy                                       random(array $attributes = [])
+ * @method static Review|Proxy                                       randomOrCreate(array $attributes = [])
+ * @method static Review[]|Proxy[]                                   all()
+ * @method static Review[]|Proxy[]                                   createMany(int $number, array|callable $attributes = [])
+ * @method static Review[]|Proxy[]                                   createSequence(iterable|callable $sequence)
+ * @method static Review[]|Proxy[]                                   findBy(array $attributes)
+ * @method static Review[]|Proxy[]                                   randomRange(int $min, int $max, array $attributes = [])
+ * @method static Review[]|Proxy[]                                   randomSet(int $number, array $attributes = [])
+ * @method        FactoryCollection<Review|Proxy>                    many(int $min, int|null $max = null)
+ * @method        FactoryCollection<Review|Proxy>                    sequence(iterable|callable $sequence)
+ * @method static ProxyRepositoryDecorator<Review, ReviewRepository> repository()
  *
- * @method        Review|Proxy                     create(array|callable $attributes = [])
- * @method static Review|Proxy                     createOne(array $attributes = [])
- * @method static Review|Proxy                     find(object|array|mixed $criteria)
- * @method static Review|Proxy                     findOrCreate(array $attributes)
- * @method static Review|Proxy                     first(string $sortedField = 'id')
- * @method static Review|Proxy                     last(string $sortedField = 'id')
- * @method static Review|Proxy                     random(array $attributes = [])
- * @method static Review|Proxy                     randomOrCreate(array $attributes = [])
- * @method static EntityRepository|RepositoryProxy repository()
- * @method static Review[]|Proxy[]                 all()
- * @method static Review[]|Proxy[]                 createMany(int $number, array|callable $attributes = [])
- * @method static Review[]|Proxy[]                 createSequence(iterable|callable $sequence)
- * @method static Review[]|Proxy[]                 findBy(array $attributes)
- * @method static Review[]|Proxy[]                 randomRange(int $min, int $max, array $attributes = [])
- * @method static Review[]|Proxy[]                 randomSet(int $number, array $attributes = [])
+ * @phpstan-method Review&Proxy<Review> create(array|callable $attributes = [])
+ * @phpstan-method static Review&Proxy<Review> createOne(array $attributes = [])
+ * @phpstan-method static Review&Proxy<Review> find(object|array|mixed $criteria)
+ * @phpstan-method static Review&Proxy<Review> findOrCreate(array $attributes)
+ * @phpstan-method static Review&Proxy<Review> first(string $sortedField = 'id')
+ * @phpstan-method static Review&Proxy<Review> last(string $sortedField = 'id')
+ * @phpstan-method static Review&Proxy<Review> random(array $attributes = [])
+ * @phpstan-method static Review&Proxy<Review> randomOrCreate(array $attributes = [])
+ * @phpstan-method static list<Review&Proxy<Review>> all()
+ * @phpstan-method static list<Review&Proxy<Review>> createMany(int $number, array|callable $attributes = [])
+ * @phpstan-method static list<Review&Proxy<Review>> createSequence(iterable|callable $sequence)
+ * @phpstan-method static list<Review&Proxy<Review>> findBy(array $attributes)
+ * @phpstan-method static list<Review&Proxy<Review>> randomRange(int $min, int $max, array $attributes = [])
+ * @phpstan-method static list<Review&Proxy<Review>> randomSet(int $number, array $attributes = [])
+ * @phpstan-method FactoryCollection<Review&Proxy<Review>> many(int $min, int|null $max = null)
+ * @phpstan-method FactoryCollection<Review&Proxy<Review>> sequence(iterable|callable $sequence)
  *
- * @psalm-method        Proxy<Review> create(array|callable $attributes = [])
- * @psalm-method static Proxy<Review> createOne(array $attributes = [])
- * @psalm-method static Proxy<Review> find(object|array|mixed $criteria)
- * @psalm-method static Proxy<Review> findOrCreate(array $attributes)
- * @psalm-method static Proxy<Review> first(string $sortedField = 'id')
- * @psalm-method static Proxy<Review> last(string $sortedField = 'id')
- * @psalm-method static Proxy<Review> random(array $attributes = [])
- * @psalm-method static Proxy<Review> randomOrCreate(array $attributes = [])
- * @psalm-method static RepositoryProxy<Review> repository()
- * @psalm-method static list<Proxy<Review>> all()
- * @psalm-method static list<Proxy<Review>> createMany(int $number, array|callable $attributes = [])
- * @psalm-method static list<Proxy<Review>> createSequence(iterable|callable $sequence)
- * @psalm-method static list<Proxy<Review>> findBy(array $attributes)
- * @psalm-method static list<Proxy<Review>> randomRange(int $min, int $max, array $attributes = [])
- * @psalm-method static list<Proxy<Review>> randomSet(int $number, array $attributes = [])
+ * @extends PersistentProxyObjectFactory<Review>
  */
-final class ReviewFactory extends ModelFactory
+final class ReviewFactory extends PersistentProxyObjectFactory
 {
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
@@ -62,7 +66,7 @@ final class ReviewFactory extends ModelFactory
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
      */
-    protected function getDefaults(): array
+    protected function defaults(): array
     {
         return [
             'user' => lazy(static fn () => UserFactory::new()),
@@ -76,7 +80,7 @@ final class ReviewFactory extends ModelFactory
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
      */
-    protected function initialize(): self
+    protected function initialize(): static
     {
         return $this
             // create the resource on the OIDC server
@@ -93,10 +97,9 @@ final class ReviewFactory extends ModelFactory
                 }
             })
         ;
-        // ->afterInstantiate(function(Review $review): void {})
     }
 
-    protected static function getClass(): string
+    public static function class(): string
     {
         return Review::class;
     }
