@@ -137,7 +137,7 @@ keycloak:
       - -jar
       - /opt/bitnami/keycloak-config-cli/keycloak-config-cli.jar
     image:
-      tag: 5-debian-11
+      tag: 5-debian-12
   postgresql:
     enabled: true
     nameOverride: postgresql-keycloak

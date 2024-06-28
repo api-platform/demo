@@ -1,12 +1,12 @@
 dependencies:
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami/
-  version: 15.2.5
+  version: 15.5.6
 - name: external-dns
   repository: https://charts.bitnami.com/bitnami/
-  version: 7.2.0
+  version: 7.5.6
 - name: keycloak
   repository: https://charts.bitnami.com/bitnami/
-  version: 21.0.3
-digest: sha256:27c3a8373d084929c65ab0de4369b59a9db901dd24352bd396097a9193f762ad
-generated: "2024-04-29T17:58:25.387778446+02:00"
+  version: 21.4.2
+digest: sha256:fa058d1558ec980b14354478fed4725d46b1f2a9b274af9ee7bee419944e926a
+generated: "2024-06-18T13:57:36.134642207+02:00"

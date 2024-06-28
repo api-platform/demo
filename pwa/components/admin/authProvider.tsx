@@ -1,5 +1,5 @@
 import { AuthProvider } from "react-admin";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { getSession, signIn, signOut } from "next-auth/react";
 
 import { NEXT_PUBLIC_OIDC_SERVER_URL } from "../../config/keycloak";
 
@@ -7,8 +7,7 @@ const authProvider: AuthProvider = {
   // Nothing to do here, this function will never be called
   login: async () => Promise.resolve(),
   logout: async () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { data: session } = useSession();
+    const session = getSession();
     if (!session) {
       return;
     }
@@ -19,8 +18,7 @@ const authProvider: AuthProvider = {
     });
   },
   checkError: async (error) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { data: session } = useSession();
+    const session = getSession();
     const status = error.status;
     // @ts-ignore
     if (!session || session?.error === "RefreshAccessTokenError" || status === 401) {
@@ -34,8 +32,7 @@ const authProvider: AuthProvider = {
     }
   },
   checkAuth: async () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { data: session } = useSession();
+    const session = getSession();
     // @ts-ignore
     if (!session || session?.error === "RefreshAccessTokenError") {
       await signIn("keycloak");
@@ -46,11 +43,10 @@ const authProvider: AuthProvider = {
     return Promise.resolve();
   },
   getPermissions: () => Promise.resolve(),
-  // @ts-ignore
   getIdentity: async () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { data: session } = useSession();
+    const session = getSession();
 
+    // @ts-ignore
     return session ? Promise.resolve(session.user) : Promise.reject();
   },
   // Nothing to do here, this function will never be called

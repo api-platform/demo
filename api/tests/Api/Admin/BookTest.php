@@ -541,7 +541,7 @@ final class BookTest extends ApiTestCase
             new Update(
                 topics: ['http://localhost/admin/books/' . $book->getId(), 'http://localhost/books/' . $book->getId()],
                 data: self::serialize(
-                    $book->object(),
+                    $book->_real(),
                     'jsonld',
                     self::getOperationNormalizationContext(Book::class, '/admin/books/{id}{._format}')
                 ),
