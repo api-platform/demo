@@ -47,7 +47,7 @@ jobs:
         run: echo "AUTH_SECRET=$(openssl rand -hex 32)" >> $GITHUB_ENV
       -
         name: Build Docker images
-        uses: docker/bake-action@v4
+        uses: docker/bake-action@v5
         with:
           # push and load may not be set together
           # must push manually in a next step
