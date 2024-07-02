@@ -10,12 +10,12 @@
     "test": "playwright test"
   },
   "dependencies": {
-    "@api-platform/admin": "3.4.6",
+    "@api-platform/admin": "^3.4.9",
     "@api-platform/api-doc-parser": "^0.16.4",
     "@auth/core": "^0.34.1",
     "@fontsource/poppins": "^5.0.14",
-    "@mui/icons-material": "^5.15.20",
-    "@mui/material": "^5.15.20",
+    "@mui/icons-material": "^5.15.21",
+    "@mui/material": "^5.15.21",
     "@tailwindcss/forms": "^0.5.7",
     "@tanstack/react-query": "^5.48.0",
     "@tanstack/react-query-devtools": "^5.48.0",
