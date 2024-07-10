@@ -169,7 +169,7 @@ external-dns:
   resources:
     requests:
       memory: 50Mi
-      cpu: 50m
+      cpu: 1m
     limits:
       memory: 200Mi
       cpu: 100m
