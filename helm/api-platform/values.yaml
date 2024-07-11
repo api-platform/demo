@@ -102,7 +102,7 @@ keycloak:
   resources:
     requests:
       memory: 400Mi
-      cpu: 200m
+      cpu: 50m
     limits:
       memory: 500Mi
   service:
@@ -169,7 +169,7 @@ external-dns:
   resources:
     requests:
       memory: 50Mi
-      cpu: 50m
+      cpu: 1m
     limits:
       memory: 200Mi
       cpu: 100m
