@@ -14,39 +14,53 @@ interface Result {
   value: string;
 }
 
-interface BookInputProps extends TextInputProps {
+interface BookInputProps extends Omit<TextInputProps, "source"> {
   title?: string;
   author?: string;
 }
 
-const fetchOpenLibrarySearch = async (query: string, signal?: AbortSignal | undefined): Promise<Array<Result>> => {
+const fetchOpenLibrarySearch = async (
+  query: string,
+  signal?: AbortSignal | undefined
+): Promise<Array<Result>> => {
   try {
-    const response = await fetch(`https://openlibrary.org/search.json?q=${query.replace(/ - /, ' ')}&limit=10`, {
-      signal,
-      method: "GET",
-      next: { revalidate: 3600 },
-    });
+    const response = await fetch(
+      `https://openlibrary.org/search.json?q=${query.replace(
+        / - /,
+        " "
+      )}&limit=10`,
+      {
+        signal,
+        method: "GET",
+        next: { revalidate: 3600 },
+      }
+    );
     const results: Search = await response.json();
 
     return results.docs
-        .filter((result: SearchDoc) => {
-          return typeof result.title !== "undefined"
-              && typeof result.author_name !== "undefined"
-              && result.author_name.length > 0
-              && typeof result.seed !== "undefined"
-              && result.seed.length > 0
-              && result.seed.filter((seed) => seed.match(/^\/books\/OL\d{7}M/)).length > 0;
-        })
-        .map(({ title, author_name, seed }): Result => {
-          return {
-            // @ts-ignore
-            title,
-            // @ts-ignore
-            author: author_name[0],
-            // @ts-ignore
-            value: `https://openlibrary.org${seed.filter((seed) => seed.match(/^\/books\/OL\d{7}M/))[0]}.json`,
-          };
-        });
+      .filter((result: SearchDoc) => {
+        return (
+          typeof result.title !== "undefined" &&
+          typeof result.author_name !== "undefined" &&
+          result.author_name.length > 0 &&
+          typeof result.seed !== "undefined" &&
+          result.seed.length > 0 &&
+          result.seed.filter((seed) => seed.match(/^\/books\/OL\d{7}M/))
+            .length > 0
+        );
+      })
+      .map(({ title, author_name, seed }): Result => {
+        return {
+          // @ts-ignore
+          title,
+          // @ts-ignore
+          author: author_name[0],
+          // @ts-ignore
+          value: `https://openlibrary.org${
+            seed?.filter((seed) => seed.match(/^\/books\/OL\d{7}M/))[0]
+          }.json`,
+        };
+      });
   } catch (error) {
     console.error(error);
 
@@ -55,13 +69,17 @@ const fetchOpenLibrarySearch = async (query: string, signal?: AbortSignal | unde
 };
 
 export const BookInput = (props: BookInputProps) => {
-  const { field: { ref, ...field} } = useInput(props);
+  const {
+    field: { ref, ...field },
+  } = useInput({ ...props, source: "book" });
   const title = useWatch({ name: "title" });
   const author = useWatch({ name: "author" });
   const controller = useRef<AbortController | undefined>();
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [value, setValue] = useState<Result | null | undefined>(
-    !!title && !!author && !!field.value ? { title: title, author: author, value: field.value } : undefined
+    !!title && !!author && !!field.value
+      ? { title: title, author: author, value: field.value }
+      : undefined
   );
   const { isLoading, data, isFetched } = useQuery({
     queryKey: ["search", searchQuery],
@@ -71,32 +89,53 @@ export const BookInput = (props: BookInputProps) => {
       }
       controller.current = new AbortController();
 
-      return await fetchOpenLibrarySearch(searchQuery, controller.current.signal);
+      return await fetchOpenLibrarySearch(
+        searchQuery,
+        controller.current.signal
+      );
     },
     enabled: !!searchQuery,
   });
-  const onInputChange = useMemo(() =>
-      debounce((event: SyntheticEvent, value: string) => setSearchQuery(value), 400),
-      []
+  const onInputChange = useMemo(
+    () =>
+      debounce(
+        (event: SyntheticEvent, value: string) => setSearchQuery(value),
+        400
+      ),
+    []
   );
-  const onChange = (event: SyntheticEvent, value: Result | null | undefined) => {
+  const onChange = (
+    event: SyntheticEvent,
+    value: Result | null | undefined
+  ) => {
     field.onChange(value?.value);
     setValue(value);
   };
 
-  return <Autocomplete
+  return (
+    <Autocomplete
       value={value}
-      options={!isFetched ? (!!value ? [value] : []) : (data ?? [])}
-      isOptionEqualToValue={(option, val) => option?.value === (val?.value || value?.value)}
+      options={!isFetched ? (!!value ? [value] : []) : data ?? []}
+      isOptionEqualToValue={(option, val) =>
+        option?.value === (val?.value || value?.value)
+      }
       onChange={onChange}
       onInputChange={onInputChange}
-      getOptionLabel={(option: Result | undefined) => !!option ? `${option.title} - ${option.author}` : "No options"}
+      getOptionLabel={(option: Result | undefined) =>
+        !!option ? `${option.title} - ${option.author}` : "No options"
+      }
       style={{ width: 500 }}
       loading={isLoading}
       renderInput={(params) => (
-        <TextInput {...params} {...field} {...props}/>
+        <TextInput
+          {...params}
+          {...field}
+          {...props}
+          source="book"
+          label="Open Library Book"
+        />
       )}
-  />;
+    />
+  );
 };
 BookInput.displayName = "BookInput";
-BookInput.defaultProps = { label: "Open Library Book" };

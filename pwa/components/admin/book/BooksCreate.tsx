@@ -1,9 +1,9 @@
 import { CreateGuesser, type CreateGuesserProps } from "@api-platform/admin";
 
-import { Form } from "./Form";
+import { BookForm } from "./BookForm";
 
-export const Create = (props: CreateGuesserProps) => (
+export const BooksCreate = (props: CreateGuesserProps) => (
   <CreateGuesser {...props} title="Create book">
-    <Form/>
+    <BookForm />
   </CreateGuesser>
 );

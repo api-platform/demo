@@ -4,17 +4,26 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 
 import { getItemPath } from "../../../utils/dataAccess";
 
-export const ShowButton = (props: ShowButtonProps) => {
-  const record = useRecordContext(props);
-
+export const ShowButton = () => {
+  const record = useRecordContext();
   return record ? (
-    // @ts-ignore
-    <Button label={props.label} target="_blank" href={getItemPath({
-      id: record["@id"].replace(/^\/admin\/books\//, ""),
-      slug: slugify(`${record.title}-${record.author}`, { lower: true, trim: true, remove: /[*+~.(),;'"!:@]/g }),
-    }, "/books/[id]/[slug]")}>
-      <VisibilityIcon/>
+    <Button
+      label="ra.action.show"
+      // @ts-ignore
+      target="_blank"
+      href={getItemPath(
+        {
+          id: record["@id"].replace(/^\/admin\/books\//, ""),
+          slug: slugify(`${record.title}-${record.author}`, {
+            lower: true,
+            trim: true,
+            remove: /[*+~.(),;'"!:@]/g,
+          }),
+        },
+        "/books/[id]/[slug]"
+      )}
+    >
+      <VisibilityIcon />
     </Button>
   ) : null;
 };
-ShowButton.defaultProps = { label: "ra.action.show" };
