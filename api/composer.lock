@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "api-platform/core",
-            "version": "3.3.7",
+            "version": "v3.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/core.git",
-                "reference": "0d5f356839eb6aa9f536044abe4affa736553e76"
+                "reference": "0792141f3fda46babc59c73893491d8f0e5e1105"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/core/zipball/0d5f356839eb6aa9f536044abe4affa736553e76",
-                "reference": "0d5f356839eb6aa9f536044abe4affa736553e76",
+                "url": "https://api.github.com/repos/api-platform/core/zipball/0792141f3fda46babc59c73893491d8f0e5e1105",
+                "reference": "0792141f3fda46babc59c73893491d8f0e5e1105",
                 "shasum": ""
             },
             "require": {
@@ -52,7 +52,7 @@
                 "behat/mink": "^1.9",
                 "doctrine/cache": "^1.11 || ^2.1",
                 "doctrine/common": "^3.2.2",
-                "doctrine/dbal": "^3.4.0 || ^4.0",
+                "doctrine/dbal": "^3.4.0",
                 "doctrine/doctrine-bundle": "^1.12 || ^2.0",
                 "doctrine/mongodb-odm": "^2.2",
                 "doctrine/mongodb-odm-bundle": "^4.0 || ^5.0",
@@ -62,17 +62,8 @@
                 "friends-of-behat/mink-extension": "^2.2",
                 "friends-of-behat/symfony-extension": "^2.1",
                 "guzzlehttp/guzzle": "^6.0 || ^7.0",
-                "illuminate/config": "^10.0||^11.0",
-                "illuminate/contracts": "^10.0||^11.0",
-                "illuminate/database": "^10.0||^11.0",
-                "illuminate/http": "^10.0||^11.0",
-                "illuminate/pagination": "^10.0||^11.0",
-                "illuminate/routing": "^10.0||^11.0",
-                "illuminate/support": "^10.0||^11.0",
                 "jangregor/phpstan-prophecy": "^1.0",
                 "justinrainbow/json-schema": "^5.2.1",
-                "laravel/framework": "^10.0||^11.0",
-                "orchestra/testbench": "^8.18",
                 "phpspec/prophecy-phpunit": "^2.0",
                 "phpstan/extension-installer": "^1.1",
                 "phpstan/phpdoc-parser": "^1.13",
@@ -83,7 +74,7 @@
                 "phpunit/phpunit": "^9.6",
                 "psr/log": "^1.0 || ^2.0 || ^3.0",
                 "ramsey/uuid": "^3.9.7 || ^4.0",
-                "ramsey/uuid-doctrine": "^1.4 || ^2.0 || ^3.0",
+                "ramsey/uuid-doctrine": "^1.4 || ^2.0",
                 "sebastian/comparator": "<5.0",
                 "soyuka/contexts": "v3.3.9",
                 "soyuka/pmu": "^0.0.2",
@@ -113,7 +104,6 @@
                 "symfony/security-bundle": "^6.4 || ^7.0",
                 "symfony/security-core": "^6.4 || ^7.0",
                 "symfony/stopwatch": "^6.4 || ^7.0",
-                "symfony/string": "^6.4 || ^7.0",
                 "symfony/twig-bundle": "^6.4 || ^7.0",
                 "symfony/uid": "^6.4 || ^7.0",
                 "symfony/validator": "^6.4 || ^7.0",
@@ -166,9 +156,7 @@
                     "api-platform/serializer",
                     "api-platform/state",
                     "api-platform/symfony",
-                    "api-platform/validator",
-                    "api-platform/laravel",
-                    "api-platform/json-api"
+                    "api-platform/validator"
                 ]
             },
             "autoload": {
@@ -202,9 +190,9 @@
             ],
             "support": {
                 "issues": "https://github.com/api-platform/core/issues",
-                "source": "https://github.com/api-platform/core/tree/v3.2.25"
+                "source": "https://github.com/api-platform/core/tree/v3.3.8"
             },
-            "time": "2024-06-25T14:01:23+00:00"
+            "time": "2024-07-11T14:15:03+00:00"
         },
         {
             "name": "brick/math",
