@@ -120,7 +120,7 @@ export const { handlers: { GET, POST }, auth } = NextAuth({
         // https://authjs.dev/guides/basics/refresh-token-rotation#jwt-strategy
         params: {
           access_type: "offline",
-          scope: "openid profile email",
+          scope: "openid profile email roles",
           prompt: "consent",
         },
       },

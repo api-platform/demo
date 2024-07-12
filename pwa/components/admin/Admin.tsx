@@ -2,7 +2,7 @@
 
 import Head from "next/head";
 import { useContext, useRef, useState } from "react";
-import { type DataProvider, localStorageStore } from "react-admin";
+import { type DataProvider, localStorageStore, usePermissions } from "react-admin";
 import { signIn, useSession } from "next-auth/react";
 import SyncLoader from "react-spinners/SyncLoader";
 import {
@@ -22,6 +22,7 @@ import { ENTRYPOINT } from "../../config/entrypoint";
 import bookResourceProps from "./book";
 import reviewResourceProps from "./review";
 import i18nProvider from "./i18nProvider";
+import Logout from "./layout/Logout";
 
 const apiDocumentationParser = (session: Session) => async () => {
   try {
@@ -116,6 +117,7 @@ const AdminWithContext = ({ session }: { session: Session }) => {
 const AdminWithOIDC = () => {
   // Can't use next-auth/middleware because of https://github.com/nextauthjs/next-auth/discussions/7488
   const { data: session, status } = useSession();
+  const { permissions } = usePermissions();
 
   if (status === "loading") {
     return <SyncLoader size={8} color="#46B6BF" />;
@@ -126,6 +128,10 @@ const AdminWithOIDC = () => {
     (async () => await signIn("keycloak"))();
 
     return;
+  }
+
+  if (permissions !== 'admin') {
+    return <p id="forbidden">You are not allowed to access this page.</p>;
   }
 
   // @ts-ignore

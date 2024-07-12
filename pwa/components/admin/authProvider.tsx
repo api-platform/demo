@@ -42,7 +42,23 @@ const authProvider: AuthProvider = {
 
     return Promise.resolve();
   },
-  getPermissions: () => Promise.resolve(),
+  getPermissions: async () => {
+    const session = getSession();
+    const response = await fetch(`${NEXT_PUBLIC_OIDC_SERVER_URL}/protocol/openid-connect/userinfo`, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        // @ts-ignore
+        Authorization: `Bearer ${session?.accessToken}`,
+      },
+    });
+    const token = await response.json();
+
+    if (!!token?.realm_access?.roles) {
+      return Promise.resolve(token.realm_access.roles);
+    }
+
+    return Promise.reject();
+  },
   getIdentity: async () => {
     const session = getSession();
 
