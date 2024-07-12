@@ -6,14 +6,24 @@ import { getItemPath } from "../../../utils/dataAccess";
 
 export const BookField = (props: UseRecordContextParams) => {
   const record = useRecordContext(props);
-
-  return !!record && !!record.book ? (
-    <Link target="_blank" href={getItemPath({
-      id: record.book["@id"].replace(/^\/admin\/books\//, ""),
-      slug: slugify(`${record.book.title}-${record.book.author}`, { lower: true, trim: true, remove: /[*+~.(),;'"!:@]/g }),
-    }, "/books/[id]/[slug]")}>
+  if (!record || !record.book) return null;
+  return (
+    <Link
+      target="_blank"
+      href={getItemPath(
+        {
+          id: record.book["@id"].replace(/^\/admin\/books\//, ""),
+          slug: slugify(`${record.book.title}-${record.book.author}`, {
+            lower: true,
+            trim: true,
+            remove: /[*+~.(),;'"!:@]/g,
+          }),
+        },
+        "/books/[id]/[slug]"
+      )}
+    >
       {record.book.title} - {record.book.author}
     </Link>
-  ) : null;
+  );
 };
 BookField.defaultProps = { label: "Book" };
