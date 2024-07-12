@@ -86,8 +86,6 @@ jobs:
   # run e2e tests iso-prod
   e2e-tests:
     name: E2E Tests
-    # can't run e2e tests on forks because of secrets sharing
-    if: ${{ github.repository == 'api-platform/demo' }}
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
@@ -100,9 +98,9 @@ jobs:
           - '@write'
       fail-fast: false
     env:
-      PHP_DOCKER_IMAGE: europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/php:latest
-      PWA_DOCKER_IMAGE: europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/pwa:latest
-      KEYCLOAK_DOCKER_IMAGE: europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/keycloak:latest
+      PHP_DOCKER_IMAGE: api-platform/demo/php:latest
+      PWA_DOCKER_IMAGE: api-platform/demo/pwa:latest
+      KEYCLOAK_DOCKER_IMAGE: api-platform/demo/keycloak:latest
       APP_SECRET: ba63418865d58089f7f070e0a437b6d16b1fb970
       CADDY_MERCURE_JWT_SECRET: 33b04d361e437e0d7d715600fc24fdefba317154
       POSTGRES_PASSWORD: aae5bf316ef5fe87ad806c6a9240fff68bcfdaf7
