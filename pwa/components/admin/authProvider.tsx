@@ -1,7 +1,7 @@
-import { AuthProvider } from "react-admin";
-import { getSession, signIn, signOut } from "next-auth/react";
+import {AuthProvider} from "react-admin";
+import {getSession, signIn, signOut} from "next-auth/react";
 
-import { NEXT_PUBLIC_OIDC_SERVER_URL } from "../../config/keycloak";
+import {NEXT_PUBLIC_OIDC_SERVER_URL} from "../../config/keycloak";
 
 const authProvider: AuthProvider = {
   // Nothing to do here, this function will never be called
@@ -44,20 +44,13 @@ const authProvider: AuthProvider = {
   },
   getPermissions: async () => {
     const session = getSession();
-    const response = await fetch(`${NEXT_PUBLIC_OIDC_SERVER_URL}/protocol/openid-connect/userinfo`, {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        // @ts-ignore
-        Authorization: `Bearer ${session?.accessToken}`,
-      },
-    });
-    const token = await response.json();
-
-    if (!!token?.realm_access?.roles) {
-      return Promise.resolve(token.realm_access.roles);
+    // @ts-ignore
+    if (!session || !!session?.error) {
+      return Promise.reject();
     }
 
-    return Promise.reject();
+    // @ts-ignore
+    return Promise.resolve(session?.permissions);
   },
   getIdentity: async () => {
     const session = getSession();
