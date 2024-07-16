@@ -36,6 +36,6 @@ export const ReviewsEdit = () => (
       source="body"
       style={{ width: 500 }}
     />
-    <RatingInput validate={required()} style={{ width: 500 }} />
+    <RatingInput name="rating" validate={required()} source="rating" size="medium" style={{ width: 500 }}/>
   </EditGuesser>
 );
