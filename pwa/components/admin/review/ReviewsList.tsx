@@ -49,7 +49,7 @@ const filters = [
       style={{ width: 300 }}
     />
   </ReferenceInput>,
-  <RatingInput key="rating" />,
+  <RatingInput name="rating" source="rating" key="rating" size="medium" />,
 ];
 
 export const ReviewsList = () => (
