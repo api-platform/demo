@@ -102,13 +102,10 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-!ChangeMe!}
       # Must finish with a trailing slash (https://github.com/bitnami/charts/issues/10885#issuecomment-1414279144)
       KEYCLOAK_HTTP_RELATIVE_PATH: /oidc/
-      # https://www.keycloak.org/server/hostname
-      KC_HOSTNAME_URL: https://${SERVER_NAME:-localhost}/oidc/
-      KC_HOSTNAME_ADMIN_URL: https://${SERVER_NAME:-localhost}/oidc/
-      # https://www.keycloak.org/server/features
-      KC_FEATURES: "scripts"
-      # https://github.com/bitnami/containers/pull/40893
+      KEYCLOAK_HOSTNAME: https://${SERVER_NAME:-localhost}/oidc/
+      KEYCLOAK_HOSTNAME_ADMIN: https://${SERVER_NAME:-localhost}/oidc/
       KEYCLOAK_ENABLE_HEALTH_ENDPOINTS: "true"
+      KEYCLOAK_EXTRA_ARGS: "--features=\"hostname:v2,scripts,persistent-user-sessions:v1\""
     # https://www.keycloak.org/server/all-config#category-health
     healthcheck:
       test: [ "CMD-SHELL", "curl http://127.0.0.1:8080/oidc/health || exit 1"]

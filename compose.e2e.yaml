@@ -5,11 +5,8 @@ services:
       KEYCLOAK_HTTPS_USE_PEM: "true"
       KEYCLOAK_HTTPS_CERTIFICATE_FILE: /opt/bitnami/keycloak/certs/tls.crt
       KEYCLOAK_HTTPS_CERTIFICATE_KEY_FILE: /opt/bitnami/keycloak/certs/tls.key
+      KEYCLOAK_EXTRA_ARGS: "--features=\"hostname:v2,scripts,persistent-user-sessions:v1\" --import-realm"
     volumes:
       - ./helm/api-platform/keycloak/certs/tls.crt:/opt/bitnami/keycloak/certs/tls.crt:ro
       - ./helm/api-platform/keycloak/certs/tls.pem:/opt/bitnami/keycloak/certs/tls.key:ro
-
-  keycloak-config-cli:
-    extends:
-      file: compose.override.yaml
-      service: keycloak-config-cli
+      - ./helm/api-platform/keycloak/config:/opt/bitnami/keycloak/data/import
