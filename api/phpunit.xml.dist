@@ -20,11 +20,9 @@
         <ini name="display_errors" value="1" />
         <ini name="error_reporting" value="-1" />
         <env name="APP_ENV" value="test" force="true" />
-        <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[direct]=0" />
         <server name="APP_ENV" value="test" force="true" />
         <server name="APP_DEBUG" value="false" force="true" />
         <server name="SHELL_VERBOSITY" value="-1" />
-        <server name="KERNEL_CLASS" value="App\Kernel"/>
     </php>
 
     <testsuites>
@@ -37,7 +35,7 @@
         </testsuite>
     </testsuites>
 
-    <source ignoreSuppressionOfDeprecations="true">
+    <source ignoreSuppressionOfDeprecations="true" ignoreIndirectDeprecations="true">
         <include>
             <directory>src</directory>
         </include>

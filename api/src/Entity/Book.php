@@ -120,7 +120,7 @@ class Book
         example: 'https://openlibrary.org/books/OL2055137M.json'
     )]
     #[Assert\NotBlank(allowNull: false)]
-    #[Assert\Url(protocols: ['https'])]
+    #[Assert\Url(protocols: ['https'], requireTld: true)]
     #[Assert\Regex(pattern: '/^https:\/\/openlibrary.org\/books\/OL\d+[A-Z]{1}\.json$/')]
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Book:write'])]
     #[ORM\Column(unique: true)]
