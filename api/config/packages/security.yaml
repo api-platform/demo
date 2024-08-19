@@ -50,4 +50,4 @@ when@test:
                             audience: '%env(OIDC_AUD)%'
                             issuers: [ '%env(OIDC_SERVER_URL)%' ]
                             algorithm: 'ES256'
-                            key: '%env(OIDC_JWK)%'
+                            keyset: '{"keys":[%env(OIDC_JWK)%]}'
