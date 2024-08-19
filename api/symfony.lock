@@ -197,7 +197,7 @@
         ]
     },
     "phpunit/phpunit": {
-        "version": "10.5",
+        "version": "11.3",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",

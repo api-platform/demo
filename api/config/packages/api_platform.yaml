@@ -13,6 +13,7 @@ api_platform:
         graphql_playground: false
     formats:
         jsonld: ['application/ld+json']
+        json: ['application/json']
     docs_formats:
         jsonld: ['application/ld+json']
         jsonopenapi: ['application/vnd.openapi+json']
@@ -27,6 +28,7 @@ api_platform:
         extra_properties:
             standard_put: true
             rfc_7807_compliant_errors: true
+    use_symfony_listeners: false
     event_listeners_backward_compatibility_layer: false
     keep_legacy_inflector: false
     oauth:
