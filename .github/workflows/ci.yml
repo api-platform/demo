@@ -229,7 +229,7 @@ jobs:
       -
         name: Get API changed files
         id: api-changed-files
-        uses: tj-actions/changed-files@v44
+        uses: tj-actions/changed-files@v45
         with:
           files: api/**/*.php
       -
