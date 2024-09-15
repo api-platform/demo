@@ -5,9 +5,9 @@
         "php": ">=8.3",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "api-platform/doctrine-orm": "^3.4",
-        "api-platform/graphql": "^3.4",
-        "api-platform/symfony": "^3.4",
+        "api-platform/doctrine-orm": "^4.0",
+        "api-platform/graphql": "^4.0",
+        "api-platform/symfony": "^4.0",
         "doctrine/common": "^3.4",
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-fixtures-bundle": "^3.5",
@@ -105,18 +105,6 @@
         ]
     },
     "conflict": {
-        "api-platform/doctrine-common": "^4.0@alpha",
-        "api-platform/documentation": "^4.0@alpha",
-        "api-platform/graphql": "^4.0@alpha",
-        "api-platform/http-cache": "^4.0@alpha",
-        "api-platform/hydra": "^4.0@alpha",
-        "api-platform/json-schema": "^4.0@alpha",
-        "api-platform/jsonld": "^4.0@alpha",
-        "api-platform/metadata": "^4.0@alpha",
-        "api-platform/openapi": "^4.0@alpha",
-        "api-platform/serializer": "^4.0@alpha",
-        "api-platform/state": "^4.0@alpha",
-        "api-platform/validator": "^4.0@alpha",
         "symfony/symfony": "*"
     },
     "extra": {
