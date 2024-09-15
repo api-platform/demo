@@ -6,20 +6,20 @@ import {
 import Rating, { type RatingProps } from "@mui/material/Rating";
 
 export type RatingInputProps = RatingProps &
-  Omit<CommonInputProps, "source"> &
+  CommonInputProps &
   Omit<ResettableTextFieldProps, "label" | "helperText">;
 
 export const RatingInput = (props: RatingInputProps) => {
   const {
     field: { ref, ...field },
-  } = useInput({ ...props, source: "rating" });
+  } = useInput(props);
   const value = Number(field.value);
   // Error with "helperText" and "validate" props: remove them from the Rating component
   const { helperText, validate, ...rest } = props;
 
   return (
     <Labeled label="Rating">
-      <Rating {...rest} {...field} size="medium" value={value} />
+      <Rating {...rest} {...field} value={value} />
     </Labeled>
   );
 };

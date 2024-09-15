@@ -3,6 +3,7 @@ import {
   DateField,
   Datagrid,
   List,
+  ListActions,
   EditButton,
   ShowButton,
   ReferenceInput,
@@ -49,11 +50,11 @@ const filters = [
       style={{ width: 300 }}
     />
   </ReferenceInput>,
-  <RatingInput key="rating" />,
+  <RatingInput name="rating" source="rating" key="rating" size="medium" />,
 ];
 
 export const ReviewsList = () => (
-  <List filters={filters} exporter={false} hasCreate={false} title="Reviews">
+  <List filters={filters} exporter={false} actions={<ListActions hasCreate={false} />} title="Reviews">
     <Datagrid>
       <TextField source="user.name" label="User" sortable={false} />
       <BookField source="book" sortable={false} />
