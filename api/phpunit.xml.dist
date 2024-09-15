@@ -7,6 +7,14 @@
          colors="true"
          bootstrap="tests/bootstrap.php"
          cacheDirectory=".phpunit.cache"
+         failOnWarning="true"
+         failOnRisky="true"
+         failOnDeprecation="true"
+         failOnNotice="true"
+         displayDetailsOnTestsThatTriggerDeprecations="true"
+         displayDetailsOnTestsThatTriggerErrors="true"
+         displayDetailsOnTestsThatTriggerNotices="true"
+         displayDetailsOnTestsThatTriggerWarnings="true"
 >
     <php>
         <ini name="display_errors" value="1" />
@@ -27,9 +35,9 @@
         </testsuite>
     </testsuites>
 
-    <source>
+    <source ignoreSuppressionOfDeprecations="true" ignoreIndirectDeprecations="true">
         <include>
-            <directory suffix=".php">src</directory>
+            <directory>src</directory>
         </include>
     </source>
 

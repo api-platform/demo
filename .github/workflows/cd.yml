@@ -66,9 +66,15 @@ jobs:
             compose.yaml
             compose.prod.yaml
           set: |
-            *.cache-from=type=gha,scope=${{ github.ref }}
-            *.cache-from=type=gha,scope=refs/heads/main
-            *.cache-to=type=gha,scope=${{ github.ref }},mode=max
+            php.cache-from=type=gha,scope=${{ github.ref }}
+            php.cache-from=type=gha,scope=refs/heads/main
+            php.cache-to=type=gha,scope=${{ github.ref }},mode=max
+            pwa.cache-from=type=gha,scope=${{ github.ref }}
+            pwa.cache-from=type=gha,scope=refs/heads/main
+            pwa.cache-to=type=gha,scope=${{ github.ref }},mode=max
+            keycloak.cache-from=type=gha,scope=${{ github.ref }}
+            keycloak.cache-from=type=gha,scope=refs/heads/main
+            keycloak.cache-to=type=gha,scope=${{ github.ref }},mode=max
       -
         name: Docker push
         run: |
