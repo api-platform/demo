@@ -7,7 +7,7 @@ on:
       - \d+.\d+
   pull_request: ~
   workflow_dispatch: ~
-  # Check api-platform/core:dev-main every sunday at 02:00
+  # Check api-platform packages with dev every sunday at 02:00
   schedule:
     - cron: 0 2 * * 0
 
@@ -54,7 +54,9 @@ jobs:
       -
         name: Update API Platform to latest
         if: ${{ github.event_name == 'schedule' }}
-        run: docker compose exec php composer require api-platform/core:dev-main
+        run: |
+          docker compose exec php composer config minimum-stability dev
+          docker compose exec php composer update "api-platform/*"
       -
         name: Check HTTP reachability
         run: curl -v --fail-with-body http://localhost
@@ -154,7 +156,9 @@ jobs:
       -
         name: Update API Platform to latest
         if: ${{ github.event_name == 'schedule' }}
-        run: docker compose exec php composer require api-platform/core:dev-main
+        run: |
+          docker compose exec php composer config minimum-stability dev
+          docker compose exec php composer update "api-platform/*"
       -
         name: Load Fixtures
         run: docker compose run --rm php bin/console doctrine:fixtures:load --no-interaction
@@ -195,6 +199,7 @@ jobs:
       -
         name: Run Playwright
         working-directory: pwa
+        timeout-minutes: 3
         # use 1 worker to prevent conflict between scenarios (longer but safer)
         run: pnpm exec playwright test --workers=1 --grep ${{ matrix.annotation }}
       -

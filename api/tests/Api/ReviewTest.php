@@ -233,7 +233,7 @@ final class ReviewTest extends ApiTestCase
         self::assertJsonContains([
             '@type' => 'hydra:Error',
             'hydra:title' => 'An error occurred',
-            'hydra:description' => 'Invalid identifier value or configuration.',
+            'hydra:description' => 'Invalid uri variables.',
         ]);
     }
 

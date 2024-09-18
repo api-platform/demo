@@ -17,3 +17,6 @@ parameters:
         - src/Kernel.php
     ignoreErrors:
         - message: '#no (?:return|value) type specified in iterable type array\.#'
+        # 3.4 BC layer
+        - message: '#Call to an undefined method ApiPlatform\\Metadata\\IriConverterInterface::getIriFromResource\(\)\.#'
+        - message: '#Access to undefined constant ApiPlatform\\Metadata\\UrlGeneratorInterface.+#'

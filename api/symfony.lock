@@ -531,9 +531,6 @@
             "ref": "e9872ca728053c5a09ef09ec4712d430f30895d6"
         }
     },
-    "willdurand/negotiation": {
-        "version": "3.0.0"
-    },
     "zendframework/zend-code": {
         "version": "3.4.1"
     },
