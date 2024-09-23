@@ -22,6 +22,7 @@ import { ENTRYPOINT } from "../../config/entrypoint";
 import bookResourceProps from "./book";
 import reviewResourceProps from "./review";
 import i18nProvider from "./i18nProvider";
+import Logout from "./layout/Logout";
 
 const apiDocumentationParser = (session: Session) => async () => {
   try {
