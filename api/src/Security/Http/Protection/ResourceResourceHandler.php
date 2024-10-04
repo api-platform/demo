@@ -41,10 +41,10 @@ final readonly class ResourceResourceHandler implements ResourceHandlerInterface
         $this->securityAuthorizationClient->request('POST', $this->getResourceRegistrationEndpoint(), [
             'auth_bearer' => $this->getPAT(),
             'json' => [
-                'name' => sprintf('%s_%s', $shortName, $resource->getId()->__toString()),
-                'displayName' => sprintf('%s #%s', $operation->getShortName(), $resource->getId()->__toString()),
+                'name' => \sprintf('%s_%s', $shortName, $resource->getId()->__toString()),
+                'displayName' => \sprintf('%s #%s', $operation->getShortName(), $resource->getId()->__toString()),
                 'uris' => [$resourceIri],
-                'type' => sprintf('urn:%s:resources:%s', $this->oidcClientId, $shortName),
+                'type' => \sprintf('urn:%s:resources:%s', $this->oidcClientId, $shortName),
                 'owner' => $owner->getUserIdentifier(),
             ],
         ]);
@@ -75,7 +75,7 @@ final readonly class ResourceResourceHandler implements ResourceHandlerInterface
                     'max' => 1,
                     'uri' => $resourceIri,
                     'owner' => $owner->getUserIdentifier(),
-                    'type' => sprintf('urn:%s:resources:%s', $this->oidcClientId, $shortName),
+                    'type' => \sprintf('urn:%s:resources:%s', $this->oidcClientId, $shortName),
                 ],
             ]
         );
@@ -85,7 +85,7 @@ final readonly class ResourceResourceHandler implements ResourceHandlerInterface
         // delete corresponding resource_set on OIDC server
         $this->securityAuthorizationClient->request(
             'DELETE',
-            sprintf('%s/%s', $this->getResourceRegistrationEndpoint(), $resourceSet['_id']),
+            \sprintf('%s/%s', $this->getResourceRegistrationEndpoint(), $resourceSet['_id']),
             [
                 'auth_bearer' => $this->getPAT(),
             ]

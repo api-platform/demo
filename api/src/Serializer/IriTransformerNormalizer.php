@@ -20,7 +20,7 @@ final class IriTransformerNormalizer implements NormalizerInterface, NormalizerA
 
     public function __construct(
         private readonly IriConverterInterface $iriConverter,
-        private readonly OperationMetadataFactoryInterface $operationMetadataFactory
+        private readonly OperationMetadataFactoryInterface $operationMetadataFactory,
     ) {
     }
 

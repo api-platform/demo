@@ -13,7 +13,7 @@ final class NotImplementedMock extends MockHttpClient
 {
     public function __construct(
         #[Autowire('%env(OIDC_SERVER_URL_INTERNAL)%/')]
-        string $baseUri
+        string $baseUri,
     ) {
         parent::__construct($this->handleRequest(...), $baseUri);
     }

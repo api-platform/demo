@@ -118,6 +118,6 @@ class User implements UserInterface
             return null;
         }
 
-        return trim(sprintf('%s %s', $this->firstName, $this->lastName));
+        return trim(\sprintf('%s %s', $this->firstName, $this->lastName));
     }
 }
