@@ -2,6 +2,20 @@
     "api-platform/schema-generator": {
         "version": "v4.0.0"
     },
+    "api-platform/symfony": {
+        "version": "4.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "4.0",
+            "ref": "e9952e9f393c2d048f10a78f272cd35e807d972b"
+        },
+        "files": [
+            "config/packages/api_platform.yaml",
+            "config/routes/api_platform.yaml",
+            "src/ApiResource/.gitignore"
+        ]
+    },
     "composer/pcre": {
         "version": "1.0.0"
     },
