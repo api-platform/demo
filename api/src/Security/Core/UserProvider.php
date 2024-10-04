@@ -24,7 +24,7 @@ final readonly class UserProvider implements AttributesBasedUserProviderInterfac
     {
         $manager = $this->registry->getManagerForClass($user::class);
         if (!$manager) {
-            throw new UnsupportedUserException(sprintf('User class "%s" not supported.', $user::class));
+            throw new UnsupportedUserException(\sprintf('User class "%s" not supported.', $user::class));
         }
 
         $manager->refresh($user);

@@ -22,7 +22,7 @@ final class UniqueUserBookValidator extends ConstraintValidator
     public function __construct(
         private readonly Security $security,
         private readonly ManagerRegistry $registry,
-        private readonly PropertyAccessorInterface $propertyAccessor
+        private readonly PropertyAccessorInterface $propertyAccessor,
     ) {
     }
 
@@ -47,7 +47,7 @@ final class UniqueUserBookValidator extends ConstraintValidator
         $className = ClassUtils::getRealClass($value::class);
         $manager = $this->registry->getManagerForClass($className);
         if (!$manager) {
-            throw new ValidatorException(sprintf('"%s" is not a valid entity.', $className));
+            throw new ValidatorException(\sprintf('"%s" is not a valid entity.', $className));
         }
 
         if ($manager->getRepository($className)->findOneBy(['user' => $user, 'book' => $book])) {

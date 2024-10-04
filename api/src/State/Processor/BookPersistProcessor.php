@@ -25,7 +25,7 @@ final readonly class BookPersistProcessor implements ProcessorInterface
         #[Autowire(service: PersistProcessor::class)]
         private ProcessorInterface $persistProcessor,
         private HttpClientInterface $client,
-        private DecoderInterface $decoder
+        private DecoderInterface $decoder,
     ) {
     }
 

@@ -27,7 +27,7 @@ final class BooksImportCommand extends Command
         private readonly SerializerInterface $serializer,
         private readonly DecoderInterface $decoder,
         private readonly HttpClientInterface $client,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
         parent::__construct();
     }

@@ -47,7 +47,7 @@ final class OidcTokenPermissionVoter extends OidcVoter
         }
 
         if (!\is_string($subject)) {
-            throw new \InvalidArgumentException(sprintf('Invalid subject type, expected "string" or "object", got "%s".', get_debug_type($subject)));
+            throw new \InvalidArgumentException(\sprintf('Invalid subject type, expected "string" or "object", got "%s".', get_debug_type($subject)));
         }
 
         // ensure user is authenticated
@@ -69,7 +69,7 @@ final class OidcTokenPermissionVoter extends OidcVoter
                     'response_mode' => 'decision',
                     'permission_resource_format' => 'uri',
                     'permission_resource_matching_uri' => true,
-                    'permission' => sprintf('%s', $subject),
+                    'permission' => \sprintf('%s', $subject),
                 ],
             ]);
 

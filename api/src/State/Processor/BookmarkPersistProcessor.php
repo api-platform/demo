@@ -24,7 +24,7 @@ final readonly class BookmarkPersistProcessor implements ProcessorInterface
         #[Autowire(service: PersistProcessor::class)]
         private ProcessorInterface $persistProcessor,
         private Security $security,
-        private ClockInterface $clock
+        private ClockInterface $clock,
     ) {
     }
 

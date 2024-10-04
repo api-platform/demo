@@ -36,7 +36,7 @@ final class OidcRoleVoter extends OidcVoter
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         if (!empty($subject)) {
-            throw new \InvalidArgumentException(sprintf('Invalid subject type, expected empty string or "null", got "%s".', get_debug_type($subject)));
+            throw new \InvalidArgumentException(\sprintf('Invalid subject type, expected empty string or "null", got "%s".', get_debug_type($subject)));
         }
 
         // ensure user is authenticated
