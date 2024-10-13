@@ -1,0 +1,73 @@
+# yaml-language-server: $schema=https://github.com/SchemaStore/schemastore/blob/master/src/schemas/json/github-workflow.json
+name: Upgrade
+
+on:
+  push:
+    branches:
+      - chore/release-workflow
+  workflow_dispatch: ~
+
+jobs:
+  upgrade:
+    name: Upgrade
+    if: ${{ github.repository == 'api-platform/demo' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Setup PHP with Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          tools: composer
+      -
+        name: Get Composer Cache Directory
+        id: composer-cache
+        working-directory: api
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+      -
+        name: Cache Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+      -
+        name: Install Dependencies
+        working-directory: api
+        run: composer install --prefer-dist
+      -
+        name: Update API Platform Dependencies
+        working-directory: api
+        run: composer update "api-platform/*"
+      -
+        name: Calculate Diff
+        working-directory: api
+        id: diff
+        run: |
+          echo "from-version=$(git diff composer.lock | grep -m 1 "api-platform/*" -A 2 | grep -oP '^-\s*"version": "v(.*)",' | sed -e 's/^-\s*"version": "v\(.*\)",$/\1/')" >> $GITHUB_OUTPUT
+          echo "to-version=$(git diff composer.lock | grep -m 1 "api-platform/*" -A 2 | grep -oP '^\+\s*"version": "v(.*)",' | sed -e 's/^\+\s*"version": "v\(.*\)",$/\1/')" >> $GITHUB_OUTPUT
+      -
+        name: Update API version
+        if: steps.diff.outputs.to-version != ''
+        run: |
+          sed -i "s/version: .*/version: ${{ steps.diff.outputs.to-version }}/g" api/config/packages/api_platform.yaml
+          sed -i "s/^version: .*/version: ${{ steps.diff.outputs.to-version }}/g" helm/api-platform/Chart.yaml
+          sed -i "s/^appVersion: .*/appVersion: ${{ steps.diff.outputs.to-version }}/g" helm/api-platform/Chart.yaml
+      -
+        name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        if: steps.diff.outputs.to-version != ''
+        with:
+          branch: release/api-platform-$toVersion
+          commit-message: "chore: upgrade API Platform to $toVersion"
+          title: "chore: upgrade API Platform to $toVersion"
+          assignees: vincentchalamon
+          add-paths: |
+            api/composer.*
+            api/config/packages/api_platform.yaml
+            helm/api-platform/Chart.yaml
