@@ -1,7 +1,7 @@
-import { AuthProvider } from "react-admin";
-import { getSession, signIn, signOut } from "next-auth/react";
+import {AuthProvider} from "react-admin";
+import {getSession, signIn, signOut} from "next-auth/react";
 
-import { NEXT_PUBLIC_OIDC_SERVER_URL } from "../../config/keycloak";
+import {NEXT_PUBLIC_OIDC_SERVER_URL} from "../../config/keycloak";
 
 const authProvider: AuthProvider = {
   // Nothing to do here, this function will never be called
@@ -42,7 +42,16 @@ const authProvider: AuthProvider = {
 
     return Promise.resolve();
   },
-  getPermissions: () => Promise.resolve(),
+  getPermissions: async () => {
+    const session = getSession();
+    // @ts-ignore
+    if (!session || !!session?.error) {
+      return Promise.reject();
+    }
+
+    // @ts-ignore
+    return Promise.resolve(session?.permissions);
+  },
   getIdentity: async () => {
     const session = getSession();
 

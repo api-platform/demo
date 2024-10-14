@@ -7,12 +7,14 @@ import { NEXT_PUBLIC_OIDC_CLIENT_ID, NEXT_PUBLIC_OIDC_SERVER_URL, NEXT_PUBLIC_OI
 export interface Session extends DefaultSession {
   error?: "RefreshAccessTokenError"
   accessToken: string
+  permissions: string
   idToken: string
   user?: User
 }
 
 interface JWT {
   accessToken: string
+  permissions: string
   idToken: string
   expiresAt: number
   refreshToken: string
@@ -31,9 +33,19 @@ export const { handlers: { GET, POST }, auth } = NextAuth({
     // @ts-ignore
     async jwt({ token, account }: { token: JWT, account: Account }): Promise<JWT> {
       if (account) {
+        // Retrieve user roles
+        const response = await fetch(`${NEXT_PUBLIC_OIDC_SERVER_URL_INTERNAL}/protocol/openid-connect/userinfo`, {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Bearer ${account.access_token}`,
+          },
+        });
+        const token = await response.json();
+
         // Save the access token and refresh token in the JWT on the initial login
         return {
           ...token,
+          permissions: token?.realm_access?.roles,
           accessToken: account.access_token,
           idToken: account.id_token,
           expiresAt: Math.floor(Date.now() / 1000 + account.expires_in),
@@ -85,6 +97,7 @@ export const { handlers: { GET, POST }, auth } = NextAuth({
     async session({ session, token }: { session: Session, token: JWT }): Promise<Session> {
       // Save the access token in the Session for API calls
       if (token) {
+        session.permissions = token.permissions;
         session.accessToken = token.accessToken;
         session.idToken = token.idToken;
         session.error = token.error;
@@ -120,7 +133,7 @@ export const { handlers: { GET, POST }, auth } = NextAuth({
         // https://authjs.dev/guides/basics/refresh-token-rotation#jwt-strategy
         params: {
           access_type: "offline",
-          scope: "openid profile email",
+          scope: "openid profile email roles",
           prompt: "consent",
         },
       },
