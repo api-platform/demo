@@ -108,14 +108,16 @@ keycloak:
   service:
     type: ClusterIP
   extraEnvVars:
-    # Must set KC_HOSTNAME_URL to force https + relative path
-    - name: KC_HOSTNAME_URL
+    # Must set KEYCLOAK_HOSTNAME to force https + relative path
+    - name: KEYCLOAK_HOSTNAME
       value: "https://chart-example.local/oidc/"
-    # Must set KC_HOSTNAME_ADMIN because of relative path
-    - name: KC_HOSTNAME_ADMIN_URL
+    # Must set KEYCLOAK_HOSTNAME_ADMIN because of relative path
+    - name: KEYCLOAK_HOSTNAME_ADMIN
       value: "https://chart-example.local/oidc/"
     - name: KEYCLOAK_PRODUCTION
       value: "true"
+    - name: KEYCLOAK_EXTRA_ARGS
+      value: "--features=\"hostname:v2,scripts,persistent-user-sessions:v1\""
   # must finish with a trailing slash (https://github.com/bitnami/charts/issues/10885#issuecomment-1414279144)
   httpRelativePath: /oidc/
   proxy: edge
@@ -137,7 +139,7 @@ keycloak:
       - -jar
       - /opt/bitnami/keycloak-config-cli/keycloak-config-cli.jar
     image:
-      tag: 5-debian-12
+      tag: 6-debian-12
   postgresql:
     enabled: true
     nameOverride: postgresql-keycloak
