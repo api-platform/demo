@@ -150,7 +150,7 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'Error',
+            '@type' => 'hydra:Error',
             'title' => 'An error occurred',
             'description' => 'Full authentication is required to access this resource.',
         ]);
@@ -231,7 +231,7 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'Error',
+            '@type' => 'hydra:Error',
             'title' => 'An error occurred',
             'description' => 'Invalid uri variables.',
         ]);
@@ -342,7 +342,7 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'Error',
+            '@type' => 'hydra:Error',
             'title' => 'An error occurred',
             'description' => 'This route does not aim to be called.',
         ]);
@@ -359,7 +359,7 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'Error',
+            '@type' => 'hydra:Error',
             'title' => 'An error occurred',
             'description' => 'This route does not aim to be called.',
         ]);
@@ -384,7 +384,7 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'Error',
+            '@type' => 'hydra:Error',
             'title' => 'An error occurred',
             'description' => 'Full authentication is required to access this resource.',
         ]);
@@ -415,7 +415,7 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'Error',
+            '@type' => 'hydra:Error',
             'title' => 'An error occurred',
             'description' => 'Access Denied.',
         ]);
@@ -501,7 +501,7 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'Error',
+            '@type' => 'hydra:Error',
             'title' => 'An error occurred',
             'description' => 'Full authentication is required to access this resource.',
         ]);
@@ -525,7 +525,7 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'Error',
+            '@type' => 'hydra:Error',
             'title' => 'An error occurred',
             'description' => 'Access Denied.',
         ]);

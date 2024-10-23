@@ -54,7 +54,7 @@ final class BookTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'Error',
+            '@type' => 'hydra:Error',
             'title' => 'An error occurred',
             'description' => $hydraDescription,
         ]);
@@ -196,7 +196,7 @@ final class BookTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'Error',
+            '@type' => 'hydra:Error',
             'title' => 'An error occurred',
             'description' => $hydraDescription,
         ]);
@@ -254,7 +254,7 @@ final class BookTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'Error',
+            '@type' => 'hydra:Error',
             'title' => 'An error occurred',
             'description' => $hydraDescription,
         ]);
@@ -442,7 +442,7 @@ final class BookTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'Error',
+            '@type' => 'hydra:Error',
             'title' => 'An error occurred',
             'description' => $hydraDescription,
         ]);
@@ -570,7 +570,7 @@ final class BookTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'Error',
+            '@type' => 'hydra:Error',
             'title' => 'An error occurred',
             'description' => $hydraDescription,
         ]);
