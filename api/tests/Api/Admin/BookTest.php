@@ -241,7 +241,7 @@ final class BookTest extends ApiTestCase
 
         $this->client->request('POST', '/admin/books', $options + [
             'json' => [
-                'book' => 'https://openlibrary.org/books/OL28346544M.json',
+                'book' => 'https://gutendex.com/books/31547.json',
                 'condition' => BookCondition::NewCondition->value,
             ],
             'headers' => [
@@ -328,7 +328,7 @@ final class BookTest extends ApiTestCase
         ];
         yield 'invalid condition' => [
             [
-                'book' => 'https://openlibrary.org/books/OL28346544M.json',
+                'book' => 'https://gutendex.com/books/31547.json',
                 'condition' => 'invalid condition',
             ],
             Response::HTTP_UNPROCESSABLE_ENTITY,
@@ -377,7 +377,7 @@ final class BookTest extends ApiTestCase
         $response = $this->client->request('POST', '/admin/books', [
             'auth_bearer' => $token,
             'json' => [
-                'book' => 'https://openlibrary.org/books/OL28346544M.json',
+                'book' => 'https://gutendex.com/books/31547.json',
                 'condition' => BookCondition::NewCondition->value,
             ],
             'headers' => [
@@ -390,10 +390,10 @@ final class BookTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertEquals('<https://localhost/.well-known/mercure>; rel="mercure"', $response->getHeaders(false)['link'][1]);
         self::assertJsonContains([
-            'book' => 'https://openlibrary.org/books/OL28346544M.json',
+            'book' => 'https://gutendex.com/books/31547.json',
             'condition' => BookCondition::NewCondition->value,
-            'title' => 'Foundation',
-            'author' => 'Isaac Asimov',
+            'title' => 'Youth',
+            'author' => 'Asimov, Isaac',
         ]);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Book/item.json'));
         $id = preg_replace('/^.*\/(.+)$/', '$1', $response->toArray()['@id']);
@@ -429,7 +429,7 @@ final class BookTest extends ApiTestCase
 
         $this->client->request('PUT', '/admin/books/' . $book->getId(), $options + [
             'json' => [
-                'book' => 'https://openlibrary.org/books/OL28346544M.json',
+                'book' => 'https://gutendex.com/books/31547.json',
                 'condition' => BookCondition::NewCondition->value,
             ],
             'headers' => [
@@ -504,7 +504,7 @@ final class BookTest extends ApiTestCase
     public function asAdminUserICanUpdateABook(): void
     {
         $book = BookFactory::createOne([
-            'book' => 'https://openlibrary.org/books/OL28346544M.json',
+            'book' => 'https://gutendex.com/books/31547.json',
         ]);
         self::getMercureHub()->reset();
 
@@ -517,7 +517,7 @@ final class BookTest extends ApiTestCase
             'json' => [
                 '@id' => '/books/' . $book->getId(),
                 // Must set all data because of standard PUT
-                'book' => 'https://openlibrary.org/books/OL28346544M.json',
+                'book' => 'https://gutendex.com/books/31547.json',
                 'condition' => BookCondition::DamagedCondition->value,
             ],
             'headers' => [
@@ -530,10 +530,10 @@ final class BookTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertEquals('<https://localhost/.well-known/mercure>; rel="mercure"', $response->getHeaders(false)['link'][1]);
         self::assertJsonContains([
-            'book' => 'https://openlibrary.org/books/OL28346544M.json',
+            'book' => 'https://gutendex.com/books/31547.json',
             'condition' => BookCondition::DamagedCondition->value,
-            'title' => 'Foundation',
-            'author' => 'Isaac Asimov',
+            'title' => 'Youth',
+            'author' => 'Asimov, Isaac',
         ]);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Book/item.json'));
         self::assertCount(1, self::getMercureMessages());

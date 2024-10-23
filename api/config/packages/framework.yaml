@@ -31,6 +31,8 @@ framework:
                 base_uri: '%env(OIDC_SERVER_URL_INTERNAL)%/'
             open_library.client:
                 base_uri: 'https://openlibrary.org/'
+            gutendex.client:
+                base_uri: 'https://gutendex.com/'
 
 when@test:
     framework:

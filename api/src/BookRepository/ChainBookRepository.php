@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\BookRepository;
 
-use App\BookRepository\Exception\UnsupportedBookException;
 use App\Entity\Book;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
@@ -27,6 +26,6 @@ final readonly class ChainBookRepository implements BookRepositoryInterface
             }
         }
 
-        throw new UnsupportedBookException();
+        return null;
     }
 }

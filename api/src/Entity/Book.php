@@ -20,6 +20,7 @@ use App\Enum\BookCondition;
 use App\Repository\BookRepository;
 use App\State\Processor\BookPersistProcessor;
 use App\State\Processor\BookRemoveProcessor;
+use App\Validator\BookUrl;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -121,7 +122,7 @@ class Book
     )]
     #[Assert\NotBlank(allowNull: false)]
     #[Assert\Url(protocols: ['https'], requireTld: true)]
-    #[Assert\Regex(pattern: '/^https:\/\/openlibrary.org\/books\/OL\d+[A-Z]{1}\.json$/')]
+    #[BookUrl]
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Book:write'])]
     #[ORM\Column(unique: true)]
     public ?string $book = null;
