@@ -29,6 +29,8 @@ framework:
             # use scoped client to ease mock on functional tests
             security.authorization.client:
                 base_uri: '%env(OIDC_SERVER_URL_INTERNAL)%/'
+            open_library.client:
+                base_uri: 'https://openlibrary.org/'
 
 when@test:
     framework:
