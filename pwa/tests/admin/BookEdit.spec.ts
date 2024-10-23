@@ -7,12 +7,12 @@ test.describe("Edit a book @admin", () => {
   });
 
   test("I can edit a book @write", async ({ page }) => {
-    // fill in Open Library Book
-    await page.getByLabel("Open Library Book").fill("Eon - Greg Bear");
-    await page.getByRole("listbox").getByText("Eon - Greg Bear", { exact: true }).waitFor({ state: "visible" });
-    await page.getByRole("listbox").getByText("Eon - Greg Bear", { exact: true }).click();
+    // fill in Book Reference
+    await page.getByLabel("Book Reference").fill("Asimov");
+    await page.getByRole("listbox").getByText("The Genetic Effects of Radiation - Asimov, Isaac", { exact: true }).waitFor({ state: "visible" });
+    await page.getByRole("listbox").getByText("The Genetic Effects of Radiation - Asimov, Isaac", { exact: true }).click();
     await expect(page.getByRole("listbox")).not.toBeAttached();
-    await expect(page.getByLabel("Open Library Book")).toHaveValue("Eon - Greg Bear");
+    await expect(page.getByLabel("Book Reference")).toHaveValue("The Genetic Effects of Radiation - Asimov, Isaac");
 
     // fill in condition
     await page.getByLabel("Condition").click();
@@ -23,7 +23,7 @@ test.describe("Edit a book @admin", () => {
 
     // submit form
     await page.getByRole("button", { name: "Save", exact: true }).click();
-    await expect(page.getByLabel("Open Library Book")).not.toBeAttached();
+    await expect(page.getByLabel("Book Reference")).not.toBeAttached();
     await expect(page.getByText("Element updated")).toBeVisible();
   });
 
@@ -33,7 +33,7 @@ test.describe("Edit a book @admin", () => {
     await expect(page.getByRole("button", { name: "Confirm" })).toBeVisible();
     await page.getByRole("button", { name: "Confirm" }).click();
     await page.getByRole("button", { name: "Confirm" }).waitFor({ state: "detached" });
-    await expect(page.getByLabel("Open Library Book")).not.toBeAttached();
+    await expect(page.getByLabel("Book Reference")).not.toBeAttached();
     await expect(page.getByText("Element deleted")).toBeVisible();
   });
 });

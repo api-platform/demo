@@ -6,21 +6,17 @@ namespace App\Tests\State\Processor;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
+use App\BookRepository\BookRepositoryInterface;
 use App\Entity\Book;
 use App\State\Processor\BookPersistProcessor;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Serializer\Encoder\DecoderInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Contracts\HttpClient\ResponseInterface;
 
 final class BookPersistProcessorTest extends TestCase
 {
     private MockObject|ProcessorInterface $persistProcessorMock;
-    private HttpClientInterface|MockObject $clientMock;
-    private MockObject|ResponseInterface $responseMock;
-    private DecoderInterface|MockObject $decoderMock;
+    private MockObject|BookRepositoryInterface $bookRepositoryMock;
     private Book|MockObject $objectMock;
     private MockObject|Operation $operationMock;
     private BookPersistProcessor $processor;
@@ -28,17 +24,14 @@ final class BookPersistProcessorTest extends TestCase
     protected function setUp(): void
     {
         $this->persistProcessorMock = $this->createMock(ProcessorInterface::class);
-        $this->clientMock = $this->createMock(HttpClientInterface::class);
-        $this->responseMock = $this->createMock(ResponseInterface::class);
-        $this->decoderMock = $this->createMock(DecoderInterface::class);
+        $this->bookRepositoryMock = $this->createMock(BookRepositoryInterface::class);
         $this->objectMock = $this->createMock(Book::class);
         $this->objectMock->book = 'https://openlibrary.org/books/OL2055137M.json';
         $this->operationMock = $this->createMock(Operation::class);
 
         $this->processor = new BookPersistProcessor(
             $this->persistProcessorMock,
-            $this->clientMock,
-            $this->decoderMock
+            $this->bookRepositoryMock
         );
     }
 
@@ -49,73 +42,10 @@ final class BookPersistProcessorTest extends TestCase
         $expectedData->title = 'Foundation';
         $expectedData->author = 'Dan Simmons';
 
-        $this->clientMock
-            ->expects($this->exactly(2))
-            ->method('request')
-//            ->withConsecutive(
-//                [
-//                    Request::METHOD_GET, 'https://openlibrary.org/books/OL2055137M.json', [
-//                        'headers' => [
-//                            'Accept' => 'application/json',
-//                        ],
-//                    ],
-//                ],
-//                [
-//                    Request::METHOD_GET, 'https://openlibrary.org/authors/OL34221A.json', [
-//                        'headers' => [
-//                            'Accept' => 'application/json',
-//                        ],
-//                    ],
-//                ],
-//            )
-            ->willReturnOnConsecutiveCalls($this->responseMock, $this->responseMock)
-        ;
-        $this->responseMock
-            ->expects($this->exactly(2))
-            ->method('getContent')
-            ->willReturnOnConsecutiveCalls(
-                json_encode([
-                    'title' => 'Foundation',
-                    'authors' => [
-                        ['key' => '/authors/OL34221A'],
-                    ],
-                ]),
-                json_encode([
-                    'name' => 'Dan Simmons',
-                ]),
-            )
-        ;
-        $this->decoderMock
-            ->expects($this->exactly(2))
-            ->method('decode')
-//            ->withConsecutive(
-//                [
-//                    json_encode([
-//                        'title' => 'Foundation',
-//                        'authors' => [
-//                            ['key' => '/authors/OL34221A'],
-//                        ],
-//                    ]),
-//                    'json',
-//                ],
-//                [
-//                    json_encode([
-//                        'name' => 'Dan Simmons',
-//                    ]),
-//                    'json',
-//                ],
-//            )
-            ->willReturnOnConsecutiveCalls(
-                [
-                    'title' => 'Foundation',
-                    'authors' => [
-                        ['key' => '/authors/OL34221A'],
-                    ],
-                ],
-                [
-                    'name' => 'Dan Simmons',
-                ],
-            )
+        $this->bookRepositoryMock
+            ->expects($this->once())
+            ->method('find')
+            ->willReturn($expectedData)
         ;
         $this->persistProcessorMock
             ->expects($this->once())

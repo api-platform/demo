@@ -210,12 +210,6 @@ jobs:
           docker compose ps
           docker compose logs
       -
-        name: Debug Services
-        if: failure()
-        run: |
-          docker compose ps
-          docker compose logs
-      -
         uses: actions/upload-artifact@v4
         if: failure()
         with:

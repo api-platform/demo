@@ -5,8 +5,10 @@ import { TextInput, type TextInputProps, useInput } from "react-admin";
 import { useQuery } from "@tanstack/react-query";
 import { useWatch } from "react-hook-form";
 
-import { Search } from "../../../types/OpenLibrary/Search";
-import { SearchDoc } from "../../../types/OpenLibrary/SearchDoc";
+import { Search as OpenLibrarySearch } from "../../../types/OpenLibrary/Search";
+import { SearchDoc as OpenLibrarySearchDoc } from "../../../types/OpenLibrary/SearchDoc";
+import { Search as GutendexSearch } from "../../../types/Gutendex/Search";
+import { SearchDoc as GutendexSearchDoc } from "../../../types/Gutendex/SearchDoc";
 
 interface Result {
   title: string;
@@ -35,10 +37,10 @@ const fetchOpenLibrarySearch = async (
         next: { revalidate: 3600 },
       }
     );
-    const results: Search = await response.json();
+    const results: OpenLibrarySearch = await response.json();
 
     return results.docs
-      .filter((result: SearchDoc) => {
+      .filter((result: OpenLibrarySearchDoc) => {
         return (
           typeof result.title !== "undefined" &&
           typeof result.author_name !== "undefined" &&
@@ -59,6 +61,50 @@ const fetchOpenLibrarySearch = async (
           value: `https://openlibrary.org${
             seed?.filter((seed) => seed.match(/^\/books\/OL\d{7}M/))[0]
           }.json`,
+        };
+      });
+  } catch (error) {
+    console.error(error);
+
+    return Promise.resolve([]);
+  }
+};
+
+const fetchGutendexSearch = async (
+  query: string,
+  signal?: AbortSignal | undefined
+): Promise<Array<Result>> => {
+  try {
+    const response = await fetch(
+      `https://gutendex.com/books?search=${query.replace(
+        / - /,
+        " "
+      )}`,
+      {
+        signal,
+        method: "GET",
+        next: { revalidate: 3600 },
+      }
+    );
+    const results: GutendexSearch = await response.json();
+
+    return results.results
+      .filter((result: GutendexSearchDoc) => {
+        return (
+          typeof result.id !== "undefined" &&
+          typeof result.title !== "undefined" &&
+          typeof result.authors !== "undefined" &&
+          result.authors.length > 0
+        );
+      })
+      .map(({ id, title, authors }): Result => {
+        return {
+          // @ts-ignore
+          title,
+          // @ts-ignore
+          author: authors[0].name,
+          // @ts-ignore
+          value: `https://gutendex.com/books/${id}.json`,
         };
       });
   } catch (error) {
@@ -89,7 +135,7 @@ export const BookInput = (props: BookInputProps) => {
       }
       controller.current = new AbortController();
 
-      return await fetchOpenLibrarySearch(
+      return await fetchGutendexSearch(
         searchQuery,
         controller.current.signal
       );
@@ -132,7 +178,7 @@ export const BookInput = (props: BookInputProps) => {
           {...field}
           {...props}
           source="book"
-          label="Open Library Book"
+          label="Book Reference"
         />
       )}
     />
