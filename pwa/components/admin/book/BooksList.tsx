@@ -6,7 +6,9 @@ import {
   List,
   EditButton,
   WrapperField,
+  usePermissions,
 } from "react-admin";
+import { Card, CardContent } from "@mui/material";
 
 import { ShowButton } from "./ShowButton";
 import { RatingField } from "../review/RatingField";
@@ -28,19 +30,35 @@ const filters = [
   <ConditionInput source="condition" key="condition" />,
 ];
 
-export const BooksList = () => (
-  <List filters={filters} exporter={false} title="Books">
-    <Datagrid>
-      <FieldGuesser source="title" />
-      <FieldGuesser source="author" sortable={false} />
-      <WrapperField label="Condition" sortable={false}>
-        <ConditionField />
-      </WrapperField>
-      <WrapperField label="Rating" sortable={false}>
-        <RatingField />
-      </WrapperField>
-      <ShowButton />
-      <EditButton />
-    </Datagrid>
-  </List>
-);
+export const BooksList = () => {
+  const { isPending, permissions } = usePermissions();
+
+  if (isPending) {
+    return <div>Waiting for permissions...</div>;
+  }
+
+  if (permissions !== 'admin') {
+    return (
+      <Card>
+        <CardContent>You are not allowed to access this page.</CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <List filters={filters} exporter={false} title="Books">
+      <Datagrid>
+        <FieldGuesser source="title"/>
+        <FieldGuesser source="author" sortable={false}/>
+        <WrapperField label="Condition" sortable={false}>
+          <ConditionField/>
+        </WrapperField>
+        <WrapperField label="Rating" sortable={false}>
+          <RatingField/>
+        </WrapperField>
+        <ShowButton/>
+        <EditButton/>
+      </Datagrid>
+    </List>
+  );
+};
