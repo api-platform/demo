@@ -83,11 +83,9 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-!ChangeMe!}
       # Must finish with a trailing slash (https://github.com/bitnami/charts/issues/10885#issuecomment-1414279144)
       KEYCLOAK_HTTP_RELATIVE_PATH: /oidc/
-      # https://www.keycloak.org/server/hostname
-      KC_HOSTNAME_URL: https://${SERVER_NAME:-localhost}/oidc/
-      KC_HOSTNAME_ADMIN_URL: https://${SERVER_NAME:-localhost}/oidc/
-      # https://www.keycloak.org/server/features
-      KC_FEATURES: "scripts"
+      KEYCLOAK_HOSTNAME: https://${SERVER_NAME:-localhost}/oidc/
+      KEYCLOAK_HOSTNAME_ADMIN: https://${SERVER_NAME:-localhost}/oidc/
+      KEYCLOAK_EXTRA_ARGS: "--features=\"hostname:v2,scripts,persistent-user-sessions:v1\""
     depends_on:
       - keycloak-database
     ports:

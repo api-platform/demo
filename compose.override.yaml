@@ -50,17 +50,8 @@ services:
     build:
       context: ./helm/api-platform/keycloak/
       target: keycloak
+    environment:
+      KEYCLOAK_EXTRA_ARGS: "--features=\"hostname:v2,scripts,persistent-user-sessions:v1\" --import-realm"
     volumes:
       - ./helm/api-platform/keycloak/themes/api-platform-demo:/opt/bitnami/keycloak/themes/api-platform-demo
-
-  keycloak-config-cli:
-    image: bitnami/keycloak-config-cli:5-debian-12
-    environment:
-      KEYCLOAK_URL: http://keycloak:8080/oidc/
-      KEYCLOAK_USER: ${KEYCLOAK_ADMIN_USER:-admin}
-      KEYCLOAK_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-!ChangeMe!}
-      KEYCLOAK_AVAILABILITYCHECK_ENABLED: "true"
-      KEYCLOAK_AVAILABILITYCHECK_TIMEOUT: 120s
-      IMPORT_FILES_LOCATIONS: "/config/*"
-    volumes:
-      - ./helm/api-platform/keycloak/config:/config
+      - ./helm/api-platform/keycloak/config:/opt/bitnami/keycloak/data/import
