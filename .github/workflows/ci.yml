@@ -200,7 +200,7 @@ jobs:
       -
         name: Run Playwright
         working-directory: pwa
-        timeout-minutes: 3
+        timeout-minutes: 10
         # use 1 worker to prevent conflict between scenarios (longer but safer)
         run: pnpm exec playwright test --workers=1 --grep ${{ matrix.annotation }}
       -
