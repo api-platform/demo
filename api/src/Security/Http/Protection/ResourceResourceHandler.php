@@ -38,7 +38,7 @@ final readonly class ResourceResourceHandler implements ResourceHandlerInterface
         );
 
         // create resource_set on OIDC server
-        $this->securityAuthorizationClient->request('POST', $this->getResourceRegistrationEndpoint(), [
+        $this->securityAuthorizationClient->request('POST', 'authz/protection/resource_set', [
             'auth_bearer' => $this->getPAT(),
             'json' => [
                 'name' => \sprintf('%s_%s', $shortName, $resource->getId()->__toString()),
@@ -66,7 +66,7 @@ final readonly class ResourceResourceHandler implements ResourceHandlerInterface
         // retrieve corresponding resource_set from OIDC server
         $response = $this->securityAuthorizationClient->request(
             'GET',
-            $this->getResourceRegistrationEndpoint(),
+            'authz/protection/resource_set',
             [
                 'auth_bearer' => $this->getPAT(),
                 'query' => [
@@ -85,7 +85,7 @@ final readonly class ResourceResourceHandler implements ResourceHandlerInterface
         // delete corresponding resource_set on OIDC server
         $this->securityAuthorizationClient->request(
             'DELETE',
-            \sprintf('%s/%s', $this->getResourceRegistrationEndpoint(), $resourceSet['_id']),
+            \sprintf('%s/%s', 'authz/protection/resource_set', $resourceSet['_id']),
             [
                 'auth_bearer' => $this->getPAT(),
             ]
@@ -97,7 +97,7 @@ final readonly class ResourceResourceHandler implements ResourceHandlerInterface
      */
     private function getPAT(): string
     {
-        $response = $this->securityAuthorizationClient->request('POST', $this->getTokenEndpoint(), [
+        $response = $this->securityAuthorizationClient->request('POST', 'protocol/openid-connect/token', [
             'body' => [
                 'grant_type' => 'client_credentials',
                 'client_id' => $this->oidcClientId,
