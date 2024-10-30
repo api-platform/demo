@@ -7,7 +7,19 @@ on:
       - main
       - \d+.\d+
   pull_request: ~
-  workflow_dispatch: ~
+  workflow_dispatch:
+    inputs:
+      minimum-stability:
+        description: 'Minimum stability'
+        required: false
+        default: 'stable'
+        type: choice
+        options:
+          - dev
+          - alpha
+          - beta
+          - RC
+          - stable
   # Check api-platform packages with dev every day at 02:00
   schedule:
     - cron: 0 2 * * *
@@ -53,10 +65,10 @@ jobs:
         name: Start services
         run: docker compose up --wait --no-build
       -
-        name: Update API Platform to latest
-        if: ${{ github.event_name == 'schedule' }}
+        name: Update API Platform
+        if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.minimum-stability != 'stable') }}
         run: |
-          docker compose exec php composer config minimum-stability dev
+          docker compose exec php composer config minimum-stability ${{ inputs.minimum-stability }}
           docker compose exec php composer update "api-platform/*"
       -
         name: Check HTTP reachability
@@ -155,10 +167,10 @@ jobs:
         name: Start Services
         run: docker compose up --wait --no-build
       -
-        name: Update API Platform to latest
-        if: ${{ github.event_name == 'schedule' }}
+        name: Update API Platform
+        if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.minimum-stability != 'stable') }}
         run: |
-          docker compose exec php composer config minimum-stability dev
+          docker compose exec php composer config minimum-stability ${{ inputs.minimum-stability }}
           docker compose exec php composer update "api-platform/*"
       -
         name: Load Fixtures
