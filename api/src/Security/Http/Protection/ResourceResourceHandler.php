@@ -114,9 +114,7 @@ final readonly class ResourceResourceHandler implements ResourceHandlerInterface
         $response = $this->securityAuthorizationClient->request('GET', '.well-known/openid-configuration');
         $content = $response->toArray();
 
-        // horrible fix for local development, can't find another way to fix it
-        // since bitnami/keycloak:^25 returns the configured hostname instead of the requested one
-        return \preg_replace('#^https?://localhost/#', 'http://keycloak:8080/', $content['token_endpoint']);
+        return $content['token_endpoint'];
     }
 
     private function getResourceRegistrationEndpoint(): string
@@ -124,8 +122,6 @@ final readonly class ResourceResourceHandler implements ResourceHandlerInterface
         $response = $this->securityAuthorizationClient->request('GET', '.well-known/uma2-configuration');
         $content = $response->toArray();
 
-        // horrible fix for local development, can't find another way to fix it
-        // since bitnami/keycloak:^25 returns the configured hostname instead of the requested one
-        return \preg_replace('#^https?://localhost/#', 'http://keycloak:8080/', $content['resource_registration_endpoint']);
+        return $content['resource_registration_endpoint'];
     }
 }
