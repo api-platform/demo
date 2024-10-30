@@ -3,6 +3,7 @@ services:
     environment:
       KEYCLOAK_ENABLE_HTTPS: "true"
       KEYCLOAK_HTTPS_USE_PEM: "true"
+      KC_LOG_LEVEL: "debug"
       KEYCLOAK_HTTPS_CERTIFICATE_FILE: /opt/bitnami/keycloak/certs/tls.crt
       KEYCLOAK_HTTPS_CERTIFICATE_KEY_FILE: /opt/bitnami/keycloak/certs/tls.key
       KEYCLOAK_EXTRA_ARGS: "--features=\"hostname:v2,scripts,persistent-user-sessions:v1\" --import-realm"
