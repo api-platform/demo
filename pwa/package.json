@@ -10,8 +10,8 @@
     "test": "playwright test"
   },
   "dependencies": {
-    "@api-platform/admin": "^4.0.1",
-    "@api-platform/api-doc-parser": "^0.16.4",
+    "@api-platform/admin": "^4.0.2",
+    "@api-platform/api-doc-parser": "^0.16.6",
     "@auth/core": "^0.34.2",
     "@fontsource/poppins": "^5.0.14",
     "@mui/icons-material": "^5.16.7",
@@ -54,5 +54,6 @@
   "peerDependencies": {
     "@babel/core": "^7.19.0",
     "@popperjs/core": "^2.11.6"
-  }
+  },
+  "packageManager": "pnpm@9.12.3+sha512.cce0f9de9c5a7c95bef944169cc5dfe8741abfb145078c0d508b868056848a87c81e626246cb60967cbd7fd29a6c062ef73ff840d96b3c86c40ac92cf4a813ee"
 }
