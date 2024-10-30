@@ -108,20 +108,4 @@ final readonly class ResourceResourceHandler implements ResourceHandlerInterface
 
         return $content['access_token'];
     }
-
-    private function getTokenEndpoint(): string
-    {
-        $response = $this->securityAuthorizationClient->request('GET', '.well-known/openid-configuration');
-        $content = $response->toArray();
-
-        return $content['token_endpoint'];
-    }
-
-    private function getResourceRegistrationEndpoint(): string
-    {
-        $response = $this->securityAuthorizationClient->request('GET', '.well-known/uma2-configuration');
-        $content = $response->toArray();
-
-        return $content['resource_registration_endpoint'];
-    }
 }
