@@ -123,7 +123,7 @@ jobs:
       gke-project: ${{ secrets.GKE_PROJECT }}
       cloudflare-api-token: ${{ secrets.CF_API_TOKEN }}
       cloudflare-zone-id: ${{ secrets.CF_ZONE_ID }}
-      keycloak-admin-password: ${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}
+      keycloak-admin-password: ${{ secrets.KC_BOOTSTRAP_ADMIN_PASSWORD }}
 
   check:
     name: Check

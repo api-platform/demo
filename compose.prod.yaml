@@ -44,4 +44,4 @@ services:
       target: keycloak
     environment:
       KEYCLOAK_PRODUCTION: "true"
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD}
