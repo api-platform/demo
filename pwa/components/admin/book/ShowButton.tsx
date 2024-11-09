@@ -1,8 +1,8 @@
-import { Button, ShowButtonProps, useRecordContext } from "react-admin";
+import {Button, useRecordContext} from "react-admin";
 import slugify from "slugify";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
-import { getItemPath } from "../../../utils/dataAccess";
+import {getItemPath} from "../../../utils/dataAccess";
 
 export const ShowButton = () => {
   const record = useRecordContext();

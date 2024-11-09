@@ -1,8 +1,12 @@
-import { type TokenSet } from "@auth/core/types";
-import NextAuth, { type Session as DefaultSession, type User } from "next-auth";
+import {type TokenSet} from "@auth/core/types";
+import NextAuth, {type Session as DefaultSession, type User} from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
 
-import { NEXT_PUBLIC_OIDC_CLIENT_ID, NEXT_PUBLIC_OIDC_SERVER_URL, NEXT_PUBLIC_OIDC_SERVER_URL_INTERNAL } from "../config/keycloak";
+import {
+  NEXT_PUBLIC_OIDC_CLIENT_ID,
+  NEXT_PUBLIC_OIDC_SERVER_URL,
+  NEXT_PUBLIC_OIDC_SERVER_URL_INTERNAL
+} from "../config/keycloak";
 
 export interface Session extends DefaultSession {
   error?: "RefreshAccessTokenError"

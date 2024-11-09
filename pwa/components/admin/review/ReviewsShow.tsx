@@ -1,8 +1,8 @@
-import { FieldGuesser, ShowGuesser } from "@api-platform/admin";
-import { TextField, Labeled } from "react-admin";
+import {FieldGuesser, ShowGuesser} from "@api-platform/admin";
+import {Labeled, TextField} from "react-admin";
 
-import { RatingField } from "./RatingField";
-import { BookField } from "./BookField";
+import {RatingField} from "./RatingField";
+import {BookField} from "./BookField";
 
 export const ReviewsShow = () => (
   <ShowGuesser title="Show review">

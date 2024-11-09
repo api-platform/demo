@@ -1,19 +1,19 @@
 "use client";
 
-import { type FunctionComponent, useEffect, useState } from "react";
-import { signIn, useSession } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
+import {type FunctionComponent, useEffect, useState} from "react";
+import {signIn, useSession} from "next-auth/react";
+import {useSearchParams} from "next/navigation";
 
-import { Pagination } from "../common/Pagination";
-import { type Book } from "../../types/Book";
-import { type PagedCollection } from "../../types/collection";
-import { type Review } from "../../types/Review";
-import { fetchApi, type FetchResponse, getItemPath } from "../../utils/dataAccess";
-import { useMercure } from "../../utils/mercure";
-import { Error } from "../common/Error";
-import { Item } from "./Item";
-import { Form } from "./Form";
-import { Loading } from "../common/Loading";
+import {Pagination} from "../common/Pagination";
+import {type Book} from "../../types/Book";
+import {type PagedCollection} from "../../types/collection";
+import {type Review} from "../../types/Review";
+import {fetchApi, type FetchResponse, getItemPath} from "../../utils/dataAccess";
+import {useMercure} from "../../utils/mercure";
+import {Error} from "../common/Error";
+import {Item} from "./Item";
+import {Form} from "./Form";
+import {Loading} from "../common/Loading";
 
 interface Props {
   book: Book;

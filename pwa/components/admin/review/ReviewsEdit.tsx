@@ -1,14 +1,9 @@
-import { EditGuesser } from "@api-platform/admin";
-import {
-  AutocompleteInput,
-  ReferenceInput,
-  required,
-  TextInput,
-} from "react-admin";
+import {EditGuesser} from "@api-platform/admin";
+import {AutocompleteInput, ReferenceInput, required, TextInput,} from "react-admin";
 
-import { type Book } from "../../../types/Book";
-import { type Review } from "../../../types/Review";
-import { RatingInput } from "./RatingInput";
+import {type Book} from "../../../types/Book";
+import {type Review} from "../../../types/Review";
+import {RatingInput} from "./RatingInput";
 
 const transform = (data: Review) => ({
   ...data,

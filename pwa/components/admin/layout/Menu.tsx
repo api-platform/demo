@@ -1,4 +1,4 @@
-import { Menu } from "react-admin";
+import {Menu} from "react-admin";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import CommentIcon from "@mui/icons-material/Comment";
 

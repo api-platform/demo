@@ -1,7 +1,7 @@
-import { BooksList } from "./BooksList";
-import { BooksCreate } from "./BooksCreate";
-import { BooksEdit } from "./BooksEdit";
-import { type Book } from "../../../types/Book";
+import {BooksList} from "./BooksList";
+import {BooksCreate} from "./BooksCreate";
+import {BooksEdit} from "./BooksEdit";
+import {type Book} from "../../../types/Book";
 
 const bookResourceProps = {
   list: BooksList,

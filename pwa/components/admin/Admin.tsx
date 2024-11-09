@@ -1,24 +1,18 @@
 "use client";
 
 import Head from "next/head";
-import { useContext, useRef, useState } from "react";
-import { type DataProvider, localStorageStore } from "react-admin";
-import { signIn, useSession } from "next-auth/react";
+import {useContext, useRef, useState} from "react";
+import {type DataProvider, localStorageStore} from "react-admin";
+import {signIn, useSession} from "next-auth/react";
 import SyncLoader from "react-spinners/SyncLoader";
-import {
-  fetchHydra,
-  HydraAdmin,
-  hydraDataProvider,
-  OpenApiAdmin,
-  ResourceGuesser,
-} from "@api-platform/admin";
-import { parseHydraDocumentation } from "@api-platform/api-doc-parser";
+import {fetchHydra, HydraAdmin, hydraDataProvider, OpenApiAdmin, ResourceGuesser,} from "@api-platform/admin";
+import {parseHydraDocumentation} from "@api-platform/api-doc-parser";
 
-import { type Session } from "../../app/auth";
+import {type Session} from "../../app/auth";
 import DocContext from "../../components/admin/DocContext";
 import authProvider from "../../components/admin/authProvider";
 import Layout from "./layout/Layout";
-import { ENTRYPOINT } from "../../config/entrypoint";
+import {ENTRYPOINT} from "../../config/entrypoint";
 import bookResourceProps from "./book";
 import reviewResourceProps from "./review";
 import i18nProvider from "./i18nProvider";

@@ -1,4 +1,4 @@
-import { AppBar, UserMenu, TitlePortal } from "react-admin";
+import {AppBar, TitlePortal, UserMenu} from "react-admin";
 
 import Logo from "../Logo";
 import Logout from "./Logout";

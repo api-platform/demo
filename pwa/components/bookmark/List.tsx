@@ -1,12 +1,12 @@
 "use client";
 
-import { type NextPage } from "next";
+import {type NextPage} from "next";
 
-import { Item } from "../../components/book/Item";
-import { Pagination } from "../../components/common/Pagination";
-import { type Bookmark } from "../../types/Bookmark";
-import { type PagedCollection } from "../../types/collection";
-import { useMercure } from "../../utils/mercure";
+import {Item} from "../../components/book/Item";
+import {Pagination} from "../../components/common/Pagination";
+import {type Bookmark} from "../../types/Bookmark";
+import {type PagedCollection} from "../../types/collection";
+import {useMercure} from "../../utils/mercure";
 
 export interface Props {
   data: PagedCollection<Bookmark> | null;

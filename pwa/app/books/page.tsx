@@ -1,11 +1,11 @@
-import { type Metadata } from "next";
+import {type Metadata} from "next";
 
 import {auth, type Session} from "../auth";
-import { List, type Props as ListProps } from "../../components/book/List";
-import { type Book } from "../../types/Book";
-import { type PagedCollection } from "../../types/collection";
-import { type FetchResponse, fetchApi } from "../../utils/dataAccess";
-import { type FiltersProps, buildUriFromFilters } from "../../utils/book";
+import {List, type Props as ListProps} from "../../components/book/List";
+import {type Book} from "../../types/Book";
+import {type PagedCollection} from "../../types/collection";
+import {fetchApi, type FetchResponse} from "../../utils/dataAccess";
+import {buildUriFromFilters, type FiltersProps} from "../../utils/book";
 
 interface Query extends URLSearchParams {
   page?: number|string|undefined;

@@ -1,10 +1,10 @@
-import { type Metadata } from "next";
-import { notFound } from "next/navigation";
+import {type Metadata} from "next";
+import {notFound} from "next/navigation";
 
-import { Show, type Props as ShowProps } from "../../../../components/book/Show";
-import { Book } from "../../../../types/Book";
-import { type FetchResponse, fetchApi } from "../../../../utils/dataAccess";
-import { type Session, auth } from "../../../auth";
+import {type Props as ShowProps, Show} from "../../../../components/book/Show";
+import {Book} from "../../../../types/Book";
+import {fetchApi, type FetchResponse} from "../../../../utils/dataAccess";
+import {auth, type Session} from "../../../auth";
 
 interface Props {
   params: Promise<{ id: string }>;

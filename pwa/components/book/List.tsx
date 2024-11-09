@@ -1,18 +1,18 @@
 "use client";
 
-import { type NextPage } from "next";
-import { useRouter } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
+import {type NextPage} from "next";
+import {useRouter} from "next/navigation";
+import {useMutation} from "@tanstack/react-query";
 import FilterListOutlinedIcon from "@mui/icons-material/FilterListOutlined";
-import { MenuItem, Select } from "@mui/material";
+import {MenuItem, Select} from "@mui/material";
 
-import { Item } from "./Item";
-import { Filters } from "./Filters";
-import { Pagination } from "../common/Pagination";
-import { type Book } from "../../types/Book";
-import { type PagedCollection } from "../../types/collection";
-import { type FiltersProps, buildUriFromFilters } from "../../utils/book";
-import { useMercure } from "../../utils/mercure";
+import {Item} from "./Item";
+import {Filters} from "./Filters";
+import {Pagination} from "../common/Pagination";
+import {type Book} from "../../types/Book";
+import {type PagedCollection} from "../../types/collection";
+import {buildUriFromFilters, type FiltersProps} from "../../utils/book";
+import {useMercure} from "../../utils/mercure";
 
 export interface Props {
   data: PagedCollection<Book> | null;

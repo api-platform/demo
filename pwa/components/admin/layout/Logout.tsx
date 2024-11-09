@@ -1,11 +1,11 @@
-import { ForwardedRef, forwardRef } from "react";
-import { LogoutClasses, useTranslate } from "react-admin";
+import {ForwardedRef, forwardRef} from "react";
+import {LogoutClasses, useTranslate} from "react-admin";
 
-import { ListItemIcon, ListItemText, MenuItem } from "@mui/material";
+import {ListItemIcon, ListItemText, MenuItem} from "@mui/material";
 import ExitIcon from "@mui/icons-material/PowerSettingsNew";
-import { signOut, useSession } from "next-auth/react";
+import {signOut, useSession} from "next-auth/react";
 
-import { NEXT_PUBLIC_OIDC_SERVER_URL } from "../../../config/keycloak";
+import {NEXT_PUBLIC_OIDC_SERVER_URL} from "../../../config/keycloak";
 
 const Logout = forwardRef((props, ref: ForwardedRef<any>) => {
   const { data: session } = useSession();

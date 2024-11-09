@@ -1,11 +1,11 @@
-import { type Metadata } from "next";
-import { redirect } from "next/navigation";
+import {type Metadata} from "next";
+import {redirect} from "next/navigation";
 
-import { List, type Props as ListProps } from "../../components/bookmark/List";
-import { type Bookmark } from "../../types/Bookmark";
-import { type PagedCollection } from "../../types/collection";
-import { type FetchResponse, fetchApi } from "../../utils/dataAccess";
-import { type Session, auth } from "../auth";
+import {List, type Props as ListProps} from "../../components/bookmark/List";
+import {type Bookmark} from "../../types/Bookmark";
+import {type PagedCollection} from "../../types/collection";
+import {fetchApi, type FetchResponse} from "../../utils/dataAccess";
+import {auth, type Session} from "../auth";
 
 interface Query extends URLSearchParams {
   page?: number|string|null;

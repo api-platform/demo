@@ -1,4 +1,4 @@
-import { useRecordContext } from "react-admin";
+import {useRecordContext} from "react-admin";
 import Rating from "@mui/material/Rating";
 
 export const RatingField = () => {

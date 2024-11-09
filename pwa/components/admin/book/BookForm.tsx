@@ -1,7 +1,7 @@
-import { required } from "react-admin";
+import {required} from "react-admin";
 
-import { ConditionInput } from "./ConditionInput";
-import { BookInput } from "./BookInput";
+import {ConditionInput} from "./ConditionInput";
+import {BookInput} from "./BookInput";
 
 export const BookForm = () => (
   <>

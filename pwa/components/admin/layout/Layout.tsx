@@ -1,4 +1,4 @@
-import { Layout, type LayoutProps } from "react-admin";
+import {Layout, type LayoutProps} from "react-admin";
 import AppBar from "./AppBar";
 import Menu from "./Menu";
 

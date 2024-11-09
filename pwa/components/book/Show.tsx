@@ -1,25 +1,25 @@
 "use client";
 
-import { type NextPage } from "next";
+import {type NextPage} from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { signIn, useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import {signIn, useSession} from "next-auth/react";
+import {useEffect, useState} from "react";
+import {useMutation} from "@tanstack/react-query";
 import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Rating from '@mui/material/Rating';
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
-import { type Book } from "../../types/Book";
-import { useMercure } from "../../utils/mercure";
-import { List as Reviews } from "../../components/review/List";
-import { useOpenLibraryBook } from "../../utils/book";
-import { fetchApi, type FetchResponse } from "../../utils/dataAccess";
-import { type Bookmark } from "../../types/Bookmark";
-import { type PagedCollection } from "../../types/collection";
-import { Loading } from "../common/Loading";
+import {type Book} from "../../types/Book";
+import {useMercure} from "../../utils/mercure";
+import {List as Reviews} from "../../components/review/List";
+import {useOpenLibraryBook} from "../../utils/book";
+import {fetchApi, type FetchResponse} from "../../utils/dataAccess";
+import {type Bookmark} from "../../types/Bookmark";
+import {type PagedCollection} from "../../types/collection";
+import {Loading} from "../common/Loading";
 
 export interface Props {
   data: Book;

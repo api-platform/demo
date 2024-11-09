@@ -1,4 +1,4 @@
-import { SelectInput, SelectInputProps } from "react-admin";
+import {SelectInput, SelectInputProps} from "react-admin";
 
 export const ConditionInput = (props: SelectInputProps) => (
   <SelectInput

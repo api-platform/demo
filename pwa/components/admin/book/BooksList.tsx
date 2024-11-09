@@ -1,16 +1,9 @@
-import { FieldGuesser } from "@api-platform/admin";
-import {
-  TextInput,
-  Datagrid,
-  useRecordContext,
-  List,
-  EditButton,
-  WrapperField,
-} from "react-admin";
+import {FieldGuesser} from "@api-platform/admin";
+import {Datagrid, EditButton, List, TextInput, useRecordContext, WrapperField,} from "react-admin";
 
-import { ShowButton } from "./ShowButton";
-import { RatingField } from "../review/RatingField";
-import { ConditionInput } from "./ConditionInput";
+import {ShowButton} from "./ShowButton";
+import {RatingField} from "../review/RatingField";
+import {ConditionInput} from "./ConditionInput";
 
 const ConditionField = () => {
   const record = useRecordContext();

@@ -1,8 +1,8 @@
-import { useRecordContext, type UseRecordContextParams } from "react-admin";
+import {useRecordContext, type UseRecordContextParams} from "react-admin";
 import Link from "next/link";
 import slugify from "slugify";
 
-import { getItemPath } from "../../../utils/dataAccess";
+import {getItemPath} from "../../../utils/dataAccess";
 
 export const BookField = (props: UseRecordContextParams) => {
   const record = useRecordContext(props);

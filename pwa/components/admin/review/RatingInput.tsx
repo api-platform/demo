@@ -1,9 +1,6 @@
-import { Labeled, useInput } from "react-admin";
-import {
-  type CommonInputProps,
-  type ResettableTextFieldProps,
-} from "ra-ui-materialui";
-import Rating, { type RatingProps } from "@mui/material/Rating";
+import {Labeled, useInput} from "react-admin";
+import {type CommonInputProps, type ResettableTextFieldProps,} from "ra-ui-materialui";
+import Rating, {type RatingProps} from "@mui/material/Rating";
 
 export type RatingInputProps = RatingProps &
   CommonInputProps &

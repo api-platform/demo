@@ -1,14 +1,13 @@
-import { type FunctionComponent, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
+import {type FunctionComponent, useState} from "react";
+import {useMutation} from "@tanstack/react-query";
+import {useSession} from "next-auth/react";
 import Rating from "@mui/material/Rating";
 
-import { Error } from "../common/Error";
-import { type Review } from "../../types/Review";
-import { fetchApi } from "../../utils/dataAccess";
-import { Form } from "./Form";
+import {Error} from "../common/Error";
+import {type Review} from "../../types/Review";
+import {fetchApi} from "../../utils/dataAccess";
+import {Form} from "./Form";
 import {usePermission} from "../../utils/review";
-import {useOpenLibraryBook} from "../../utils/book";
 
 interface Props {
   review: Review;

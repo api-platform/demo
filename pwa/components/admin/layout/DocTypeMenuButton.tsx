@@ -1,6 +1,6 @@
-import { useContext, useState } from "react";
-import { useStore } from "react-admin";
-import { Button, Menu, MenuItem } from "@mui/material";
+import {useContext, useState} from "react";
+import {useStore} from "react-admin";
+import {Button, Menu, MenuItem} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import DocContext from "../DocContext";

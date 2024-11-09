@@ -1,12 +1,12 @@
 "use client";
 
-import { signIn, signOut, useSession } from "next-auth/react";
-import { usePathname } from "next/navigation";
+import {signIn, signOut, useSession} from "next-auth/react";
+import {usePathname} from "next/navigation";
 import Link from "next/link";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
-import { NEXT_PUBLIC_OIDC_SERVER_URL } from "../../config/keycloak";
+import {NEXT_PUBLIC_OIDC_SERVER_URL} from "../../config/keycloak";
 
 export const Header = () => {
   const pathname = usePathname();

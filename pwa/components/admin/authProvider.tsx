@@ -1,7 +1,7 @@
-import { AuthProvider } from "react-admin";
-import { getSession, signIn, signOut } from "next-auth/react";
+import {AuthProvider} from "react-admin";
+import {getSession, signIn, signOut} from "next-auth/react";
 
-import { NEXT_PUBLIC_OIDC_SERVER_URL } from "../../config/keycloak";
+import {NEXT_PUBLIC_OIDC_SERVER_URL} from "../../config/keycloak";
 
 const authProvider: AuthProvider = {
   // Nothing to do here, this function will never be called

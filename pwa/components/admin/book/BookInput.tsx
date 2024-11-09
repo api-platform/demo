@@ -1,14 +1,14 @@
-import { SyntheticEvent, useMemo, useRef, useState } from "react";
+import {SyntheticEvent, useMemo, useRef, useState} from "react";
 import Autocomplete from "@mui/material/Autocomplete";
-import { debounce } from "@mui/material";
-import { TextInput, type TextInputProps, useInput } from "react-admin";
-import { useQuery } from "@tanstack/react-query";
-import { useWatch } from "react-hook-form";
+import {debounce} from "@mui/material";
+import {TextInput, type TextInputProps, useInput} from "react-admin";
+import {useQuery} from "@tanstack/react-query";
+import {useWatch} from "react-hook-form";
 
-import { Search as OpenLibrarySearch } from "../../../types/OpenLibrary/Search";
-import { SearchDoc as OpenLibrarySearchDoc } from "../../../types/OpenLibrary/SearchDoc";
-import { Search as GutendexSearch } from "../../../types/Gutendex/Search";
-import { SearchDoc as GutendexSearchDoc } from "../../../types/Gutendex/SearchDoc";
+import {Search as OpenLibrarySearch} from "../../../types/OpenLibrary/Search";
+import {SearchDoc as OpenLibrarySearchDoc} from "../../../types/OpenLibrary/SearchDoc";
+import {Search as GutendexSearch} from "../../../types/Gutendex/Search";
+import {SearchDoc as GutendexSearchDoc} from "../../../types/Gutendex/SearchDoc";
 
 interface Result {
   title: string;
