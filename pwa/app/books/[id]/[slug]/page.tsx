@@ -7,11 +7,11 @@ import { type FetchResponse, fetchApi } from "../../../../utils/dataAccess";
 import { type Session, auth } from "../../../auth";
 
 interface Props {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata|undefined> {
-  const id = params.id;
+  const id = (await params).id;
   try {
     const response: FetchResponse<Book> | undefined = await fetchApi(`/books/${id}`, {
       // next: { revalidate: 3600 },
@@ -56,7 +56,7 @@ async function getServerSideProps(id: string, session: Session|null): Promise<Sh
 export default async function Page({ params }: Props) {
   // @ts-ignore
   const session: Session|null = await auth();
-  const props = await getServerSideProps(params.id, session);
+  const props = await getServerSideProps((await params).id, session);
   if (!props) {
     notFound();
   }

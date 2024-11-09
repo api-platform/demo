@@ -32,7 +32,7 @@ async function getServerSideProps({ page = 1 }: Query, session: Session): Promis
   return { data: null, hubURL: null, page: Number(page) };
 }
 
-export default async function Page({ searchParams }: { searchParams: Query }) {
+export default async function Page({ searchParams }: { searchParams: Promise<Query> }) {
   // @ts-ignore
   const session: Session|null = await auth();
   if (!session || session?.error === "RefreshAccessTokenError") {
@@ -41,7 +41,7 @@ export default async function Page({ searchParams }: { searchParams: Query }) {
     redirect("/api/auth/signin?callbackUrl=/bookmarks");
   }
 
-  const props = await getServerSideProps(searchParams, session);
+  const props = await getServerSideProps(await searchParams, session);
 
   return <List {...props}/>;
 }

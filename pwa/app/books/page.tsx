@@ -17,7 +17,7 @@ interface Query extends URLSearchParams {
 }
 
 interface Props {
-  searchParams: Query;
+  searchParams: Promise<Query>;
 }
 
 async function getServerSideProps(query: Query, session: Session|null): Promise<ListProps> {
@@ -66,7 +66,7 @@ export const metadata: Metadata = {
 export default async function Page({ searchParams }: Props) {
   // @ts-ignore
   const session: Session|null = await auth();
-  const props = await getServerSideProps(searchParams, session);
+  const props = await getServerSideProps(await searchParams, session);
 
   return <List {...props}/>;
 }

@@ -89,7 +89,7 @@ export const Show: NextPage<Props> = ({ data, hubURL }) => {
         setBookmark(null);
       }
     })()
-  }, [data, status]);
+  }, [session, data, status]);
 
   return (
     <div className="container mx-auto max-w-7xl items-center justify-between p-6 lg:px-8">

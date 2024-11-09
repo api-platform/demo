@@ -48,7 +48,7 @@ export const List: FunctionComponent<Props> = ({ book }) => {
         return;
       }
     })();
-  }, [book, page, status, reload]);
+  }, [session, book, page, status, reload]);
 
   const getPagePath = (page: number): string =>
     `${getItemPath(book, '/books/[id]/[slug]')}?page=${page}#reviews`;
