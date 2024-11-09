@@ -12,7 +12,7 @@
   "dependencies": {
     "@api-platform/admin": "^4.0.3",
     "@api-platform/api-doc-parser": "^0.16.6",
-    "@auth/core": "^0.34.2",
+    "@auth/core": "^0.37.3",
     "@fontsource/poppins": "^5.1.0",
     "@mui/icons-material": "^5.16.7",
     "@mui/material": "^5.16.7",
