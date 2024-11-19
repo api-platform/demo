@@ -63,6 +63,7 @@
         "preferred-install": {
             "*": "dist"
         },
+        "bump-after-update": true,
         "sort-packages": true,
         "allow-plugins": {
             "symfony/flex": true,
