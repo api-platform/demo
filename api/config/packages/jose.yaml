@@ -10,6 +10,15 @@ jose:
                 signature_algorithms: ['HS256', 'RS256', 'ES256']
                 header_checkers: ['alg', 'iat', 'nbf', 'exp', 'aud', 'iss']
                 is_public: true
+    checkers:
+        claims:
+            oidc:
+                is_public: true
+                claims: ['iat', 'nbf', 'exp']
+        headers:
+            oidc:
+                is_public: true
+                headers: ['alg', 'iss', 'aud']
 
 services:
     _defaults:

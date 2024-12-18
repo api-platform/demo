@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Security\Http\AccessToken\Oidc;
 
+use Jose\Component\Checker\ClaimCheckerManager;
+use Jose\Component\Checker\HeaderCheckerManager;
 use Jose\Component\Core\JWKSet;
 use Jose\Component\Signature\JWSLoader;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Http\AccessToken\AccessTokenHandlerInterface;
-use Symfony\Component\Security\Http\AccessToken\Oidc\Exception\MissingClaimException;
 use Symfony\Component\Security\Http\AccessToken\Oidc\OidcTokenHandler;
 use Symfony\Component\Security\Http\AccessToken\Oidc\OidcTrait;
 use Symfony\Component\Security\Http\Authenticator\FallbackUserLoader;
@@ -21,8 +22,11 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * Completes {@see OidcTokenHandler} with OIDC Discovery and configuration stored in cache.
+ * It verifies access tokens, extracts user information, and creates user badges for Symfony's security system.
+ *
+ * @see https://github.com/symfony/symfony/pull/54932
  */
-final class OidcDiscoveryTokenHandler implements AccessTokenHandlerInterface
+final readonly class OidcDiscoveryTokenHandler implements AccessTokenHandlerInterface
 {
     use OidcTrait;
 
@@ -31,7 +35,11 @@ final class OidcDiscoveryTokenHandler implements AccessTokenHandlerInterface
         private CacheInterface $cache,
         #[Autowire('@jose.jws_loader.oidc')]
         private JWSLoader $jwsLoader,
-        private readonly HttpClientInterface $securityAuthorizationClient,
+        #[Autowire('@jose.claim_checker.oidc')]
+        private ClaimCheckerManager $claimCheckerManager,
+        #[Autowire('@jose.header_checker.oidc')]
+        private HeaderCheckerManager $headerCheckerManager,
+        private HttpClientInterface $securityAuthorizationClient,
         private string $claim = 'email',
         private int $ttl = 600,
         private ?LoggerInterface $logger = null,
@@ -86,9 +94,8 @@ final class OidcDiscoveryTokenHandler implements AccessTokenHandlerInterface
             );
 
             $claims = json_decode($jws->getPayload(), true);
-            if (empty($claims[$this->claim])) {
-                throw new MissingClaimException(\sprintf('"%s" claim not found.', $this->claim));
-            }
+            $this->claimCheckerManager->check(claims: $claims, mandatoryClaims: [$this->claim]);
+            $this->headerCheckerManager->check(jwt: $jws, index: 0);
 
             // UserLoader argument can be overridden by a UserProvider on AccessTokenAuthenticator::authenticate
             return new UserBadge($claims[$this->claim], new FallbackUserLoader(fn () => $this->createUser($claims)), $claims);
