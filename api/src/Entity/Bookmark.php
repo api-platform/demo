@@ -69,7 +69,7 @@ class Bookmark
     #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\Id]
-    private ?Uuid $id = null;
+    private Uuid $id;
 
     /**
      * @see https://schema.org/agent
@@ -77,7 +77,7 @@ class Bookmark
     #[ApiProperty(types: ['https://schema.org/agent'])]
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
-    public ?User $user = null;
+    public User $user;
 
     /**
      * @see https://schema.org/object
@@ -88,7 +88,7 @@ class Bookmark
     #[Groups(groups: ['Bookmark:read', 'Bookmark:write'])]
     #[ORM\ManyToOne(targetEntity: Book::class)]
     #[ORM\JoinColumn(nullable: false)]
-    public ?Book $book = null;
+    public Book $book;
 
     /**
      * @see https://schema.org/startTime
@@ -96,9 +96,9 @@ class Bookmark
     #[ApiProperty(types: ['https://schema.org/startTime'])]
     #[Groups(groups: ['Bookmark:read'])]
     #[ORM\Column(type: 'datetime_immutable')]
-    public ?\DateTimeInterface $bookmarkedAt = null;
+    public \DateTimeImmutable $bookmarkedAt;
 
-    public function getId(): ?Uuid
+    public function getId(): Uuid
     {
         return $this->id;
     }

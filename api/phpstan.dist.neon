@@ -17,3 +17,4 @@ parameters:
         - src/Kernel.php
     ignoreErrors:
         - message: '#no (?:return|value) type specified in iterable type array\.#'
+        - message: '#has invalid type Illuminate\\Http\\Request#'

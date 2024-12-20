@@ -27,9 +27,9 @@ class Parchment
     #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\Id]
-    private ?Uuid $id = null;
+    private Uuid $id;
 
-    public function getId(): ?Uuid
+    public function getId(): Uuid
     {
         return $this->id;
     }
@@ -39,12 +39,12 @@ class Parchment
      */
     #[Assert\NotBlank(allowNull: false)]
     #[ORM\Column]
-    public ?string $title = null;
+    public string $title;
 
     /**
      * A description of the item.
      */
     #[Assert\NotBlank(allowNull: false)]
     #[ORM\Column]
-    public ?string $description = null;
+    public string $description;
 }

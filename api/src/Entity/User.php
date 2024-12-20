@@ -61,13 +61,13 @@ class User implements UserInterface
     #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\Id]
-    private ?Uuid $id = null;
+    private Uuid $id;
 
     /**
      * @see https://schema.org/email
      */
     #[ORM\Column(unique: true)]
-    public ?string $email = null;
+    public string $email;
 
     /**
      * @see https://schema.org/givenName
@@ -75,7 +75,7 @@ class User implements UserInterface
     #[ApiProperty(types: ['https://schema.org/givenName'])]
     #[Groups(groups: ['User:read', 'Review:read'])]
     #[ORM\Column]
-    public ?string $firstName = null;
+    public string $firstName;
 
     /**
      * @see https://schema.org/familyName
@@ -83,9 +83,9 @@ class User implements UserInterface
     #[ApiProperty(types: ['https://schema.org/familyName'])]
     #[Groups(groups: ['User:read', 'Review:read'])]
     #[ORM\Column]
-    public ?string $lastName = null;
+    public string $lastName;
 
-    public function getId(): ?Uuid
+    public function getId(): Uuid
     {
         return $this->id;
     }
@@ -104,7 +104,7 @@ class User implements UserInterface
 
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return $this->email;
     }
 
     /**
@@ -112,12 +112,8 @@ class User implements UserInterface
      */
     #[ApiProperty(iris: ['https://schema.org/name'])]
     #[Groups(groups: ['User:read', 'Review:read'])]
-    public function getName(): ?string
+    public function getName(): string
     {
-        if (!$this->firstName && !$this->lastName) {
-            return null;
-        }
-
         return trim(\sprintf('%s %s', $this->firstName, $this->lastName));
     }
 }

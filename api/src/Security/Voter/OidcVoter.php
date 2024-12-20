@@ -10,6 +10,9 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Exception\TokenNotFoundException;
 use Symfony\Component\Security\Http\AccessToken\AccessTokenExtractorInterface;
 
+/**
+ * @extends Voter<string, null|string|object>
+ */
 abstract class OidcVoter extends Voter
 {
     public function __construct(
