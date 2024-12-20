@@ -167,7 +167,7 @@ class Review
     #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\Id]
-    private ?Uuid $id = null;
+    private Uuid $id;
 
     /**
      * @see https://schema.org/author
@@ -176,7 +176,7 @@ class Review
     #[Groups(groups: ['Review:read'])]
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
-    public ?User $user = null;
+    public User $user;
 
     /**
      * @see https://schema.org/itemReviewed
@@ -186,7 +186,7 @@ class Review
     #[Groups(groups: ['Review:read', 'Review:write:admin'])]
     #[ORM\ManyToOne(targetEntity: Book::class, inversedBy: 'reviews')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    public ?Book $book = null;
+    public Book $book;
 
     /**
      * @see https://schema.org/datePublished
@@ -194,7 +194,7 @@ class Review
     #[ApiProperty(types: ['https://schema.org/datePublished'])]
     #[Groups(groups: ['Review:read'])]
     #[ORM\Column(type: 'datetime_immutable')]
-    public ?\DateTimeInterface $publishedAt = null;
+    public \DateTimeImmutable $publishedAt;
 
     /**
      * @see https://schema.org/reviewBody
@@ -203,7 +203,7 @@ class Review
     #[Assert\NotBlank(allowNull: false)]
     #[Groups(groups: ['Review:read', 'Review:write'])]
     #[ORM\Column(type: Types::TEXT)]
-    public ?string $body = null;
+    public string $body;
 
     /**
      * @see https://schema.org/reviewRating
@@ -213,7 +213,7 @@ class Review
     #[Assert\Range(min: 0, max: 5)]
     #[Groups(groups: ['Review:read', 'Review:write'])]
     #[ORM\Column(type: 'smallint')]
-    public ?int $rating = null;
+    public int $rating;
 
     /**
      * @deprecated use the rating property instead
@@ -224,7 +224,7 @@ class Review
     #[ORM\Column(nullable: true)]
     public ?string $letter = null;
 
-    public function getId(): ?Uuid
+    public function getId(): Uuid
     {
         return $this->id;
     }

@@ -90,7 +90,7 @@ final class ReviewFactory extends PersistentProxyObjectFactory
                 }
 
                 // project specification: only create resource on OIDC server for known users (john.doe and chuck.norris)
-                if (\in_array($object->user?->email, ['john.doe@example.com', 'chuck.norris@example.com'], true)) {
+                if (isset($object->user) && \in_array($object->user->email, ['john.doe@example.com', 'chuck.norris@example.com'], true)) {
                     $this->resourceHandler->create($object, $object->user, [
                         'operation_name' => '/books/{bookId}/reviews/{id}{._format}',
                     ]);

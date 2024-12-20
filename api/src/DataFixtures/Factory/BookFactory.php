@@ -82,11 +82,11 @@ final class BookFactory extends PersistentProxyObjectFactory
     {
         return $this
             ->afterInstantiate(function (Book $book): void {
-                if ($book->book && $book->title && $book->author) {
+                if (isset($book->book, $book->title, $book->author)) {
                     return;
                 }
 
-                if (!$book->book) {
+                if (!isset($book->book)) {
                     $book->book = 'https://openlibrary.org/books/OL' . self::faker()->unique()->randomNumber(7, true) . 'M.json';
                     $book->title ??= self::faker()->text();
                     $book->author ??= self::faker()->name();
