@@ -48,7 +48,7 @@ final readonly class ResourceResourceHandler implements ResourceHandlerInterface
                 'owner' => $owner->getUserIdentifier(),
             ],
         ]);
-        if ($response->getStatusCode() !== 200) {
+        if (200 !== $response->getStatusCode()) {
             dump($response->toArray(false));
         }
     }

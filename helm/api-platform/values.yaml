@@ -117,7 +117,7 @@ keycloak:
     - name: KEYCLOAK_PRODUCTION
       value: "true"
     - name: KEYCLOAK_EXTRA_ARGS
-      value: "--features=\"hostname:v2,scripts,persistent-user-sessions:v1\""
+      value: "--features=\"hostname:v2,scripts,persistent-user-sessions:v1\" --hostname-backchannel-dynamic=true"
   # must finish with a trailing slash (https://github.com/bitnami/charts/issues/10885#issuecomment-1414279144)
   httpRelativePath: /oidc/
   proxy: edge
