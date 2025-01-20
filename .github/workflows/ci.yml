@@ -31,7 +31,7 @@ concurrency:
 jobs:
   tests:
     name: Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -107,7 +107,7 @@ jobs:
   # run e2e tests iso-prod
   e2e-tests:
     name: E2E Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -223,7 +223,7 @@ jobs:
 
   lint:
     name: Lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     steps:
       -
         name: Checkout
@@ -262,7 +262,7 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
       -
         name: Lint API
-        uses: docker://oskarstark/php-cs-fixer-ga
+        uses: docker://oskarstark/php-cs-fixer-ga:3.26.0
         with:
           args: --config=api/.php-cs-fixer.dist.php -v --dry-run --stop-on-violation --using-cache=no ${{ env.PHPCS_EXTRA_ARGS }}"
 

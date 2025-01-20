@@ -17,7 +17,7 @@ jobs:
   cleanup:
     name: Uninstall K8s Release for Closed Pull Request
     if: ${{ github.repository == 'api-platform/demo' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     permissions:
       contents: 'read'
       id-token: 'write'

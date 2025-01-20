@@ -8,7 +8,7 @@ jobs:
   upgrade:
     name: Upgrade
     if: ${{ github.repository == 'api-platform/demo' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     permissions:
       contents: write
       pull-requests: write
