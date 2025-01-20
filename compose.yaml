@@ -2,7 +2,12 @@ services:
   php:
     image: ${IMAGES_PREFIX:-}app-php
     depends_on:
-      - database
+      database:
+        condition: service_healthy
+      pwa:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
     restart: unless-stopped
     environment:
       PWA_UPSTREAM: pwa:3000
@@ -43,6 +48,12 @@ services:
       AUTH_SECRET: ${AUTH_SECRET:-!ChangeThisNextAuthSecret!}
       AUTH_URL: ${AUTH_URL:-https://localhost/api/auth}
       NEXT_SHARP_PATH: /srv/app/node_modules/sharp
+    healthcheck:
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/ || exit 1" ]
+      start_period: 5s
+      interval: 5s
+      timeout: 3s
+      retries: 3
 
 ###> doctrine/doctrine-bundle ###
   database:
@@ -52,6 +63,12 @@ services:
       # You should definitely change the password in production
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-!ChangeMe!}
       - POSTGRES_USER=${POSTGRES_USER:-app}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-app}" ]
+      start_period: 1s
+      interval: 5s
+      timeout: 3s
+      retries: 3
     volumes:
       - db_data:/var/lib/postgresql/data
       # you may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
@@ -69,6 +86,12 @@ services:
       # You should definitely change the password in production
       POSTGRES_PASSWORD: ${KEYCLOAK_POSTGRES_PASSWORD:-!ChangeMe!}
       POSTGRES_USER: ${KEYCLOAK_POSTGRES_USER:-keycloak}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${KEYCLOAK_POSTGRES_USER:-keycloak}" ]
+      start_period: 1s
+      interval: 5s
+      timeout: 3s
+      retries: 3
     volumes:
       - keycloak_db_data:/var/lib/postgresql/data
 
@@ -88,8 +111,18 @@ services:
       KC_HOSTNAME_ADMIN_URL: https://${SERVER_NAME:-localhost}/oidc/
       # https://www.keycloak.org/server/features
       KC_FEATURES: "scripts"
+      # https://github.com/bitnami/containers/pull/40893
+      KEYCLOAK_ENABLE_HEALTH_ENDPOINTS: "true"
+    # https://www.keycloak.org/server/all-config#category-health
+    healthcheck:
+      test: [ "CMD-SHELL", "curl http://127.0.0.1:8080/oidc/health || exit 1"]
+      start_period: 15s
+      interval: 5s
+      timeout: 3s
+      retries: 15
     depends_on:
-      - keycloak-database
+      keycloak-database:
+        condition: service_healthy
     ports:
       - target: 8080
         published: 8080

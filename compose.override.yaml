@@ -55,6 +55,9 @@ services:
 
   keycloak-config-cli:
     image: bitnami/keycloak-config-cli:5-debian-12
+    depends_on:
+      keycloak:
+        condition: service_healthy
     environment:
       KEYCLOAK_URL: http://keycloak:8080/oidc/
       KEYCLOAK_USER: ${KEYCLOAK_ADMIN_USER:-admin}
