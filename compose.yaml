@@ -51,9 +51,9 @@ services:
     healthcheck:
       test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/ || exit 1" ]
       start_period: 5s
-      interval: 5s
+      interval: 10s
       timeout: 3s
-      retries: 3
+      retries: 5
 
 ###> doctrine/doctrine-bundle ###
   database:
