@@ -34,6 +34,12 @@ services:
       WATCHPACK_POLLING: "true"
       # Development usage only
       NODE_TLS_REJECT_UNAUTHORIZED: "0"
+    healthcheck:
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://127.0.0.1:3000 || exit 1" ]
+      start_period: 15s
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
 ###> doctrine/doctrine-bundle ###
   database:
