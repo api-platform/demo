@@ -120,7 +120,7 @@ export const BookInput = (props: BookInputProps) => {
   } = useInput({ ...props, source: "book" });
   const title = useWatch({ name: "title" });
   const author = useWatch({ name: "author" });
-  const controller = useRef<AbortController | undefined>();
+  const controller = useRef<AbortController | undefined>(undefined);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [value, setValue] = useState<Result | null | undefined>(
     !!title && !!author && !!field.value
