@@ -289,7 +289,7 @@ final class BookTest extends ApiTestCase
             [],
             Response::HTTP_UNPROCESSABLE_ENTITY,
             [
-                '@type' => 'ConstraintViolationList',
+                '@type' => 'ConstraintViolation',
                 'title' => 'An error occurred',
                 'violations' => [
                     [
@@ -315,7 +315,7 @@ final class BookTest extends ApiTestCase
             ],
             Response::HTTP_UNPROCESSABLE_ENTITY,
             [
-                '@type' => 'ConstraintViolationList',
+                '@type' => 'ConstraintViolation',
                 'title' => 'An error occurred',
                 'description' => 'condition: This value should be of type ' . BookCondition::class . '.',
                 'violations' => [
@@ -333,7 +333,7 @@ final class BookTest extends ApiTestCase
             ],
             Response::HTTP_UNPROCESSABLE_ENTITY,
             [
-                '@type' => 'ConstraintViolationList',
+                '@type' => 'ConstraintViolation',
                 'title' => 'An error occurred',
                 'description' => 'condition: This value should be of type ' . BookCondition::class . '.',
                 'violations' => [
@@ -351,7 +351,7 @@ final class BookTest extends ApiTestCase
             ],
             Response::HTTP_UNPROCESSABLE_ENTITY,
             [
-                '@type' => 'ConstraintViolationList',
+                '@type' => 'ConstraintViolation',
                 'title' => 'An error occurred',
                 'violations' => [
                     [

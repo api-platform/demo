@@ -128,7 +128,7 @@ final class BookmarkTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'ConstraintViolationList',
+            '@type' => 'ConstraintViolation',
             'title' => 'An error occurred',
             'description' => 'book: This value should be of type ' . Book::class . '.',
             'violations' => [
@@ -218,7 +218,7 @@ final class BookmarkTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'ConstraintViolationList',
+            '@type' => 'ConstraintViolation',
             'title' => 'An error occurred',
             'description' => 'You have already bookmarked this book.',
         ]);
