@@ -2,7 +2,7 @@
 
 
 # Versions
-FROM node:21-alpine AS node_upstream
+FROM node:23-alpine AS node_upstream
 
 
 # Base stage for dev and build
@@ -14,7 +14,8 @@ RUN apk add --no-cache libc6-compat
 
 WORKDIR /srv/app
 
-RUN corepack enable && \
+RUN apk upgrade && \
+    corepack enable && \
 	corepack prepare --activate pnpm@latest && \
 	pnpm config -g set store-dir /.pnpm-store
 
