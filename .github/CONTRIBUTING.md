@@ -64,6 +64,14 @@ Fill in the following header from the pull request template:
 | Doc PR        | api-platform/docs#1234
 ```
 
+## Update Project Version from API Platform Release
+
+When a release occur on [api-platform/core](https://github.com/api-platform/core) repository, you can trigger a workflow to automatically update this project.
+
+Go to Actions > Upgrade API Platform > Run workflow, then click on the `Run workflow` button. This action will detect the new API Platform release, update the API and HELM dependencies, and open a Pull Request to run the CI and review it.
+
+If the CI is green and the review seems valid, the Pull Request can be merged (by member of the API Platform organization), and a release can be created through GitHub UI.
+
 ## Squash your Commits
 
 If you have 3 commits. So start with:
