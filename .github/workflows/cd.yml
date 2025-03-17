@@ -22,7 +22,21 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
+    outputs:
+      environment: ${{ steps.set-github-outputs.outputs.environment }}
+      url: ${{ steps.set-github-outputs.outputs.url }}
     steps:
+      -
+        name: Sets GitHub Outputs
+        id: set-github-outputs
+        run: |
+          if [ "${{ github.event_name }}" == "push" ]; then
+            echo "environment=prod" >> "$GITHUB_OUTPUT"
+            echo "url=demo.api-platform.com" >> "$GITHUB_OUTPUT"
+          else
+            echo "environment=pr-${{ github.event.pull_request.number }}" >> "$GITHUB_OUTPUT"
+            echo "url=pr-${{ github.event.pull_request.number }}-demo.api-platform.com" >> "$GITHUB_OUTPUT"
+          fi
       -
         name: Checkout
         uses: actions/checkout@v4
@@ -51,9 +65,9 @@ jobs:
         name: Generate NEXT_PUBLIC_OIDC_SERVER_URL
         run: |
           if [ "${{ github.event_name }}" == "push" ]; then
-            echo "NEXT_PUBLIC_OIDC_SERVER_URL=https://demo.api-platform.com/oidc/realms/demo" >> $GITHUB_ENV
+            echo "NEXT_PUBLIC_OIDC_SERVER_URL=https://${{ steps.set-github-outputs.outputs.url }}/" >> $GITHUB_ENV
           else
-            echo "NEXT_PUBLIC_OIDC_SERVER_URL=https://pr-${{ github.event.pull_request.number }}-demo.api-platform.com/oidc/realms/demo" >> $GITHUB_ENV
+            echo "NEXT_PUBLIC_OIDC_SERVER_URL=https://${{ steps.set-github-outputs.outputs.url }}oidc/realms/demo/" >> $GITHUB_ENV
           fi
       -
         name: Build Docker images
@@ -107,6 +121,8 @@ jobs:
       docker-images-version: ${{ github.sha }}
       gke-cluster: api-platform-demo
       gke-zone: europe-west1-c
+      environment: ${{ needs.build.outputs.environment }}
+      url: ${{ needs.build.outputs.url }}
     secrets:
       gke-credentials: ${{ secrets.GKE_SA_KEY }}
       gke-project: ${{ secrets.GKE_PROJECT }}

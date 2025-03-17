@@ -17,6 +17,14 @@ on:
         type: string
         description: Google Kubernetes Engine Zone
         required: true
+      environment:
+        type: string
+        description: GitHub Environment
+        required: true
+      url:
+        type: string
+        description: GitHub Environment URL
+        required: true
     secrets:
       gke-credentials:
         description: Google Kubernetes Engine Credentials as JSON
