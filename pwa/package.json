@@ -22,7 +22,7 @@
     "@tanstack/react-query-next-experimental": "^5.65.1",
     "autoprefixer": "^10.4.20",
     "formik": "^2.4.6",
-    "next": "^15.2.3",
+    "next": "^15.2.4",
     "next-auth": "5.0.0-beta.25",
     "picocolors": "^1.1.1",
     "postcss": "^8.5.1",
