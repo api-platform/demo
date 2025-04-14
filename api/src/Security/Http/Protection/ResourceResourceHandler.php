@@ -38,7 +38,7 @@ final readonly class ResourceResourceHandler implements ResourceHandlerInterface
         );
 
         // create resource_set on OIDC server
-        $response = $this->securityAuthorizationClient->request('POST', 'authz/protection/resource_set', [
+        $this->securityAuthorizationClient->request('POST', 'authz/protection/resource_set', [
             'auth_bearer' => $this->getPAT(),
             'json' => [
                 'name' => \sprintf('%s_%s', $shortName, $resource->getId()->__toString()),
@@ -48,9 +48,6 @@ final readonly class ResourceResourceHandler implements ResourceHandlerInterface
                 'owner' => $owner->getUserIdentifier(),
             ],
         ]);
-        if (200 !== $response->getStatusCode()) {
-            dump($response->toArray(false));
-        }
     }
 
     public function delete(object $resource, UserInterface $owner, array $context = []): void

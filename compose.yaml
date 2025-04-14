@@ -105,7 +105,7 @@ services:
       KEYCLOAK_HOSTNAME: https://${SERVER_NAME:-localhost}/oidc/
       KEYCLOAK_HOSTNAME_ADMIN: https://${SERVER_NAME:-localhost}/oidc/
       KEYCLOAK_ENABLE_HEALTH_ENDPOINTS: "true"
-      KEYCLOAK_EXTRA_ARGS: "--features=\"hostname:v2,scripts,persistent-user-sessions:v1\" --hostname-backchannel-dynamic=true"
+      KEYCLOAK_PROXY_HEADERS: xforwarded
     # https://www.keycloak.org/server/all-config#category-health
     healthcheck:
       test: [ "CMD-SHELL", "curl http://127.0.0.1:8080/oidc/health || exit 1"]

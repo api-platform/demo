@@ -57,7 +57,7 @@ services:
       context: ./helm/api-platform/keycloak/
       target: keycloak
     environment:
-      KEYCLOAK_EXTRA_ARGS: "--features=\"hostname:v2,scripts,persistent-user-sessions:v1\" --hostname-backchannel-dynamic=true --import-realm"
+      KEYCLOAK_EXTRA_ARGS: "--import-realm"
     volumes:
       - ./helm/api-platform/keycloak/themes/api-platform-demo:/opt/bitnami/keycloak/themes/api-platform-demo
       - ./helm/api-platform/keycloak/config:/opt/bitnami/keycloak/data/import
