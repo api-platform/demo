@@ -4,25 +4,17 @@ framework:
     #csrf_protection: true
     http_method_override: false
     handle_all_throwables: true
- 
-    trusted_proxies: '%env(TRUSTED_PROXIES)%'
-    #trusted_hosts: '%env(TRUSTED_HOSTS)%'
-    # See https://caddyserver.com/docs/caddyfile/directives/reverse_proxy#defaults
-    trusted_headers: [ 'x-forwarded-for', 'x-forwarded-proto' ]
-    #trusted_headers: [ 'x-forwarded-for', 'x-forwarded-proto', 'x-forwarded-host' ]
 
-    # Enables session support. Note that the session will ONLY be started if you read or write from it.
-    # Remove or comment this section to explicitly disable session support.
-    #session:
-    #    handler_id: null
-    #    cookie_secure: auto
-    #    cookie_samesite: lax
-    #    storage_factory_id: session.storage.factory.native
+    trusted_proxies: '%env(TRUSTED_PROXIES)%'
+    trusted_hosts: '%env(TRUSTED_HOSTS)%'
+    # See https://caddyserver.com/docs/caddyfile/directives/reverse_proxy#headers
+    trusted_headers: [ 'x-forwarded-for', 'x-forwarded-proto' ]
+
+    # Note that the session will be started ONLY if you read or write from it.
+    #session: true
 
     #esi: true
     #fragments: true
-    php_errors:
-        log: true
 
     http_client:
         scoped_clients:
