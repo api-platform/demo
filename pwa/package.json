@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "test": "playwright test"
+    "lint": "next lint"
   },
   "dependencies": {
     "@api-platform/admin": "^4.0.4",
@@ -42,7 +41,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.26.7",
-    "@playwright/test": "^1.50.0",
     "@popperjs/core": "^2.11.8",
     "@types/node": "^22.12.0",
     "@types/react": "^19.0.8",
