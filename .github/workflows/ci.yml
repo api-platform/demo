@@ -175,42 +175,9 @@ jobs:
       -
         name: Load Fixtures
         run: docker compose run --rm php bin/console doctrine:fixtures:load --no-interaction
-#      -
-#        name: Cache Playwright Binaries
-#        uses: actions/cache@v4
-#        with:
-#          path: ~/.cache/ms-playwright
-#          key: ${{ runner.os }}-playwright
-#      -
-#        name: Install PNPM
-#        uses: pnpm/action-setup@v4
-#        with:
-#          version: latest
-#      -
-#        name: Cache PNPM
-#        uses: actions/cache@v4
-#        with:
-#          path: ${{ env.PNPM_HOME }}
-#          key: ${{ runner.os }}-pnpm-${{ github.run_id }}
-#          restore-keys: |
-#            ${{ runner.os }}-pnpm-
-#      -
-#        name: Install Dependencies
-#        working-directory: e2e
-#        run: pnpm install
-#      -
-#        name: Install Playwright Browsers with Deps
-#        working-directory: e2e
-#        run: pnpm exec playwright install --with-deps
-#      -
-#        name: Run Playwright
-#        working-directory: e2e
-#        timeout-minutes: 10
-#        # use 1 worker to prevent conflict between scenarios (longer but safer)
-#        run: pnpm exec playwright test --workers=1 --grep ${{ matrix.annotation }}
       -
         name: Run Playwright
-        run: docker run --network host -w /app -v ./e2e:/app --rm --ipc=host mcr.microsoft.com/playwright:v1.50.0-noble /bin/sh -c 'npm i; npx playwright test;'
+        run: docker run --network host -w /app -v ./e2e:/app --rm --ipc=host mcr.microsoft.com/playwright:v1.50.0-noble /bin/sh -c 'npm i; npx playwright test --grep ${{ matrix.annotation }};'
       -
         name: Debug Services
         if: failure()
@@ -222,7 +189,7 @@ jobs:
         if: failure()
         with:
           name: playwright-screenshots
-          path: pwa/test-results
+          path: e2e/test-results
 
   lint:
     name: Lint
