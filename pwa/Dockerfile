@@ -1,8 +1,8 @@
-#syntax=docker/dockerfile:1.4
+#syntax=docker/dockerfile:1
 
 
 # Versions
-FROM node:23-alpine AS node_upstream
+FROM node:lts AS node_upstream
 
 
 # Base stage for dev and build
@@ -15,6 +15,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /srv/app
 
 RUN apk upgrade && \
+    npm install -g corepack@latest && \
     corepack enable && \
 	corepack prepare --activate pnpm@latest && \
 	pnpm config -g set store-dir /.pnpm-store
@@ -59,8 +60,8 @@ ENV NODE_ENV production
 # Delete the following line in case you want to enable telemetry during runtime.
 ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN addgroup --system --gid 1001 nodejs; \
-	adduser --system --uid 1001 nextjs
+RUN addgroup --gid 1001 nodejs; \
+	adduser --uid 1001 nextjs
 
 COPY --from=builder --link /srv/app/public ./public
 
