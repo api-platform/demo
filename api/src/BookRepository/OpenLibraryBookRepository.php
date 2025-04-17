@@ -36,7 +36,8 @@ final readonly class OpenLibraryBookRepository implements RestrictedBookReposito
 
         $book->author = null;
         if (isset($data['authors'][0]['key'])) {
-            $author = $this->openLibraryClient->request('GET', $data['authors'][0]['key'] . '.json', $options);
+            $authorResponse = $this->openLibraryClient->request('GET', $data['authors'][0]['key'] . '.json', $options);
+            $author = $this->decoder->decode($authorResponse->getContent(), 'json');
             if (isset($author['name'])) {
                 $book->author = $author['name'];
             }
