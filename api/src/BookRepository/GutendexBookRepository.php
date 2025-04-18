@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace App\BookRepository;
 
 use App\Entity\Book;
-use Symfony\Component\Serializer\Encoder\DecoderInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final readonly class GutendexBookRepository implements RestrictedBookRepositoryInterface
 {
     public function __construct(
         private HttpClientInterface $gutendexClient,
-        private DecoderInterface $decoder,
     ) {
     }
 
@@ -31,7 +29,7 @@ final readonly class GutendexBookRepository implements RestrictedBookRepositoryI
 
         $book = new Book();
 
-        $data = $this->decoder->decode($response->getContent(), 'json');
+        $data = $response->toArray();
         $book->title = $data['title'];
         $book->author = $data['authors'][0]['name'] ?? null;
 

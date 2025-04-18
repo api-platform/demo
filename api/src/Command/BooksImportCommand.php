@@ -12,7 +12,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Serializer\Encoder\DecoderInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -25,7 +24,6 @@ final class BooksImportCommand extends Command
 {
     public function __construct(
         private readonly SerializerInterface $serializer,
-        private readonly DecoderInterface $decoder,
         private readonly HttpClientInterface $client,
         private readonly LoggerInterface $logger,
     ) {
@@ -91,10 +89,10 @@ final class BooksImportCommand extends Command
 
     private function getData(string $uri): array
     {
-        return $this->decoder->decode($this->client->request(Request::METHOD_GET, $uri, [
+        return $this->client->request(Request::METHOD_GET, $uri, [
             'headers' => [
                 'Accept' => 'application/json',
             ],
-        ])->getContent(), 'json');
+        ])->toArray();
     }
 }

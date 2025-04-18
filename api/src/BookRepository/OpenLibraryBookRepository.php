@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace App\BookRepository;
 
 use App\Entity\Book;
-use Symfony\Component\Serializer\Encoder\DecoderInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final readonly class OpenLibraryBookRepository implements RestrictedBookRepositoryInterface
 {
     public function __construct(
         private HttpClientInterface $openLibraryClient,
-        private DecoderInterface $decoder,
     ) {
     }
 
@@ -31,13 +29,13 @@ final readonly class OpenLibraryBookRepository implements RestrictedBookReposito
 
         $book = new Book();
 
-        $data = $this->decoder->decode($response->getContent(), 'json');
+        $data = $response->toArray();
         $book->title = $data['title'];
 
         $book->author = null;
         if (isset($data['authors'][0]['key'])) {
             $authorResponse = $this->openLibraryClient->request('GET', $data['authors'][0]['key'] . '.json', $options);
-            $author = $this->decoder->decode($authorResponse->getContent(), 'json');
+            $author = $authorResponse->toArray();
             if (isset($author['name'])) {
                 $book->author = $author['name'];
             }
