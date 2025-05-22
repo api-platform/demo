@@ -9,7 +9,6 @@ use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\DataFixtures\Factory\BookFactory;
 use App\DataFixtures\Factory\BookmarkFactory;
 use App\DataFixtures\Factory\UserFactory;
-use App\Entity\Book;
 use App\Entity\Bookmark;
 use App\Repository\BookmarkRepository;
 use App\Tests\Api\Security\TokenGenerator;
@@ -130,7 +129,7 @@ final class BookmarkTest extends ApiTestCase
         self::assertJsonContains([
             '@type' => 'ConstraintViolation',
             'hydra:title' => 'An error occurred',
-            'hydra:description' => 'book: This value should be of type ' . Book::class . '.',
+            'hydra:description' => 'book: This value should be of type Book.',
             'violations' => [
                 [
                     'propertyPath' => 'book',

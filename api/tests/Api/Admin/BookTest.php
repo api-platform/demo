@@ -317,7 +317,7 @@ final class BookTest extends ApiTestCase
             [
                 '@type' => 'ConstraintViolation',
                 'hydra:title' => 'An error occurred',
-                'hydra:description' => 'condition: This value should be of type ' . BookCondition::class . '.',
+                'hydra:description' => 'condition: This value should be of type BookCondition.',
                 'violations' => [
                     [
                         'propertyPath' => 'condition',
@@ -335,7 +335,7 @@ final class BookTest extends ApiTestCase
             [
                 '@type' => 'ConstraintViolation',
                 'hydra:title' => 'An error occurred',
-                'hydra:description' => 'condition: This value should be of type ' . BookCondition::class . '.',
+                'hydra:description' => 'condition: This value should be of type BookCondition.',
                 'violations' => [
                     [
                         'propertyPath' => 'condition',
