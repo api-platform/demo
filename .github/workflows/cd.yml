@@ -67,7 +67,7 @@ jobs:
           if [ "${{ github.event_name }}" == "push" ]; then
             echo "NEXT_PUBLIC_OIDC_SERVER_URL=https://${{ steps.set-github-outputs.outputs.url }}/" >> $GITHUB_ENV
           else
-            echo "NEXT_PUBLIC_OIDC_SERVER_URL=https://${{ steps.set-github-outputs.outputs.url }}oidc/realms/demo/" >> $GITHUB_ENV
+            echo "NEXT_PUBLIC_OIDC_SERVER_URL=https://${{ steps.set-github-outputs.outputs.url }}/oidc/realms/demo/" >> $GITHUB_ENV
           fi
       -
         name: Build Docker images
