@@ -63,12 +63,7 @@ jobs:
       # https://nextjs.org/docs/app/building-your-application/configuring/environment-variables#bundling-environment-variables-for-the-browser
       -
         name: Generate NEXT_PUBLIC_OIDC_SERVER_URL
-        run: |
-          if [ "${{ github.event_name }}" == "push" ]; then
-            echo "NEXT_PUBLIC_OIDC_SERVER_URL=https://${{ steps.set-github-outputs.outputs.url }}/" >> $GITHUB_ENV
-          else
-            echo "NEXT_PUBLIC_OIDC_SERVER_URL=https://${{ steps.set-github-outputs.outputs.url }}/oidc/realms/demo/" >> $GITHUB_ENV
-          fi
+        run: echo "NEXT_PUBLIC_OIDC_SERVER_URL=https://${{ steps.set-github-outputs.outputs.url }}/oidc/realms/demo" >> $GITHUB_ENV
       -
         name: Build Docker images
         uses: docker/bake-action@v6
