@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7122e1248ad0fa452d46dd6c14974cb3",
+    "content-hash": "9070c6873d6d9889d26f3e321fd0be08",
     "packages": [
         {
             "name": "api-platform/doctrine-common",
-            "version": "v4.1.12",
+            "version": "v4.1.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/doctrine-common.git",
-                "reference": "152f0de3589b55306f14c4153489bd09bb8fe400"
+                "reference": "3e1a2f3244ac5dba44a894bbb27d5c1705fccb0f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/doctrine-common/zipball/152f0de3589b55306f14c4153489bd09bb8fe400",
-                "reference": "152f0de3589b55306f14c4153489bd09bb8fe400",
+                "url": "https://api.github.com/repos/api-platform/doctrine-common/zipball/3e1a2f3244ac5dba44a894bbb27d5c1705fccb0f",
+                "reference": "3e1a2f3244ac5dba44a894bbb27d5c1705fccb0f",
                 "shasum": ""
             },
             "require": {
@@ -56,6 +56,7 @@
                 },
                 "branch-alias": {
                     "dev-3.4": "3.4.x-dev",
+                    "dev-4.1": "4.1.x-dev",
                     "dev-main": "4.2.x-dev"
                 }
             },
@@ -89,22 +90,22 @@
                 "rest"
             ],
             "support": {
-                "source": "https://github.com/api-platform/doctrine-common/tree/v4.1.12"
+                "source": "https://github.com/api-platform/doctrine-common/tree/v4.1.16"
             },
-            "time": "2025-05-22T13:13:55+00:00"
+            "time": "2025-06-06T14:56:47+00:00"
         },
         {
             "name": "api-platform/doctrine-orm",
-            "version": "v4.1.12",
+            "version": "v4.1.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/doctrine-orm.git",
-                "reference": "5e0cd55b2bf0dbdaf512fbdbbae71f1d79827980"
+                "reference": "61a199da6f6014dba2da43ea1a66b2c9dda27263"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/doctrine-orm/zipball/5e0cd55b2bf0dbdaf512fbdbbae71f1d79827980",
-                "reference": "5e0cd55b2bf0dbdaf512fbdbbae71f1d79827980",
+                "url": "https://api.github.com/repos/api-platform/doctrine-orm/zipball/61a199da6f6014dba2da43ea1a66b2c9dda27263",
+                "reference": "61a199da6f6014dba2da43ea1a66b2c9dda27263",
                 "shasum": ""
             },
             "require": {
@@ -140,6 +141,7 @@
                 },
                 "branch-alias": {
                     "dev-3.4": "3.4.x-dev",
+                    "dev-4.1": "4.1.x-dev",
                     "dev-main": "4.2.x-dev"
                 }
             },
@@ -173,22 +175,22 @@
                 "rest"
             ],
             "support": {
-                "source": "https://github.com/api-platform/doctrine-orm/tree/v4.1.12"
+                "source": "https://github.com/api-platform/doctrine-orm/tree/v4.1.16"
             },
-            "time": "2025-05-22T13:13:55+00:00"
+            "time": "2025-06-06T14:56:47+00:00"
         },
         {
             "name": "api-platform/documentation",
-            "version": "v4.1.12",
+            "version": "v4.1.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/documentation.git",
-                "reference": "237c6c46acc2be98b5e0c60c6de8afc35c78cd37"
+                "reference": "1a0ac988d659008ef8667d05bc9978863026bab8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/documentation/zipball/237c6c46acc2be98b5e0c60c6de8afc35c78cd37",
-                "reference": "237c6c46acc2be98b5e0c60c6de8afc35c78cd37",
+                "url": "https://api.github.com/repos/api-platform/documentation/zipball/1a0ac988d659008ef8667d05bc9978863026bab8",
+                "reference": "1a0ac988d659008ef8667d05bc9978863026bab8",
                 "shasum": ""
             },
             "require": {
@@ -209,6 +211,7 @@
                 },
                 "branch-alias": {
                     "dev-3.4": "3.4.x-dev",
+                    "dev-4.1": "4.1.x-dev",
                     "dev-main": "4.2.x-dev"
                 }
             },
@@ -234,22 +237,22 @@
             ],
             "description": "API Platform documentation controller.",
             "support": {
-                "source": "https://github.com/api-platform/documentation/tree/v4.1.12"
+                "source": "https://github.com/api-platform/documentation/tree/v4.1.16"
             },
-            "time": "2025-05-22T13:13:55+00:00"
+            "time": "2025-06-06T14:56:47+00:00"
         },
         {
             "name": "api-platform/graphql",
-            "version": "v4.1.12",
+            "version": "v4.1.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/graphql.git",
-                "reference": "7189837fd53d2b5f813f12fd6bba9f01ad6ff3cd"
+                "reference": "966bafa3a5ba2c41e1700699c65fa25581da9484"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/graphql/zipball/7189837fd53d2b5f813f12fd6bba9f01ad6ff3cd",
-                "reference": "7189837fd53d2b5f813f12fd6bba9f01ad6ff3cd",
+                "url": "https://api.github.com/repos/api-platform/graphql/zipball/966bafa3a5ba2c41e1700699c65fa25581da9484",
+                "reference": "966bafa3a5ba2c41e1700699c65fa25581da9484",
                 "shasum": ""
             },
             "require": {
@@ -261,6 +264,10 @@
                 "symfony/serializer": "^6.4 || ^7.0",
                 "webonyx/graphql-php": "^15.0",
                 "willdurand/negotiation": "^3.1"
+            },
+            "conflict": {
+                "doctrine/inflector": "<2.0",
+                "symfony/http-client": "<6.4"
             },
             "require-dev": {
                 "api-platform/validator": "^4.1",
@@ -286,6 +293,7 @@
                 },
                 "branch-alias": {
                     "dev-3.4": "3.4.x-dev",
+                    "dev-4.1": "4.1.x-dev",
                     "dev-main": "4.2.x-dev"
                 }
             },
@@ -319,22 +327,22 @@
                 "graphql"
             ],
             "support": {
-                "source": "https://github.com/api-platform/graphql/tree/v4.1.12"
+                "source": "https://github.com/api-platform/graphql/tree/v4.1.16"
             },
-            "time": "2025-05-22T13:13:55+00:00"
+            "time": "2025-06-06T14:56:47+00:00"
         },
         {
             "name": "api-platform/http-cache",
-            "version": "v4.1.12",
+            "version": "v4.1.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/http-cache.git",
-                "reference": "280c9f3ad086a378f881c6d48c4eaa63d4899242"
+                "reference": "f65f092c90311a87ebb6dda87db3ca08b57c10d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/http-cache/zipball/280c9f3ad086a378f881c6d48c4eaa63d4899242",
-                "reference": "280c9f3ad086a378f881c6d48c4eaa63d4899242",
+                "url": "https://api.github.com/repos/api-platform/http-cache/zipball/f65f092c90311a87ebb6dda87db3ca08b57c10d6",
+                "reference": "f65f092c90311a87ebb6dda87db3ca08b57c10d6",
                 "shasum": ""
             },
             "require": {
@@ -361,6 +369,7 @@
                 },
                 "branch-alias": {
                     "dev-3.4": "3.4.x-dev",
+                    "dev-4.1": "4.1.x-dev",
                     "dev-main": "4.2.x-dev"
                 }
             },
@@ -396,22 +405,22 @@
                 "rest"
             ],
             "support": {
-                "source": "https://github.com/api-platform/http-cache/tree/v4.1.12"
+                "source": "https://github.com/api-platform/http-cache/tree/v4.1.16"
             },
-            "time": "2025-05-22T13:13:55+00:00"
+            "time": "2025-06-06T14:56:47+00:00"
         },
         {
             "name": "api-platform/hydra",
-            "version": "v4.1.12",
+            "version": "v4.1.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/hydra.git",
-                "reference": "e3ba11053ad4653e29a58863686019df99c542b7"
+                "reference": "8a521a1d4a7d377dd3a7cf6d51520a8e2762d9f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/hydra/zipball/e3ba11053ad4653e29a58863686019df99c542b7",
-                "reference": "e3ba11053ad4653e29a58863686019df99c542b7",
+                "url": "https://api.github.com/repos/api-platform/hydra/zipball/8a521a1d4a7d377dd3a7cf6d51520a8e2762d9f0",
+                "reference": "8a521a1d4a7d377dd3a7cf6d51520a8e2762d9f0",
                 "shasum": ""
             },
             "require": {
@@ -443,6 +452,7 @@
                 },
                 "branch-alias": {
                     "dev-3.4": "3.4.x-dev",
+                    "dev-4.1": "4.1.x-dev",
                     "dev-main": "4.2.x-dev"
                 }
             },
@@ -480,22 +490,22 @@
                 "rest"
             ],
             "support": {
-                "source": "https://github.com/api-platform/hydra/tree/v4.1.12"
+                "source": "https://github.com/api-platform/hydra/tree/v4.1.16"
             },
-            "time": "2025-05-22T13:13:55+00:00"
+            "time": "2025-06-06T14:56:47+00:00"
         },
         {
             "name": "api-platform/json-schema",
-            "version": "v4.1.12",
+            "version": "v4.1.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/json-schema.git",
-                "reference": "dbe8f7d3e6a647abc90027d3e0f4e4b1bcbb8d62"
+                "reference": "1081f99a02ef35c42779b0dd9f532ca0bddf2781"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/json-schema/zipball/dbe8f7d3e6a647abc90027d3e0f4e4b1bcbb8d62",
-                "reference": "dbe8f7d3e6a647abc90027d3e0f4e4b1bcbb8d62",
+                "url": "https://api.github.com/repos/api-platform/json-schema/zipball/1081f99a02ef35c42779b0dd9f532ca0bddf2781",
+                "reference": "1081f99a02ef35c42779b0dd9f532ca0bddf2781",
                 "shasum": ""
             },
             "require": {
@@ -521,6 +531,7 @@
                 },
                 "branch-alias": {
                     "dev-3.4": "3.4.x-dev",
+                    "dev-4.1": "4.1.x-dev",
                     "dev-main": "4.2.x-dev"
                 }
             },
@@ -558,22 +569,22 @@
                 "swagger"
             ],
             "support": {
-                "source": "https://github.com/api-platform/json-schema/tree/v4.1.12"
+                "source": "https://github.com/api-platform/json-schema/tree/v4.1.16"
             },
-            "time": "2025-05-22T13:13:55+00:00"
+            "time": "2025-06-06T14:56:47+00:00"
         },
         {
             "name": "api-platform/jsonld",
-            "version": "v4.1.12",
+            "version": "v4.1.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/jsonld.git",
-                "reference": "eb327c4a1dfdb5a1a35a56d30bdfc80c9b9c09db"
+                "reference": "5dd415bd0904c8e16938c15e75ac73e539018748"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/jsonld/zipball/eb327c4a1dfdb5a1a35a56d30bdfc80c9b9c09db",
-                "reference": "eb327c4a1dfdb5a1a35a56d30bdfc80c9b9c09db",
+                "url": "https://api.github.com/repos/api-platform/jsonld/zipball/5dd415bd0904c8e16938c15e75ac73e539018748",
+                "reference": "5dd415bd0904c8e16938c15e75ac73e539018748",
                 "shasum": ""
             },
             "require": {
@@ -596,6 +607,7 @@
                 },
                 "branch-alias": {
                     "dev-3.4": "3.4.x-dev",
+                    "dev-4.1": "4.1.x-dev",
                     "dev-main": "4.2.x-dev"
                 }
             },
@@ -635,26 +647,26 @@
                 "rest"
             ],
             "support": {
-                "source": "https://github.com/api-platform/jsonld/tree/v4.1.12"
+                "source": "https://github.com/api-platform/jsonld/tree/v4.1.16"
             },
-            "time": "2025-05-22T13:13:55+00:00"
+            "time": "2025-06-06T14:56:47+00:00"
         },
         {
             "name": "api-platform/metadata",
-            "version": "v4.1.12",
+            "version": "v4.1.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/metadata.git",
-                "reference": "a1d52a80f73656803a87f6e575aff26fe5596997"
+                "reference": "3d6a9c508bde9df4bf2c94e2d5258372e1c4f012"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/metadata/zipball/a1d52a80f73656803a87f6e575aff26fe5596997",
-                "reference": "a1d52a80f73656803a87f6e575aff26fe5596997",
+                "url": "https://api.github.com/repos/api-platform/metadata/zipball/3d6a9c508bde9df4bf2c94e2d5258372e1c4f012",
+                "reference": "3d6a9c508bde9df4bf2c94e2d5258372e1c4f012",
                 "shasum": ""
             },
             "require": {
-                "doctrine/inflector": "^1.0 || ^2.0",
+                "doctrine/inflector": "^2.0",
                 "php": ">=8.2",
                 "psr/cache": "^1.0 || ^2.0 || ^3.0",
                 "psr/log": "^1.0 || ^2.0 || ^3.0",
@@ -663,9 +675,9 @@
                 "symfony/type-info": "^7.2"
             },
             "require-dev": {
-                "api-platform/json-schema": "^4.1",
-                "api-platform/openapi": "^4.1",
-                "api-platform/state": "^4.1",
+                "api-platform/json-schema": "^4.1.11",
+                "api-platform/openapi": "^4.1.11",
+                "api-platform/state": "^4.1.11",
                 "phpspec/prophecy-phpunit": "^2.2",
                 "phpstan/phpdoc-parser": "^1.29 || ^2.0",
                 "phpunit/phpunit": "11.5.x-dev",
@@ -691,6 +703,7 @@
                 },
                 "branch-alias": {
                     "dev-3.4": "3.4.x-dev",
+                    "dev-4.1": "4.1.x-dev",
                     "dev-main": "4.2.x-dev"
                 }
             },
@@ -731,22 +744,22 @@
                 "swagger"
             ],
             "support": {
-                "source": "https://github.com/api-platform/metadata/tree/v4.1.12"
+                "source": "https://github.com/api-platform/metadata/tree/v4.1.16"
             },
-            "time": "2025-05-21T12:14:44+00:00"
+            "time": "2025-06-13T12:04:07+00:00"
         },
         {
             "name": "api-platform/openapi",
-            "version": "v4.1.12",
+            "version": "v4.1.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/openapi.git",
-                "reference": "df58b06d51ffe8ffb36ff731639c5973ec15874a"
+                "reference": "67b095062d8830cd730b5440632965252b7ea364"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/openapi/zipball/df58b06d51ffe8ffb36ff731639c5973ec15874a",
-                "reference": "df58b06d51ffe8ffb36ff731639c5973ec15874a",
+                "url": "https://api.github.com/repos/api-platform/openapi/zipball/67b095062d8830cd730b5440632965252b7ea364",
+                "reference": "67b095062d8830cd730b5440632965252b7ea364",
                 "shasum": ""
             },
             "require": {
@@ -777,6 +790,7 @@
                 },
                 "branch-alias": {
                     "dev-3.4": "3.4.x-dev",
+                    "dev-4.1": "4.1.x-dev",
                     "dev-main": "4.2.x-dev"
                 }
             },
@@ -817,22 +831,22 @@
                 "swagger"
             ],
             "support": {
-                "source": "https://github.com/api-platform/openapi/tree/v4.1.12"
+                "source": "https://github.com/api-platform/openapi/tree/v4.1.16"
             },
-            "time": "2025-05-22T13:13:55+00:00"
+            "time": "2025-06-06T14:56:47+00:00"
         },
         {
             "name": "api-platform/serializer",
-            "version": "v4.1.12",
+            "version": "v4.1.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/serializer.git",
-                "reference": "cb156d799d0c719f295f45d75eb8681df8dd9ee2"
+                "reference": "1c368db2437db362ff78ee621dfe5aa7ee3800c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/serializer/zipball/cb156d799d0c719f295f45d75eb8681df8dd9ee2",
-                "reference": "cb156d799d0c719f295f45d75eb8681df8dd9ee2",
+                "url": "https://api.github.com/repos/api-platform/serializer/zipball/1c368db2437db362ff78ee621dfe5aa7ee3800c5",
+                "reference": "1c368db2437db362ff78ee621dfe5aa7ee3800c5",
                 "shasum": ""
             },
             "require": {
@@ -872,6 +886,7 @@
                 },
                 "branch-alias": {
                     "dev-3.4": "3.4.x-dev",
+                    "dev-4.1": "4.1.x-dev",
                     "dev-main": "4.2.x-dev"
                 }
             },
@@ -907,32 +922,33 @@
                 "serializer"
             ],
             "support": {
-                "source": "https://github.com/api-platform/serializer/tree/v4.1.12"
+                "source": "https://github.com/api-platform/serializer/tree/v4.1.16"
             },
-            "time": "2025-05-22T13:13:55+00:00"
+            "time": "2025-06-06T14:56:47+00:00"
         },
         {
             "name": "api-platform/state",
-            "version": "v4.1.12",
+            "version": "v4.1.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/state.git",
-                "reference": "752a72e039f86b09d5f48e6595dd3282c01559ce"
+                "reference": "b6c9510a974bda5a89af43266b7a7d829e0de549"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/state/zipball/752a72e039f86b09d5f48e6595dd3282c01559ce",
-                "reference": "752a72e039f86b09d5f48e6595dd3282c01559ce",
+                "url": "https://api.github.com/repos/api-platform/state/zipball/b6c9510a974bda5a89af43266b7a7d829e0de549",
+                "reference": "b6c9510a974bda5a89af43266b7a7d829e0de549",
                 "shasum": ""
             },
             "require": {
                 "api-platform/metadata": "^4.1.11",
                 "php": ">=8.2",
                 "psr/container": "^1.0 || ^2.0",
-                "symfony/http-kernel": "^6.4 || ^7.0"
+                "symfony/contracts": "^3.0",
+                "symfony/http-kernel": "^6.4 || ^7.0",
+                "symfony/serializer": "^6.4 || ^7.0"
             },
             "require-dev": {
-                "api-platform/serializer": "^4.1",
                 "api-platform/validator": "^4.1",
                 "phpunit/phpunit": "11.5.x-dev",
                 "symfony/http-foundation": "^6.4 || ^7.0",
@@ -957,6 +973,7 @@
                 },
                 "branch-alias": {
                     "dev-3.4": "3.4.x-dev",
+                    "dev-4.1": "4.1.x-dev",
                     "dev-main": "4.2.x-dev"
                 }
             },
@@ -997,22 +1014,22 @@
                 "swagger"
             ],
             "support": {
-                "source": "https://github.com/api-platform/state/tree/v4.1.12"
+                "source": "https://github.com/api-platform/state/tree/v4.1.16"
             },
-            "time": "2025-05-22T13:13:55+00:00"
+            "time": "2025-06-13T12:04:07+00:00"
         },
         {
             "name": "api-platform/symfony",
-            "version": "v4.1.12",
+            "version": "v4.1.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/symfony.git",
-                "reference": "eec2ff3c2926cca4ba7fe37ed93ec4ccae5c6bf0"
+                "reference": "89a5e6116ac1ecd5ef30017decedf5cb66b5b32c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/symfony/zipball/eec2ff3c2926cca4ba7fe37ed93ec4ccae5c6bf0",
-                "reference": "eec2ff3c2926cca4ba7fe37ed93ec4ccae5c6bf0",
+                "url": "https://api.github.com/repos/api-platform/symfony/zipball/89a5e6116ac1ecd5ef30017decedf5cb66b5b32c",
+                "reference": "89a5e6116ac1ecd5ef30017decedf5cb66b5b32c",
                 "shasum": ""
             },
             "require": {
@@ -1079,6 +1096,7 @@
                 },
                 "branch-alias": {
                     "dev-3.4": "3.4.x-dev",
+                    "dev-4.1": "4.1.x-dev",
                     "dev-main": "4.2.x-dev"
                 }
             },
@@ -1120,22 +1138,22 @@
                 "symfony"
             ],
             "support": {
-                "source": "https://github.com/api-platform/symfony/tree/v4.1.12"
+                "source": "https://github.com/api-platform/symfony/tree/v4.1.16"
             },
-            "time": "2025-05-22T13:13:55+00:00"
+            "time": "2025-06-13T12:57:40+00:00"
         },
         {
             "name": "api-platform/validator",
-            "version": "v4.1.12",
+            "version": "v4.1.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/validator.git",
-                "reference": "ef792eb7d1d7dd576f09397159e4de352f12e7a8"
+                "reference": "0f25a9a2a4c75723a2f790177f0c6d83433b575d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/validator/zipball/ef792eb7d1d7dd576f09397159e4de352f12e7a8",
-                "reference": "ef792eb7d1d7dd576f09397159e4de352f12e7a8",
+                "url": "https://api.github.com/repos/api-platform/validator/zipball/0f25a9a2a4c75723a2f790177f0c6d83433b575d",
+                "reference": "0f25a9a2a4c75723a2f790177f0c6d83433b575d",
                 "shasum": ""
             },
             "require": {
@@ -1162,6 +1180,7 @@
                 },
                 "branch-alias": {
                     "dev-3.4": "3.4.x-dev",
+                    "dev-4.1": "4.1.x-dev",
                     "dev-main": "4.2.x-dev"
                 }
             },
@@ -1194,9 +1213,9 @@
                 "validator"
             ],
             "support": {
-                "source": "https://github.com/api-platform/validator/tree/v4.1.12"
+                "source": "https://github.com/api-platform/validator/tree/v4.1.16"
             },
-            "time": "2025-05-22T13:13:55+00:00"
+            "time": "2025-06-06T14:56:47+00:00"
         },
         {
             "name": "brick/math",
@@ -3702,82 +3721,6 @@
             "time": "2025-03-25T15:54:33+00:00"
         },
         {
-            "name": "symfony/cache-contracts",
-            "version": "v3.5.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/cache-contracts.git",
-                "reference": "15a4f8e5cd3bce9aeafc882b1acab39ec8de2c1b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/cache-contracts/zipball/15a4f8e5cd3bce9aeafc882b1acab39ec8de2c1b",
-                "reference": "15a4f8e5cd3bce9aeafc882b1acab39ec8de2c1b",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.1",
-                "psr/cache": "^3.0"
-            },
-            "type": "library",
-            "extra": {
-                "thanks": {
-                    "url": "https://github.com/symfony/contracts",
-                    "name": "symfony/contracts"
-                },
-                "branch-alias": {
-                    "dev-main": "3.5-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Contracts\\Cache\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Generic abstractions related to caching",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "abstractions",
-                "contracts",
-                "decoupling",
-                "interfaces",
-                "interoperability",
-                "standards"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/cache-contracts/tree/v3.5.1"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2024-09-25T14:20:29+00:00"
-        },
-        {
             "name": "symfony/clock",
             "version": "v7.2.0",
             "source": {
@@ -4020,6 +3963,101 @@
             "time": "2025-03-12T08:11:12+00:00"
         },
         {
+            "name": "symfony/contracts",
+            "version": "v3.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/contracts.git",
+                "reference": "6e489617c52619f6a4f92986dfd19eb52d83de1f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/contracts/zipball/6e489617c52619f6a4f92986dfd19eb52d83de1f",
+                "reference": "6e489617c52619f6a4f92986dfd19eb52d83de1f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1",
+                "psr/cache": "^3.0",
+                "psr/container": "^1.1|^2.0",
+                "psr/event-dispatcher": "^1.0"
+            },
+            "conflict": {
+                "ext-psr": "<1.1|>=2"
+            },
+            "replace": {
+                "symfony/cache-contracts": "self.version",
+                "symfony/deprecation-contracts": "self.version",
+                "symfony/event-dispatcher-contracts": "self.version",
+                "symfony/http-client-contracts": "self.version",
+                "symfony/service-contracts": "self.version",
+                "symfony/translation-contracts": "self.version"
+            },
+            "require-dev": {
+                "symfony/polyfill-intl-idn": "^1.10"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "3.6-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "Deprecation/function.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Contracts\\": ""
+                },
+                "exclude-from-classmap": [
+                    "**/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "A set of abstractions extracted out of the Symfony components",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "abstractions",
+                "contracts",
+                "decoupling",
+                "dev",
+                "interfaces",
+                "interoperability",
+                "standards"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/contracts/tree/v3.6.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2025-05-01T12:12:53+00:00"
+        },
+        {
             "name": "symfony/dependency-injection",
             "version": "v7.2.5",
             "source": {
@@ -4098,73 +4136,6 @@
                 }
             ],
             "time": "2025-03-13T12:21:46+00:00"
-        },
-        {
-            "name": "symfony/deprecation-contracts",
-            "version": "v3.5.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "74c71c939a79f7d5bf3c1ce9f5ea37ba0114c6f6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/74c71c939a79f7d5bf3c1ce9f5ea37ba0114c6f6",
-                "reference": "74c71c939a79f7d5bf3c1ce9f5ea37ba0114c6f6",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.1"
-            },
-            "type": "library",
-            "extra": {
-                "thanks": {
-                    "url": "https://github.com/symfony/contracts",
-                    "name": "symfony/contracts"
-                },
-                "branch-alias": {
-                    "dev-main": "3.5-dev"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "function.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "A generic function and convention to trigger deprecation notices",
-            "homepage": "https://symfony.com",
-            "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.5.1"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2024-09-25T14:20:29+00:00"
         },
         {
             "name": "symfony/doctrine-bridge",
@@ -4503,82 +4474,6 @@
                 }
             ],
             "time": "2024-09-25T14:21:43+00:00"
-        },
-        {
-            "name": "symfony/event-dispatcher-contracts",
-            "version": "v3.5.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/event-dispatcher-contracts.git",
-                "reference": "7642f5e970b672283b7823222ae8ef8bbc160b9f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher-contracts/zipball/7642f5e970b672283b7823222ae8ef8bbc160b9f",
-                "reference": "7642f5e970b672283b7823222ae8ef8bbc160b9f",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.1",
-                "psr/event-dispatcher": "^1"
-            },
-            "type": "library",
-            "extra": {
-                "thanks": {
-                    "url": "https://github.com/symfony/contracts",
-                    "name": "symfony/contracts"
-                },
-                "branch-alias": {
-                    "dev-main": "3.5-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Contracts\\EventDispatcher\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Generic abstractions related to dispatching event",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "abstractions",
-                "contracts",
-                "decoupling",
-                "interfaces",
-                "interoperability",
-                "standards"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/event-dispatcher-contracts/tree/v3.5.1"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2024-09-25T14:20:29+00:00"
         },
         {
             "name": "symfony/expression-language",
@@ -5086,84 +4981,6 @@
                 }
             ],
             "time": "2025-02-13T10:27:23+00:00"
-        },
-        {
-            "name": "symfony/http-client-contracts",
-            "version": "v3.5.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/http-client-contracts.git",
-                "reference": "ee8d807ab20fcb51267fdace50fbe3494c31e645"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client-contracts/zipball/ee8d807ab20fcb51267fdace50fbe3494c31e645",
-                "reference": "ee8d807ab20fcb51267fdace50fbe3494c31e645",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.1"
-            },
-            "type": "library",
-            "extra": {
-                "thanks": {
-                    "url": "https://github.com/symfony/contracts",
-                    "name": "symfony/contracts"
-                },
-                "branch-alias": {
-                    "dev-main": "3.5-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Contracts\\HttpClient\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Test/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Generic abstractions related to HTTP clients",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "abstractions",
-                "contracts",
-                "decoupling",
-                "interfaces",
-                "interoperability",
-                "standards"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/http-client-contracts/tree/v3.5.2"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2024-12-07T08:49:48+00:00"
         },
         {
             "name": "symfony/http-foundation",
@@ -6757,89 +6574,6 @@
             "time": "2025-03-24T12:37:32+00:00"
         },
         {
-            "name": "symfony/service-contracts",
-            "version": "v3.5.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/service-contracts.git",
-                "reference": "e53260aabf78fb3d63f8d79d69ece59f80d5eda0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/service-contracts/zipball/e53260aabf78fb3d63f8d79d69ece59f80d5eda0",
-                "reference": "e53260aabf78fb3d63f8d79d69ece59f80d5eda0",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.1",
-                "psr/container": "^1.1|^2.0",
-                "symfony/deprecation-contracts": "^2.5|^3"
-            },
-            "conflict": {
-                "ext-psr": "<1.1|>=2"
-            },
-            "type": "library",
-            "extra": {
-                "thanks": {
-                    "url": "https://github.com/symfony/contracts",
-                    "name": "symfony/contracts"
-                },
-                "branch-alias": {
-                    "dev-main": "3.5-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Contracts\\Service\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Test/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Generic abstractions related to writing services",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "abstractions",
-                "contracts",
-                "decoupling",
-                "interfaces",
-                "interoperability",
-                "standards"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/service-contracts/tree/v3.5.1"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2024-09-25T14:20:29+00:00"
-        },
-        {
             "name": "symfony/stopwatch",
             "version": "v7.2.4",
             "source": {
@@ -6987,84 +6721,6 @@
                 }
             ],
             "time": "2024-11-13T13:31:26+00:00"
-        },
-        {
-            "name": "symfony/translation-contracts",
-            "version": "v3.5.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/translation-contracts.git",
-                "reference": "4667ff3bd513750603a09c8dedbea942487fb07c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation-contracts/zipball/4667ff3bd513750603a09c8dedbea942487fb07c",
-                "reference": "4667ff3bd513750603a09c8dedbea942487fb07c",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.1"
-            },
-            "type": "library",
-            "extra": {
-                "thanks": {
-                    "url": "https://github.com/symfony/contracts",
-                    "name": "symfony/contracts"
-                },
-                "branch-alias": {
-                    "dev-main": "3.5-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Contracts\\Translation\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Test/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Generic abstractions related to translation",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "abstractions",
-                "contracts",
-                "decoupling",
-                "interfaces",
-                "interoperability",
-                "standards"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/translation-contracts/tree/v3.5.1"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2024-09-25T14:20:29+00:00"
         },
         {
             "name": "symfony/twig-bridge",
