@@ -4,11 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9070c6873d6d9889d26f3e321fd0be08",
+    "content-hash": "76098775fdfaf3df0443fa667d4e978a",
     "packages": [
         {
             "name": "api-platform/doctrine-common",
-            "version": "v4.1.16",
+            "version": "v4.1.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/doctrine-common.git",
@@ -90,13 +90,13 @@
                 "rest"
             ],
             "support": {
-                "source": "https://github.com/api-platform/doctrine-common/tree/v4.1.16"
+                "source": "https://github.com/api-platform/doctrine-common/tree/v4.1.17"
             },
             "time": "2025-06-06T14:56:47+00:00"
         },
         {
             "name": "api-platform/doctrine-orm",
-            "version": "v4.1.16",
+            "version": "v4.1.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/doctrine-orm.git",
@@ -175,13 +175,13 @@
                 "rest"
             ],
             "support": {
-                "source": "https://github.com/api-platform/doctrine-orm/tree/v4.1.16"
+                "source": "https://github.com/api-platform/doctrine-orm/tree/v4.1.17"
             },
             "time": "2025-06-06T14:56:47+00:00"
         },
         {
             "name": "api-platform/documentation",
-            "version": "v4.1.16",
+            "version": "v4.1.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/documentation.git",
@@ -237,13 +237,13 @@
             ],
             "description": "API Platform documentation controller.",
             "support": {
-                "source": "https://github.com/api-platform/documentation/tree/v4.1.16"
+                "source": "https://github.com/api-platform/documentation/tree/v4.1.17"
             },
             "time": "2025-06-06T14:56:47+00:00"
         },
         {
             "name": "api-platform/graphql",
-            "version": "v4.1.16",
+            "version": "v4.1.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/graphql.git",
@@ -327,13 +327,13 @@
                 "graphql"
             ],
             "support": {
-                "source": "https://github.com/api-platform/graphql/tree/v4.1.16"
+                "source": "https://github.com/api-platform/graphql/tree/v4.1.17"
             },
             "time": "2025-06-06T14:56:47+00:00"
         },
         {
             "name": "api-platform/http-cache",
-            "version": "v4.1.16",
+            "version": "v4.1.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/http-cache.git",
@@ -405,13 +405,13 @@
                 "rest"
             ],
             "support": {
-                "source": "https://github.com/api-platform/http-cache/tree/v4.1.16"
+                "source": "https://github.com/api-platform/http-cache/tree/v4.1.17"
             },
             "time": "2025-06-06T14:56:47+00:00"
         },
         {
             "name": "api-platform/hydra",
-            "version": "v4.1.16",
+            "version": "v4.1.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/hydra.git",
@@ -490,13 +490,13 @@
                 "rest"
             ],
             "support": {
-                "source": "https://github.com/api-platform/hydra/tree/v4.1.16"
+                "source": "https://github.com/api-platform/hydra/tree/v4.1.17"
             },
             "time": "2025-06-06T14:56:47+00:00"
         },
         {
             "name": "api-platform/json-schema",
-            "version": "v4.1.16",
+            "version": "v4.1.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/json-schema.git",
@@ -569,22 +569,22 @@
                 "swagger"
             ],
             "support": {
-                "source": "https://github.com/api-platform/json-schema/tree/v4.1.16"
+                "source": "https://github.com/api-platform/json-schema/tree/v4.1.17"
             },
             "time": "2025-06-06T14:56:47+00:00"
         },
         {
             "name": "api-platform/jsonld",
-            "version": "v4.1.16",
+            "version": "v4.1.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/jsonld.git",
-                "reference": "5dd415bd0904c8e16938c15e75ac73e539018748"
+                "reference": "f9450e0ed2218a3f7fe32041172135514591c74d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/jsonld/zipball/5dd415bd0904c8e16938c15e75ac73e539018748",
-                "reference": "5dd415bd0904c8e16938c15e75ac73e539018748",
+                "url": "https://api.github.com/repos/api-platform/jsonld/zipball/f9450e0ed2218a3f7fe32041172135514591c74d",
+                "reference": "f9450e0ed2218a3f7fe32041172135514591c74d",
                 "shasum": ""
             },
             "require": {
@@ -647,22 +647,22 @@
                 "rest"
             ],
             "support": {
-                "source": "https://github.com/api-platform/jsonld/tree/v4.1.16"
+                "source": "https://github.com/api-platform/jsonld/tree/v4.1.17"
             },
-            "time": "2025-06-06T14:56:47+00:00"
+            "time": "2025-06-19T10:12:21+00:00"
         },
         {
             "name": "api-platform/metadata",
-            "version": "v4.1.16",
+            "version": "v4.1.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/metadata.git",
-                "reference": "3d6a9c508bde9df4bf2c94e2d5258372e1c4f012"
+                "reference": "fd11cd8e38d859357a010bb7c31dc5116f1908d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/metadata/zipball/3d6a9c508bde9df4bf2c94e2d5258372e1c4f012",
-                "reference": "3d6a9c508bde9df4bf2c94e2d5258372e1c4f012",
+                "url": "https://api.github.com/repos/api-platform/metadata/zipball/fd11cd8e38d859357a010bb7c31dc5116f1908d7",
+                "reference": "fd11cd8e38d859357a010bb7c31dc5116f1908d7",
                 "shasum": ""
             },
             "require": {
@@ -744,22 +744,22 @@
                 "swagger"
             ],
             "support": {
-                "source": "https://github.com/api-platform/metadata/tree/v4.1.16"
+                "source": "https://github.com/api-platform/metadata/tree/v4.1.17"
             },
-            "time": "2025-06-13T12:04:07+00:00"
+            "time": "2025-06-19T08:33:15+00:00"
         },
         {
             "name": "api-platform/openapi",
-            "version": "v4.1.16",
+            "version": "v4.1.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/openapi.git",
-                "reference": "67b095062d8830cd730b5440632965252b7ea364"
+                "reference": "d60890b47f0a75912cec4ea44a98d181145ae6f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/openapi/zipball/67b095062d8830cd730b5440632965252b7ea364",
-                "reference": "67b095062d8830cd730b5440632965252b7ea364",
+                "url": "https://api.github.com/repos/api-platform/openapi/zipball/d60890b47f0a75912cec4ea44a98d181145ae6f3",
+                "reference": "d60890b47f0a75912cec4ea44a98d181145ae6f3",
                 "shasum": ""
             },
             "require": {
@@ -831,22 +831,22 @@
                 "swagger"
             ],
             "support": {
-                "source": "https://github.com/api-platform/openapi/tree/v4.1.16"
+                "source": "https://github.com/api-platform/openapi/tree/v4.1.17"
             },
-            "time": "2025-06-06T14:56:47+00:00"
+            "time": "2025-06-19T08:57:27+00:00"
         },
         {
             "name": "api-platform/serializer",
-            "version": "v4.1.16",
+            "version": "v4.1.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/serializer.git",
-                "reference": "1c368db2437db362ff78ee621dfe5aa7ee3800c5"
+                "reference": "804a421fa27f8c21270937c55ee3fb6d1855697c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/serializer/zipball/1c368db2437db362ff78ee621dfe5aa7ee3800c5",
-                "reference": "1c368db2437db362ff78ee621dfe5aa7ee3800c5",
+                "url": "https://api.github.com/repos/api-platform/serializer/zipball/804a421fa27f8c21270937c55ee3fb6d1855697c",
+                "reference": "804a421fa27f8c21270937c55ee3fb6d1855697c",
                 "shasum": ""
             },
             "require": {
@@ -922,13 +922,13 @@
                 "serializer"
             ],
             "support": {
-                "source": "https://github.com/api-platform/serializer/tree/v4.1.16"
+                "source": "https://github.com/api-platform/serializer/tree/v4.1.17"
             },
-            "time": "2025-06-06T14:56:47+00:00"
+            "time": "2025-06-19T10:12:21+00:00"
         },
         {
             "name": "api-platform/state",
-            "version": "v4.1.16",
+            "version": "v4.1.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/state.git",
@@ -1014,13 +1014,13 @@
                 "swagger"
             ],
             "support": {
-                "source": "https://github.com/api-platform/state/tree/v4.1.16"
+                "source": "https://github.com/api-platform/state/tree/v4.1.17"
             },
             "time": "2025-06-13T12:04:07+00:00"
         },
         {
             "name": "api-platform/symfony",
-            "version": "v4.1.16",
+            "version": "v4.1.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/symfony.git",
@@ -1138,13 +1138,13 @@
                 "symfony"
             ],
             "support": {
-                "source": "https://github.com/api-platform/symfony/tree/v4.1.16"
+                "source": "https://github.com/api-platform/symfony/tree/v4.1.17"
             },
             "time": "2025-06-13T12:57:40+00:00"
         },
         {
             "name": "api-platform/validator",
-            "version": "v4.1.16",
+            "version": "v4.1.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/validator.git",
@@ -1213,7 +1213,7 @@
                 "validator"
             ],
             "support": {
-                "source": "https://github.com/api-platform/validator/tree/v4.1.16"
+                "source": "https://github.com/api-platform/validator/tree/v4.1.17"
             },
             "time": "2025-06-06T14:56:47+00:00"
         },
