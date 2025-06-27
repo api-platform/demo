@@ -52,7 +52,7 @@ This demo application contains several things you may be interested:
 
 > Note: this demo application implements [OpenID Connect Specification Support](https://openid.net/developers/specs/)
 > (using [Keycloak](https://www.keycloak.org/)). See [usage in API](api/config/packages/security.yaml) and
-> [usage in PWA](pwa/pages/api/auth/%5B...nextauth%5D.tsx).
+> [usage in PWA](pwa/app/api/auth/%5B...nextauth%5D/route.ts).
 
 ## Contributing
 
