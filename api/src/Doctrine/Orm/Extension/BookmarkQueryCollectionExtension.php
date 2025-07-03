@@ -25,7 +25,7 @@ final readonly class BookmarkQueryCollectionExtension implements QueryCollection
         if (
             Bookmark::class !== $resourceClass
             || '_api_/bookmarks{._format}_get_collection' !== $operation->getName()
-            || !$user = $this->security->getUser()
+            || !($user = $this->security->getUser()) instanceof \Symfony\Component\Security\Core\User\UserInterface
         ) {
             return;
         }

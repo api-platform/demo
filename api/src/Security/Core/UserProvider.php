@@ -48,11 +48,13 @@ final readonly class UserProvider implements AttributesBasedUserProviderInterfac
         if (!isset($attributes['given_name'])) {
             throw new UnsupportedUserException('Property "given_name" is missing in token attributes.');
         }
+
         $user->firstName = $attributes['given_name'];
 
         if (!isset($attributes['family_name'])) {
             throw new UnsupportedUserException('Property "family_name" is missing in token attributes.');
         }
+
         $user->lastName = $attributes['family_name'];
 
         $this->repository->save($user);

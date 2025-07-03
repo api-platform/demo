@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\Exception\TokenNotFoundException;
 use Symfony\Component\Security\Http\AccessToken\AccessTokenExtractorInterface;
 
 /**
- * @extends Voter<string, null|string|object>
+ * @extends Voter<string, string|object|null>
  */
 abstract class OidcVoter extends Voter
 {
@@ -31,7 +31,7 @@ abstract class OidcVoter extends Voter
 
         // user is authenticated, its token should be valid (validated through AccessTokenAuthenticator)
         $accessToken = $this->accessTokenExtractor->extractAccessToken($request);
-        if (!$accessToken) {
+        if (null === $accessToken || '' === $accessToken || '0' === $accessToken) {
             throw new TokenNotFoundException();
         }
 

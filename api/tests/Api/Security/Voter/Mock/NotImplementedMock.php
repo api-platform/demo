@@ -18,8 +18,8 @@ final class NotImplementedMock extends MockHttpClient
         parent::__construct($this->handleRequest(...), $baseUri);
     }
 
-    public function handleRequest(string $method, string $url): void
+    public function handleRequest(string $method, string $url): never
     {
-        throw new \UnexpectedValueException("Mock not implemented: {$method}/{$url}");
+        throw new \UnexpectedValueException(\sprintf('Mock not implemented: %s/%s', $method, $url));
     }
 }

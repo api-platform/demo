@@ -43,7 +43,7 @@ final class KeycloakProtocolOpenIdConnectTokenIntrospectMock extends MockHttpCli
 
         $serializerManager = new JWSSerializerManager([new CompactSerializer()]);
         $jws = $serializerManager->unserialize($body['token']);
-        $claims = json_decode($jws->getPayload(), true);
+        $claims = json_decode((string) $jws->getPayload(), true);
 
         // "authorize" custom claim set in the test
         if (\array_key_exists('authorize', $claims)) {

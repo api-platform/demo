@@ -18,6 +18,7 @@ final class UniqueUserBook extends Constraint
         $this->message = $message ?? $this->message;
     }
 
+    #[\Override]
     public function getTargets(): string
     {
         return self::CLASS_CONSTRAINT;

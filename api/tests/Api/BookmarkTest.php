@@ -139,10 +139,8 @@ final class BookmarkTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @group mercure
-     */
     #[Test]
+    #[\PHPUnit\Framework\Attributes\Group('mercure')]
     public function asAUserICanCreateABookmark(): void
     {
         $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL2055137M.json']);
@@ -174,7 +172,7 @@ final class BookmarkTest extends ApiTestCase
             ],
         ]);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Bookmark/item.json'));
-        $id = preg_replace('/^.*\/(.+)$/', '$1', $response->toArray()['@id']);
+        $id = preg_replace('/^.*\/(.+)$/', '$1', (string) $response->toArray()['@id']);
         $object = self::getContainer()->get(BookmarkRepository::class)->find($id);
         self::assertCount(1, self::getMercureMessages());
         self::assertEquals(
@@ -278,10 +276,8 @@ final class BookmarkTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 
-    /**
-     * @group mercure
-     */
     #[Test]
+    #[\PHPUnit\Framework\Attributes\Group('mercure')]
     public function asAUserICanDeleteMyBookmark(): void
     {
         $book = BookFactory::createOne(['title' => 'Hyperion']);

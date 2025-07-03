@@ -17,11 +17,16 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 final class BookmarkQueryCollectionExtensionTest extends TestCase
 {
-    private MockObject|Security $securityMock;
-    private MockObject|UserInterface $userMock;
-    private MockObject|QueryBuilder $queryBuilderMock;
-    private MockObject|QueryNameGeneratorInterface $queryNameGeneratorMock;
-    private MockObject|Operation $operationMock;
+    private MockObject $securityMock;
+
+    private MockObject $userMock;
+
+    private MockObject $queryBuilderMock;
+
+    private MockObject $queryNameGeneratorMock;
+
+    private MockObject $operationMock;
+
     private BookmarkQueryCollectionExtension $extension;
 
     protected function setUp(): void

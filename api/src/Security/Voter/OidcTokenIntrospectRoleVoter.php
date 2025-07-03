@@ -30,7 +30,7 @@ final class OidcTokenIntrospectRoleVoter extends OidcVoter
         #[Autowire('%env(OIDC_API_CLIENT_SECRET)%')]
         private readonly string $oidcClientSecret,
         private readonly HttpClientInterface $securityAuthorizationClient,
-        private ?LoggerInterface $logger = null,
+        private readonly ?LoggerInterface $logger = null,
     ) {
         parent::__construct($requestStack, $accessTokenExtractor);
     }
@@ -52,7 +52,7 @@ final class OidcTokenIntrospectRoleVoter extends OidcVoter
         }
 
         $accessToken = $this->getToken();
-        if (!$accessToken) {
+        if ('' === $accessToken || '0' === $accessToken) {
             return false;
         }
 

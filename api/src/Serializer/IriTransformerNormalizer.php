@@ -16,7 +16,7 @@ final class IriTransformerNormalizer implements NormalizerInterface, NormalizerA
 {
     use NormalizerAwareTrait;
 
-    public const CONTEXT_KEY = 'iris_transform';
+    public const string CONTEXT_KEY = 'iris_transform';
 
     public function __construct(
         private readonly IriConverterInterface $iriConverter,
@@ -35,7 +35,7 @@ final class IriTransformerNormalizer implements NormalizerInterface, NormalizerA
         }
 
         foreach ($value as $property => $uriTemplate) {
-            if (!isset($data[$property]) || !(\is_string($data[$property]) || isset($data[$property]['@id']))) {
+            if (!isset($data[$property]) || !\is_string($data[$property]) && !isset($data[$property]['@id'])) {
                 continue;
             }
 

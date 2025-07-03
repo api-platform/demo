@@ -55,13 +55,13 @@ final readonly class OidcDiscoveryTokenHandler implements AccessTokenHandlerInte
 
                 return $response->getContent();
             }), true, 512, \JSON_THROW_ON_ERROR);
-        } catch (\Throwable $e) {
+        } catch (\Throwable $throwable) {
             $this->logger?->error('An error occurred while requesting OIDC configuration.', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
+                'error' => $throwable->getMessage(),
+                'trace' => $throwable->getTraceAsString(),
             ]);
 
-            throw new BadCredentialsException('Invalid credentials.', $e->getCode(), $e);
+            throw new BadCredentialsException('Invalid credentials.', $throwable->getCode(), $throwable);
         }
 
         try {
@@ -70,18 +70,18 @@ final readonly class OidcDiscoveryTokenHandler implements AccessTokenHandlerInte
                     $item->expiresAfter($this->ttl);
                     $response = $this->securityAuthorizationClient->request('GET', $oidcConfiguration['jwks_uri']);
                     // we only need signature key
-                    $keys = array_filter($response->toArray()['keys'], static fn (array $key) => 'sig' === $key['use']);
+                    $keys = array_filter($response->toArray()['keys'], static fn (array $key): bool => 'sig' === $key['use']);
 
                     return json_encode(['keys' => $keys]);
                 })
             );
-        } catch (\Throwable $e) {
+        } catch (\Throwable $throwable) {
             $this->logger?->error('An error occurred while requesting OIDC certs.', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
+                'error' => $throwable->getMessage(),
+                'trace' => $throwable->getTraceAsString(),
             ]);
 
-            throw new BadCredentialsException('Invalid credentials.', $e->getCode(), $e);
+            throw new BadCredentialsException('Invalid credentials.', $throwable->getCode(), $throwable);
         }
 
         try {
@@ -93,19 +93,19 @@ final readonly class OidcDiscoveryTokenHandler implements AccessTokenHandlerInte
                 signature: $signature,
             );
 
-            $claims = json_decode($jws->getPayload(), true);
+            $claims = json_decode((string) $jws->getPayload(), true);
             $this->claimCheckerManager->check(claims: $claims, mandatoryClaims: [$this->claim]);
             $this->headerCheckerManager->check(jwt: $jws, index: 0);
 
             // UserLoader argument can be overridden by a UserProvider on AccessTokenAuthenticator::authenticate
-            return new UserBadge($claims[$this->claim], new FallbackUserLoader(fn () => $this->createUser($claims)), $claims);
-        } catch (\Throwable $e) {
+            return new UserBadge($claims[$this->claim], new FallbackUserLoader(fn (): \Symfony\Component\Security\Core\User\OidcUser => $this->createUser($claims)), $claims);
+        } catch (\Throwable $throwable) {
             $this->logger?->error('An error occurred while decoding and validating the token.', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
+                'error' => $throwable->getMessage(),
+                'trace' => $throwable->getTraceAsString(),
             ]);
 
-            throw new BadCredentialsException('Invalid credentials.', $e->getCode(), $e);
+            throw new BadCredentialsException('Invalid credentials.', $throwable->getCode(), $throwable);
         }
     }
 }

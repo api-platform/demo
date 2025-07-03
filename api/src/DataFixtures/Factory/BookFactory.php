@@ -78,6 +78,7 @@ final class BookFactory extends PersistentProxyObjectFactory
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
      */
+    #[\Override]
     protected function initialize(): static
     {
         return $this
@@ -95,10 +96,8 @@ final class BookFactory extends PersistentProxyObjectFactory
                 }
 
                 // An Open Library book URI has been specified: try to find it in the array of books
-                $data = array_filter($this->data, static function (array $datum) use ($book) {
-                    return $book->book === $datum['book'];
-                });
-                if ($data) {
+                $data = array_filter($this->data, static fn (array $datum): bool => $book->book === $datum['book']);
+                if ([] !== $data) {
                     $datum = current($data);
                     $book->title ??= $datum['title'];
                     // A book can have no author

@@ -34,7 +34,7 @@ final class UserTest extends ApiTestCase
     public function asNonAdminUserICannotGetACollectionOfUsers(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
     {
         $options = [];
-        if ($userFactory) {
+        if ($userFactory instanceof UserFactory) {
             $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
@@ -110,7 +110,7 @@ final class UserTest extends ApiTestCase
         $user = UserFactory::createOne();
 
         $options = [];
-        if ($userFactory) {
+        if ($userFactory instanceof UserFactory) {
             $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
@@ -138,7 +138,7 @@ final class UserTest extends ApiTestCase
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
-        $response = $this->client->request('GET', '/admin/users/' . $user->getId(), ['auth_bearer' => $token]);
+        $this->client->request('GET', '/admin/users/' . $user->getId(), ['auth_bearer' => $token]);
 
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');

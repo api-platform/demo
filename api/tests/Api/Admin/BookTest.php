@@ -41,7 +41,7 @@ final class BookTest extends ApiTestCase
     public function asNonAdminUserICannotGetACollectionOfBooks(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
     {
         $options = [];
-        if ($userFactory) {
+        if ($userFactory instanceof UserFactory) {
             $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
@@ -120,7 +120,7 @@ final class BookTest extends ApiTestCase
             BookFactory::new()->sequence(static function () {
                 foreach (range(1, 100) as $i) {
                     // 33% of books are damaged
-                    yield ['condition' => $i % 3 ? BookCondition::NewCondition : BookCondition::DamagedCondition];
+                    yield ['condition' => 0 !== $i % 3 ? BookCondition::NewCondition : BookCondition::DamagedCondition];
                 }
             }),
             '/admin/books?condition=' . BookCondition::DamagedCondition->value,
@@ -157,7 +157,7 @@ final class BookTest extends ApiTestCase
         BookFactory::createOne();
 
         $options = [];
-        if ($userFactory) {
+        if ($userFactory instanceof UserFactory) {
             $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
@@ -183,7 +183,7 @@ final class BookTest extends ApiTestCase
         $book = BookFactory::createOne();
 
         $options = [];
-        if ($userFactory) {
+        if ($userFactory instanceof UserFactory) {
             $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
@@ -231,7 +231,7 @@ final class BookTest extends ApiTestCase
     public function asNonAdminUserICannotCreateABook(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
     {
         $options = [];
-        if ($userFactory) {
+        if ($userFactory instanceof UserFactory) {
             $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
@@ -362,11 +362,9 @@ final class BookTest extends ApiTestCase
         ];
     }
 
-    /**
-     * @group apiCall
-     * @group mercure
-     */
     #[Test]
+    #[\PHPUnit\Framework\Attributes\Group('apiCall')]
+    #[\PHPUnit\Framework\Attributes\Group('mercure')]
     public function asAdminUserICanCreateABook(): void
     {
         $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
@@ -395,7 +393,7 @@ final class BookTest extends ApiTestCase
             'author' => 'Asimov, Isaac',
         ]);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Book/item.json'));
-        $id = preg_replace('/^.*\/(.+)$/', '$1', $response->toArray()['@id']);
+        $id = preg_replace('/^.*\/(.+)$/', '$1', (string) $response->toArray()['@id']);
         /** @var Book $book */
         $book = self::getContainer()->get(BookRepository::class)->find($id);
         self::assertCount(1, self::getMercureMessages());
@@ -419,7 +417,7 @@ final class BookTest extends ApiTestCase
         $book = BookFactory::createOne();
 
         $options = [];
-        if ($userFactory) {
+        if ($userFactory instanceof UserFactory) {
             $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
@@ -495,11 +493,9 @@ final class BookTest extends ApiTestCase
         self::assertJsonContains($expected);
     }
 
-    /**
-     * @group apiCall
-     * @group mercure
-     */
     #[Test]
+    #[\PHPUnit\Framework\Attributes\Group('apiCall')]
+    #[\PHPUnit\Framework\Attributes\Group('mercure')]
     public function asAdminUserICanUpdateABook(): void
     {
         $book = BookFactory::createOne([
@@ -556,7 +552,7 @@ final class BookTest extends ApiTestCase
         $book = BookFactory::createOne();
 
         $options = [];
-        if ($userFactory) {
+        if ($userFactory instanceof UserFactory) {
             $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
@@ -589,10 +585,8 @@ final class BookTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 
-    /**
-     * @group mercure
-     */
     #[Test]
+    #[\PHPUnit\Framework\Attributes\Group('mercure')]
     public function asAdminUserICanDeleteABook(): void
     {
         $book = BookFactory::createOne(['title' => 'Hyperion']);

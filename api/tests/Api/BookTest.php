@@ -78,7 +78,7 @@ final class BookTest extends ApiTestCase
             BookFactory::new()->sequence(static function () {
                 foreach (range(1, 100) as $i) {
                     // 33% of books are damaged
-                    yield ['condition' => $i % 3 ? BookCondition::NewCondition : BookCondition::DamagedCondition];
+                    yield ['condition' => 0 !== $i % 3 ? BookCondition::NewCondition : BookCondition::DamagedCondition];
                 }
             }),
             '/books?condition=' . BookCondition::DamagedCondition->value,

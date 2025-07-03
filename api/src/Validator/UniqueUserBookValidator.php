@@ -36,7 +36,7 @@ final class UniqueUserBookValidator extends ConstraintValidator
         }
 
         $user = $this->security->getUser();
-        if (!$value || !$user || !($book = $this->propertyAccessor->getValue($value, 'book'))) {
+        if (!$value || !$user instanceof \Symfony\Component\Security\Core\User\UserInterface || !($book = $this->propertyAccessor->getValue($value, 'book'))) {
             return;
         }
 

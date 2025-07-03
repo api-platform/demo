@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\State\Processor;
 
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Operation;
-use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Review;
 use App\Entity\User;
@@ -19,21 +16,20 @@ use PHPUnit\Framework\TestCase;
 
 final class ReviewRemoveProcessorTest extends TestCase
 {
-    private MockObject|ProcessorInterface $removeProcessorMock;
-    private ResourceMetadataCollection $resourceMetadataCollection;
-    private MockObject|Review $objectMock;
-    private MockObject|Operation $operationMock;
-    private ResourceHandlerInterface|MockObject $resourceHandlerMock;
+    private MockObject $removeProcessorMock;
+
+    private MockObject $objectMock;
+
+    private MockObject $operationMock;
+
+    private MockObject $resourceHandlerMock;
+
     private ReviewRemoveProcessor $processor;
 
     protected function setUp(): void
     {
         $this->removeProcessorMock = $this->createMock(ProcessorInterface::class);
         $this->resourceHandlerMock = $this->createMock(ResourceHandlerInterface::class);
-        $this->resourceMetadataCollection = new ResourceMetadataCollection(Review::class, [
-            new ApiResource(operations: [new Get('/admin/reviews/{id}{._format}')]),
-            new ApiResource(operations: [new Get('/books/{bookId}/reviews/{id}{._format}')]),
-        ]);
         $this->objectMock = $this->createMock(Review::class);
         $this->operationMock = $this->createMock(Operation::class);
 

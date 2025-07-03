@@ -12,6 +12,7 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20230906094949 extends AbstractMigration
 {
+    #[\Override]
     public function getDescription(): string
     {
         return '';
@@ -22,25 +23,25 @@ final class Version20230906094949 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE TABLE book (id UUID NOT NULL, book VARCHAR(255) NOT NULL, title TEXT NOT NULL, author VARCHAR(255) DEFAULT NULL, "condition" VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_CBE5A331CBE5A331 ON book (book)');
-        $this->addSql('COMMENT ON COLUMN book.id IS \'(DC2Type:uuid)\'');
+        $this->addSql("COMMENT ON COLUMN book.id IS '(DC2Type:uuid)'");
         $this->addSql('CREATE TABLE bookmark (id UUID NOT NULL, user_id UUID NOT NULL, book_id UUID NOT NULL, bookmarked_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_DA62921DA76ED395 ON bookmark (user_id)');
         $this->addSql('CREATE INDEX IDX_DA62921D16A2B381 ON bookmark (book_id)');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_DA62921DA76ED39516A2B381 ON bookmark (user_id, book_id)');
-        $this->addSql('COMMENT ON COLUMN bookmark.id IS \'(DC2Type:uuid)\'');
-        $this->addSql('COMMENT ON COLUMN bookmark.user_id IS \'(DC2Type:uuid)\'');
-        $this->addSql('COMMENT ON COLUMN bookmark.book_id IS \'(DC2Type:uuid)\'');
-        $this->addSql('COMMENT ON COLUMN bookmark.bookmarked_at IS \'(DC2Type:datetime_immutable)\'');
+        $this->addSql("COMMENT ON COLUMN bookmark.id IS '(DC2Type:uuid)'");
+        $this->addSql("COMMENT ON COLUMN bookmark.user_id IS '(DC2Type:uuid)'");
+        $this->addSql("COMMENT ON COLUMN bookmark.book_id IS '(DC2Type:uuid)'");
+        $this->addSql("COMMENT ON COLUMN bookmark.bookmarked_at IS '(DC2Type:datetime_immutable)'");
         $this->addSql('CREATE TABLE parchment (id UUID NOT NULL, title VARCHAR(255) NOT NULL, description VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('COMMENT ON COLUMN parchment.id IS \'(DC2Type:uuid)\'');
+        $this->addSql("COMMENT ON COLUMN parchment.id IS '(DC2Type:uuid)'");
         $this->addSql('CREATE TABLE review (id UUID NOT NULL, user_id UUID NOT NULL, book_id UUID NOT NULL, published_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, body TEXT NOT NULL, rating SMALLINT NOT NULL, letter VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_794381C6A76ED395 ON review (user_id)');
         $this->addSql('CREATE INDEX IDX_794381C616A2B381 ON review (book_id)');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_794381C6A76ED39516A2B381 ON review (user_id, book_id)');
-        $this->addSql('COMMENT ON COLUMN review.id IS \'(DC2Type:uuid)\'');
-        $this->addSql('COMMENT ON COLUMN review.user_id IS \'(DC2Type:uuid)\'');
-        $this->addSql('COMMENT ON COLUMN review.book_id IS \'(DC2Type:uuid)\'');
-        $this->addSql('COMMENT ON COLUMN review.published_at IS \'(DC2Type:datetime_immutable)\'');
+        $this->addSql("COMMENT ON COLUMN review.id IS '(DC2Type:uuid)'");
+        $this->addSql("COMMENT ON COLUMN review.user_id IS '(DC2Type:uuid)'");
+        $this->addSql("COMMENT ON COLUMN review.book_id IS '(DC2Type:uuid)'");
+        $this->addSql("COMMENT ON COLUMN review.published_at IS '(DC2Type:datetime_immutable)'");
         $this->addSql('CREATE TABLE "user" (id UUID NOT NULL, email VARCHAR(255) NOT NULL, first_name VARCHAR(255) NOT NULL, last_name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649E7927C74 ON "user" (email)');
         $this->addSql('COMMENT ON COLUMN "user".id IS \'(DC2Type:uuid)\'');
@@ -50,6 +51,7 @@ final class Version20230906094949 extends AbstractMigration
         $this->addSql('ALTER TABLE review ADD CONSTRAINT FK_794381C616A2B381 FOREIGN KEY (book_id) REFERENCES book (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
     }
 
+    #[\Override]
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs

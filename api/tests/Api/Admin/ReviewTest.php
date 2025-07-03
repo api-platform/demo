@@ -42,7 +42,7 @@ final class ReviewTest extends ApiTestCase
     public function asNonAdminUserICannotGetACollectionOfReviews(int $expectedCode, string $hydraDescription, ?UserFactory $userFactory): void
     {
         $options = [];
-        if ($userFactory) {
+        if ($userFactory instanceof UserFactory) {
             $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
@@ -104,7 +104,7 @@ final class ReviewTest extends ApiTestCase
             ReviewFactory::new()->sequence(static function () {
                 foreach (range(1, 100) as $i) {
                     // 33% of reviews are rated 5
-                    yield ['rating' => $i % 3 ? 3 : 5];
+                    yield ['rating' => 0 !== $i % 3 ? 3 : 5];
                 }
             }),
             '/admin/reviews?rating=5',
@@ -150,7 +150,7 @@ final class ReviewTest extends ApiTestCase
         $review = ReviewFactory::createOne();
 
         $options = [];
-        if ($userFactory) {
+        if ($userFactory instanceof UserFactory) {
             $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
@@ -205,7 +205,7 @@ final class ReviewTest extends ApiTestCase
         $review = ReviewFactory::createOne();
 
         $options = [];
-        if ($userFactory) {
+        if ($userFactory instanceof UserFactory) {
             $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
@@ -255,10 +255,8 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 
-    /**
-     * @group mercure
-     */
     #[Test]
+    #[\PHPUnit\Framework\Attributes\Group('mercure')]
     public function asAdminUserICanUpdateAReview(): void
     {
         $book = BookFactory::createOne();
@@ -321,7 +319,7 @@ final class ReviewTest extends ApiTestCase
         $review = ReviewFactory::createOne();
 
         $options = [];
-        if ($userFactory) {
+        if ($userFactory instanceof UserFactory) {
             $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
                 'email' => $userFactory->create()->email,
             ]);
@@ -352,10 +350,8 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 
-    /**
-     * @group mercure
-     */
     #[Test]
+    #[\PHPUnit\Framework\Attributes\Group('mercure')]
     public function asAdminUserICanDeleteAReview(): void
     {
         $review = ReviewFactory::createOne(['body' => 'Best book ever!']);

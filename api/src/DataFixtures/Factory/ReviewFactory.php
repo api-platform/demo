@@ -69,8 +69,8 @@ final class ReviewFactory extends PersistentProxyObjectFactory
     protected function defaults(): array
     {
         return [
-            'user' => lazy(static fn () => UserFactory::new()),
-            'book' => lazy(static fn () => BookFactory::new()),
+            'user' => lazy(static fn (): UserFactory => UserFactory::new()),
+            'book' => lazy(static fn (): BookFactory => BookFactory::new()),
             'publishedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime('-1 week')),
             'body' => self::faker()->text(),
             'rating' => self::faker()->numberBetween(0, 5),
@@ -80,12 +80,13 @@ final class ReviewFactory extends PersistentProxyObjectFactory
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
      */
+    #[\Override]
     protected function initialize(): static
     {
         return $this
             // create the resource on the OIDC server
             ->afterPersist(function (Review $object): void {
-                if (!$this->resourceHandler) {
+                if (!$this->resourceHandler instanceof ResourceHandlerInterface) {
                     return;
                 }
 

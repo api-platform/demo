@@ -18,12 +18,18 @@ use Symfony\Component\Clock\MockClock;
 
 final class BookmarkPersistProcessorTest extends TestCase
 {
-    private MockObject|ProcessorInterface $persistProcessorMock;
-    private MockObject|Security $securityMock;
-    private MockObject|User $userMock;
-    private Bookmark|MockObject $objectMock;
-    private MockObject|Operation $operationMock;
+    private MockObject $persistProcessorMock;
+
+    private MockObject $securityMock;
+
+    private MockObject $userMock;
+
+    private MockObject $objectMock;
+
+    private MockObject $operationMock;
+
     private ClockInterface|MockObject $clockMock;
+
     private BookmarkPersistProcessor $processor;
 
     protected function setUp(): void

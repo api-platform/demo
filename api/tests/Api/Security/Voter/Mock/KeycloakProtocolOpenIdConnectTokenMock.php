@@ -38,7 +38,7 @@ final class KeycloakProtocolOpenIdConnectTokenMock extends MockHttpClient
         $accessToken = preg_replace('/^Authorization: Bearer (.*)$/', '$1', $options['normalized_headers']['authorization'][0]);
         $serializerManager = new JWSSerializerManager([new CompactSerializer()]);
         $jws = $serializerManager->unserialize($accessToken);
-        $claims = json_decode($jws->getPayload(), true);
+        $claims = json_decode((string) $jws->getPayload(), true);
 
         // "authorize" custom claim set in the test
         if (\array_key_exists('authorize', $claims)) {
@@ -46,7 +46,7 @@ final class KeycloakProtocolOpenIdConnectTokenMock extends MockHttpClient
         }
 
         // no "authorize" custom claim set, try to detect permission from body
-        parse_str($options['body'], $body);
+        parse_str((string) $options['body'], $body);
         if (!isset($body['permission'])) {
             return $this->getInvalidMock();
         }

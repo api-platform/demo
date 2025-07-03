@@ -15,10 +15,14 @@ use PHPUnit\Framework\TestCase;
 
 final class BookPersistProcessorTest extends TestCase
 {
-    private MockObject|ProcessorInterface $persistProcessorMock;
-    private MockObject|BookRepositoryInterface $bookRepositoryMock;
-    private Book|MockObject $objectMock;
-    private MockObject|Operation $operationMock;
+    private MockObject $persistProcessorMock;
+
+    private MockObject $bookRepositoryMock;
+
+    private MockObject $objectMock;
+
+    private MockObject $operationMock;
+
     private BookPersistProcessor $processor;
 
     protected function setUp(): void
@@ -27,6 +31,7 @@ final class BookPersistProcessorTest extends TestCase
         $this->bookRepositoryMock = $this->createMock(BookRepositoryInterface::class);
         $this->objectMock = $this->createMock(Book::class);
         $this->objectMock->book = 'https://openlibrary.org/books/OL2055137M.json';
+
         $this->operationMock = $this->createMock(Operation::class);
 
         $this->processor = new BookPersistProcessor(

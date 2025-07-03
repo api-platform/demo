@@ -15,9 +15,12 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class BookNormalizerTest extends TestCase
 {
-    private MockObject|NormalizerInterface $normalizerMock;
-    private MockObject|ReviewRepository $repositoryMock;
-    private Book|MockObject $objectMock;
+    private MockObject $normalizerMock;
+
+    private MockObject $repositoryMock;
+
+    private MockObject $objectMock;
+
     private BookNormalizer $normalizer;
 
     protected function setUp(): void

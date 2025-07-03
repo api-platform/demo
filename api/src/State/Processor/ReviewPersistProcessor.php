@@ -55,13 +55,11 @@ final readonly class ReviewPersistProcessor implements ProcessorInterface
         $data = $this->persistProcessor->process($data, $operation, $uriVariables, $context);
 
         // create resource on OIDC server
-        if ($operation instanceof Post) {
-            // project specification: only create resource on OIDC server for known users (john.doe and chuck.norris)
-            if (\in_array($data->user->email, ['john.doe@example.com', 'chuck.norris@example.com'], true)) {
-                $this->resourceHandler->create($data, $data->user, [
-                    'operation_name' => '/books/{bookId}/reviews/{id}{._format}',
-                ]);
-            }
+        // project specification: only create resource on OIDC server for known users (john.doe and chuck.norris)
+        if ($operation instanceof Post && \in_array($data->user->email, ['john.doe@example.com', 'chuck.norris@example.com'], true)) {
+            $this->resourceHandler->create($data, $data->user, [
+                'operation_name' => '/books/{bookId}/reviews/{id}{._format}',
+            ]);
         }
 
         return $data;

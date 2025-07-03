@@ -24,7 +24,7 @@ trait SerializerTrait
         if ($resourceMetadataFactoryCollection = static::getContainer()->get('api_platform.metadata.resource.metadata_collection_factory')) {
             $operation = $resourceMetadataFactoryCollection->create($resourceClass)->getOperation($operationName);
         } else {
-            $operation = $operationName ? (new Get())->withName($operationName) : new Get();
+            $operation = null !== $operationName && '' !== $operationName && '0' !== $operationName ? new Get()->withName($operationName) : new Get();
         }
 
         return ($operation->getNormalizationContext() ?? []) + ['item_uri_template' => $operation->getUriTemplate()];

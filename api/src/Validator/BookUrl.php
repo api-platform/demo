@@ -18,6 +18,7 @@ final class BookUrl extends Constraint
         $this->message = $message ?? $this->message;
     }
 
+    #[\Override]
     public function getTargets(): string
     {
         return self::PROPERTY_CONSTRAINT;

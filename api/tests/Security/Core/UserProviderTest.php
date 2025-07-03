@@ -18,10 +18,14 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 final class UserProviderTest extends TestCase
 {
-    private ManagerRegistry|MockObject $registryMock;
-    private MockObject|ObjectManager $managerMock;
-    private MockObject|UserRepository $repositoryMock;
-    private MockObject|User $userMock;
+    private MockObject $registryMock;
+
+    private MockObject $managerMock;
+
+    private MockObject $repositoryMock;
+
+    private MockObject $userMock;
+
     private UserProvider $provider;
 
     protected function setUp(): void

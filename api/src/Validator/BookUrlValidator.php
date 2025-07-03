@@ -29,7 +29,7 @@ final class BookUrlValidator extends ConstraintValidator
             return;
         }
 
-        if (!$this->bookRepository->find($value)) {
+        if (!$this->bookRepository->find($value) instanceof \App\Entity\Book) {
             $this->context->buildViolation($constraint->message)->addViolation();
         }
     }

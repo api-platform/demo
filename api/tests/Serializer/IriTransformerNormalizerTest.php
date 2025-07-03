@@ -16,11 +16,16 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class IriTransformerNormalizerTest extends TestCase
 {
-    private MockObject|NormalizerInterface $normalizerMock;
-    private IriConverterInterface|MockObject $iriConverterMock;
-    private MockObject|OperationMetadataFactoryInterface $operationMetadataFactoryMock;
-    private MockObject|Operation $operationMock;
+    private MockObject $normalizerMock;
+
+    private MockObject $iriConverterMock;
+
+    private MockObject $operationMetadataFactoryMock;
+
+    private MockObject $operationMock;
+
     private MockObject|\stdClass $objectMock;
+
     private IriTransformerNormalizer $normalizer;
 
     protected function setUp(): void

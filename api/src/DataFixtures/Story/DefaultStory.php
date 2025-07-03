@@ -45,7 +45,7 @@ final class DefaultStory extends Story
             ]);
 
             // Optionally add reviews to it (create new users)
-            if ($number = random_int(0, 5)) {
+            if (($number = random_int(0, 5)) !== 0) {
                 ReviewFactory::createMany($number, [
                     'book' => $book,
                     'publishedAt' => \DateTimeImmutable::createFromMutable(faker()->dateTime('-1 week')),

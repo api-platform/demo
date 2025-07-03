@@ -59,8 +59,8 @@ final class BookmarkFactory extends PersistentProxyObjectFactory
     protected function defaults(): array
     {
         return [
-            'user' => lazy(static fn () => UserFactory::new()),
-            'book' => lazy(static fn () => BookFactory::new()),
+            'user' => lazy(static fn (): UserFactory => UserFactory::new()),
+            'book' => lazy(static fn (): BookFactory => BookFactory::new()),
             'bookmarkedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
         ];
     }

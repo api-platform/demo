@@ -99,7 +99,7 @@ final class ReviewTest extends ApiTestCase
                 $book = BookFactory::createOne(['title' => 'Hyperion']);
                 foreach (range(1, 100) as $i) {
                     // 33% of reviews are rated 5
-                    yield ['book' => $book, 'rating' => $i % 3 ? 3 : 5];
+                    yield ['book' => $book, 'rating' => 0 !== $i % 3 ? 3 : 5];
                 }
             }),
             static function (): string {
@@ -237,10 +237,8 @@ final class ReviewTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @group mercure
-     */
     #[Test]
+    #[\PHPUnit\Framework\Attributes\Group('mercure')]
     public function asAUserICanAddAReviewOnABook(): void
     {
         $book = BookFactory::createOne();
@@ -280,7 +278,7 @@ final class ReviewTest extends ApiTestCase
         // if I add a review on a book with reviews, it doesn't erase the existing reviews
         $reviews = self::getContainer()->get(ReviewRepository::class)->findBy(['book' => $book->_real()]);
         self::assertCount(6, $reviews);
-        $id = preg_replace('/^.*\/(.+)$/', '$1', $response->toArray()['@id']);
+        $id = preg_replace('/^.*\/(.+)$/', '$1', (string) $response->toArray()['@id']);
         /** @var Review $review */
         $review = self::getContainer()->get(ReviewRepository::class)->find($id);
         self::assertCount(1, self::getMercureMessages());
@@ -444,10 +442,8 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 
-    /**
-     * @group mercure
-     */
     #[Test]
+    #[\PHPUnit\Framework\Attributes\Group('mercure')]
     public function asAUserICanUpdateMyBookReview(): void
     {
         $review = ReviewFactory::createOne();
@@ -547,10 +543,8 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 
-    /**
-     * @group mercure
-     */
     #[Test]
+    #[\PHPUnit\Framework\Attributes\Group('mercure')]
     public function asAUserICanDeleteMyBookReview(): void
     {
         $review = ReviewFactory::createOne(['body' => 'Best book ever!']);

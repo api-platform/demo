@@ -30,7 +30,7 @@ final class OidcTokenPermissionVoter extends OidcVoter
         private readonly string $oidcClientId,
         private readonly HttpClientInterface $securityAuthorizationClient,
         private readonly IriConverterInterface $iriConverter,
-        private ?LoggerInterface $logger = null,
+        private readonly ?LoggerInterface $logger = null,
     ) {
         parent::__construct($requestStack, $accessTokenExtractor);
     }
@@ -56,7 +56,7 @@ final class OidcTokenPermissionVoter extends OidcVoter
         }
 
         $accessToken = $this->getToken();
-        if (!$accessToken) {
+        if ('' === $accessToken || '0' === $accessToken) {
             return false;
         }
 
@@ -69,7 +69,7 @@ final class OidcTokenPermissionVoter extends OidcVoter
                     'response_mode' => 'decision',
                     'permission_resource_format' => 'uri',
                     'permission_resource_matching_uri' => true,
-                    'permission' => \sprintf('%s', $subject),
+                    'permission' => $subject,
                 ],
             ]);
 
