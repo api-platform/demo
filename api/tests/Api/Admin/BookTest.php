@@ -203,7 +203,6 @@ final class BookTest extends ApiTestCase
     }
 
     #[Test]
-    #[DataProvider(methodName: 'getNonAdminUsers')]
     public function asAdminUserICanGetABook(): void
     {
         $book = BookFactory::createOne();

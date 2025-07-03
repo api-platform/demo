@@ -9,8 +9,6 @@ api_platform:
     # Mercure integration, remove if unwanted
     mercure:
         include_type: true
-    graphql:
-        graphql_playground: false
     formats:
         jsonld: ['application/ld+json']
         json: ['application/json']
