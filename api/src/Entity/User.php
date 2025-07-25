@@ -29,10 +29,10 @@ use Symfony\Component\Uid\Uuid;
     operations: [
         new GetCollection(
             uriTemplate: '/admin/users{._format}',
-            itemUriTemplate: '/admin/users/{id}{._format}',
+            paginationClientItemsPerPage: true,
             security: 'is_granted("OIDC_ADMIN")',
             filters: ['app.filter.user.admin.name'],
-            paginationClientItemsPerPage: true
+            itemUriTemplate: '/admin/users/{id}{._format}'
         ),
         new Get(
             uriTemplate: '/admin/users/{id}{._format}',

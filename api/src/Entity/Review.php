@@ -43,13 +43,13 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [
         new GetCollection(
             uriTemplate: '/admin/reviews{._format}',
-            itemUriTemplate: '/admin/reviews/{id}{._format}',
+            paginationClientItemsPerPage: true,
             filters: [
                 'app.filter.review.admin.user',
                 'app.filter.review.admin.book',
                 'app.filter.review.admin.rating',
             ],
-            paginationClientItemsPerPage: true
+            itemUriTemplate: '/admin/reviews/{id}{._format}'
         ),
         new Get(
             uriTemplate: '/admin/reviews/{id}{._format}'
@@ -95,8 +95,8 @@ use Symfony\Component\Validator\Constraints as Assert;
     ],
     operations: [
         new GetCollection(
-            itemUriTemplate: '/books/{bookId}/reviews/{id}{._format}',
-            paginationClientItemsPerPage: true
+            paginationClientItemsPerPage: true,
+            itemUriTemplate: '/books/{bookId}/reviews/{id}{._format}'
         ),
         new NotExposed(
             uriTemplate: '/books/{bookId}/reviews/{id}{._format}',
@@ -107,10 +107,10 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
         new Post(
             security: 'is_granted("OIDC_USER")',
-            processor: ReviewPersistProcessor::class,
+            validationContext: [AbstractNormalizer::GROUPS => ['Default', 'Review:create']],
             provider: CreateProvider::class,
-            itemUriTemplate: '/books/{bookId}/reviews/{id}{._format}',
-            validationContext: [AbstractNormalizer::GROUPS => ['Default', 'Review:create']]
+            processor: ReviewPersistProcessor::class,
+            itemUriTemplate: '/books/{bookId}/reviews/{id}{._format}'
         ),
         new Patch(
             uriTemplate: '/books/{bookId}/reviews/{id}{._format}',

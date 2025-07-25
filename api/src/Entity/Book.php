@@ -44,8 +44,8 @@ use Symfony\Component\Validator\Constraints as Assert;
     types: ['https://schema.org/Book', 'https://schema.org/Offer'],
     operations: [
         new GetCollection(
-            itemUriTemplate: '/admin/books/{id}{._format}',
-            paginationClientItemsPerPage: true
+            paginationClientItemsPerPage: true,
+            itemUriTemplate: '/admin/books/{id}{._format}'
         ),
         new Post(
             processor: BookPersistProcessor::class,
