@@ -83,7 +83,7 @@ postgresql:
       size: 1Gi
     pullPolicy: Always
     image:
-      repository: bitnami/postgresql
+      repository: bitnamilegacy/postgresql
       tag: 16
     resources:
       requests:
