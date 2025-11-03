@@ -62,7 +62,6 @@ mercure:
     demo
     cors_origins http://chart-example.local https://chart-example.local
 
-# Full configuration: https://github.com/bitnami/charts/tree/master/bitnami/postgresql
 postgresql:
   enabled: true
   # If bringing your own PostgreSQL, the full uri to use
@@ -75,7 +74,7 @@ postgresql:
         password: "!ChangeMe!"
         database: "api"
   image:
-    repository: bitnamilegacy/postgresql
+    repository: "ghcr.io/cloudnative-pg/postgresql"
     tag: 16
   # Persistent Volume Storage configuration.
   # ref: https://kubernetes.io/docs/user-guide/persistent-volumes
