@@ -74,6 +74,9 @@ postgresql:
         username: "example"
         password: "!ChangeMe!"
         database: "api"
+  image:
+    repository: bitnamilegacy/postgresql
+    tag: 16
   # Persistent Volume Storage configuration.
   # ref: https://kubernetes.io/docs/user-guide/persistent-volumes
   primary:
@@ -82,9 +85,6 @@ postgresql:
       storageClass: standard
       size: 1Gi
     pullPolicy: Always
-    image:
-      repository: bitnamilegacy/postgresql
-      tag: 16
     resources:
       requests:
         memory: 50Mi
@@ -137,6 +137,7 @@ keycloak:
       - -jar
       - /opt/bitnami/keycloak-config-cli/keycloak-config-cli.jar
     image:
+      repository: bitnamilegacy/keycloak-config-cli
       tag: 6-debian-12
   postgresql:
     enabled: true
@@ -146,15 +147,15 @@ keycloak:
         auth:
           postgresPassword: "!ThisMustBeChanged!"
           password: "!ChangeMe!"
+    image:
+      repository: bitnamilegacy/postgresql
+      tag: 16
     primary:
       persistence:
         enabled: true
         storageClass: standard
         size: 1Gi
       pullPolicy: Always
-      image:
-        repository: bitnamilegacy/postgresql
-        tag: 16
       resources:
         requests:
           memory: 50Mi
@@ -166,6 +167,8 @@ keycloak:
 
 external-dns:
   enabled: true
+  image:
+    repository: bitnamilegacy/external-dns
   resources:
     requests:
       memory: 50Mi
