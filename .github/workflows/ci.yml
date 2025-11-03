@@ -180,7 +180,7 @@ jobs:
         run: docker compose run --rm php bin/console doctrine:fixtures:load --no-interaction
       -
         name: Run Playwright
-        run: docker run --network host -w /app -v ./e2e:/app --rm --ipc=host mcr.microsoft.com/playwright:v1.50.0-noble /bin/sh -c 'npm i; npx playwright test --grep ${{ matrix.annotation }};'
+        run: docker run --network host -w /app -v ./e2e:/app --rm --ipc=host mcr.microsoft.com/playwright:v1.56.1-noble /bin/sh -c 'npm i; npx playwright test --grep ${{ matrix.annotation }};'
       -
         name: Debug Services
         if: failure()
