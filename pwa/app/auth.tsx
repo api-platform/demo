@@ -109,7 +109,7 @@ export const { handlers: { GET, POST }, auth } = NextAuth({
       idToken: true,
 
       // https://github.com/nextauthjs/next-auth/issues/685#issuecomment-785212676
-      protection: "pkce",
+      checks: ["pkce"],
       client: {
         token_endpoint_auth_method: "none",
       },
