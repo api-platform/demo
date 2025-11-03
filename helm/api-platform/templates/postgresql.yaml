@@ -1,0 +1,37 @@
+{{- if .Values.postgresql.enabled -}}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "api-platform.fullname" . }}-initdb
+  labels:
+    {{- include "api-platform.labels" . | nindent 4 }}
+type: kubernetes.io/basic-auth
+data:
+  username: {{ .Values.postgresql.global.postgresql.auth.username | b64enc }}
+  password: {{ .Values.postgresql.global.postgresql.auth.password | b64enc }}
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ .Release.Name }}-postgresql
+spec:
+  instances: 1
+  imageName: {{ .Values.postgresql.image.registry | default "ghcr.io" }}/{{ .Values.postgresql.image.repository | default "cloudnative-pg/postgresql" }}:{{ .Values.postgresql.image.tag | default "17" }}
+  superuserSecret:
+    name: {{ include "api-platform.fullname" . }}-initdb
+  bootstrap:
+    initdb:
+      database: {{ .Values.postgresql.global.postgresql.auth.database }}
+      owner: {{ .Values.postgresql.global.postgresql.auth.username  }}
+      postInitSQL:
+        - {{ printf "ALTER USER %s CREATEDB;" .Values.postgresql.global.postgresql.auth.username | quote  }}
+      secret:
+        name: {{ include "api-platform.fullname" . }}-initdb
+  managed:
+    services:
+      disabledDefaultServices: ["ro", "r"]
+  storage:
+    size: {{ .Values.postgresql.primary.persistence.size }}
+  resources:
+    {{- toYaml .Values.postgresql.primary.resources | nindent 4 }}
+{{- end -}}
