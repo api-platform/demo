@@ -1,0 +1,162 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "api-platform.fullname" . }}-keycloak
+  labels:
+    {{- include "api-platform.labelsKeycloak" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "api-platform.selectorLabelsKeycloak" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "api-platform.selectorLabelsKeycloak" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "api-platform.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-keycloak
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.keycloak.image.repository }}:{{ .Values.keycloak.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.keycloak.image.pullPolicy }}
+          {{- if .Values.keycloak.importRealm.enabled }}
+          args: ['--import-realm']
+          volumeMounts:
+            - name: keycloak-realm
+              mountPath: /opt/keycloak/data/import
+              readOnly: true
+          {{- end }}
+          env:
+            - name: KC_PRODUCTION
+              value: "true"
+            - name: KC_HTTP_RELATIVE_PATH
+              value: "/oidc/"
+            - name: KC_HEALTH_ENABLED
+              value: "true"
+            - name: KC_METRICS_ENABLED
+              value: "true"
+            - name: KC_DB
+              value: "postgres"
+            - name: KC_DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: keycloak-database-url
+            - name: KC_DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: keycloak-database-username
+            - name: KC_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: keycloak-database-password
+            - name: KC_BOOTSTRAP_ADMIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: keycloak-database-password
+            {{- if .Values.keycloak.auth.createAdminUser }}
+            - name: KC_BOOTSTRAP_ADMIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: keycloak-admin-username
+            - name: KC_BOOTSTRAP_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: keycloak-admin-password
+            {{- end }}
+            {{- toYaml .Values.keycloak.extraEnvVars | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: https
+              containerPort: 8443
+              protocol: TCP
+            - name: api
+              containerPort: 9000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.keycloak.resources | nindent 12 }}
+        {{- if .Values.keycloak.postgresql.enabled }}
+        - name: {{ .Chart.Name }}-keycloak-postgresql
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.keycloak.postgresql.image.repository }}:{{ .Values.keycloak.postgresql.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.keycloak.postgresql.image.pullPolicy | default "IfNotPresent" }}
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: keycloak-database-name
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: keycloak-database-username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: keycloak-database-password
+            {{- toYaml .Values.keycloak.postgresql.extraEnvVars | nindent 12 }}
+          ports:
+            - name: main
+              containerPort: 5432
+              protocol: UDP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: main
+          readinessProbe:
+            httpGet:
+              path: /
+              port: main
+          resources:
+            {{- toYaml .Values.keycloak.postgresql.resources | nindent 12 }}
+        {{- end }}
+      {{- if .Values.keycloak.importRealm.enabled }}
+      volumes:
+        - name: keycloak-realm
+          configMap:
+            name: {{ include "api-platform.fullname" . }}-keycloak-realm
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

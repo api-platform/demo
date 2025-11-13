@@ -104,20 +104,20 @@ services:
   keycloak:
     image: app_keycloak
     environment:
-      KEYCLOAK_DATABASE_HOST: keycloak-database
-      KEYCLOAK_DATABASE_NAME: ${KEYCLOAK_POSTGRES_DB:-keycloak}
-      KEYCLOAK_DATABASE_USER: ${KEYCLOAK_POSTGRES_USER:-keycloak}
-      KEYCLOAK_DATABASE_PASSWORD: ${KEYCLOAK_POSTGRES_PASSWORD:-!ChangeMe!}
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-database:5432/${KEYCLOAK_POSTGRES_DB:-keycloak}
+      KC_DB_USERNAME: ${KEYCLOAK_POSTGRES_USER:-keycloak}
+      KC_DB_PASSWORD: ${KEYCLOAK_POSTGRES_PASSWORD:-!ChangeMe!}
       KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_BOOTSTRAP_ADMIN_USERNAME:-admin}
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD:-!ChangeMe!}
-      # Must finish with a trailing slash (https://github.com/bitnami/charts/issues/10885#issuecomment-1414279144)
-      KEYCLOAK_HTTP_RELATIVE_PATH: /oidc/
-      KEYCLOAK_HOSTNAME: https://${SERVER_NAME:-localhost}/oidc/
-      KEYCLOAK_HOSTNAME_ADMIN: https://${SERVER_NAME:-localhost}/oidc/
-      KEYCLOAK_ENABLE_HEALTH_ENDPOINTS: "true"
-    # https://www.keycloak.org/server/all-config#category-health
+      # Must finish with a trailing slash
+      KC_HTTP_RELATIVE_PATH: /oidc/
+      KC_HOSTNAME: https://${SERVER_NAME:-localhost}/oidc/
+      KC_HOSTNAME_ADMIN: https://${SERVER_NAME:-localhost}/oidc/
+      KC_HEALTH_ENABLED: "true"
+      KC_METRICS_ENABLED: "true"
     healthcheck:
-      test: [ "CMD-SHELL", "curl http://127.0.0.1:8080/oidc/health || exit 1"]
+      test: ["CMD-SHELL", "bash -c ':> /dev/tcp/localhost/8080'"]
       start_period: 15s
       interval: 5s
       timeout: 3s
