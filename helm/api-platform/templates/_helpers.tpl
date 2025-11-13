@@ -55,6 +55,18 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
+Common labels Keycloak
+*/}}
+{{- define "api-platform.labelsKeycloak" -}}
+helm.sh/chart: {{ include "api-platform.chart" . }}
+{{ include "api-platform.selectorLabelsKeycloak" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
 Selector labels
 */}}
 {{- define "api-platform.selectorLabels" -}}
@@ -68,6 +80,15 @@ Selector labels PWA
 */}}
 {{- define "api-platform.selectorLabelsPWA" -}}
 app.kubernetes.io/name: {{ include "api-platform.name" . }}-pwa
+app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/part-of: {{ include "api-platform.name" . }}
+{{- end }}
+
+{{/*
+Selector labels Keycloak
+*/}}
+{{- define "api-platform.selectorLabelsKeycloak" -}}
+app.kubernetes.io/name: {{ include "api-platform.name" . }}-keycloak
 app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/part-of: {{ include "api-platform.name" . }}
 {{- end }}

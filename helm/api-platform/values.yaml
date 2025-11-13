@@ -89,7 +89,6 @@ postgresql:
         memory: 50Mi
         cpu: 1m
 
-# Full configuration: https://github.com/bitnami/charts/tree/master/bitnami/keycloak
 keycloak:
   enabled: true
   image:
@@ -107,15 +106,13 @@ keycloak:
   service:
     type: ClusterIP
   extraEnvVars:
-    # Must set KEYCLOAK_HOSTNAME to force https + relative path
-    - name: KEYCLOAK_HOSTNAME
+    # Must set KC_HOSTNAME to force https + relative path
+    - name: KC_HOSTNAME
       value: "https://chart-example.local/oidc/"
-    # Must set KEYCLOAK_HOSTNAME_ADMIN because of relative path
-    - name: KEYCLOAK_HOSTNAME_ADMIN
+    # Must set KC_HOSTNAME_ADMIN because of relative path
+    - name: KC_HOSTNAME_ADMIN
       value: "https://chart-example.local/oidc/"
-    - name: KEYCLOAK_PRODUCTION
-      value: "true"
-  # must finish with a trailing slash (https://github.com/bitnami/charts/issues/10885#issuecomment-1414279144)
+  # must finish with a trailing slash
   httpRelativePath: /oidc/
   proxy: edge
   tls:
@@ -127,29 +124,27 @@ keycloak:
   livenessProbe:
     initialDelaySeconds: 0
     periodSeconds: 10
-  keycloakConfigCli:
-    enabled: true
-    existingConfigmap: "keycloak-realm"
-    # https://github.com/bitnami/charts/issues/14279
-    command:
-      - java
-      - -jar
-      - /opt/bitnami/keycloak-config-cli/keycloak-config-cli.jar
-    image:
-      repository: bitnamilegacy/keycloak-config-cli
-      tag: 6-debian-12
+  auth:
+    createAdminUser: true
+    adminUser: admin
+    adminPassword: "!ChangeMe!"
   postgresql:
     enabled: true
-    nameOverride: postgresql-keycloak
+    # If bringing your own PostgreSQL, the full uri to use
+    #url: postgresql://keycloak:keycloak@keycloak:5432/api?serverVersion=16&charset=utf8
     global:
       postgresql:
         auth:
           postgresPassword: "!ThisMustBeChanged!"
+          username: "example"
           password: "!ChangeMe!"
+          database: "api"
     image:
-      repository: bitnamilegacy/postgresql
+      repository: "ghcr.io/cloudnative-pg/postgresql"
       tag: 16
     primary:
+      # Persistent Volume Storage configuration.
+      # ref: https://kubernetes.io/docs/user-guide/persistent-volumes
       persistence:
         enabled: true
         storageClass: standard
@@ -159,10 +154,9 @@ keycloak:
         requests:
           memory: 50Mi
           cpu: 1m
-  auth:
-    createAdminUser: true
-    adminUser: admin
-    adminPassword: "!ChangeMe!"
+  importRealm:
+    enabled: true
+    path: "keycloak/config/*"
 
 external-dns:
   enabled: true

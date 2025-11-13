@@ -18,13 +18,11 @@ services:
       - mock-openlibrary
 
   keycloak:
+    command: start-dev --import-realm
     environment:
-      KEYCLOAK_ENABLE_HTTPS: "true"
-      KEYCLOAK_HTTPS_USE_PEM: "true"
-      KEYCLOAK_HTTPS_CERTIFICATE_FILE: /opt/bitnami/keycloak/certs/tls.crt
-      KEYCLOAK_HTTPS_CERTIFICATE_KEY_FILE: /opt/bitnami/keycloak/certs/tls.key
-      KEYCLOAK_EXTRA_ARGS: "--import-realm"
+      KC_HTTPS_CERTIFICATE_FILE: /opt/keycloak/certs/tls.crt
+      KC_HTTPS_CERTIFICATE_KEY_FILE: /opt/keycloak/certs/tls.key
     volumes:
-      - ./helm/api-platform/keycloak/certs/tls.crt:/opt/bitnami/keycloak/certs/tls.crt:ro
-      - ./helm/api-platform/keycloak/certs/tls.pem:/opt/bitnami/keycloak/certs/tls.key:ro
-      - ./helm/api-platform/keycloak/config:/opt/bitnami/keycloak/data/import
+      - ./helm/api-platform/keycloak/certs/tls.crt:/opt/keycloak/certs/tls.crt:ro
+      - ./helm/api-platform/keycloak/certs/tls.pem:/opt/keycloak/certs/tls.key:ro
+      - ./helm/api-platform/keycloak/config:/opt/keycloak/data/import

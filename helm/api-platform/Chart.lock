@@ -1,9 +1,6 @@
 dependencies:
 - name: external-dns
   repository: https://charts.bitnami.com/bitnami/
-  version: 7.5.6
-- name: keycloak
-  repository: https://charts.bitnami.com/bitnami/
-  version: 21.4.2
-digest: sha256:2eeb31600fc84010057a78979e8f015a3dc5ac27cd6f17e615e6e500668ecebe
-generated: "2025-11-03T15:07:19.08338873+01:00"
+  version: 9.0.3
+digest: sha256:3b0229942127a01c02f151e18b739c39b68e6458c6b865e3a3dd90fcfe198c99
+generated: "2026-02-04T16:01:05.816182082+01:00"
