@@ -26,10 +26,6 @@ appVersion: 4.2.15
 
 dependencies:
   - name: external-dns
-    version: 7.5.6
+    version: 9.0.3
     repository: https://charts.bitnami.com/bitnami/
     condition: external-dns.enabled
-  - name: keycloak
-    version: 21.4.2
-    repository: https://charts.bitnami.com/bitnami/
-    condition: keycloak.enabled
