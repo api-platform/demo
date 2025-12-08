@@ -20,6 +20,7 @@ jobs:
         name: Setup PHP with Composer
         uses: shivammathur/setup-php@v2
         with:
+          php-version: '8.4'
           tools: composer
       -
         name: Get Composer Cache Directory
