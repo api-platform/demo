@@ -6,7 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "api-platform/doctrine-orm": "^4.2.9",
-        "api-platform/graphql": "^4.2.9",
+        "api-platform/graphql": "^4.2.10",
         "api-platform/symfony": "^4.2.9",
         "doctrine/common": "^3.5",
         "doctrine/doctrine-bundle": "^2.15",
