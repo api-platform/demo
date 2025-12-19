@@ -18,7 +18,6 @@ use ApiPlatform\Metadata\UrlGeneratorInterface;
 use ApiPlatform\State\CreateProvider;
 use App\Repository\ReviewRepository;
 use App\Security\Voter\OidcTokenPermissionVoter;
-use App\Serializer\IriTransformerNormalizer;
 use App\State\Processor\ReviewPersistProcessor;
 use App\State\Processor\ReviewRemoveProcessor;
 use App\Validator\UniqueUserBook;
@@ -65,10 +64,6 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
     ],
     normalizationContext: [
-        IriTransformerNormalizer::CONTEXT_KEY => [
-            'book' => '/admin/books/{id}{._format}',
-            'user' => '/admin/users/{id}{._format}',
-        ],
         AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
         AbstractNormalizer::GROUPS => ['Review:read', 'Review:read:admin'],
     ],
@@ -134,10 +129,6 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
     ],
     normalizationContext: [
-        IriTransformerNormalizer::CONTEXT_KEY => [
-            'book' => '/books/{id}{._format}',
-            'user' => '/users/{id}{._format}',
-        ],
         AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
         AbstractNormalizer::GROUPS => ['Review:read'],
     ],

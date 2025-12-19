@@ -13,7 +13,6 @@ use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Repository\BookmarkRepository;
-use App\Serializer\IriTransformerNormalizer;
 use App\State\Processor\BookmarkPersistProcessor;
 use App\Validator\UniqueUserBook;
 use Doctrine\ORM\Mapping as ORM;
@@ -45,9 +44,6 @@ use Symfony\Component\Validator\Constraints as Assert;
     normalizationContext: [
         AbstractNormalizer::GROUPS => ['Bookmark:read'],
         AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
-        IriTransformerNormalizer::CONTEXT_KEY => [
-            'book' => '/books/{id}{._format}',
-        ],
     ],
     denormalizationContext: [
         AbstractNormalizer::GROUPS => ['Bookmark:write'],
