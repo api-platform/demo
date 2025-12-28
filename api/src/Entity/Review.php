@@ -218,8 +218,8 @@ class Review
     /**
      * @deprecated use the rating property instead
      */
-    #[ApiProperty(deprecationReason: 'Use the rating property instead.')]
-    #[Assert\Choice(['a', 'b', 'c', 'd'])]
+    #[ApiProperty(deprecationReason: 'Use the rating property instead.')] // TODO: the comment should be enough
+    #[Assert\Choice(choices: ['a', 'b', 'c', 'd'])]
     #[Groups(groups: ['Review:read', 'Review:write'])]
     #[ORM\Column(nullable: true)]
     public ?string $letter = null;
