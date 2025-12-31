@@ -33,10 +33,10 @@ CMD ["sh", "-c", "pnpm install; pnpm dev"]
 
 FROM base AS builder
 
-COPY --link pnpm-lock.yaml ./
+COPY pnpm-lock.yaml ./
 RUN pnpm fetch --prod
 
-COPY --link . .
+COPY . .
 
 ARG AUTH_SECRET
 # https://nextjs.org/docs/app/building-your-application/configuring/environment-variables#bundling-environment-variables-for-the-browser
@@ -58,7 +58,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN addgroup --system --gid 1001 nodejs; \
 	adduser --system --uid 1001 nextjs
 
-COPY --from=builder --link /srv/app/public ./public
+COPY --from=builder /srv/app/public ./public
 
 # Set the correct permission for prerender cache
 RUN mkdir .next; \
@@ -66,8 +66,8 @@ RUN mkdir .next; \
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --link --chown=1001:1001 /srv/app/.next/standalone ./
-COPY --from=builder --link --chown=1001:1001 /srv/app/.next/static ./.next/static
+COPY --from=builder --chown=1001:1001 /srv/app/.next/standalone ./
+COPY --from=builder --chown=1001:1001 /srv/app/.next/static ./.next/static
 
 USER nextjs
 
