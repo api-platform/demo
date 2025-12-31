@@ -2,7 +2,7 @@
 
 
 # Versions
-FROM node:lts AS node_upstream
+FROM docker.io/node:lts AS node_upstream
 
 
 # Base stage for dev and build

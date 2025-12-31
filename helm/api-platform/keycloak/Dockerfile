@@ -4,7 +4,7 @@
 
 
 # Versions
-FROM bitnamilegacy/keycloak:26-debian-12 AS keycloak_upstream
+FROM docker.io/bitnamilegacy/keycloak:26-debian-12 AS keycloak_upstream
 
 
 # The different stages of this Dockerfile are meant to be built into separate images
