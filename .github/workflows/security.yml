@@ -62,7 +62,7 @@ jobs:
         run: docker pull europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/${{ matrix.image }}:latest
       -
         name: Cache Trivy
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .trivy
           key: ${{ runner.os }}-trivy-${{ github.run_id }}

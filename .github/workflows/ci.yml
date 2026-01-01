@@ -213,7 +213,7 @@ jobs:
       # todo Waiting for PHP CS Fixer to support PHP 8.4
 #      -
 #        name: PHP CS Fixer Cache
-#        uses: actions/cache@v4
+#        uses: actions/cache@v5
 #        with:
 #          path: api/.php-cs-fixer.cache
 #          key: ${{ runner.OS }}-phpcsfixer-${{ github.sha }}
@@ -248,7 +248,7 @@ jobs:
           version: latest
       -
         name: Cache PNPM
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ env.PNPM_HOME }}
           key: ${{ runner.os }}-pnpm-${{ github.run_id }}
@@ -266,7 +266,7 @@ jobs:
       # Lint HELM
       -
         name: Cache Helm Dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: helm/api-platform/charts/
           key: ${{ runner.os }}-helm-dependencies-${{ github.run_id }}
