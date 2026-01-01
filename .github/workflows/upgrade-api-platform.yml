@@ -54,7 +54,7 @@ jobs:
           sed -i "s/^appVersion: .*/appVersion: ${{ steps.diff.outputs.to-version }}/g" helm/api-platform/Chart.yaml
       -
         name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         if: steps.diff.outputs.to-version != ''
         with:
           token: ${{ secrets.API_PLATFORM_DEMO_PR_TOKEN }}
