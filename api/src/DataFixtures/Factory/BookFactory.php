@@ -8,7 +8,7 @@ use App\Entity\Book;
 use App\Enum\BookCondition;
 use App\Repository\BookRepository;
 use Zenstruck\Foundry\FactoryCollection;
-use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
+use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 use Zenstruck\Foundry\Persistence\Proxy;
 use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
@@ -21,12 +21,12 @@ use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
  * @method static Book|Proxy                                     last(string $sortedField = 'id')
  * @method static Book|Proxy                                     random(array $attributes = [])
  * @method static Book|Proxy                                     randomOrCreate(array $attributes = [])
- * @method static Book[]|Proxy[]                                 all()
- * @method static Book[]|Proxy[]                                 createMany(int $number, array|callable $attributes = [])
- * @method static Book[]|Proxy[]                                 createSequence(iterable|callable $sequence)
- * @method static Book[]|Proxy[]                                 findBy(array $attributes)
- * @method static Book[]|Proxy[]                                 randomRange(int $min, int $max, array $attributes = [])
- * @method static Book[]|Proxy[]                                 randomSet(int $number, array $attributes = [])
+ * @method static Book[]|Proxy[] all()
+ * @method static Book[]|Proxy[] createMany(int $number, array|callable $attributes = [])
+ * @method static Book[]|Proxy[] createSequence((iterable|callable) $sequence)
+ * @method static Book[]|Proxy[] findBy(array $attributes)
+ * @method static Book[]|Proxy[] randomRange(int $min, int $max, array $attributes = [])
+ * @method static Book[]|Proxy[] randomSet(int $number, array $attributes = [])
  * @method        FactoryCollection<Book|Proxy>                  many(int $min, int|null $max = null)
  * @method        FactoryCollection<Book|Proxy>                  sequence(iterable|callable $sequence)
  * @method static ProxyRepositoryDecorator<Book, BookRepository> repository()
@@ -48,9 +48,9 @@ use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
  * @phpstan-method FactoryCollection<Book&Proxy<Book>> many(int $min, int|null $max = null)
  * @phpstan-method FactoryCollection<Book&Proxy<Book>> sequence(iterable|callable $sequence)
  *
- * @extends PersistentProxyObjectFactory<Book>
+ * @extends PersistentObjectFactory<Book>
  */
-final class BookFactory extends PersistentProxyObjectFactory
+final class BookFactory extends PersistentObjectFactory
 {
     private array $data;
 

@@ -86,7 +86,6 @@ final class UserProviderTest extends TestCase
             ->expects($this->once())
             ->method('refresh')
             ->with($objectMock)
-            ->willReturn($this->managerMock)
         ;
 
         $this->assertSame($objectMock, $this->provider->refreshUser($objectMock));

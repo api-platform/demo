@@ -26,7 +26,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Bridge\Doctrine\Types\UuidType;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Uid\Uuid;
@@ -219,7 +219,7 @@ class Review
      * @deprecated use the rating property instead
      */
     #[ApiProperty(deprecationReason: 'Use the rating property instead.')]
-    #[Assert\Choice(['a', 'b', 'c', 'd'])]
+    #[Assert\Choice(choices: ['a', 'b', 'c', 'd'])]
     #[Groups(groups: ['Review:read', 'Review:write'])]
     #[ORM\Column(nullable: true)]
     public ?string $letter = null;
