@@ -3,7 +3,7 @@
         "version": "v4.0.0"
     },
     "api-platform/symfony": {
-        "version": "4.0",
+        "version": "4.2",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -18,9 +18,6 @@
     },
     "composer/pcre": {
         "version": "1.0.0"
-    },
-    "composer/semver": {
-        "version": "3.2.7"
     },
     "composer/xdebug-handler": {
         "version": "2.0.4"

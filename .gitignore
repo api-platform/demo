@@ -1,3 +1,5 @@
 /.env
 /helm/api-platform/charts/*
 !/helm/api-platform/charts/.gitignore
+
+/api/config/reference.php
