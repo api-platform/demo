@@ -21,6 +21,13 @@ Try it online at <https://demo.api-platform.com>.
 
 You can now go to https://localhost
 
+Authentication and usage:
+
+- Admin: the credentials are shown on https://localhost/admin You can create a Book with `https://openlibrary.org/books/OL2055137M.json` as value for *Book Reference*
+- API:
+  - endpoints without the `/admin` prefix are public and can be called without further step
+  - endpoints with the `/admin` prefix require an authentication: open https://localhost/docs then check the “openid” option under “Scopes” and click on “Authorize”. If you are not yet logged in on the API then log in with the credentials, and finally click on “Close”. You can now perform authenticated requests through the API, like listing books on `GET /admin/books` 
+
 ## What Can I Find In This Demo?
 
 This demo application contains several things you may be interested:
