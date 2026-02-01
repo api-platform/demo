@@ -1,7 +1,7 @@
 # See full configuration: https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#full-default-bundle-configuration
 zenstruck_foundry:
     # from Foundry 2.7, with PHP >=8.4, not setting this configuration is deprecated
-    enable_auto_refresh_with_lazy_objects: true
+    enable_auto_refresh_with_lazy_objects: false
     orm:
         reset:
             entity_managers: [ 'default' ]
