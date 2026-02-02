@@ -27,7 +27,6 @@ export const Filters: FunctionComponent<Props> = ({ filters, mutation }) => (
               isValid: true,
             });
           },
-          // @ts-ignore
           onError: (error: Error | FetchError) => {
             setStatus({
               isValid: false,

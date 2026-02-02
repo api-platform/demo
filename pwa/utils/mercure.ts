@@ -76,7 +76,7 @@ export const useMercure = <
     return () => {
       eventSource.close();
     };
-  }, [data]);
+  }, [data, hubURL]);
 
   return data;
 };

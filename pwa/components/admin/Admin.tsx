@@ -25,7 +25,7 @@ const apiDocumentationParser = (session: Session) => async () => {
       },
     });
   } catch (result) {
-    // @ts-ignore
+    // @ts-expect-error Ignore Eslint error
     const { api, response, status } = result;
     if (status !== 401 || !response) {
       throw result;
@@ -46,7 +46,7 @@ const AdminAdapter = ({
   session: Session;
   children?: React.ReactNode | undefined;
 }) => {
-  // @ts-ignore
+  // @ts-expect-error Ignore Eslint error
   const dataProvider = useRef<DataProvider>();
   const { docType } = useContext(DocContext);
 
@@ -66,7 +66,7 @@ const AdminAdapter = ({
     <HydraAdmin
       requireAuth
       authProvider={authProvider}
-      // @ts-ignore
+      // @ts-expect-error Ignore Eslint error
       dataProvider={dataProvider.current}
       entrypoint={window.origin}
       i18nProvider={i18nProvider}
@@ -78,7 +78,7 @@ const AdminAdapter = ({
     <OpenApiAdmin
       requireAuth
       authProvider={authProvider}
-      // @ts-ignore
+      // @ts-expect-error Ignore Eslint error
       dataProvider={dataProvider.current}
       entrypoint={window.origin}
       docEntrypoint={`${window.origin}/docs.json`}
@@ -115,14 +115,14 @@ const AdminWithOIDC = () => {
     return <SyncLoader size={8} color="#46B6BF" />;
   }
 
-  // @ts-ignore
+  // @ts-expect-error Ignore Eslint error
   if (!session || session?.error === "RefreshAccessTokenError") {
     (async () => await signIn("keycloak"))();
 
     return;
   }
 
-  // @ts-ignore
+  // @ts-expect-error Ignore Eslint error
   return <AdminWithContext session={session} />;
 };
 
@@ -132,7 +132,6 @@ const Admin = () => (
       <title>API Platform Admin</title>
     </Head>
 
-    {/*@ts-ignore*/}
     <AdminWithOIDC />
   </>
 );

@@ -19,15 +19,15 @@ interface DeleteParams {
   id: string;
 }
 
-// @ts-ignore
+// @ts-expect-error Ignore Eslint error
 const deleteReview = async (id: string, session) => await fetchApi<Review>(id, { method: "DELETE" }, session);
 
-export const Item: FunctionComponent<Props> = ({ review, onDelete, onEdit }) => {
-  const { data: session, status } = useSession();
+export const Item: FunctionComponent<Props> = ({ review, onDelete }) => {
+  const { data: session } = useSession();
   const [data, setData] = useState<Review>(review);
   const [error, setError] = useState<string | undefined>();
   const [edit, setEdit] = useState<boolean>(false);
-  // @ts-ignore
+  // @ts-expect-error Ignore Eslint error
   const isGranted = usePermission(data, session);
 
   const deleteMutation = useMutation({
@@ -81,7 +81,6 @@ export const Item: FunctionComponent<Props> = ({ review, onDelete, onEdit }) => 
                 <Rating value={Number(data["rating"] ?? 0)} readOnly className="ml-2" size="small"/>
               </p>
               <p className="mt-2 mb-2 text-justify">{data["body"]}</p>
-              {/* @ts-ignore */}
               {isGranted && (
                 <div className="text-xs text-gray-400">
                   <a href="#" className="mr-1.5 text-gray-400 hover:underline" onClick={(e) => {

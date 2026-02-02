@@ -32,7 +32,7 @@ export const List: FunctionComponent<Props> = ({ book }) => {
   useEffect(() => {
     (async () => {
       try {
-        // @ts-ignore
+        // @ts-expect-error Ignore Eslint error
         const response: FetchResponse<PagedCollection<Review>> | undefined = await fetchApi(`${book["reviews"]}?itemsPerPage=5&page=${page}`, {}, session);
         if (response?.data) {
           setData(response.data);
@@ -42,7 +42,7 @@ export const List: FunctionComponent<Props> = ({ book }) => {
         }
       } catch (error) {
         console.error(error);
-        // @ts-ignore
+        // @ts-expect-error Ignore Eslint error
         setError(error.message);
 
         return;
@@ -55,7 +55,7 @@ export const List: FunctionComponent<Props> = ({ book }) => {
 
   return (
     <>
-      {/* @ts-ignore */}
+      {/* @ts-expect-error Ignore Eslint error */}
       {!!session && !session.error && (
         <div className="mb-10 max-w-4xl mx-auto">
           <div className="mb-5 flex">

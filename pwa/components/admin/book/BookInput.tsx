@@ -53,11 +53,10 @@ const fetchOpenLibrarySearch = async (
       })
       .map(({ title, author_name, seed }): Result => {
         return {
-          // @ts-ignore
+          // @ts-expect-error Ignore Eslint error
           title,
-          // @ts-ignore
+          // @ts-expect-error Ignore Eslint error
           author: author_name[0],
-          // @ts-ignore
           value: `https://openlibrary.org${
             seed?.filter((seed) => seed.match(/^\/books\/OL\d{7}M/))[0]
           }.json`,
@@ -99,11 +98,10 @@ const fetchGutendexSearch = async (
       })
       .map(({ id, title, authors }): Result => {
         return {
-          // @ts-ignore
+          // @ts-expect-error Ignore Eslint error
           title,
-          // @ts-ignore
+          // @ts-expect-error Ignore Eslint error
           author: authors[0].name,
-          // @ts-ignore
           value: `https://gutendex.com/books/${id}.json`,
         };
       });

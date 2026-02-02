@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint",
+    "lint:fix": "eslint --fix"
   },
   "dependencies": {
     "@api-platform/admin": "^4.0.6",
@@ -41,12 +42,14 @@
   },
   "devDependencies": {
     "@babel/core": "^7.26.10",
+    "@eslint/eslintrc": "^3.3.3",
+    "@eslint/js": "^9.39.2",
     "@popperjs/core": "^2.11.8",
     "@types/node": "^22.14.1",
     "@types/react": "^19.1.1",
     "@types/react-dom": "^19.1.2",
-    "eslint": "^9.26.0",
-    "eslint-config-next": "^15.3.0",
+    "eslint": "^9.39.2",
+    "eslint-config-next": "^16.1.6",
     "typescript": "^5.8.3"
   },
   "packageManager": "pnpm@10.3.0"

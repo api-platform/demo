@@ -82,7 +82,7 @@ export const buildUriFromFilters = (uri: string, filters: FiltersProps): string 
 
   const params = new URLSearchParams();
   Object.keys(filters).forEach((filter: string) => {
-    // @ts-ignore
+    // @ts-expect-error Ignore Eslint error
     const value = filters[filter];
     if (typeof value === "string" || typeof value === "number") {
       params.append(filter, value.toString());
@@ -91,7 +91,7 @@ export const buildUriFromFilters = (uri: string, filters: FiltersProps): string 
         params.append(`${filter}[]`, v);
       });
     } else if (typeof value === "object") {
-      // @ts-ignore
+      // @ts-expect-error Ignore Eslint error
       Object.entries(value).forEach(([k, v]) => params.append(`${filter}[${k}]`, v));
     }
   });

@@ -29,7 +29,7 @@ export const usePermission = (review: Review, session: Session|null): boolean =>
             response_mode: "decision",
             permission_resource_format: "uri",
             permission_resource_matching_uri: "true",
-            // @ts-ignore
+            // @ts-expect-error Ignore Eslint error
             permission: review["@id"].toString(),
           }),
           method: "POST",
@@ -44,7 +44,7 @@ export const usePermission = (review: Review, session: Session|null): boolean =>
         grant(false);
       }
     })();
-  }, [review]);
+  }, [review, session]);
 
   return isGranted;
 };

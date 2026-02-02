@@ -24,7 +24,7 @@ const bookQuery = (searchText: string) => {
     .filter((n) => n);
   const query = { title: values[0] };
   if (typeof values[1] !== "undefined") {
-    // @ts-ignore
+    // @ts-expect-error Ignore Eslint error
     query.author = values[1];
   }
 
