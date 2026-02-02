@@ -98,6 +98,7 @@ const AdminWithContext = ({ session }: { session: Session }) => {
   );
 
   return (
+    // @ts-expect-error Ignore Eslint error
     <DocContext.Provider value={{ docType, setDocType }}>
       <AdminAdapter session={session}>
         <ResourceGuesser name="admin/books" {...bookResourceProps} />
