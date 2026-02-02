@@ -137,7 +137,7 @@ export const Show: NextPage<Props> = ({ data, hubURL }) => {
               <p className="text-justify leading-7 my-8" data-testid="book-description">
                 {book["description"] ?? "This book has no description."}
               </p>
-              <button className="mt-4 px-10 py-4 font-semibold text-sm bg-cyan-500 text-white rounded-full shadow-sm"
+              <button className="mt-4 px-10 py-4 font-semibold text-sm bg-cyan-500 text-white rounded-full shadow-xs"
                       onClick={() => bookmarkMutation.mutate({ book: book["@id"] })} data-testid="bookmark">
                 {!!bookmark && (
                   <>

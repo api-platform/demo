@@ -73,7 +73,7 @@ export const List: FunctionComponent<Props> = ({ book }) => {
         </div>
       ) || (
         <div className="flex mb-10">
-          <button className="px-10 py-4 font-semibold text-sm bg-cyan-500 text-white rounded shadow-sm mx-auto"
+          <button className="px-10 py-4 font-semibold text-sm bg-cyan-500 text-white rounded-sm shadow-xs mx-auto"
                   onClick={() => signIn("keycloak")}>
             Log in to add a review!
           </button>

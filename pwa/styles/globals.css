@@ -1,6 +1,63 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@plugin '@tailwindcss/forms';
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+}
+
+@theme {
+  --font-sans: Poppins, system-ui;
+
+  --shadow-card: 0px 0px 20px 0px rgba(0, 0, 0, 0.15);
+
+  --default-transition-duration: 300ms;
+
+  --min-height-24: 96px;
+
+  --color-cyan-200: #bceff3;
+  --color-cyan-500: #46b6bf;
+  --color-cyan-700: #0f929a;
+
+  --color-red-500: #ee4322;
+
+  --color-black: #1d1e1c;
+  --color-white: #ffffff;
+  --color-transparent: transparent;
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@utility bg-spider-cover {
+  @apply bg-cyan-700 bg-center bg-no-repeat;
+  background-image: url('../public/api-platform/web.svg');
+  background-size: 110%;
+}
+
+@utility ribbon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(13.397459%, -100%) rotate(30deg); /* translateX: 100%*(1-cos(angleRotation) */
+  transform-origin: bottom left;
+}
 
 @layer base {
     * {
@@ -10,19 +67,4 @@
     a {
         @apply no-underline text-cyan-700;
     }
-}
-
-@layer utilities {
-    .bg-spider-cover {
-        @apply bg-cyan-700 bg-center bg-no-repeat;
-        background-image: url("../public/api-platform/web.svg");
-        background-size: 110%;
-    }
-    .ribbon {
-        position: absolute;
-        top: 0;
-        right: 0;
-        transform: translate(13.397459%, -100%) rotate(30deg); /* translateX: 100%*(1-cos(angleRotation) */
-        transform-origin: bottom left;
-  }
 }
