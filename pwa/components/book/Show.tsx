@@ -30,13 +30,13 @@ interface BookmarkProps {
   book: string | undefined;
 }
 
-// @ts-ignore
+// @ts-expect-error Ignore Eslint error
 const saveBookmark = async (values: BookmarkProps, session) => await fetchApi<Bookmark>("/bookmarks", {
   method: "POST",
   body: JSON.stringify(values),
 }, session);
 
-// @ts-ignore
+// @ts-expect-error Ignore Eslint error
 const deleteBookmark = async (id: string, session) => await fetchApi<Bookmark>(id, { method: "DELETE" }, session);
 
 export const Show: NextPage<Props> = ({ data, hubURL }) => {
@@ -47,7 +47,7 @@ export const Show: NextPage<Props> = ({ data, hubURL }) => {
 
   const bookmarkMutation = useMutation({
     mutationFn: async (data: BookmarkProps) => {
-      // @ts-ignore
+      // @ts-expect-error Ignore Eslint error
       if (!session || session?.error === "RefreshAccessTokenError") {
         await signIn("keycloak");
 
@@ -55,7 +55,7 @@ export const Show: NextPage<Props> = ({ data, hubURL }) => {
       }
 
       if (bookmark) {
-        // @ts-ignore
+        // @ts-expect-error Ignore Eslint error
         await deleteBookmark(bookmark["@id"], session);
         setBookmark(null);
 
@@ -79,7 +79,7 @@ export const Show: NextPage<Props> = ({ data, hubURL }) => {
 
     (async () => {
       try {
-        // @ts-ignore
+        // @ts-expect-error Ignore Eslint error
         const response: FetchResponse<PagedCollection<Bookmark>> | undefined = await fetchApi(`/bookmarks?book=${data["@id"]}`, {}, session);
         if (response && response?.data && response.data["hydra:member"]?.length) {
           setBookmark(response.data["hydra:member"][0]);
@@ -137,7 +137,7 @@ export const Show: NextPage<Props> = ({ data, hubURL }) => {
               <p className="text-justify leading-7 my-8" data-testid="book-description">
                 {book["description"] ?? "This book has no description."}
               </p>
-              <button className="mt-4 px-10 py-4 font-semibold text-sm bg-cyan-500 text-white rounded-full shadow-sm"
+              <button className="mt-4 px-10 py-4 font-semibold text-sm bg-cyan-500 text-white rounded-full shadow-xs"
                       onClick={() => bookmarkMutation.mutate({ book: book["@id"] })} data-testid="bookmark">
                 {!!bookmark && (
                   <>

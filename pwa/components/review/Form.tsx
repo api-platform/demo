@@ -28,7 +28,7 @@ export const Form: FunctionComponent<Props> = ({ book, onSuccess, review, userna
     await fetchApi<Review>(!values["@id"] ? `${book["@id"]}/reviews` : values["@id"], {
       method: !values["@id"] ? "POST" : "PATCH",
       body: JSON.stringify(values),
-      // @ts-ignore
+      // @ts-expect-error Ignore Eslint error
     }, session);
 
   const saveMutation = useMutation({
@@ -43,7 +43,7 @@ export const Form: FunctionComponent<Props> = ({ book, onSuccess, review, userna
       initialValues={review ?? {}}
       validationSchema={DisplayingErrorMessagesSchema}
       enableReinitialize={true}
-      // @ts-ignore
+      // @ts-expect-error Ignore Eslint error
       onSubmit={(values: Review, { setSubmitting, setStatus, setErrors, resetForm }) => {
         saveMutation.mutate(
           {
@@ -56,7 +56,6 @@ export const Form: FunctionComponent<Props> = ({ book, onSuccess, review, userna
                 isValid: true,
               });
               if (onSuccess) {
-                // @ts-ignore
                 onSuccess(values);
               }
               resetForm();
@@ -67,7 +66,7 @@ export const Form: FunctionComponent<Props> = ({ book, onSuccess, review, userna
                 msg: `${"status" in error ? error.status : error.message}`,
               });
               if ("fields" in error) {
-                // @ts-ignore
+                // @ts-expect-error Ignore Eslint error
                 setErrors(error.fields);
               }
             },
@@ -80,7 +79,6 @@ export const Form: FunctionComponent<Props> = ({ book, onSuccess, review, userna
     >
       {({
         values,
-        touched,
         errors,
         status,
         handleBlur,
@@ -92,22 +90,22 @@ export const Form: FunctionComponent<Props> = ({ book, onSuccess, review, userna
           <FormGroup>
             <p>
               <span className="text-lg font-semibold">{username}</span>
-              {/* @ts-ignore */}
+              {/* @ts-expect-error Ignore Eslint error */}
               <Rating value={Number(values?.rating ?? 0)} name="rating" className="ml-2" size="small"
                       onChange={handleChange} onBlur={handleBlur} data-testid="review-rating"
               />
-              {/* @ts-ignore */}
+              {/* @ts-expect-error Ignore Eslint error */}
               {errors.rating && <span className="block text-sm text-red-500">{errors.rating}</span>}
             </p>
           </FormGroup>
           <FormGroup>
             <TextareaAutosize
-              className="mt-2 mb-2 text-justify text-sm font-normal font-sans leading-5 p-3 rounded rounded-br-none shadow-md shadow-slate-100 focus:shadow-outline-purple focus:shadow-lg border border-solid border-slate-300 hover:border-purple-500 focus:border-purple-500 bg-white text-slate-900 focus-visible:outline-0"
-              // @ts-ignore
+              className="mt-2 mb-2 text-justify text-sm font-normal font-sans leading-5 p-3 rounded-sm rounded-br-none shadow-md shadow-slate-100 focus:shadow-outline-purple focus:shadow-lg border border-solid border-slate-300 hover:border-purple-500 focus:border-purple-500 bg-white text-slate-900 focus-visible:outline-0"
+              // @ts-expect-error Ignore Eslint error
               aria-label="Review body" name="body" value={values?.body ?? ""} placeholder="Add a review..."
               onChange={handleChange} onBlur={handleBlur} data-testid="review-body"
             />
-            {/* @ts-ignore */}
+            {/* @ts-expect-error Ignore Eslint error */}
             {errors.body && <span className="block text-sm text-red-500">{errors.body}</span>}
           </FormGroup>
           {status && status.msg && (
@@ -122,7 +120,7 @@ export const Form: FunctionComponent<Props> = ({ book, onSuccess, review, userna
               {status.msg}
             </div>
           )}
-          <button className="mt-4 px-10 py-3 font-semibold text-sm bg-cyan-500 text-white rounded shadow-sm"
+          <button className="mt-4 px-10 py-3 font-semibold text-sm bg-cyan-500 text-white rounded-sm shadow-xs"
                   type="submit" disabled={isSubmitting}>
             Submit
           </button>

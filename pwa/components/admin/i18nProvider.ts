@@ -8,7 +8,7 @@ const messages = {
   en: englishMessages,
 };
 const i18nProvider = polyglotI18nProvider(
-  // @ts-ignore
+  // @ts-expect-error Ignore Eslint error
   (locale) => (messages[locale] ? messages[locale] : messages.en),
   resolveBrowserLocale()
 );

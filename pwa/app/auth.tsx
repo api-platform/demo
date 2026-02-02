@@ -32,7 +32,7 @@ interface Account {
 
 export const { handlers: { GET, POST }, auth } = NextAuth({
   callbacks: {
-    // @ts-ignore
+    // @ts-expect-error Ignore Eslint error
     async jwt({ token, account }: { token: JWT, account: Account }): Promise<JWT> {
       if (account) {
         // Save the access token and refresh token in the JWT on the initial login
@@ -65,11 +65,11 @@ export const { handlers: { GET, POST }, auth } = NextAuth({
 
           return {
             ...token, // Keep the previous token properties
-            // @ts-ignore
+            // @ts-expect-error Ignore Eslint error
             accessToken: tokens.access_token,
-            // @ts-ignore
+            // @ts-expect-error Ignore Eslint error
             idToken: tokens.id_token,
-            // @ts-ignore
+            // @ts-expect-error Ignore Eslint error
             expiresAt: Math.floor(Date.now() / 1000 + tokens.expires_at),
             // Fall back to old refresh token, but note that
             // many providers may only allow using a refresh token once.
@@ -85,7 +85,7 @@ export const { handlers: { GET, POST }, auth } = NextAuth({
         }
       }
     },
-    // @ts-ignore
+    // @ts-expect-error Ignore Eslint error
     async session({ session, token }: { session: Session, token: JWT }): Promise<Session> {
       // Save the access token in the Session for API calls
       if (token) {
@@ -105,7 +105,6 @@ export const { handlers: { GET, POST }, auth } = NextAuth({
 
       // user information will be extracted from the `id_token` claims, instead of making a request to the `userinfo` endpoint
       // https://next-auth.js.org/configuration/providers/oauth
-      // @ts-ignore
       idToken: true,
 
       // https://github.com/nextauthjs/next-auth/issues/685#issuecomment-785212676

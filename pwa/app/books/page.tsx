@@ -64,7 +64,7 @@ export const metadata: Metadata = {
   title: 'Books Store',
 }
 export default async function Page({ searchParams }: Props) {
-  // @ts-ignore
+  // @ts-expect-error Ignore Eslint error
   const session: Session|null = await auth();
   const props = await getServerSideProps(await searchParams, session);
 

@@ -33,7 +33,7 @@ async function getServerSideProps({ page = 1 }: Query, session: Session): Promis
 }
 
 export default async function Page({ searchParams }: { searchParams: Promise<Query> }) {
-  // @ts-ignore
+  // @ts-expect-error Ignore Eslint error
   const session: Session|null = await auth();
   if (!session || session?.error === "RefreshAccessTokenError") {
     // todo find a way to redirect directly to keycloak from here

@@ -1,6 +1,4 @@
 import { type Session } from "../app/auth";
-import { type Item } from "../types/item";
-import { type PagedCollection } from "../types/collection";
 import { ENTRYPOINT } from "../config/entrypoint";
 
 const MIME_TYPE = "application/ld+json";
@@ -50,7 +48,6 @@ export const fetchApi = async <TData>(
     init.headers = {...init.headers, "Content-Type": init.method === "PATCH" ? "application/merge-patch+json" : MIME_TYPE};
   }
   if (session && !init.headers?.hasOwnProperty("Authorization")) {
-    // @ts-ignore
     init.headers = { ...init.headers, Authorization: `Bearer ${session?.accessToken}` };
   }
 
@@ -91,9 +88,9 @@ export const getItemPath = (
     uriVariables = { id: uriVariables.split("/").slice(-1)[0] };
   }
 
-  // @ts-ignore
+  // @ts-expect-error Ignore Eslint error
   [...pathTemplate.matchAll(/\[([^\]]+)\]/g)].forEach((m) => {
-    // @ts-ignore
+    // @ts-expect-error Ignore Eslint error
     pathTemplate = pathTemplate.replace(m[0], uriVariables[m[1]]);
   });
 

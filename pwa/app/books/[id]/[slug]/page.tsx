@@ -54,7 +54,7 @@ async function getServerSideProps(id: string, session: Session|null): Promise<Sh
 }
 
 export default async function Page({ params }: Props) {
-  // @ts-ignore
+  // @ts-expect-error Ignore Eslint error
   const session: Session|null = await auth();
   const props = await getServerSideProps((await params).id, session);
   if (!props) {

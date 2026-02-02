@@ -9,7 +9,7 @@ export const ShowButton = () => {
   return record ? (
     <Button
       label="ra.action.show"
-      // @ts-ignore
+      // @ts-expect-error Ignore Eslint error
       target="_blank"
       href={getItemPath(
         {

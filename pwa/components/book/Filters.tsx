@@ -27,7 +27,6 @@ export const Filters: FunctionComponent<Props> = ({ filters, mutation }) => (
               isValid: true,
             });
           },
-          // @ts-ignore
           onError: (error: Error | FetchError) => {
             setStatus({
               isValid: false,
@@ -52,7 +51,7 @@ export const Filters: FunctionComponent<Props> = ({ filters, mutation }) => (
     }) => (
       <form onSubmit={handleSubmit}>
         <FormGroup className="mb-4">
-          <FormControlLabel name="author" labelPlacement="top" className="!m-0" label={
+          <FormControlLabel name="author" labelPlacement="top" className="m-0!" label={
             <Typography className="font-semibold w-full">Author</Typography>
           } control={
             <TextField value={values?.author ?? ""} placeholder="Search by author..." type="search"
@@ -64,7 +63,7 @@ export const Filters: FunctionComponent<Props> = ({ filters, mutation }) => (
           }/>
         </FormGroup>
         <FormGroup className="mb-4">
-          <FormControlLabel name="title" labelPlacement="top" className="!m-0" label={
+          <FormControlLabel name="title" labelPlacement="top" className="m-0!" label={
             <Typography className="font-semibold w-full">Title</Typography>
           } control={
             <TextField value={values?.title ?? ""} placeholder="Search by title..." type="search"

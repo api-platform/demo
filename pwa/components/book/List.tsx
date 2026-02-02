@@ -44,7 +44,7 @@ export const List: NextPage<Props> = ({ data, hubURL, filters, page }: Props) =>
             <FilterListOutlinedIcon className="w-6 h-6 mr-1"/>
             Filters
           </div>
-          {/* @ts-ignore */}
+          {/* @ts-expect-error Ignore Eslint error */}
           <Filters mutation={filtersMutation} filters={filters}/>
         </aside>
         <div className="float-right w-[1010px] justify-center">
