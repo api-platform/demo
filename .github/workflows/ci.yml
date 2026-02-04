@@ -80,6 +80,9 @@ jobs:
         name: Check PWA reachability
         run: "curl -vk --fail-with-body -H 'Accept: text/html' https://localhost"
       -
+        name: Check Mercure reachability
+        run: curl -vkI --fail-with-body https://localhost/.well-known/mercure?topic=test
+      -
         name: Create test database
         run: docker compose exec -T php bin/console -e test doctrine:database:create
       -
@@ -180,7 +183,7 @@ jobs:
         run: docker compose run --rm php bin/console doctrine:fixtures:load --no-interaction
       -
         name: Run Playwright
-        run: docker run --network host -w /app -v ./e2e:/app --rm --ipc=host mcr.microsoft.com/playwright:v1.56.1-noble /bin/sh -c 'npm i; npx playwright test --grep ${{ matrix.annotation }};'
+        run: docker run --network host -w /app -v ./e2e:/app --rm --ipc=host mcr.microsoft.com/playwright:v1.58.0-noble /bin/sh -c 'npm i; npx playwright test --grep ${{ matrix.annotation }};'
       -
         name: Debug Services
         if: failure()
@@ -210,35 +213,34 @@ jobs:
           recursive: true
 
       # Lint API
-      # todo Waiting for PHP CS Fixer to support PHP 8.4
-#      -
-#        name: PHP CS Fixer Cache
-#        uses: actions/cache@v5
-#        with:
-#          path: api/.php-cs-fixer.cache
-#          key: ${{ runner.OS }}-phpcsfixer-${{ github.sha }}
-#          restore-keys: |
-#            ${{ runner.OS }}-phpcsfixer-
-#      -
-#        name: Get API changed files
-#        id: api-changed-files
-#        uses: tj-actions/changed-files@v46
-#        with:
-#          files: api/**/*.php
-#      -
-#        name: Get Extra Arguments for PHP-CS-Fixer
-#        id: phpcs-intersection
-#        run: |
-#          CHANGED_FILES=$(echo "${{ steps.api-changed-files.outputs.all_changed_and_modified_files }}" | tr ' ' '\n')
-#          if ! echo "${CHANGED_FILES}" | grep -qE "^api\/(\\.php-cs-fixer(\\.dist)?\\.php|composer\\.lock)$"; then EXTRA_ARGS=$(printf -- '--path-mode=intersection\n--\n%s' "${CHANGED_FILES}"); else EXTRA_ARGS=''; fi
-#          echo "PHPCS_EXTRA_ARGS<<EOF" >> $GITHUB_ENV
-#          echo "$EXTRA_ARGS" >> $GITHUB_ENV
-#          echo "EOF" >> $GITHUB_ENV
-#      -
-#        name: Lint API
-#        uses: docker://oskarstark/php-cs-fixer-ga
-#        with:
-#          args: --config=api/.php-cs-fixer.dist.php -v --dry-run --stop-on-violation --using-cache=no ${{ env.PHPCS_EXTRA_ARGS }}"
+      -
+        name: PHP CS Fixer Cache
+        uses: actions/cache@v5
+        with:
+          path: api/.php-cs-fixer.cache
+          key: ${{ runner.OS }}-phpcsfixer-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.OS }}-phpcsfixer-
+      -
+        name: Get API changed files
+        id: api-changed-files
+        uses: tj-actions/changed-files@v46
+        with:
+          files: api/**/*.php
+      -
+        name: Get Extra Arguments for PHP-CS-Fixer
+        id: phpcs-intersection
+        run: |
+          CHANGED_FILES=$(echo "${{ steps.api-changed-files.outputs.all_changed_and_modified_files }}" | tr ' ' '\n')
+          if ! echo "${CHANGED_FILES}" | grep -qE "^api\/(\\.php-cs-fixer(\\.dist)?\\.php|composer\\.lock)$"; then EXTRA_ARGS=$(printf -- '--path-mode=intersection\n--\n%s' "${CHANGED_FILES}"); else EXTRA_ARGS=''; fi
+          echo "PHPCS_EXTRA_ARGS<<EOF" >> $GITHUB_ENV
+          echo "$EXTRA_ARGS" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+      -
+        name: Lint API
+        uses: docker://oskarstark/php-cs-fixer-ga
+        with:
+          args: --config=api/.php-cs-fixer.dist.php -v --dry-run --stop-on-violation --using-cache=no ${{ env.PHPCS_EXTRA_ARGS }}"
 
       # Lint PWA
       -

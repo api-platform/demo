@@ -9,8 +9,10 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Operation\Factory\OperationMetadataFactoryInterface;
 use App\Serializer\IriTransformerNormalizer;
 use Doctrine\Common\Collections\ArrayCollection;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -22,7 +24,7 @@ final class IriTransformerNormalizerTest extends TestCase
 
     private MockObject $operationMetadataFactoryMock;
 
-    private MockObject $operationMock;
+    private Stub $operationMock;
 
     private MockObject|\stdClass $objectMock;
 
@@ -33,7 +35,7 @@ final class IriTransformerNormalizerTest extends TestCase
         $this->normalizerMock = $this->createMock(NormalizerInterface::class);
         $this->iriConverterMock = $this->createMock(IriConverterInterface::class);
         $this->operationMetadataFactoryMock = $this->createMock(OperationMetadataFactoryInterface::class);
-        $this->operationMock = $this->createMock(Operation::class);
+        $this->operationMock = $this->createStub(Operation::class);
         $this->objectMock = new \stdClass();
         $this->objectMock->book = $this->createMock(\stdClass::class);
         $this->objectMock->user = $this->createMock(\stdClass::class);
@@ -42,6 +44,7 @@ final class IriTransformerNormalizerTest extends TestCase
         $this->normalizer->setNormalizer($this->normalizerMock);
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     #[Test]
     public function itDoesNotSupportInvalidData(): void
     {
@@ -52,6 +55,7 @@ final class IriTransformerNormalizerTest extends TestCase
         $this->assertFalse($this->normalizer->supportsNormalization(new ArrayCollection([$this->objectMock])));
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     #[Test]
     public function itDoesNotSupportInvalidContext(): void
     {
@@ -59,6 +63,7 @@ final class IriTransformerNormalizerTest extends TestCase
         $this->assertFalse($this->normalizer->supportsNormalization($this->objectMock, null, [IriTransformerNormalizer::class => true]));
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     #[Test]
     public function itDoesNotSupportInvalidFormat(): void
     {
@@ -79,6 +84,7 @@ final class IriTransformerNormalizerTest extends TestCase
         ]));
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     #[Test]
     public function itSupportsValidObjectClassAndContext(): void
     {
@@ -89,6 +95,7 @@ final class IriTransformerNormalizerTest extends TestCase
         ]));
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     #[Test]
     public function itNormalizesData(): void
     {

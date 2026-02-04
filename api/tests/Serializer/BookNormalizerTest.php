@@ -8,8 +8,10 @@ use App\Entity\Book;
 use App\Enum\BookCondition;
 use App\Repository\ReviewRepository;
 use App\Serializer\BookNormalizer;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -19,7 +21,7 @@ final class BookNormalizerTest extends TestCase
 
     private MockObject $repositoryMock;
 
-    private MockObject $objectMock;
+    private Stub $objectMock;
 
     private BookNormalizer $normalizer;
 
@@ -27,24 +29,27 @@ final class BookNormalizerTest extends TestCase
     {
         $this->normalizerMock = $this->createMock(NormalizerInterface::class);
         $this->repositoryMock = $this->createMock(ReviewRepository::class);
-        $this->objectMock = $this->createMock(Book::class);
+        $this->objectMock = $this->createStub(Book::class);
 
         $this->normalizer = new BookNormalizer($this->repositoryMock);
         $this->normalizer->setNormalizer($this->normalizerMock);
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     #[Test]
     public function itDoesNotSupportInvalidObjectClass(): void
     {
         $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     #[Test]
     public function itDoesNotSupportInvalidContext(): void
     {
         $this->assertFalse($this->normalizer->supportsNormalization($this->objectMock, null, [BookNormalizer::class => true]));
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     #[Test]
     public function itSupportsValidObjectClassAndContext(): void
     {

@@ -3,12 +3,14 @@
 
 	frankenphp {
 		{$FRANKENPHP_CONFIG}
-	}
 
-	# https://caddyserver.com/docs/caddyfile/directives#sorting-algorithm
-	order mercure after encode
-	order vulcain after reverse_proxy
-	order php_server before file_server
+		worker {
+			env APP_RUNTIME Runtime\FrankenPhpSymfony\Runtime
+			file ./public/index.php
+
+			{$FRANKENPHP_WORKER_CONFIG}
+		}
+	}
 }
 
 {$CADDY_EXTRA_CONFIG}
@@ -23,7 +25,7 @@
 		}
 	}
 
-	root * /app/public
+	root /app/public
 	encode zstd br gzip
 
 	mercure {
@@ -48,28 +50,41 @@
 	# Disable Topics tracking if not enabled explicitly: https://github.com/jkarlin/topics
 	header ?Permissions-Policy "browsing-topics=()"
 
-	# Matches requests for OIDC routes
-	@oidc expression path('/oidc/*')
+	route {
+		# Matches requests for OIDC routes
+		@oidc expression path('/oidc/*')
 
-	# Comment the following line if you don't want to manage Keycloak locally
-	# In this case, you'll need an external OIDC server
-	reverse_proxy @oidc http://{$OIDC_UPSTREAM}
+		# Comment the following line if you don't want to manage Keycloak locally
+		# In this case, you'll need an external OIDC server
+		reverse_proxy @oidc http://{$OIDC_UPSTREAM}
 
-	# Matches requests for HTML documents, for static files and for Next.js files,
-	# except for known API paths and paths with extensions handled by API Platform
-	@pwa expression `(
-			header({'Accept': '*text/html*'})
-			&& !path(
-				'/docs*', '/graphql*', '/bundles*', '/contexts*', '/_profiler*', '/_wdt*',
-				'*.json*', '*.html', '*.csv', '*.yml', '*.yaml', '*.xml'
+		# Matches requests for HTML documents, for static files and for Next.js files,
+		# except for known API paths and paths with extensions handled by API Platform
+		@pwa expression `(
+				header({'Accept': '*text/html*'})
+				&& !path(
+					'/docs*', '/graphql*', '/bundles*', '/contexts*', '/_profiler*', '/_wdt*',
+					'*.json*', '*.html', '*.csv', '*.yml', '*.yaml', '*.xml'
+				)
 			)
-		)
-		|| path('/favicon.ico', '/manifest.json', '/robots.txt', '/sitemap*', '/_next*', '/__next*', '/api/auth/*')
-		|| query({'_rsc': '*'})`
+			|| path('/favicon.ico', '/manifest.json', '/robots.txt', '/sitemap*', '/_next*', '/__next*', '/api/auth/*')
+			|| query({'_rsc': '*'})`
 
-	# Comment the following line if you don't want Next.js to catch requests for HTML documents.
-	# In this case, they will be handled by the PHP app.
-	reverse_proxy @pwa http://{$PWA_UPSTREAM}
+		# Comment the following line if you don't want Next.js to catch requests for HTML documents.
+		# In this case, they will be handled by the PHP app.
+		reverse_proxy @pwa http://{$PWA_UPSTREAM}
 
-	php_server
+		@phpRoute {
+			not path /.well-known/mercure*
+			not file {path}
+		}
+		rewrite @phpRoute index.php
+
+		@frontController path index.php
+		php @frontController
+
+		file_server {
+			hide *.php
+		}
+	}
 }

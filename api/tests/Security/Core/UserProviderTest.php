@@ -9,9 +9,11 @@ use App\Repository\UserRepository;
 use App\Security\Core\UserProvider;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -24,7 +26,7 @@ final class UserProviderTest extends TestCase
 
     private MockObject $repositoryMock;
 
-    private MockObject $userMock;
+    private Stub $userMock;
 
     private UserProvider $provider;
 
@@ -33,29 +35,32 @@ final class UserProviderTest extends TestCase
         $this->registryMock = $this->createMock(ManagerRegistry::class);
         $this->managerMock = $this->createMock(ObjectManager::class);
         $this->repositoryMock = $this->createMock(UserRepository::class);
-        $this->userMock = $this->createMock(User::class);
+        $this->userMock = $this->createStub(User::class);
 
         $this->provider = new UserProvider($this->registryMock, $this->repositoryMock);
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     #[Test]
     public function itDoesNotSupportAnInvalidClass(): void
     {
         $this->assertFalse($this->provider->supportsClass(\stdClass::class));
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     #[Test]
     public function itSupportsAValidClass(): void
     {
         $this->assertTrue($this->provider->supportsClass(User::class));
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     #[Test]
     public function itCannotRefreshAnInvalidObject(): void
     {
         $this->expectException(UnsupportedUserException::class);
 
-        $objectMock = $this->createMock(UserInterface::class);
+        $objectMock = $this->createStub(UserInterface::class);
         $this->registryMock
             ->expects($this->once())
             ->method('getManagerForClass')
@@ -66,10 +71,11 @@ final class UserProviderTest extends TestCase
         $this->provider->refreshUser($objectMock);
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     #[Test]
     public function itRefreshesAValidObject(): void
     {
-        $objectMock = $this->createMock(UserInterface::class);
+        $objectMock = $this->createStub(UserInterface::class);
         $this->registryMock
             ->expects($this->once())
             ->method('getManagerForClass')
@@ -86,8 +92,9 @@ final class UserProviderTest extends TestCase
         $this->assertSame($objectMock, $this->provider->refreshUser($objectMock));
     }
 
-    #[Test]
+    #[AllowMockObjectsWithoutExpectations]
     #[DataProvider(methodName: 'getInvalidAttributes')]
+    #[Test]
     public function itCannotLoadUserIfAttributeIsMissing(array $attributes): void
     {
         $this->expectException(UnsupportedUserException::class);
@@ -111,6 +118,7 @@ final class UserProviderTest extends TestCase
         ]];
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     #[Test]
     public function itLoadsUserFromAttributes(): void
     {
@@ -132,6 +140,7 @@ final class UserProviderTest extends TestCase
         ]));
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     #[Test]
     public function itCreatesAUserFromAttributes(): void
     {
