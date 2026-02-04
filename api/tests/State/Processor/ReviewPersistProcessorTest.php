@@ -13,8 +13,8 @@ use App\Security\Http\Protection\ResourceHandlerInterface;
 use App\State\Processor\ReviewPersistProcessor;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
-use Psr\Clock\ClockInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Clock\MockClock;
 
@@ -24,11 +24,11 @@ final class ReviewPersistProcessorTest extends TestCase
 
     private MockObject $securityMock;
 
-    private MockObject $userMock;
+    private Stub $userMock;
 
-    private MockObject $objectMock;
+    private Stub $objectMock;
 
-    private ClockInterface|MockObject $clockMock;
+    private MockClock $clockMock;
 
     private MockObject $resourceHandlerMock;
 
@@ -38,8 +38,8 @@ final class ReviewPersistProcessorTest extends TestCase
     {
         $this->persistProcessorMock = $this->createMock(ProcessorInterface::class);
         $this->securityMock = $this->createMock(Security::class);
-        $this->userMock = $this->createMock(User::class);
-        $this->objectMock = $this->createMock(Review::class);
+        $this->userMock = $this->createStub(User::class);
+        $this->objectMock = $this->createStub(Review::class);
         $this->clockMock = new MockClock();
         $this->resourceHandlerMock = $this->createMock(ResourceHandlerInterface::class);
 
@@ -86,7 +86,7 @@ final class ReviewPersistProcessorTest extends TestCase
     #[Test]
     public function itUpdatesReviewDataFromContextBeforeSaveAndSendMercureUpdates(): void
     {
-        $operation = $this->createMock(Operation::class);
+        $operation = $this->createStub(Operation::class);
 
         $previousData = new Review();
         $previousData->publishedAt = $this->clockMock->now();

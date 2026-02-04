@@ -11,6 +11,7 @@ use App\Entity\Bookmark;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -19,11 +20,11 @@ final class BookmarkQueryCollectionExtensionTest extends TestCase
 {
     private MockObject $securityMock;
 
-    private MockObject $userMock;
+    private Stub $userMock;
 
     private MockObject $queryBuilderMock;
 
-    private MockObject $queryNameGeneratorMock;
+    private Stub $queryNameGeneratorMock;
 
     private MockObject $operationMock;
 
@@ -32,9 +33,9 @@ final class BookmarkQueryCollectionExtensionTest extends TestCase
     protected function setUp(): void
     {
         $this->securityMock = $this->createMock(Security::class);
-        $this->userMock = $this->createMock(UserInterface::class);
+        $this->userMock = $this->createStub(UserInterface::class);
         $this->queryBuilderMock = $this->createMock(QueryBuilder::class);
-        $this->queryNameGeneratorMock = $this->createMock(QueryNameGeneratorInterface::class);
+        $this->queryNameGeneratorMock = $this->createStub(QueryNameGeneratorInterface::class);
         $this->operationMock = $this->createMock(Operation::class);
 
         $this->extension = new BookmarkQueryCollectionExtension($this->securityMock);

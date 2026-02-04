@@ -19,7 +19,7 @@ services:
       TRUSTED_HOSTS: ${TRUSTED_HOSTS:-^${SERVER_NAME:-example\.com|localhost}|php$$}
       DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-!ChangeMe!}@database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-16}&charset=${POSTGRES_CHARSET:-utf8}
       MERCURE_URL: ${CADDY_MERCURE_URL:-http://php/.well-known/mercure}
-      MERCURE_PUBLIC_URL: ${CADDY_MERCURE_PUBLIC_URL:-https://${SERVER_NAME:-localhost}/.well-known/mercure}
+      MERCURE_PUBLIC_URL: ${CADDY_MERCURE_PUBLIC_URL:-https://${SERVER_NAME:-localhost}:${HTTPS_PORT:-443}/.well-known/mercure}
       MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
       OIDC_SERVER_URL: ${OIDC_SERVER_URL:-https://localhost/oidc/realms/demo}
       OIDC_SERVER_URL_INTERNAL: ${OIDC_SERVER_URL_INTERNAL:-http://keycloak:8080/oidc/realms/demo}
@@ -39,6 +39,11 @@ services:
       - target: 443
         published: ${HTTP3_PORT:-443}
         protocol: udp
+    healthcheck:
+      test: curl --insecure --fail https://localhost/docs || exit 1
+      timeout: 5s
+      retries: 5
+      start_period: 60s
 
   pwa:
     image: ${IMAGES_PREFIX:-}app-pwa
@@ -51,6 +56,11 @@ services:
       AUTH_SECRET: ${AUTH_SECRET:-!ChangeThisNextAuthSecret!}
       AUTH_URL: ${AUTH_URL:-https://localhost/api/auth}
       NEXT_SHARP_PATH: /srv/app/node_modules/sharp
+    healthcheck:
+      test: curl -f http://localhost:3000 || exit 1
+      timeout: 5s
+      retries: 5
+      start_period: 60s
 
 ###> doctrine/doctrine-bundle ###
   database:

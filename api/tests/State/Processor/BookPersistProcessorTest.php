@@ -11,6 +11,7 @@ use App\Entity\Book;
 use App\State\Processor\BookPersistProcessor;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 final class BookPersistProcessorTest extends TestCase
@@ -19,9 +20,9 @@ final class BookPersistProcessorTest extends TestCase
 
     private MockObject $bookRepositoryMock;
 
-    private MockObject $objectMock;
+    private Stub $objectMock;
 
-    private MockObject $operationMock;
+    private Stub $operationMock;
 
     private BookPersistProcessor $processor;
 
@@ -29,10 +30,10 @@ final class BookPersistProcessorTest extends TestCase
     {
         $this->persistProcessorMock = $this->createMock(ProcessorInterface::class);
         $this->bookRepositoryMock = $this->createMock(BookRepositoryInterface::class);
-        $this->objectMock = $this->createMock(Book::class);
+        $this->objectMock = $this->createStub(Book::class);
         $this->objectMock->book = 'https://openlibrary.org/books/OL2055137M.json';
 
-        $this->operationMock = $this->createMock(Operation::class);
+        $this->operationMock = $this->createStub(Operation::class);
 
         $this->processor = new BookPersistProcessor(
             $this->persistProcessorMock,

@@ -10,23 +10,24 @@ use App\Entity\Book;
 use App\State\Processor\BookRemoveProcessor;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 final class BookRemoveProcessorTest extends TestCase
 {
     private MockObject $removeProcessorMock;
 
-    private MockObject $objectMock;
+    private Stub $objectMock;
 
-    private MockObject $operationMock;
+    private Stub $operationMock;
 
     private BookRemoveProcessor $processor;
 
     protected function setUp(): void
     {
         $this->removeProcessorMock = $this->createMock(ProcessorInterface::class);
-        $this->objectMock = $this->createMock(Book::class);
-        $this->operationMock = $this->createMock(Operation::class);
+        $this->objectMock = $this->createStub(Book::class);
+        $this->operationMock = $this->createStub(Operation::class);
 
         $this->processor = new BookRemoveProcessor($this->removeProcessorMock);
     }

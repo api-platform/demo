@@ -12,15 +12,16 @@ use App\Security\Http\Protection\ResourceHandlerInterface;
 use App\State\Processor\ReviewRemoveProcessor;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 final class ReviewRemoveProcessorTest extends TestCase
 {
     private MockObject $removeProcessorMock;
 
-    private MockObject $objectMock;
+    private Stub $objectMock;
 
-    private MockObject $operationMock;
+    private Stub $operationMock;
 
     private MockObject $resourceHandlerMock;
 
@@ -30,8 +31,8 @@ final class ReviewRemoveProcessorTest extends TestCase
     {
         $this->removeProcessorMock = $this->createMock(ProcessorInterface::class);
         $this->resourceHandlerMock = $this->createMock(ResourceHandlerInterface::class);
-        $this->objectMock = $this->createMock(Review::class);
-        $this->operationMock = $this->createMock(Operation::class);
+        $this->objectMock = $this->createStub(Review::class);
+        $this->operationMock = $this->createStub(Operation::class);
 
         $this->processor = new ReviewRemoveProcessor(
             $this->removeProcessorMock,
@@ -47,7 +48,7 @@ final class ReviewRemoveProcessorTest extends TestCase
             ->method('process')
             ->with($this->objectMock, $this->operationMock, [], [])
         ;
-        $this->objectMock->user = $this->createMock(User::class);
+        $this->objectMock->user = $this->createStub(User::class);
         $this->objectMock->user->email = 'john.doe@example.com';
         $this->resourceHandlerMock
             ->expects($this->once())

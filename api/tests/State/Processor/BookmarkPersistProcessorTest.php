@@ -11,8 +11,8 @@ use App\Entity\User;
 use App\State\Processor\BookmarkPersistProcessor;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
-use Psr\Clock\ClockInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Clock\MockClock;
 
@@ -22,13 +22,13 @@ final class BookmarkPersistProcessorTest extends TestCase
 
     private MockObject $securityMock;
 
-    private MockObject $userMock;
+    private Stub $userMock;
 
-    private MockObject $objectMock;
+    private Stub $objectMock;
 
-    private MockObject $operationMock;
+    private Stub $operationMock;
 
-    private ClockInterface|MockObject $clockMock;
+    private MockClock $clockMock;
 
     private BookmarkPersistProcessor $processor;
 
@@ -36,9 +36,9 @@ final class BookmarkPersistProcessorTest extends TestCase
     {
         $this->persistProcessorMock = $this->createMock(ProcessorInterface::class);
         $this->securityMock = $this->createMock(Security::class);
-        $this->userMock = $this->createMock(User::class);
-        $this->objectMock = $this->createMock(Bookmark::class);
-        $this->operationMock = $this->createMock(Operation::class);
+        $this->userMock = $this->createStub(User::class);
+        $this->objectMock = $this->createStub(Bookmark::class);
+        $this->operationMock = $this->createStub(Operation::class);
         $this->clockMock = new MockClock();
 
         $this->processor = new BookmarkPersistProcessor($this->persistProcessorMock, $this->securityMock, $this->clockMock);
