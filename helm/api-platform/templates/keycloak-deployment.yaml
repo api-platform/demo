@@ -130,17 +130,19 @@ spec:
             {{- toYaml . | nindent 12 }}
             {{- end }}
           ports:
-            - name: main
+            - name: postgresql
               containerPort: 5432
-              protocol: UDP
+              protocol: TCP
           livenessProbe:
-            httpGet:
-              path: /
-              port: main
+            tcpSocket:
+              port: postgresql
+            initialDelaySeconds: 30
+            periodSeconds: 10
           readinessProbe:
-            httpGet:
-              path: /
-              port: main
+            tcpSocket:
+              port: postgresql
+            initialDelaySeconds: 5
+            periodSeconds: 10
           resources:
             {{- toYaml .Values.keycloak.postgresql.resources | nindent 12 }}
         {{- end }}
