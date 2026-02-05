@@ -12,10 +12,6 @@ data:
   php-trusted-proxies: "{{ join "," .Values.php.trustedProxies }}"
   mercure-url: "http://{{ include "api-platform.fullname" . }}/.well-known/mercure"
   mercure-public-url: {{ .Values.mercure.publicUrl | default "http://127.0.0.1/.well-known/mercure" | quote }}
-  mercure-extra-directives: 
-    {{- .Values.mercure.extraDirectives | toYaml | nindent 4 }}
-  caddy-global-options:
-    {{- .Values.php.caddyGlobalOptions | toYaml | nindent 4 }}
   oidc-server-url: "https://{{ (first .Values.ingress.hosts).host }}/oidc/realms/demo"
   oidc-server-url-internal: "http://{{ include "api-platform.fullname" . }}-keycloak/oidc/realms/demo"
   next-auth-url: "https://{{ (first .Values.ingress.hosts).host }}/api/auth"
@@ -37,6 +33,5 @@ metadata:
   labels:
     {{- include "api-platform.labelsKeycloak" . | nindent 4 }}
 data:
-  realm.json: |
-    {{ (.Files.Glob .Values.keycloak.importRealm.path).AsConfig | indent 2 }}
+{{ (.Files.Glob .Values.keycloak.importRealm.path).AsConfig | indent 2 }}
 {{- end }}

@@ -126,7 +126,9 @@ spec:
                 secretKeyRef:
                   name: {{ include "api-platform.fullname" . }}
                   key: keycloak-database-password
-            {{- toYaml .Values.keycloak.postgresql.extraEnvVars | nindent 12 }}
+            {{- with .Values.keycloak.postgresql.extraEnvVars }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           ports:
             - name: main
               containerPort: 5432
