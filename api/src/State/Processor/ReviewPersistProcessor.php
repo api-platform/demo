@@ -7,7 +7,6 @@ namespace App\State\Processor;
 use ApiPlatform\Doctrine\Common\State\PersistProcessor;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Review;
 use App\Security\Http\Protection\ResourceHandlerInterface;
@@ -42,13 +41,6 @@ final readonly class ReviewPersistProcessor implements ProcessorInterface
             /** @phpstan-ignore-next-line */
             $data->user = $this->security->getUser();
             $data->publishedAt = $this->clock->now();
-        }
-
-        // standard PUT
-        // todo find why $data lost properties unauthorized from deserialization
-        if ($operation instanceof Put && isset($context['previous_data'])) {
-            $data->user = $context['previous_data']->user;
-            $data->publishedAt = $context['previous_data']->publishedAt;
         }
 
         // save entity

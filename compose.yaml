@@ -3,11 +3,11 @@ services:
     image: ${IMAGES_PREFIX:-}app-php
     depends_on:
       database:
-        condition: service_healthy
+        condition: service_started
       pwa:
-        condition: service_healthy
+        condition: service_started
       keycloak:
-        condition: service_healthy
+        condition: service_started
     restart: unless-stopped
     environment:
       PWA_UPSTREAM: pwa:3000
@@ -124,7 +124,7 @@ services:
       retries: 15
     depends_on:
       keycloak-database:
-        condition: service_healthy
+        condition: service_started
     ports:
       - target: 8080
         published: 8080

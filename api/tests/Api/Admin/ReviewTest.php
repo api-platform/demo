@@ -16,6 +16,7 @@ use App\Tests\Api\Admin\Trait\UsersDataProviderTrait;
 use App\Tests\Api\Security\TokenGenerator;
 use App\Tests\Api\Trait\SerializerTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\Update;
@@ -240,14 +241,14 @@ final class ReviewTest extends ApiTestCase
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
-        $this->client->request('PUT', '/admin/reviews/invalid', [
+        $this->client->request('PATCH', '/admin/reviews/invalid', [
             'auth_bearer' => $token,
             'json' => [
                 'body' => 'Very good book!',
                 'rating' => 5,
             ],
             'headers' => [
-                'Content-Type' => 'application/ld+json',
+                'Content-Type' => 'application/merge-patch+json',
                 'Accept' => 'application/ld+json',
             ],
         ]);
@@ -256,11 +257,15 @@ final class ReviewTest extends ApiTestCase
     }
 
     #[Test]
-    #[\PHPUnit\Framework\Attributes\Group('mercure')]
+    #[Group('mercure')]
     public function asAdminUserICanUpdateAReview(): void
     {
         $book = BookFactory::createOne();
-        $review = ReviewFactory::createOne(['book' => $book]);
+        $review = ReviewFactory::createOne([
+            'book' => $book,
+            'body' => "Yeah, it's ok...",
+            'rating' => 3,
+        ]);
         $user = UserFactory::createOneAdmin();
         self::getMercureHub()->reset();
 
@@ -268,17 +273,14 @@ final class ReviewTest extends ApiTestCase
             'email' => $user->email,
         ]);
 
-        $response = $this->client->request('PUT', '/admin/reviews/' . $review->getId(), [
+        $response = $this->client->request('PATCH', '/admin/reviews/' . $review->getId(), [
             'auth_bearer' => $token,
             'json' => [
-                // Must set all data because of standard PUT
-                'book' => '/admin/books/' . $book->getId(),
-                'letter' => null,
                 'body' => 'Very good book!',
                 'rating' => 5,
             ],
             'headers' => [
-                'Content-Type' => 'application/ld+json',
+                'Content-Type' => 'application/merge-patch+json',
                 'Accept' => 'application/ld+json',
             ],
         ]);
@@ -351,7 +353,7 @@ final class ReviewTest extends ApiTestCase
     }
 
     #[Test]
-    #[\PHPUnit\Framework\Attributes\Group('mercure')]
+    #[Group('mercure')]
     public function asAdminUserICanDeleteAReview(): void
     {
         $review = ReviewFactory::createOne(['body' => 'Best book ever!']);

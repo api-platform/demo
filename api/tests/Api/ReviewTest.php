@@ -16,6 +16,7 @@ use App\Repository\ReviewRepository;
 use App\Tests\Api\Security\TokenGenerator;
 use App\Tests\Api\Trait\SerializerTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\Update;
@@ -238,7 +239,7 @@ final class ReviewTest extends ApiTestCase
     }
 
     #[Test]
-    #[\PHPUnit\Framework\Attributes\Group('mercure')]
+    #[Group('mercure')]
     public function asAUserICanAddAReviewOnABook(): void
     {
         $book = BookFactory::createOne();
@@ -443,7 +444,7 @@ final class ReviewTest extends ApiTestCase
     }
 
     #[Test]
-    #[\PHPUnit\Framework\Attributes\Group('mercure')]
+    #[Group('mercure')]
     public function asAUserICanUpdateMyBookReview(): void
     {
         $review = ReviewFactory::createOne();
@@ -544,7 +545,7 @@ final class ReviewTest extends ApiTestCase
     }
 
     #[Test]
-    #[\PHPUnit\Framework\Attributes\Group('mercure')]
+    #[Group('mercure')]
     public function asAUserICanDeleteMyBookReview(): void
     {
         $review = ReviewFactory::createOne(['body' => 'Best book ever!']);

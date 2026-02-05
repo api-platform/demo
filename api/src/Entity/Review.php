@@ -13,9 +13,9 @@ use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\NotExposed;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\UrlGeneratorInterface;
 use ApiPlatform\State\CreateProvider;
+use ApiPlatform\State\SerializerContextBuilderInterface;
 use App\Repository\ReviewRepository;
 use App\Security\Voter\OidcTokenPermissionVoter;
 use App\Serializer\IriTransformerNormalizer;
@@ -54,8 +54,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Get(
             uriTemplate: '/admin/reviews/{id}{._format}'
         ),
-        // https://github.com/api-platform/admin/issues/370
-        new Put(
+        new Patch(
             uriTemplate: '/admin/reviews/{id}{._format}',
             processor: ReviewPersistProcessor::class
         ),
@@ -74,6 +73,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     ],
     denormalizationContext: [
         AbstractNormalizer::GROUPS => ['Review:write', 'Review:write:admin'],
+        SerializerContextBuilderInterface::ASSIGN_OBJECT_TO_POPULATE => true,
     ],
     collectDenormalizationErrors: true,
     security: 'is_granted("OIDC_ADMIN")',

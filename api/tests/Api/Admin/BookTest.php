@@ -15,6 +15,7 @@ use App\Tests\Api\Admin\Trait\UsersDataProviderTrait;
 use App\Tests\Api\Security\TokenGenerator;
 use App\Tests\Api\Trait\SerializerTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\Update;
@@ -363,8 +364,8 @@ final class BookTest extends ApiTestCase
     }
 
     #[Test]
-    #[\PHPUnit\Framework\Attributes\Group('apiCall')]
-    #[\PHPUnit\Framework\Attributes\Group('mercure')]
+    #[Group('apiCall')]
+    #[Group('mercure')]
     public function asAdminUserICanCreateABook(): void
     {
         $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
@@ -424,13 +425,13 @@ final class BookTest extends ApiTestCase
             $options['auth_bearer'] = $token;
         }
 
-        $this->client->request('PUT', '/admin/books/' . $book->getId(), $options + [
+        $this->client->request('PATCH', '/admin/books/' . $book->getId(), $options + [
             'json' => [
                 'book' => 'https://gutendex.com/books/31547.json',
                 'condition' => BookCondition::NewCondition->value,
             ],
             'headers' => [
-                'Content-Type' => 'application/ld+json',
+                'Content-Type' => 'application/merge-patch+json',
                 'Accept' => 'application/ld+json',
             ],
         ]);
@@ -454,13 +455,13 @@ final class BookTest extends ApiTestCase
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
-        $this->client->request('PUT', '/admin/books/invalid', [
+        $this->client->request('PATCH', '/admin/books/invalid', [
             'auth_bearer' => $token,
             'json' => [
                 'condition' => BookCondition::DamagedCondition->value,
             ],
             'headers' => [
-                'Content-Type' => 'application/ld+json',
+                'Content-Type' => 'application/merge-patch+json',
                 'Accept' => 'application/ld+json',
             ],
         ]);
@@ -478,11 +479,11 @@ final class BookTest extends ApiTestCase
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
-        $this->client->request('PUT', '/admin/books/' . $book->getId(), [
+        $this->client->request('PATCH', '/admin/books/' . $book->getId(), [
             'auth_bearer' => $token,
             'json' => $data,
             'headers' => [
-                'Content-Type' => 'application/ld+json',
+                'Content-Type' => 'application/merge-patch+json',
                 'Accept' => 'application/ld+json',
             ],
         ]);
@@ -494,12 +495,13 @@ final class BookTest extends ApiTestCase
     }
 
     #[Test]
-    #[\PHPUnit\Framework\Attributes\Group('apiCall')]
-    #[\PHPUnit\Framework\Attributes\Group('mercure')]
+    #[Group('apiCall')]
+    #[Group('mercure')]
     public function asAdminUserICanUpdateABook(): void
     {
         $book = BookFactory::createOne([
             'book' => 'https://gutendex.com/books/31547.json',
+            'condition' => BookCondition::UsedCondition,
         ]);
         self::getMercureHub()->reset();
 
@@ -507,16 +509,13 @@ final class BookTest extends ApiTestCase
             'email' => UserFactory::createOneAdmin()->email,
         ]);
 
-        $response = $this->client->request('PUT', '/admin/books/' . $book->getId(), [
+        $response = $this->client->request('PATCH', '/admin/books/' . $book->getId(), [
             'auth_bearer' => $token,
             'json' => [
-                '@id' => '/books/' . $book->getId(),
-                // Must set all data because of standard PUT
-                'book' => 'https://gutendex.com/books/31547.json',
                 'condition' => BookCondition::DamagedCondition->value,
             ],
             'headers' => [
-                'Content-Type' => 'application/ld+json',
+                'Content-Type' => 'application/merge-patch+json',
                 'Accept' => 'application/ld+json',
             ],
         ]);
@@ -586,7 +585,7 @@ final class BookTest extends ApiTestCase
     }
 
     #[Test]
-    #[\PHPUnit\Framework\Attributes\Group('mercure')]
+    #[Group('mercure')]
     public function asAdminUserICanDeleteABook(): void
     {
         $book = BookFactory::createOne(['title' => 'Hyperion']);
