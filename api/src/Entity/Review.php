@@ -89,6 +89,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[ApiResource(
     uriTemplate: '/books/{bookId}/reviews{._format}',
+    shortName: 'Review',
     types: ['https://schema.org/Review'],
     operations: [
         new GetCollection(

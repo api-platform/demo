@@ -84,6 +84,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     security: 'is_granted("OIDC_ADMIN")',
 )]
 #[ApiResource(
+    shortName: 'Book',
     types: ['https://schema.org/Book', 'https://schema.org/Offer'],
     operations: [
         new GetCollection(
