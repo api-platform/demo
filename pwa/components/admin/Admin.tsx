@@ -56,6 +56,7 @@ const AdminAdapter = ({
       fetchHydra(url, {
         ...options,
         headers: {
+          ...options.headers,
           Authorization: `Bearer ${session?.accessToken}`,
         },
       }),
