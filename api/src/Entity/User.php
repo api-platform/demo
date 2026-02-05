@@ -25,6 +25,7 @@ use Symfony\Component\Uid\Uuid;
  * @see https://schema.org/Person
  */
 #[ApiResource(
+    shortName: 'User',
     types: ['https://schema.org/Person'],
     operations: [
         new GetCollection(

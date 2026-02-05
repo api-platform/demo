@@ -38,6 +38,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @see https://schema.org/Review
  */
 #[ApiResource(
+    shortName: 'Review',
     types: ['https://schema.org/Review'],
     order: ['publishedAt' => 'DESC'],
     operations: [
@@ -87,6 +88,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     ]
 )]
 #[ApiResource(
+    shortName: 'Review',
     types: ['https://schema.org/Review'],
     order: ['publishedAt' => 'DESC'],
     uriTemplate: '/books/{bookId}/reviews{._format}',

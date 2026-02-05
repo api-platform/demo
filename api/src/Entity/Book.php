@@ -41,6 +41,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ApiResource(
     uriTemplate: '/admin/books{._format}',
+    shortName: 'Book',
     types: ['https://schema.org/Book', 'https://schema.org/Offer'],
     operations: [
         new GetCollection(
@@ -81,6 +82,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     ]
 )]
 #[ApiResource(
+    shortName: 'Book',
     types: ['https://schema.org/Book', 'https://schema.org/Offer'],
     operations: [
         new GetCollection(

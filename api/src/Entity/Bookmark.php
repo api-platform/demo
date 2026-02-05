@@ -31,6 +31,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @see https://schema.org/BookmarkAction
  */
 #[ApiResource(
+    shortName: 'Bookmark',
     types: ['https://schema.org/BookmarkAction'],
     order: ['bookmarkedAt' => 'DESC'],
     operations: [
