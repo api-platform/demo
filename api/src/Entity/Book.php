@@ -13,8 +13,8 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\UrlGeneratorInterface;
 use App\Enum\BookCondition;
 use App\Repository\BookRepository;
@@ -54,8 +54,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Get(
             uriTemplate: '/admin/books/{id}{._format}'
         ),
-        // https://github.com/api-platform/admin/issues/370
-        new Put(
+        new Patch(
             uriTemplate: '/admin/books/{id}{._format}',
             processor: BookPersistProcessor::class
         ),

@@ -13,6 +13,7 @@ use App\Entity\Bookmark;
 use App\Repository\BookmarkRepository;
 use App\Tests\Api\Security\TokenGenerator;
 use App\Tests\Api\Trait\SerializerTrait;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\Update;
@@ -140,7 +141,7 @@ final class BookmarkTest extends ApiTestCase
     }
 
     #[Test]
-    #[\PHPUnit\Framework\Attributes\Group('mercure')]
+    #[Group('mercure')]
     public function asAUserICanCreateABookmark(): void
     {
         $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL2055137M.json']);
@@ -277,7 +278,7 @@ final class BookmarkTest extends ApiTestCase
     }
 
     #[Test]
-    #[\PHPUnit\Framework\Attributes\Group('mercure')]
+    #[Group('mercure')]
     public function asAUserICanDeleteMyBookmark(): void
     {
         $book = BookFactory::createOne(['title' => 'Hyperion']);
