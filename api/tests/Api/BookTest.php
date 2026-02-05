@@ -41,9 +41,9 @@ final class BookTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertEquals('<https://localhost:443/.well-known/mercure>; rel="mercure"', $response->getHeaders()['link'][1]);
         self::assertJsonContains([
-            'hydra:totalItems' => $hydraTotalItems,
+            'totalItems' => $hydraTotalItems,
         ]);
-        self::assertCount(min($hydraTotalItems, 30), $response->toArray()['hydra:member']);
+        self::assertCount(min($hydraTotalItems, 30), $response->toArray()['member']);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Book/collection.json'));
     }
 
@@ -98,9 +98,9 @@ final class BookTest extends ApiTestCase
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertEquals('<https://localhost:443/.well-known/mercure>; rel="mercure"', $response->getHeaders()['link'][1]);
-        self::assertEquals('Ball Lightning', $response->toArray()['hydra:member'][0]['title']);
-        self::assertEquals('Hyperion', $response->toArray()['hydra:member'][1]['title']);
-        self::assertEquals('The Wandering Earth', $response->toArray()['hydra:member'][2]['title']);
+        self::assertEquals('Ball Lightning', $response->toArray()['member'][0]['title']);
+        self::assertEquals('Hyperion', $response->toArray()['member'][1]['title']);
+        self::assertEquals('The Wandering Earth', $response->toArray()['member'][2]['title']);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Book/collection.json'));
     }
 

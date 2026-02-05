@@ -49,16 +49,16 @@ export const useMercure = <
 
     if (
       isPagedCollection<Item>(data) &&
-      data["hydra:member"] &&
-      data["hydra:member"].length !== 0
+      data["member"] &&
+      data["member"].length !== 0
     ) {
       const eventSources: EventSource[] = [];
       // It's a PagedCollection
-      data["hydra:member"].forEach((obj, pos) => {
+      data["member"].forEach((obj, pos) => {
         eventSources.push(
           mercureSubscribe(hubURL, obj, (datum) => {
-            if (data["hydra:member"]) {
-              data["hydra:member"][pos] = datum;
+            if (data["member"]) {
+              data["member"][pos] = datum;
             }
             setData({ ...data });
           })

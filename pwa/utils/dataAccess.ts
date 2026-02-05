@@ -64,8 +64,8 @@ export const fetchApi = async <TData>(
     };
   }
 
-  const errorMessage = json["hydra:title"];
-  const status = json["hydra:description"] || resp.statusText;
+  const errorMessage = json["title"];
+  const status = json["description"] || resp.statusText;
   if (!json.violations) throw Error(errorMessage);
   const fields: { [key: string]: string } = {};
   json.violations.map(

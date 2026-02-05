@@ -81,9 +81,9 @@ export const List: FunctionComponent<Props> = ({ book }) => {
       )}
       {!!error && (
         <Error message={error}/>
-      ) || !!collection && !!collection["hydra:member"] && collection["hydra:member"]?.length > 0 && (
+      ) || !!collection && !!collection["member"] && collection["member"]?.length > 0 && (
         <>
-          {collection["hydra:member"].map((review) => (
+          {collection["member"].map((review) => (
             <Item key={review["@id"]} review={review} onDelete={() => toggleReload(!reload)}/>
           ))}
           <Pagination collection={collection} getPagePath={getPagePath} currentPage={page}/>
