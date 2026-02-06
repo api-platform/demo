@@ -7,28 +7,27 @@ namespace App\DataFixtures\Factory;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Zenstruck\Foundry\FactoryCollection;
-use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 use Zenstruck\Foundry\Persistence\Proxy;
 use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
 /**
- * @method        User|Proxy                                     create(array|callable $attributes = [])
- * @method static User|Proxy                                     createOne(array $attributes = [])
- * @method static User|Proxy                                     find(object|array|mixed $criteria)
- * @method static User|Proxy                                     findOrCreate(array $attributes)
- * @method static User|Proxy                                     first(string $sortedField = 'id')
- * @method static User|Proxy                                     last(string $sortedField = 'id')
- * @method static User|Proxy                                     random(array $attributes = [])
- * @method static User|Proxy                                     randomOrCreate(array $attributes = [])
+ * @method        User|Proxy                                                create(array|callable $attributes = [])
+ * @method static User|Proxy                                                createOne(array $attributes = [])
+ * @method static User|Proxy                                                find(object|array|mixed $criteria)
+ * @method static User|Proxy                                                findOrCreate(array $attributes)
+ * @method static User|Proxy                                                first(string $sortedField = 'id')
+ * @method static User|Proxy                                                last(string $sortedField = 'id')
+ * @method static User|Proxy                                                random(array $attributes = [])
+ * @method static User|Proxy                                                randomOrCreate(array $attributes = [])
  * @method static \App\Entity\User[]|\Zenstruck\Foundry\Persistence\Proxy[] all()
  * @method static \App\Entity\User[]|\Zenstruck\Foundry\Persistence\Proxy[] createMany(int $number, array|callable $attributes = [])
  * @method static \App\Entity\User[]|\Zenstruck\Foundry\Persistence\Proxy[] createSequence((iterable|callable) $sequence)
  * @method static \App\Entity\User[]|\Zenstruck\Foundry\Persistence\Proxy[] findBy(array $attributes)
  * @method static \App\Entity\User[]|\Zenstruck\Foundry\Persistence\Proxy[] randomRange(int $min, int $max, array $attributes = [])
  * @method static \App\Entity\User[]|\Zenstruck\Foundry\Persistence\Proxy[] randomSet(int $number, array $attributes = [])
- * @method        FactoryCollection<User|Proxy>                  many(int $min, int|null $max = null)
- * @method        FactoryCollection<User|Proxy>                  sequence(iterable|callable $sequence)
- * @method static ProxyRepositoryDecorator<User, UserRepository> repository()
+ * @method        FactoryCollection<User|Proxy>                             many(int $min, int|null $max = null)
+ * @method        FactoryCollection<User|Proxy>                             sequence(iterable|callable $sequence)
+ * @method static ProxyRepositoryDecorator<User, UserRepository>            repository()
  *
  * @phpstan-method User&Proxy<User> create(array|callable $attributes = [])
  * @phpstan-method static User&Proxy<User> createOne(array $attributes = [])

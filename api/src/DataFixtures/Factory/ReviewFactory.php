@@ -8,30 +8,29 @@ use App\Entity\Review;
 use App\Repository\ReviewRepository;
 use App\Security\Http\Protection\ResourceHandlerInterface;
 use Zenstruck\Foundry\FactoryCollection;
-use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 use Zenstruck\Foundry\Persistence\Proxy;
 use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
 use function Zenstruck\Foundry\lazy;
 
 /**
- * @method        Review|Proxy                                       create(array|callable $attributes = [])
- * @method static Review|Proxy                                       createOne(array $attributes = [])
- * @method static Review|Proxy                                       find(object|array|mixed $criteria)
- * @method static Review|Proxy                                       findOrCreate(array $attributes)
- * @method static Review|Proxy                                       first(string $sortedField = 'id')
- * @method static Review|Proxy                                       last(string $sortedField = 'id')
- * @method static Review|Proxy                                       random(array $attributes = [])
- * @method static Review|Proxy                                       randomOrCreate(array $attributes = [])
+ * @method        Review|Proxy                                                create(array|callable $attributes = [])
+ * @method static Review|Proxy                                                createOne(array $attributes = [])
+ * @method static Review|Proxy                                                find(object|array|mixed $criteria)
+ * @method static Review|Proxy                                                findOrCreate(array $attributes)
+ * @method static Review|Proxy                                                first(string $sortedField = 'id')
+ * @method static Review|Proxy                                                last(string $sortedField = 'id')
+ * @method static Review|Proxy                                                random(array $attributes = [])
+ * @method static Review|Proxy                                                randomOrCreate(array $attributes = [])
  * @method static \App\Entity\Review[]|\Zenstruck\Foundry\Persistence\Proxy[] all()
  * @method static \App\Entity\Review[]|\Zenstruck\Foundry\Persistence\Proxy[] createMany(int $number, array|callable $attributes = [])
  * @method static \App\Entity\Review[]|\Zenstruck\Foundry\Persistence\Proxy[] createSequence((iterable|callable) $sequence)
  * @method static \App\Entity\Review[]|\Zenstruck\Foundry\Persistence\Proxy[] findBy(array $attributes)
  * @method static \App\Entity\Review[]|\Zenstruck\Foundry\Persistence\Proxy[] randomRange(int $min, int $max, array $attributes = [])
  * @method static \App\Entity\Review[]|\Zenstruck\Foundry\Persistence\Proxy[] randomSet(int $number, array $attributes = [])
- * @method        FactoryCollection<Review|Proxy>                    many(int $min, int|null $max = null)
- * @method        FactoryCollection<Review|Proxy>                    sequence(iterable|callable $sequence)
- * @method static ProxyRepositoryDecorator<Review, ReviewRepository> repository()
+ * @method        FactoryCollection<Review|Proxy>                             many(int $min, int|null $max = null)
+ * @method        FactoryCollection<Review|Proxy>                             sequence(iterable|callable $sequence)
+ * @method static ProxyRepositoryDecorator<Review, ReviewRepository>          repository()
  *
  * @phpstan-method Review&Proxy<Review> create(array|callable $attributes = [])
  * @phpstan-method static Review&Proxy<Review> createOne(array $attributes = [])

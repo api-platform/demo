@@ -7,30 +7,29 @@ namespace App\DataFixtures\Factory;
 use App\Entity\Bookmark;
 use App\Repository\BookmarkRepository;
 use Zenstruck\Foundry\FactoryCollection;
-use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 use Zenstruck\Foundry\Persistence\Proxy;
 use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
 use function Zenstruck\Foundry\lazy;
 
 /**
- * @method        Bookmark|Proxy                                         create(array|callable $attributes = [])
- * @method static Bookmark|Proxy                                         createOne(array $attributes = [])
- * @method static Bookmark|Proxy                                         find(object|array|mixed $criteria)
- * @method static Bookmark|Proxy                                         findOrCreate(array $attributes)
- * @method static Bookmark|Proxy                                         first(string $sortedField = 'id')
- * @method static Bookmark|Proxy                                         last(string $sortedField = 'id')
- * @method static Bookmark|Proxy                                         random(array $attributes = [])
- * @method static Bookmark|Proxy                                         randomOrCreate(array $attributes = [])
+ * @method        Bookmark|Proxy                                                create(array|callable $attributes = [])
+ * @method static Bookmark|Proxy                                                createOne(array $attributes = [])
+ * @method static Bookmark|Proxy                                                find(object|array|mixed $criteria)
+ * @method static Bookmark|Proxy                                                findOrCreate(array $attributes)
+ * @method static Bookmark|Proxy                                                first(string $sortedField = 'id')
+ * @method static Bookmark|Proxy                                                last(string $sortedField = 'id')
+ * @method static Bookmark|Proxy                                                random(array $attributes = [])
+ * @method static Bookmark|Proxy                                                randomOrCreate(array $attributes = [])
  * @method static \App\Entity\Bookmark[]|\Zenstruck\Foundry\Persistence\Proxy[] all()
  * @method static \App\Entity\Bookmark[]|\Zenstruck\Foundry\Persistence\Proxy[] createMany(int $number, array|callable $attributes = [])
  * @method static \App\Entity\Bookmark[]|\Zenstruck\Foundry\Persistence\Proxy[] createSequence((iterable|callable) $sequence)
  * @method static \App\Entity\Bookmark[]|\Zenstruck\Foundry\Persistence\Proxy[] findBy(array $attributes)
  * @method static \App\Entity\Bookmark[]|\Zenstruck\Foundry\Persistence\Proxy[] randomRange(int $min, int $max, array $attributes = [])
  * @method static \App\Entity\Bookmark[]|\Zenstruck\Foundry\Persistence\Proxy[] randomSet(int $number, array $attributes = [])
- * @method        FactoryCollection<Bookmark|Proxy>                      many(int $min, int|null $max = null)
- * @method        FactoryCollection<Bookmark|Proxy>                      sequence(iterable|callable $sequence)
- * @method static ProxyRepositoryDecorator<Bookmark, BookmarkRepository> repository()
+ * @method        FactoryCollection<Bookmark|Proxy>                             many(int $min, int|null $max = null)
+ * @method        FactoryCollection<Bookmark|Proxy>                             sequence(iterable|callable $sequence)
+ * @method static ProxyRepositoryDecorator<Bookmark, BookmarkRepository>        repository()
  *
  * @phpstan-method Bookmark&Proxy<Bookmark> create(array|callable $attributes = [])
  * @phpstan-method static Bookmark&Proxy<Bookmark> createOne(array $attributes = [])
