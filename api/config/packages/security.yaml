@@ -3,23 +3,25 @@ security:
     providers:
         app_user_provider:
             id: 'App\Security\Core\UserProvider'
+
     firewalls:
         dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            # Ensure dev tools and static assets are always allowed
+            pattern: ^/(_profiler|_wdt|assets|build)/
             security: false
         main:
             lazy: true
             provider: app_user_provider
             stateless: true
 
-            # activate different ways to authenticate
+            # Activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
 
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
 
     # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
+    # Note: Only the *first* matching rule is applied
     access_control:
         - { path: ^/profile, roles: IS_AUTHENTICATED_FULLY }
 
