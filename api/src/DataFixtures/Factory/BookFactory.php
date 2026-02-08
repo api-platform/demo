@@ -23,7 +23,7 @@ use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
  * @method static Book|Proxy                                     randomOrCreate(array $attributes = [])
  * @method static Book[]|Proxy[]                                 all()
  * @method static Book[]|Proxy[]                                 createMany(int $number, array|callable $attributes = [])
- * @method static Book[]|Proxy[]                                 createSequence((iterable|callable) $sequence)
+ * @method static Book[]|Proxy[]                                 createSequence(iterable|callable $sequence)
  * @method static Book[]|Proxy[]                                 findBy(array $attributes)
  * @method static Book[]|Proxy[]                                 randomRange(int $min, int $max, array $attributes = [])
  * @method static Book[]|Proxy[]                                 randomSet(int $number, array $attributes = [])
