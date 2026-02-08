@@ -7,6 +7,7 @@ namespace App\DataFixtures\Factory;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Zenstruck\Foundry\FactoryCollection;
+use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 use Zenstruck\Foundry\Persistence\Proxy;
 use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
@@ -19,12 +20,12 @@ use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
  * @method static User|Proxy                                                last(string $sortedField = 'id')
  * @method static User|Proxy                                                random(array $attributes = [])
  * @method static User|Proxy                                                randomOrCreate(array $attributes = [])
- * @method static \App\Entity\User[]|\Zenstruck\Foundry\Persistence\Proxy[] all()
- * @method static \App\Entity\User[]|\Zenstruck\Foundry\Persistence\Proxy[] createMany(int $number, array|callable $attributes = [])
- * @method static \App\Entity\User[]|\Zenstruck\Foundry\Persistence\Proxy[] createSequence((iterable|callable) $sequence)
- * @method static \App\Entity\User[]|\Zenstruck\Foundry\Persistence\Proxy[] findBy(array $attributes)
- * @method static \App\Entity\User[]|\Zenstruck\Foundry\Persistence\Proxy[] randomRange(int $min, int $max, array $attributes = [])
- * @method static \App\Entity\User[]|\Zenstruck\Foundry\Persistence\Proxy[] randomSet(int $number, array $attributes = [])
+ * @method static User[]|Proxy[] all()
+ * @method static User[]|Proxy[] createMany(int $number, array|callable $attributes = [])
+ * @method static User[]|Proxy[] createSequence((iterable|callable) $sequence)
+ * @method static User[]|Proxy[] findBy(array $attributes)
+ * @method static User[]|Proxy[] randomRange(int $min, int $max, array $attributes = [])
+ * @method static User[]|Proxy[] randomSet(int $number, array $attributes = [])
  * @method        FactoryCollection<User|Proxy>                             many(int $min, int|null $max = null)
  * @method        FactoryCollection<User|Proxy>                             sequence(iterable|callable $sequence)
  * @method static ProxyRepositoryDecorator<User, UserRepository>            repository()
@@ -46,9 +47,9 @@ use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
  * @phpstan-method FactoryCollection<User&Proxy<User>> many(int $min, int|null $max = null)
  * @phpstan-method FactoryCollection<User&Proxy<User>> sequence(iterable|callable $sequence)
  *
- * @extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory<User>
+ * @extends PersistentObjectFactory<User>
  */
-final class UserFactory extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory
+final class UserFactory extends PersistentObjectFactory
 {
     public static function createOneAdmin(array $attributes = []): Proxy|User
     {

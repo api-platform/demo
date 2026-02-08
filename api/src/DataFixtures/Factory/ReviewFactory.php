@@ -8,6 +8,7 @@ use App\Entity\Review;
 use App\Repository\ReviewRepository;
 use App\Security\Http\Protection\ResourceHandlerInterface;
 use Zenstruck\Foundry\FactoryCollection;
+use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 use Zenstruck\Foundry\Persistence\Proxy;
 use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
@@ -22,12 +23,12 @@ use function Zenstruck\Foundry\lazy;
  * @method static Review|Proxy                                                last(string $sortedField = 'id')
  * @method static Review|Proxy                                                random(array $attributes = [])
  * @method static Review|Proxy                                                randomOrCreate(array $attributes = [])
- * @method static \App\Entity\Review[]|\Zenstruck\Foundry\Persistence\Proxy[] all()
- * @method static \App\Entity\Review[]|\Zenstruck\Foundry\Persistence\Proxy[] createMany(int $number, array|callable $attributes = [])
- * @method static \App\Entity\Review[]|\Zenstruck\Foundry\Persistence\Proxy[] createSequence((iterable|callable) $sequence)
- * @method static \App\Entity\Review[]|\Zenstruck\Foundry\Persistence\Proxy[] findBy(array $attributes)
- * @method static \App\Entity\Review[]|\Zenstruck\Foundry\Persistence\Proxy[] randomRange(int $min, int $max, array $attributes = [])
- * @method static \App\Entity\Review[]|\Zenstruck\Foundry\Persistence\Proxy[] randomSet(int $number, array $attributes = [])
+ * @method static Review[]|Proxy[] all()
+ * @method static Review[]|Proxy[] createMany(int $number, array|callable $attributes = [])
+ * @method static Review[]|Proxy[] createSequence((iterable|callable) $sequence)
+ * @method static Review[]|Proxy[] findBy(array $attributes)
+ * @method static Review[]|Proxy[] randomRange(int $min, int $max, array $attributes = [])
+ * @method static Review[]|Proxy[] randomSet(int $number, array $attributes = [])
  * @method        FactoryCollection<Review|Proxy>                             many(int $min, int|null $max = null)
  * @method        FactoryCollection<Review|Proxy>                             sequence(iterable|callable $sequence)
  * @method static ProxyRepositoryDecorator<Review, ReviewRepository>          repository()
@@ -49,9 +50,9 @@ use function Zenstruck\Foundry\lazy;
  * @phpstan-method FactoryCollection<Review&Proxy<Review>> many(int $min, int|null $max = null)
  * @phpstan-method FactoryCollection<Review&Proxy<Review>> sequence(iterable|callable $sequence)
  *
- * @extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory<Review>
+ * @extends PersistentObjectFactory<Review>
  */
-final class ReviewFactory extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory
+final class ReviewFactory extends PersistentObjectFactory
 {
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services

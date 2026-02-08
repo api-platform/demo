@@ -7,6 +7,7 @@ namespace App\DataFixtures\Factory;
 use App\Entity\Bookmark;
 use App\Repository\BookmarkRepository;
 use Zenstruck\Foundry\FactoryCollection;
+use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 use Zenstruck\Foundry\Persistence\Proxy;
 use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
@@ -21,12 +22,12 @@ use function Zenstruck\Foundry\lazy;
  * @method static Bookmark|Proxy                                                last(string $sortedField = 'id')
  * @method static Bookmark|Proxy                                                random(array $attributes = [])
  * @method static Bookmark|Proxy                                                randomOrCreate(array $attributes = [])
- * @method static \App\Entity\Bookmark[]|\Zenstruck\Foundry\Persistence\Proxy[] all()
- * @method static \App\Entity\Bookmark[]|\Zenstruck\Foundry\Persistence\Proxy[] createMany(int $number, array|callable $attributes = [])
- * @method static \App\Entity\Bookmark[]|\Zenstruck\Foundry\Persistence\Proxy[] createSequence((iterable|callable) $sequence)
- * @method static \App\Entity\Bookmark[]|\Zenstruck\Foundry\Persistence\Proxy[] findBy(array $attributes)
- * @method static \App\Entity\Bookmark[]|\Zenstruck\Foundry\Persistence\Proxy[] randomRange(int $min, int $max, array $attributes = [])
- * @method static \App\Entity\Bookmark[]|\Zenstruck\Foundry\Persistence\Proxy[] randomSet(int $number, array $attributes = [])
+ * @method static Bookmark[]|Proxy[] all()
+ * @method static Bookmark[]|Proxy[] createMany(int $number, array|callable $attributes = [])
+ * @method static Bookmark[]|Proxy[] createSequence((iterable|callable) $sequence)
+ * @method static Bookmark[]|Proxy[] findBy(array $attributes)
+ * @method static Bookmark[]|Proxy[] randomRange(int $min, int $max, array $attributes = [])
+ * @method static Bookmark[]|Proxy[] randomSet(int $number, array $attributes = [])
  * @method        FactoryCollection<Bookmark|Proxy>                             many(int $min, int|null $max = null)
  * @method        FactoryCollection<Bookmark|Proxy>                             sequence(iterable|callable $sequence)
  * @method static ProxyRepositoryDecorator<Bookmark, BookmarkRepository>        repository()
@@ -48,9 +49,9 @@ use function Zenstruck\Foundry\lazy;
  * @phpstan-method FactoryCollection<Bookmark&Proxy<Bookmark>> many(int $min, int|null $max = null)
  * @phpstan-method FactoryCollection<Bookmark&Proxy<Bookmark>> sequence(iterable|callable $sequence)
  *
- * @extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory<Bookmark>
+ * @extends PersistentObjectFactory<Bookmark>
  */
-final class BookmarkFactory extends \Zenstruck\Foundry\Persistence\PersistentObjectFactory
+final class BookmarkFactory extends PersistentObjectFactory
 {
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
