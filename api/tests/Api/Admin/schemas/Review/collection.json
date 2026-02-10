@@ -166,7 +166,7 @@
         "@context": {
             "readOnly": true,
             "type": "string",
-            "pattern": "^/contexts/Review$"
+            "pattern": "^/contexts/AdminReview$"
         },
         "@type": {
             "readOnly": true,

@@ -38,6 +38,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @see https://schema.org/Review
  */
 #[ApiResource(
+    shortName: 'AdminReview',
     types: ['https://schema.org/Review'],
     operations: [
         new GetCollection(
@@ -87,6 +88,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     security: 'is_granted("OIDC_ADMIN")',
 )]
 #[ApiResource(
+    shortName: 'Review',
     uriTemplate: '/books/{bookId}/reviews{._format}',
     types: ['https://schema.org/Review'],
     operations: [

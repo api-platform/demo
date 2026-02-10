@@ -73,7 +73,7 @@
         "@context": {
             "readOnly": true,
             "type": "string",
-            "pattern": "^/contexts/Book$"
+            "pattern": "^/contexts/AdminBook$"
         },
         "@type": {
             "readOnly": true,

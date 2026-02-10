@@ -25,6 +25,7 @@ use Symfony\Component\Uid\Uuid;
  * @see https://schema.org/Person
  */
 #[ApiResource(
+    shortName: 'AdminUser',
     types: ['https://schema.org/Person'],
     operations: [
         new GetCollection(
@@ -38,6 +39,16 @@ use Symfony\Component\Uid\Uuid;
             uriTemplate: '/admin/users/{id}{._format}',
             security: 'is_granted("OIDC_ADMIN")'
         ),
+    ],
+    normalizationContext: [
+        AbstractNormalizer::GROUPS => ['User:read'],
+        AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+    ]
+)]
+#[ApiResource(
+    shortName: 'User',
+    types: ['https://schema.org/Person'],
+    operations: [
         new Get(
             uriTemplate: '/users/{id}{._format}',
             security: 'object === user'

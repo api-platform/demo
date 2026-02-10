@@ -105,7 +105,7 @@ jobs:
             url=$release-demo.api-platform.com
           fi
           echo "url=$url" >> "$GITHUB_OUTPUT"
-          cors="https://$url|http://localhost|https://localhost|http://localhost:3000"
+          cors="https://$url|http://localhost|https://localhost|http://localhost:3000|https://api-platform.github.io"
           set -o pipefail
           helm upgrade $release ./helm/api-platform -f ./helm/api-platform/values.yaml \
             --install \
