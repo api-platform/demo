@@ -66,7 +66,7 @@ final class OidcTokenIntrospectRoleVoter extends OidcVoter
                 ],
             ]);
 
-            $roles = array_map(static fn (string $role): string => strtolower($role), $response->toArray()['realm_access']['roles'] ?? []);
+            $roles = array_map(strtolower(...), $response->toArray()['realm_access']['roles'] ?? []);
 
             return \in_array(strtolower(substr($attribute, 5)), $roles, true);
         } catch (HttpExceptionInterface) {

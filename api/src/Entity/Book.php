@@ -39,46 +39,37 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @see https://schema.org/Book
  */
-#[ApiResource(
-    uriTemplate: '/admin/books{._format}',
-    types: ['https://schema.org/Book', 'https://schema.org/Offer'],
-    operations: [
-        new GetCollection(
-            paginationClientItemsPerPage: true,
-            itemUriTemplate: '/admin/books/{id}{._format}'
-        ),
-        new Post(
-            processor: BookPersistProcessor::class,
-            itemUriTemplate: '/admin/books/{id}{._format}'
-        ),
-        new Get(
-            uriTemplate: '/admin/books/{id}{._format}'
-        ),
-        new Patch(
-            uriTemplate: '/admin/books/{id}{._format}',
-            processor: BookPersistProcessor::class
-        ),
-        new Delete(
-            uriTemplate: '/admin/books/{id}{._format}',
-            processor: BookRemoveProcessor::class
-        ),
+#[ApiResource(uriTemplate: '/admin/books{._format}', types: ['https://schema.org/Book', 'https://schema.org/Offer'], operations: [
+    new GetCollection(
+        paginationClientItemsPerPage: true,
+        itemUriTemplate: '/admin/books/{id}{._format}'
+    ),
+    new Post(
+        processor: BookPersistProcessor::class,
+        itemUriTemplate: '/admin/books/{id}{._format}'
+    ),
+    new Get(
+        uriTemplate: '/admin/books/{id}{._format}'
+    ),
+    new Patch(
+        uriTemplate: '/admin/books/{id}{._format}',
+        processor: BookPersistProcessor::class
+    ),
+    new Delete(
+        uriTemplate: '/admin/books/{id}{._format}',
+        processor: BookRemoveProcessor::class
+    ),
+], normalizationContext: [
+    AbstractNormalizer::GROUPS => ['Book:read:admin', 'Enum:read'],
+    AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+], denormalizationContext: [
+    AbstractNormalizer::GROUPS => ['Book:write'],
+], collectDenormalizationErrors: true, mercure: [
+    'topics' => [
+        '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/admin/books/{id}{._format}"))',
+        '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/books/{id}{._format}"))',
     ],
-    normalizationContext: [
-        AbstractNormalizer::GROUPS => ['Book:read:admin', 'Enum:read'],
-        AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
-    ],
-    denormalizationContext: [
-        AbstractNormalizer::GROUPS => ['Book:write'],
-    ],
-    collectDenormalizationErrors: true,
-    security: 'is_granted("OIDC_ADMIN")',
-    mercure: [
-        'topics' => [
-            '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/admin/books/{id}{._format}"))',
-            '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/books/{id}{._format}"))',
-        ],
-    ]
-)]
+], security: 'is_granted("OIDC_ADMIN")')]
 #[ApiResource(
     types: ['https://schema.org/Book', 'https://schema.org/Offer'],
     operations: [
@@ -115,10 +106,7 @@ class Book
     /**
      * @see https://schema.org/itemOffered
      */
-    #[ApiProperty(
-        types: ['https://schema.org/itemOffered', 'https://purl.org/dc/terms/BibliographicResource'],
-        example: 'https://openlibrary.org/books/OL2055137M.json'
-    )]
+    #[ApiProperty(example: 'https://openlibrary.org/books/OL2055137M.json', types: ['https://schema.org/itemOffered', 'https://purl.org/dc/terms/BibliographicResource'])]
     #[Assert\NotBlank(allowNull: false)]
     #[Assert\Url(protocols: ['https'], requireTld: true)]
     #[BookUrl]
@@ -131,10 +119,7 @@ class Book
      */
     #[ApiFilter(OrderFilter::class)]
     #[ApiFilter(SearchFilter::class, strategy: 'i' . SearchFilterInterface::STRATEGY_PARTIAL)]
-    #[ApiProperty(
-        iris: ['https://schema.org/name'],
-        example: 'Hyperion'
-    )]
+    #[ApiProperty(example: 'Hyperion', iris: ['https://schema.org/name'])]
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Review:read:admin'])]
     #[ORM\Column(type: Types::TEXT)]
     public string $title;
@@ -143,10 +128,7 @@ class Book
      * @see https://schema.org/author
      */
     #[ApiFilter(SearchFilter::class, strategy: 'i' . SearchFilterInterface::STRATEGY_PARTIAL)]
-    #[ApiProperty(
-        types: ['https://schema.org/author'],
-        example: 'Dan Simmons'
-    )]
+    #[ApiProperty(example: 'Dan Simmons', types: ['https://schema.org/author'])]
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Review:read:admin'])]
     #[ORM\Column(nullable: true)]
     public ?string $author = null;
@@ -155,10 +137,7 @@ class Book
      * @see https://schema.org/OfferItemCondition
      */
     #[ApiFilter(SearchFilter::class, strategy: SearchFilterInterface::STRATEGY_EXACT)]
-    #[ApiProperty(
-        types: ['https://schema.org/OfferItemCondition'],
-        example: BookCondition::NewCondition->value
-    )]
+    #[ApiProperty(example: BookCondition::NewCondition->value, types: ['https://schema.org/OfferItemCondition'])]
     #[Assert\NotNull]
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Book:write'])]
     #[ORM\Column(name: '`condition`', type: 'string', enumType: BookCondition::class)]
@@ -171,11 +150,7 @@ class Book
      *
      * @see https://schema.org/reviews
      */
-    #[ApiProperty(
-        types: ['https://schema.org/reviews'],
-        example: '/books/6acacc80-8321-4d83-9b02-7f2c7bf6eb1d/reviews',
-        uriTemplate: '/books/{bookId}/reviews{._format}'
-    )]
+    #[ApiProperty(example: '/books/6acacc80-8321-4d83-9b02-7f2c7bf6eb1d/reviews', types: ['https://schema.org/reviews'], uriTemplate: '/books/{bookId}/reviews{._format}')]
     #[Groups(groups: ['Book:read', 'Bookmark:read'])]
     #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'book')]
     public Collection $reviews;
@@ -185,10 +160,7 @@ class Book
      *
      * @see https://schema.org/aggregateRating
      */
-    #[ApiProperty(
-        types: ['https://schema.org/aggregateRating'],
-        example: 1
-    )]
+    #[ApiProperty(example: 1, types: ['https://schema.org/aggregateRating'])]
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read'])]
     public ?int $rating = null;
 

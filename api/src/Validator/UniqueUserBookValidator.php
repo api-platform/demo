@@ -46,11 +46,11 @@ final class UniqueUserBookValidator extends ConstraintValidator
 
         $className = ClassUtils::getRealClass($value::class);
         $manager = $this->registry->getManagerForClass($className);
-        if (!$manager) {
+        if (!$manager instanceof \Doctrine\Persistence\ObjectManager) {
             throw new ValidatorException(\sprintf('"%s" is not a valid entity.', $className));
         }
 
-        if ($manager->getRepository($className)->findOneBy(['user' => $user, 'book' => $book])) {
+        if ($manager->getRepository($className)->findOneBy(['user' => $user, 'book' => $book]) !== null) {
             $this->context->buildViolation($constraint->message)->addViolation();
         }
     }

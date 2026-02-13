@@ -30,32 +30,23 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @see https://schema.org/BookmarkAction
  */
-#[ApiResource(
-    types: ['https://schema.org/BookmarkAction'],
-    order: ['bookmarkedAt' => 'DESC'],
-    operations: [
-        new GetCollection(),
-        new Delete(
-            security: 'object.user === user'
-        ),
-        new Post(
-            processor: BookmarkPersistProcessor::class
-        ),
+#[ApiResource(types: ['https://schema.org/BookmarkAction'], operations: [
+    new GetCollection(),
+    new Delete(
+        security: 'object.user === user'
+    ),
+    new Post(
+        processor: BookmarkPersistProcessor::class
+    ),
+], normalizationContext: [
+    AbstractNormalizer::GROUPS => ['Bookmark:read'],
+    AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+    IriTransformerNormalizer::CONTEXT_KEY => [
+        'book' => '/books/{id}{._format}',
     ],
-    normalizationContext: [
-        AbstractNormalizer::GROUPS => ['Bookmark:read'],
-        AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
-        IriTransformerNormalizer::CONTEXT_KEY => [
-            'book' => '/books/{id}{._format}',
-        ],
-    ],
-    denormalizationContext: [
-        AbstractNormalizer::GROUPS => ['Bookmark:write'],
-    ],
-    collectDenormalizationErrors: true,
-    mercure: true,
-    security: 'is_granted("OIDC_USER")'
-)]
+], denormalizationContext: [
+    AbstractNormalizer::GROUPS => ['Bookmark:write'],
+], collectDenormalizationErrors: true, mercure: true, order: ['bookmarkedAt' => 'DESC'], security: 'is_granted("OIDC_USER")')]
 #[ORM\Entity(repositoryClass: BookmarkRepository::class)]
 #[ORM\UniqueConstraint(fields: ['user', 'book'])]
 #[UniqueUserBook(message: 'You have already bookmarked this book.')]

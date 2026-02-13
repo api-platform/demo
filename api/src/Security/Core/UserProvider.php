@@ -23,7 +23,7 @@ final readonly class UserProvider implements AttributesBasedUserProviderInterfac
     public function refreshUser(UserInterface $user): UserInterface
     {
         $manager = $this->registry->getManagerForClass($user::class);
-        if (!$manager) {
+        if (!$manager instanceof \Doctrine\Persistence\ObjectManager) {
             throw new UnsupportedUserException(\sprintf('User class "%s" not supported.', $user::class));
         }
 

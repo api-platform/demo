@@ -53,7 +53,7 @@ final class OidcRoleVoter extends OidcVoter
         // OIDC server doesn't seem to answer: check roles in token (if present)
         $jws = $this->jwsSerializerManager->unserialize($accessToken);
         $claims = json_decode((string) $jws->getPayload(), true);
-        $roles = array_map(static fn (string $role): string => strtolower($role), $claims['realm_access']['roles'] ?? []);
+        $roles = array_map(strtolower(...), $claims['realm_access']['roles'] ?? []);
 
         return \in_array(strtolower(substr($attribute, 5)), $roles, true);
     }
