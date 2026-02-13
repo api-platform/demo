@@ -50,7 +50,7 @@ final class UniqueUserBookValidator extends ConstraintValidator
             throw new ValidatorException(\sprintf('"%s" is not a valid entity.', $className));
         }
 
-        if ($manager->getRepository($className)->findOneBy(['user' => $user, 'book' => $book]) !== null) {
+        if (null !== $manager->getRepository($className)->findOneBy(['user' => $user, 'book' => $book])) {
             $this->context->buildViolation($constraint->message)->addViolation();
         }
     }

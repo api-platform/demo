@@ -83,7 +83,7 @@ final class BookFactory extends PersistentObjectFactory
     {
         return $this
             ->afterInstantiate(function (Book $book): void {
-                if ($book->author !== null) {
+                if (null !== $book->author) {
                     return;
                 }
 
