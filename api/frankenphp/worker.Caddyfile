@@ -1,3 +1,0 @@
-worker {
-	file ./public/index.php
-}
