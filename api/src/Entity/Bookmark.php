@@ -78,7 +78,7 @@ class Bookmark
     #[Assert\NotNull]
     #[Groups(groups: ['Bookmark:read', 'Bookmark:write'])]
     #[ORM\ManyToOne(targetEntity: Book::class)]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     public Book $book;
 
     /**
