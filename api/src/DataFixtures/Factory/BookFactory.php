@@ -83,13 +83,6 @@ final class BookFactory extends PersistentObjectFactory
     {
         return $this
             ->afterInstantiate(function (Book $book): void {
-                if (null !== $book->author) {
-                    $book->title ??= self::faker()->text();
-                    $book->book = 'https://openlibrary.org/books/OL' . self::faker()->unique()->randomNumber(7, true) . 'M.json';
-
-                    return;
-                }
-
                 if (!isset($book->book)) {
                     $book->book = 'https://openlibrary.org/books/OL' . self::faker()->unique()->randomNumber(7, true) . 'M.json';
                     $book->title ??= self::faker()->text();

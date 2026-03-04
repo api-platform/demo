@@ -9,6 +9,7 @@ use App\Entity\Bookmark;
 use App\Entity\Review;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Validator\Constraint;
@@ -46,7 +47,7 @@ final class UniqueUserBookValidator extends ConstraintValidator
 
         $className = ClassUtils::getRealClass($value::class);
         $manager = $this->registry->getManagerForClass($className);
-        if (!$manager instanceof \Doctrine\Persistence\ObjectManager) {
+        if (!$manager instanceof ObjectManager) {
             throw new ValidatorException(\sprintf('"%s" is not a valid entity.', $className));
         }
 

@@ -39,37 +39,49 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @see https://schema.org/Book
  */
-#[ApiResource(uriTemplate: '/admin/books{._format}', types: ['https://schema.org/Book', 'https://schema.org/Offer'], operations: [
-    new GetCollection(
-        paginationClientItemsPerPage: true,
-        itemUriTemplate: '/admin/books/{id}{._format}'
-    ),
-    new Post(
-        processor: BookPersistProcessor::class,
-        itemUriTemplate: '/admin/books/{id}{._format}'
-    ),
-    new Get(
-        uriTemplate: '/admin/books/{id}{._format}'
-    ),
-    new Patch(
-        uriTemplate: '/admin/books/{id}{._format}',
-        processor: BookPersistProcessor::class
-    ),
-    new Delete(
-        uriTemplate: '/admin/books/{id}{._format}',
-        processor: BookRemoveProcessor::class
-    ),
-], normalizationContext: [
-    AbstractNormalizer::GROUPS => ['Book:read:admin', 'Enum:read'],
-    AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
-], denormalizationContext: [
-    AbstractNormalizer::GROUPS => ['Book:write'],
-], collectDenormalizationErrors: true, mercure: [
-    'topics' => [
-        '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/admin/books/{id}{._format}"))',
-        '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/books/{id}{._format}"))',
+#[ApiResource(
+    uriTemplate: '/admin/books{._format}',
+    types: [
+        'https://schema.org/Book',
+        'https://schema.org/Offer',
     ],
-], security: 'is_granted("OIDC_ADMIN")')]
+    operations: [
+        new GetCollection(
+            paginationClientItemsPerPage: true,
+            itemUriTemplate: '/admin/books/{id}{._format}'
+        ),
+        new Post(
+            processor: BookPersistProcessor::class,
+            itemUriTemplate: '/admin/books/{id}{._format}'
+        ),
+        new Get(
+            uriTemplate: '/admin/books/{id}{._format}'
+        ),
+        new Patch(
+            uriTemplate: '/admin/books/{id}{._format}',
+            processor: BookPersistProcessor::class
+        ),
+        new Delete(
+            uriTemplate: '/admin/books/{id}{._format}',
+            processor: BookRemoveProcessor::class
+        ),
+    ],
+    normalizationContext: [
+        AbstractNormalizer::GROUPS => ['Book:read:admin', 'Enum:read'],
+        AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+    ],
+    denormalizationContext: [
+        AbstractNormalizer::GROUPS => ['Book:write'],
+    ],
+    collectDenormalizationErrors: true,
+    mercure: [
+        'topics' => [
+            '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/admin/books/{id}{._format}"))',
+            '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/books/{id}{._format}"))',
+        ],
+    ],
+    security: 'is_granted("OIDC_ADMIN")',
+)]
 #[ApiResource(
     types: ['https://schema.org/Book', 'https://schema.org/Offer'],
     operations: [
@@ -106,7 +118,10 @@ class Book
     /**
      * @see https://schema.org/itemOffered
      */
-    #[ApiProperty(example: 'https://openlibrary.org/books/OL2055137M.json', types: ['https://schema.org/itemOffered', 'https://purl.org/dc/terms/BibliographicResource'])]
+    #[ApiProperty(example: 'https://openlibrary.org/books/OL2055137M.json', types: [
+        'https://schema.org/itemOffered',
+        'https://purl.org/dc/terms/BibliographicResource',
+    ])]
     #[Assert\NotBlank(allowNull: false)]
     #[Assert\Url(protocols: ['https'], requireTld: true)]
     #[BookUrl]
