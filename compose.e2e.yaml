@@ -1,4 +1,22 @@
 services:
+  mock-openlibrary:
+    image: node:22-alpine
+    working_dir: /app
+    volumes:
+      - ./e2e:/app
+    command: sh -c "apk add --no-cache openssl && cd mock-server && node server.js"
+    networks:
+      default:
+        aliases:
+          - openlibrary.org
+          - covers.openlibrary.org
+
+  pwa:
+    environment:
+      NODE_TLS_REJECT_UNAUTHORIZED: "0"
+    depends_on:
+      - mock-openlibrary
+
   keycloak:
     environment:
       KEYCLOAK_ENABLE_HTTPS: "true"
