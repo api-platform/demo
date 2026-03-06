@@ -18,6 +18,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+#[AllowMockObjectsWithoutExpectations]
 final class UserProviderTest extends TestCase
 {
     private MockObject $registryMock;
@@ -86,7 +87,6 @@ final class UserProviderTest extends TestCase
             ->expects($this->once())
             ->method('refresh')
             ->with($objectMock)
-            ->willReturn($this->managerMock)
         ;
 
         $this->assertSame($objectMock, $this->provider->refreshUser($objectMock));

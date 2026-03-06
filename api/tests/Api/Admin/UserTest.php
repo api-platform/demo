@@ -155,7 +155,7 @@ final class UserTest extends ApiTestCase
         $user = UserFactory::createOne([
             'firstName' => 'John',
             'lastName' => 'DOE',
-        ])->_disableAutoRefresh();
+        ]);
 
         $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
             'email' => $user->email,

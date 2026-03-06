@@ -16,6 +16,7 @@ use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
+#[AllowMockObjectsWithoutExpectations]
 final class IriTransformerNormalizerTest extends TestCase
 {
     private MockObject $normalizerMock;
@@ -37,8 +38,8 @@ final class IriTransformerNormalizerTest extends TestCase
         $this->operationMetadataFactoryMock = $this->createMock(OperationMetadataFactoryInterface::class);
         $this->operationMock = $this->createStub(Operation::class);
         $this->objectMock = new \stdClass();
-        $this->objectMock->book = $this->createMock(\stdClass::class);
-        $this->objectMock->user = $this->createMock(\stdClass::class);
+        $this->objectMock->book = $this->createStub(\stdClass::class);
+        $this->objectMock->user = $this->createStub(\stdClass::class);
 
         $this->normalizer = new IriTransformerNormalizer($this->iriConverterMock, $this->operationMetadataFactoryMock);
         $this->normalizer->setNormalizer($this->normalizerMock);

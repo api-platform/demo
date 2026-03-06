@@ -8,7 +8,7 @@ use App\Entity\Book;
 use App\Enum\BookCondition;
 use App\Repository\BookRepository;
 use Zenstruck\Foundry\FactoryCollection;
-use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
+use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 use Zenstruck\Foundry\Persistence\Proxy;
 use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
@@ -48,9 +48,9 @@ use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
  * @phpstan-method FactoryCollection<Book&Proxy<Book>> many(int $min, int|null $max = null)
  * @phpstan-method FactoryCollection<Book&Proxy<Book>> sequence(iterable|callable $sequence)
  *
- * @extends PersistentProxyObjectFactory<Book>
+ * @extends PersistentObjectFactory<Book>
  */
-final class BookFactory extends PersistentProxyObjectFactory
+final class BookFactory extends PersistentObjectFactory
 {
     private array $data;
 
@@ -83,10 +83,6 @@ final class BookFactory extends PersistentProxyObjectFactory
     {
         return $this
             ->afterInstantiate(function (Book $book): void {
-                if (isset($book->book, $book->title, $book->author)) {
-                    return;
-                }
-
                 if (!isset($book->book)) {
                     $book->book = 'https://openlibrary.org/books/OL' . self::faker()->unique()->randomNumber(7, true) . 'M.json';
                     $book->title ??= self::faker()->text();

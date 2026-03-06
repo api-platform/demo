@@ -3,3 +3,5 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+mock-server/key.pem
+mock-server/cert.pem

@@ -7,7 +7,7 @@ namespace App\DataFixtures\Factory;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Zenstruck\Foundry\FactoryCollection;
-use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
+use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 use Zenstruck\Foundry\Persistence\Proxy;
 use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
@@ -22,7 +22,7 @@ use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
  * @method static User|Proxy                                     randomOrCreate(array $attributes = [])
  * @method static User[]|Proxy[]                                 all()
  * @method static User[]|Proxy[]                                 createMany(int $number, array|callable $attributes = [])
- * @method static User[]|Proxy[]                                 createSequence(iterable|callable $sequence)
+ * @method static User[]|Proxy[]                                 createSequence((iterable|callable) $sequence)
  * @method static User[]|Proxy[]                                 findBy(array $attributes)
  * @method static User[]|Proxy[]                                 randomRange(int $min, int $max, array $attributes = [])
  * @method static User[]|Proxy[]                                 randomSet(int $number, array $attributes = [])
@@ -47,9 +47,9 @@ use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
  * @phpstan-method FactoryCollection<User&Proxy<User>> many(int $min, int|null $max = null)
  * @phpstan-method FactoryCollection<User&Proxy<User>> sequence(iterable|callable $sequence)
  *
- * @extends PersistentProxyObjectFactory<User>
+ * @extends PersistentObjectFactory<User>
  */
-final class UserFactory extends PersistentProxyObjectFactory
+final class UserFactory extends PersistentObjectFactory
 {
     public static function createOneAdmin(array $attributes = []): Proxy|User
     {

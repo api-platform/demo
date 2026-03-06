@@ -7,7 +7,7 @@ namespace App\DataFixtures\Factory;
 use App\Entity\Bookmark;
 use App\Repository\BookmarkRepository;
 use Zenstruck\Foundry\FactoryCollection;
-use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
+use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 use Zenstruck\Foundry\Persistence\Proxy;
 use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
@@ -24,7 +24,7 @@ use function Zenstruck\Foundry\lazy;
  * @method static Bookmark|Proxy                                         randomOrCreate(array $attributes = [])
  * @method static Bookmark[]|Proxy[]                                     all()
  * @method static Bookmark[]|Proxy[]                                     createMany(int $number, array|callable $attributes = [])
- * @method static Bookmark[]|Proxy[]                                     createSequence(iterable|callable $sequence)
+ * @method static Bookmark[]|Proxy[]                                     createSequence((iterable|callable) $sequence)
  * @method static Bookmark[]|Proxy[]                                     findBy(array $attributes)
  * @method static Bookmark[]|Proxy[]                                     randomRange(int $min, int $max, array $attributes = [])
  * @method static Bookmark[]|Proxy[]                                     randomSet(int $number, array $attributes = [])
@@ -49,9 +49,9 @@ use function Zenstruck\Foundry\lazy;
  * @phpstan-method FactoryCollection<Bookmark&Proxy<Bookmark>> many(int $min, int|null $max = null)
  * @phpstan-method FactoryCollection<Bookmark&Proxy<Bookmark>> sequence(iterable|callable $sequence)
  *
- * @extends PersistentProxyObjectFactory<Bookmark>
+ * @extends PersistentObjectFactory<Bookmark>
  */
-final class BookmarkFactory extends PersistentProxyObjectFactory
+final class BookmarkFactory extends PersistentObjectFactory
 {
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories

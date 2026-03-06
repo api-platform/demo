@@ -20,8 +20,6 @@ export abstract class AbstractPage {
   }
 
   public async waitForDefaultBookToBeLoaded() {
-    await this.page.waitForResponse("https://openlibrary.org/books/OL2055137M.json");
-    await this.page.waitForResponse(/4066031-M\.jpg/);
     await (await this.getDefaultBook()).waitFor({ state: "visible" });
 
     return this.page;

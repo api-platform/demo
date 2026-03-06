@@ -7,6 +7,7 @@ namespace App\Security\Core;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\AttributesBasedUserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -23,7 +24,7 @@ final readonly class UserProvider implements AttributesBasedUserProviderInterfac
     public function refreshUser(UserInterface $user): UserInterface
     {
         $manager = $this->registry->getManagerForClass($user::class);
-        if (!$manager) {
+        if (!$manager instanceof ObjectManager) {
             throw new UnsupportedUserException(\sprintf('User class "%s" not supported.', $user::class));
         }
 

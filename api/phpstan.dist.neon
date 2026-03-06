@@ -10,8 +10,6 @@ parameters:
     symfony:
         containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
         constantHassers: false
-    scanDirectories:
-        - var/cache/dev/Symfony/Config
     bootstrapFiles:
         - vendor/autoload.php
         - src/Kernel.php

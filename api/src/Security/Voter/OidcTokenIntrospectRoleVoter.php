@@ -8,6 +8,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\AccessToken\AccessTokenExtractorInterface;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
@@ -40,7 +41,7 @@ final class OidcTokenIntrospectRoleVoter extends OidcVoter
         return str_starts_with($attribute, 'OIDC_INTROSPECT_') && empty($subject);
     }
 
-    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token, ?Vote $vote = null): bool
     {
         if (!empty($subject)) {
             throw new \InvalidArgumentException(\sprintf('Invalid subject type, expected empty string or "null", got "%s".', get_debug_type($subject)));
@@ -65,7 +66,7 @@ final class OidcTokenIntrospectRoleVoter extends OidcVoter
                 ],
             ]);
 
-            $roles = array_map(static fn (string $role): string => strtolower($role), $response->toArray()['realm_access']['roles'] ?? []);
+            $roles = array_map(strtolower(...), $response->toArray()['realm_access']['roles'] ?? []);
 
             return \in_array(strtolower(substr($attribute, 5)), $roles, true);
         } catch (HttpExceptionInterface) {

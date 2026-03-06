@@ -277,7 +277,7 @@ final class ReviewTest extends ApiTestCase
         ]);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Review/item.json'));
         // if I add a review on a book with reviews, it doesn't erase the existing reviews
-        $reviews = self::getContainer()->get(ReviewRepository::class)->findBy(['book' => $book->_real()]);
+        $reviews = self::getContainer()->get(ReviewRepository::class)->findBy(['book' => $book]);
         self::assertCount(6, $reviews);
         $id = preg_replace('/^.*\/(.+)$/', '$1', (string) $response->toArray()['@id']);
         /** @var Review $review */

@@ -26,7 +26,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Bridge\Doctrine\Types\UuidType;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Uid\Uuid;
@@ -39,7 +39,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ApiResource(
     types: ['https://schema.org/Review'],
-    order: ['publishedAt' => 'DESC'],
     operations: [
         new GetCollection(
             uriTemplate: '/admin/reviews{._format}',
@@ -76,7 +75,6 @@ use Symfony\Component\Validator\Constraints as Assert;
         SerializerContextBuilderInterface::ASSIGN_OBJECT_TO_POPULATE => true,
     ],
     collectDenormalizationErrors: true,
-    security: 'is_granted("OIDC_ADMIN")',
     mercure: [
         'topics' => [
             '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/admin/reviews/{id}{._format}"))',
@@ -84,15 +82,13 @@ use Symfony\Component\Validator\Constraints as Assert;
             '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/books/{bookId}/reviews/{id}{._format}"))',
             '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/books/{bookId}/reviews{._format}"))',
         ],
-    ]
+    ],
+    order: ['publishedAt' => 'DESC'],
+    security: 'is_granted("OIDC_ADMIN")',
 )]
 #[ApiResource(
-    types: ['https://schema.org/Review'],
-    order: ['publishedAt' => 'DESC'],
     uriTemplate: '/books/{bookId}/reviews{._format}',
-    uriVariables: [
-        'bookId' => new Link(toProperty: 'book', fromClass: Book::class),
-    ],
+    types: ['https://schema.org/Review'],
     operations: [
         new GetCollection(
             paginationClientItemsPerPage: true,
@@ -133,6 +129,9 @@ use Symfony\Component\Validator\Constraints as Assert;
             processor: ReviewRemoveProcessor::class
         ),
     ],
+    uriVariables: [
+        'bookId' => new Link(toProperty: 'book', fromClass: Book::class),
+    ],
     normalizationContext: [
         IriTransformerNormalizer::CONTEXT_KEY => [
             'book' => '/books/{id}{._format}',
@@ -152,7 +151,8 @@ use Symfony\Component\Validator\Constraints as Assert;
             '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/books/{bookId}/reviews/{id}{._format}"))',
             '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/books/{bookId}/reviews{._format}"))',
         ],
-    ]
+    ],
+    order: ['publishedAt' => 'DESC'],
 )]
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
 #[ORM\UniqueConstraint(fields: ['user', 'book'])]
@@ -219,7 +219,7 @@ class Review
      * @deprecated use the rating property instead
      */
     #[ApiProperty(deprecationReason: 'Use the rating property instead.')]
-    #[Assert\Choice(['a', 'b', 'c', 'd'])]
+    #[Assert\Choice(choices: ['a', 'b', 'c', 'd'])]
     #[Groups(groups: ['Review:read', 'Review:write'])]
     #[ORM\Column(nullable: true)]
     public ?string $letter = null;

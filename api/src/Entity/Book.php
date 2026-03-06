@@ -28,7 +28,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Uid\Uuid;
@@ -41,7 +41,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ApiResource(
     uriTemplate: '/admin/books{._format}',
-    types: ['https://schema.org/Book', 'https://schema.org/Offer'],
+    types: [
+        'https://schema.org/Book',
+        'https://schema.org/Offer',
+    ],
     operations: [
         new GetCollection(
             paginationClientItemsPerPage: true,
@@ -71,13 +74,13 @@ use Symfony\Component\Validator\Constraints as Assert;
         AbstractNormalizer::GROUPS => ['Book:write'],
     ],
     collectDenormalizationErrors: true,
-    security: 'is_granted("OIDC_ADMIN")',
     mercure: [
         'topics' => [
             '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/admin/books/{id}{._format}"))',
             '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/books/{id}{._format}"))',
         ],
-    ]
+    ],
+    security: 'is_granted("OIDC_ADMIN")',
 )]
 #[ApiResource(
     types: ['https://schema.org/Book', 'https://schema.org/Offer'],
@@ -115,10 +118,10 @@ class Book
     /**
      * @see https://schema.org/itemOffered
      */
-    #[ApiProperty(
-        types: ['https://schema.org/itemOffered', 'https://purl.org/dc/terms/BibliographicResource'],
-        example: 'https://openlibrary.org/books/OL2055137M.json'
-    )]
+    #[ApiProperty(example: 'https://openlibrary.org/books/OL2055137M.json', types: [
+        'https://schema.org/itemOffered',
+        'https://purl.org/dc/terms/BibliographicResource',
+    ])]
     #[Assert\NotBlank(allowNull: false)]
     #[Assert\Url(protocols: ['https'], requireTld: true)]
     #[BookUrl]
@@ -131,10 +134,7 @@ class Book
      */
     #[ApiFilter(OrderFilter::class)]
     #[ApiFilter(SearchFilter::class, strategy: 'i' . SearchFilterInterface::STRATEGY_PARTIAL)]
-    #[ApiProperty(
-        iris: ['https://schema.org/name'],
-        example: 'Hyperion'
-    )]
+    #[ApiProperty(example: 'Hyperion', iris: ['https://schema.org/name'])]
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Review:read:admin'])]
     #[ORM\Column(type: Types::TEXT)]
     public string $title;
@@ -143,10 +143,7 @@ class Book
      * @see https://schema.org/author
      */
     #[ApiFilter(SearchFilter::class, strategy: 'i' . SearchFilterInterface::STRATEGY_PARTIAL)]
-    #[ApiProperty(
-        types: ['https://schema.org/author'],
-        example: 'Dan Simmons'
-    )]
+    #[ApiProperty(example: 'Dan Simmons', types: ['https://schema.org/author'])]
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Review:read:admin'])]
     #[ORM\Column(nullable: true)]
     public ?string $author = null;
@@ -155,10 +152,7 @@ class Book
      * @see https://schema.org/OfferItemCondition
      */
     #[ApiFilter(SearchFilter::class, strategy: SearchFilterInterface::STRATEGY_EXACT)]
-    #[ApiProperty(
-        types: ['https://schema.org/OfferItemCondition'],
-        example: BookCondition::NewCondition->value
-    )]
+    #[ApiProperty(example: BookCondition::NewCondition->value, types: ['https://schema.org/OfferItemCondition'])]
     #[Assert\NotNull]
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Book:write'])]
     #[ORM\Column(name: '`condition`', type: 'string', enumType: BookCondition::class)]
@@ -171,11 +165,7 @@ class Book
      *
      * @see https://schema.org/reviews
      */
-    #[ApiProperty(
-        types: ['https://schema.org/reviews'],
-        example: '/books/6acacc80-8321-4d83-9b02-7f2c7bf6eb1d/reviews',
-        uriTemplate: '/books/{bookId}/reviews{._format}'
-    )]
+    #[ApiProperty(example: '/books/6acacc80-8321-4d83-9b02-7f2c7bf6eb1d/reviews', types: ['https://schema.org/reviews'], uriTemplate: '/books/{bookId}/reviews{._format}')]
     #[Groups(groups: ['Book:read', 'Bookmark:read'])]
     #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'book')]
     public Collection $reviews;
@@ -185,10 +175,7 @@ class Book
      *
      * @see https://schema.org/aggregateRating
      */
-    #[ApiProperty(
-        types: ['https://schema.org/aggregateRating'],
-        example: 1
-    )]
+    #[ApiProperty(example: 1, types: ['https://schema.org/aggregateRating'])]
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read'])]
     public ?int $rating = null;
 

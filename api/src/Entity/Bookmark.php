@@ -19,7 +19,7 @@ use App\Validator\UniqueUserBook;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Bridge\Doctrine\Types\UuidType;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Uid\Uuid;
@@ -32,7 +32,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ApiResource(
     types: ['https://schema.org/BookmarkAction'],
-    order: ['bookmarkedAt' => 'DESC'],
     operations: [
         new GetCollection(),
         new Delete(
@@ -54,7 +53,8 @@ use Symfony\Component\Validator\Constraints as Assert;
     ],
     collectDenormalizationErrors: true,
     mercure: true,
-    security: 'is_granted("OIDC_USER")'
+    order: ['bookmarkedAt' => 'DESC'],
+    security: 'is_granted("OIDC_USER")',
 )]
 #[ORM\Entity(repositoryClass: BookmarkRepository::class)]
 #[ORM\UniqueConstraint(fields: ['user', 'book'])]
@@ -87,7 +87,7 @@ class Bookmark
     #[Assert\NotNull]
     #[Groups(groups: ['Bookmark:read', 'Bookmark:write'])]
     #[ORM\ManyToOne(targetEntity: Book::class)]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     public Book $book;
 
     /**
