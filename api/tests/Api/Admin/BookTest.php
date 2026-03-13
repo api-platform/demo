@@ -397,7 +397,7 @@ final class BookTest extends ApiTestCase
         $id = preg_replace('/^.*\/(.+)$/', '$1', (string) $response->toArray()['@id']);
         /** @var Book $book */
         $book = self::getContainer()->get(BookRepository::class)->find($id);
-        self::assertCount(1, self::getMercureMessages());
+        self::assertCount(2, self::getMercureMessages());
         self::assertEquals(
             new Update(
                 topics: ['http://localhost/admin/books/' . $book->getId(), 'http://localhost/books/' . $book->getId()],
@@ -530,7 +530,7 @@ final class BookTest extends ApiTestCase
             'author' => 'Asimov, Isaac',
         ]);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Book/item.json'));
-        self::assertCount(1, self::getMercureMessages());
+        self::assertCount(2, self::getMercureMessages());
         self::assertEquals(
             new Update(
                 topics: ['http://localhost/admin/books/' . $book->getId(), 'http://localhost/books/' . $book->getId()],
@@ -601,7 +601,7 @@ final class BookTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
         self::assertEmpty($response->getContent());
         BookFactory::assert()->notExists(['title' => 'Hyperion']);
-        self::assertCount(1, self::getMercureMessages());
+        self::assertCount(2, self::getMercureMessages());
         self::assertEquals(
             new Update(
                 topics: ['http://localhost/admin/books/' . $id, 'http://localhost/books/' . $id],

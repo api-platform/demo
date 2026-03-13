@@ -282,7 +282,7 @@ final class ReviewTest extends ApiTestCase
         $id = preg_replace('/^.*\/(.+)$/', '$1', (string) $response->toArray()['@id']);
         /** @var Review $review */
         $review = self::getContainer()->get(ReviewRepository::class)->find($id);
-        self::assertCount(1, self::getMercureMessages());
+        self::assertCount(2, self::getMercureMessages());
         self::assertMercureUpdateMatchesJsonSchema(
             update: self::getMercureMessage(),
             topics: [
@@ -474,7 +474,7 @@ final class ReviewTest extends ApiTestCase
             'rating' => 5,
         ]);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Review/item.json'));
-        self::assertCount(1, self::getMercureMessages());
+        self::assertCount(2, self::getMercureMessages());
         self::assertMercureUpdateMatchesJsonSchema(
             update: self::getMercureMessage(),
             topics: [
@@ -565,7 +565,7 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
         self::assertEmpty($response->getContent());
         ReviewFactory::assert()->notExists(['body' => 'Best book ever!']);
-        self::assertCount(1, self::getMercureMessages());
+        self::assertCount(2, self::getMercureMessages());
         self::assertEquals(
             new Update(
                 topics: [
