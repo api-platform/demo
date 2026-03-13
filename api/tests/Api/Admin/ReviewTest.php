@@ -295,7 +295,7 @@ final class ReviewTest extends ApiTestCase
         // ensure user hasn't changed
         self::assertNotEquals($user, $review->user);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Review/item.json'));
-        self::assertCount(1, self::getMercureMessages());
+        self::assertCount(2, self::getMercureMessages());
         self::assertEquals(
             new Update(
                 topics: [
@@ -372,7 +372,7 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
         self::assertEmpty($response->getContent());
         ReviewFactory::assert()->notExists(['body' => 'Best book ever!']);
-        self::assertCount(1, self::getMercureMessages());
+        self::assertCount(2, self::getMercureMessages());
         self::assertEquals(
             new Update(
                 topics: [
