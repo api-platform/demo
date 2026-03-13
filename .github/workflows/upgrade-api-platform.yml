@@ -1,5 +1,8 @@
 # yaml-language-server: $schema=https://github.com/SchemaStore/schemastore/blob/master/src/schemas/json/github-workflow.json
 name: Upgrade API Platform
+permissions:
+  contents: write
+  pull-requests: write
 
 on:
   workflow_dispatch: ~
@@ -9,9 +12,6 @@ jobs:
     name: Upgrade
     if: ${{ github.repository == 'api-platform/demo' }}
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
     steps:
       -
         name: Checkout
