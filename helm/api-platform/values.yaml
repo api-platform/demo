@@ -92,7 +92,6 @@ postgresql:
 keycloak:
   enabled: true
   image:
-    registry: europe-west1-docker.pkg.dev
     repository: "chart-example.local/api-platform/keycloak"
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
@@ -160,10 +159,18 @@ keycloak:
 
 external-dns:
   enabled: true
-  image:
-    repository: registry.k8s.io/external-dns/external-dns
-    tag: v0.15.0
-    pullPolicy: IfNotPresent
+  provider:
+    name: cloudflare
+  env:
+    - name: CF_API_TOKEN
+      value: ""
+  sources:
+    - ingress
+  domainFilters:
+    - chart-example.local
+  policy: sync
+  registry: txt
+  txtOwnerId: ""
   resources:
     requests:
       memory: 50Mi
@@ -171,14 +178,6 @@ external-dns:
     limits:
       memory: 200Mi
       cpu: 100m
-  domainFilters:
-    - chart-example.local
-  provider: cloudflare
-  cloudflare:
-    apiToken: ""
-  zoneIdFilters: []
-  rbac:
-    create: true
 
 imagePullSecrets: []
 nameOverride: ""

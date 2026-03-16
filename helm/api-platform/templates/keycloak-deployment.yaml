@@ -5,9 +5,7 @@ metadata:
   labels:
     {{- include "api-platform.labelsKeycloak" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
-  {{- end }}
+  replicas: 1
   selector:
     matchLabels:
       {{- include "api-platform.selectorLabelsKeycloak" . | nindent 6 }}
@@ -66,11 +64,6 @@ spec:
                 secretKeyRef:
                   name: {{ include "api-platform.fullname" . }}
                   key: keycloak-database-password
-            - name: KC_BOOTSTRAP_ADMIN_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "api-platform.fullname" . }}
-                  key: keycloak-database-password
             {{- if .Values.keycloak.auth.createAdminUser }}
             - name: KC_BOOTSTRAP_ADMIN_USERNAME
               valueFrom:
@@ -83,7 +76,9 @@ spec:
                   name: {{ include "api-platform.fullname" . }}
                   key: keycloak-admin-password
             {{- end }}
-            {{- toYaml .Values.keycloak.extraEnvVars | nindent 12 }}
+            {{- with .Values.keycloak.extraEnvVars }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           ports:
             - name: http
               containerPort: 8080
@@ -94,14 +89,20 @@ spec:
             - name: api
               containerPort: 9000
               protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /health/started
+              port: api
+            failureThreshold: 30
+            periodSeconds: 5
           livenessProbe:
             httpGet:
-              path: /
-              port: http
+              path: /health/live
+              port: api
           readinessProbe:
             httpGet:
-              path: /
-              port: http
+              path: /health/ready
+              port: api
           resources:
             {{- toYaml .Values.keycloak.resources | nindent 12 }}
         {{- if .Values.keycloak.postgresql.enabled }}

@@ -22,7 +22,7 @@ data:
   {{- if .Values.keycloak.postgresql.enabled }}
   keycloak-database-url: {{ printf "jdbc:postgresql://localhost:5432/%s" .Values.keycloak.postgresql.global.postgresql.auth.database | quote }}
   {{- else }}
-  keycloak-database-url: {{ .Values.keycloak.postgresql.url | b64enc | quote }}
+  keycloak-database-url: {{ .Values.keycloak.postgresql.url | quote }}
   {{- end }}
 
 ---
