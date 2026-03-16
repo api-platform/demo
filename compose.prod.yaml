@@ -43,5 +43,4 @@ services:
       context: ./helm/api-platform/keycloak/
       target: keycloak
     environment:
-      KC_PRODUCTION: "true"
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD}
