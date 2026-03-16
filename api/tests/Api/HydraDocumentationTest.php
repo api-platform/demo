@@ -58,6 +58,81 @@ final class HydraDocumentationTest extends ApiTestCase
         self::assertNotContains('https://schema.org/Person', $classNames, 'User should not use full IRI as class name');
     }
 
+    /**
+     * Regression test for api-platform/hydra DocumentationNormalizer bug.
+     *
+     * When `serializer.hydra_prefix` is false (the default since API Platform 4.x), the
+     * `DocumentationNormalizer` emits:
+     *
+     *   "owl:onProperty": {"@id": "member"}
+     *
+     * instead of:
+     *
+     *   "owl:onProperty": {"@id": "hydra:member"}
+     *
+     * The bare term `"member"` cannot be expanded by jsonld.js to
+     * `http://www.w3.org/ns/hydra/core#member` because `@id` values are expanded
+     * with `vocab=false`, which skips term definitions. Only compact IRIs (prefix:localname)
+     * are always resolved. This causes `@api-platform/api-doc-parser`'s `findRelatedClass`
+     * to throw "Cannot find the class related to …#Entrypoint/book", breaking HydraAdmin.
+     *
+     * @see https://github.com/api-platform/hydra/blob/main/src/Serializer/DocumentationNormalizer.php
+     */
+    #[Test]
+    public function entrypointOwlOnPropertyIsMemberCompactIriNotBareTerm(): void
+    {
+        $response = $this->client->request('GET', '/docs.jsonld');
+
+        self::assertResponseIsSuccessful();
+
+        $docs = $response->toArray();
+
+        // Find the Entrypoint class in supportedClass
+        $entrypointClass = null;
+        foreach ($docs['supportedClass'] as $class) {
+            if ('#Entrypoint' === ($class['@id'] ?? null)) {
+                $entrypointClass = $class;
+                break;
+            }
+        }
+
+        self::assertNotNull($entrypointClass, 'Entrypoint class should exist in supportedClass');
+
+        $supportedProperties = $entrypointClass['supportedProperty'] ?? [];
+        self::assertNotEmpty($supportedProperties, 'Entrypoint should have supported properties');
+
+        foreach ($supportedProperties as $supportedProperty) {
+            $property = $supportedProperty['property'] ?? null;
+            if (null === $property) {
+                continue;
+            }
+
+            foreach ($property['range'] ?? [] as $rangeEntry) {
+                $onPropertyId = $rangeEntry['owl:equivalentClass']['owl:onProperty']['@id'] ?? null;
+                if (null === $onPropertyId) {
+                    continue;
+                }
+
+                // A bare "member" cannot be expanded to http://www.w3.org/ns/hydra/core#member
+                // by jsonld.js because @id values are resolved with vocab=false (term definitions
+                // are ignored). Only compact IRIs like "hydra:member" or the full IRI work.
+                // Fix in DocumentationNormalizer: replace `$hydraPrefix.'member'` with `'hydra:member'`
+                // (or ContextBuilderInterface::HYDRA_NS.'member') for owl:onProperty.
+                self::assertNotSame(
+                    'member',
+                    $onPropertyId,
+                    \sprintf(
+                        'owl:onProperty @id for entrypoint property "%s" is the bare term "member". '
+                        .'jsonld.js cannot expand it to http://www.w3.org/ns/hydra/core#member '
+                        .'(@id values use vocab=false, which skips term definitions). '
+                        .'Use "hydra:member" instead.',
+                        $property['@id'] ?? '?'
+                    )
+                );
+            }
+        }
+    }
+
     #[Test]
     public function booksResourceHasCorrectShortNameAndTypes(): void
     {
