@@ -41,7 +41,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ApiResource(
     uriTemplate: '/admin/books{._format}',
-    shortName: 'AdminBook',
     types: [
         'https://schema.org/Book',
         'https://schema.org/Offer',
@@ -84,7 +83,6 @@ use Symfony\Component\Validator\Constraints as Assert;
     security: 'is_granted("OIDC_ADMIN")',
 )]
 #[ApiResource(
-    shortName: 'Book',
     types: ['https://schema.org/Book', 'https://schema.org/Offer'],
     operations: [
         new GetCollection(
