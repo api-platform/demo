@@ -69,7 +69,6 @@ postgresql:
   global:
     postgresql:
       auth:
-        postgresPassword: "!ThisMustBeChanged!"
         username: "example"
         password: "!ChangeMe!"
         database: "api"
@@ -113,16 +112,6 @@ keycloak:
       value: "https://chart-example.local/oidc/"
   # must finish with a trailing slash
   httpRelativePath: /oidc/
-  proxy: edge
-  tls:
-    enabled: false
-  startupProbe:
-    enabled: true
-  readinessProbe:
-    initialDelaySeconds: 0
-  livenessProbe:
-    initialDelaySeconds: 0
-    periodSeconds: 10
   auth:
     createAdminUser: true
     adminUser: admin
@@ -134,7 +123,6 @@ keycloak:
     global:
       postgresql:
         auth:
-          postgresPassword: "!ThisMustBeChanged!"
           username: "example"
           password: "!ChangeMe!"
           database: "api"
