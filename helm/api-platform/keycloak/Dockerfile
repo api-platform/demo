@@ -16,6 +16,8 @@ FROM keycloak_upstream AS keycloak_builder
 
 WORKDIR /opt/keycloak
 
+COPY --link --chown=keycloak:keycloak --chmod=644 providers/owner-policy.jar /opt/keycloak/providers/owner-policy.jar
+
 RUN /opt/keycloak/bin/kc.sh build \
     --db=postgres \
     --http-relative-path=/oidc/ \
@@ -28,6 +30,5 @@ FROM keycloak_upstream AS keycloak
 COPY --from=keycloak_builder /opt/keycloak/ /opt/keycloak/
 
 COPY --link --chown=keycloak:keycloak --chmod=644 themes/api-platform-demo /opt/keycloak/themes/api-platform-demo
-COPY --link --chown=keycloak:keycloak --chmod=644 providers/owner-policy.jar /opt/keycloak/providers/owner-policy.jar
 
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
