@@ -32,7 +32,7 @@ spec:
           image: "{{ .Values.keycloak.image.repository }}:{{ .Values.keycloak.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.keycloak.image.pullPolicy }}
           {{- if .Values.keycloak.importRealm.enabled }}
-          args: ['start', '--import-realm']
+          args: ['start', '--optimized', '--import-realm']
           volumeMounts:
             - name: keycloak-realm
               mountPath: /opt/keycloak/data/import
@@ -41,14 +41,6 @@ spec:
           env:
             - name: KC_PRODUCTION
               value: "true"
-            - name: KC_HTTP_RELATIVE_PATH
-              value: "/oidc/"
-            - name: KC_HEALTH_ENABLED
-              value: "true"
-            - name: KC_METRICS_ENABLED
-              value: "true"
-            - name: KC_DB
-              value: "postgres"
             - name: KC_DB_URL
               valueFrom:
                 configMapKeyRef:
@@ -64,7 +56,7 @@ spec:
                 secretKeyRef:
                   name: {{ include "api-platform.fullname" . }}
                   key: keycloak-database-password
-            {{- if .Values.keycloak.auth.createAdminUser }}
+            {{- if and .Values.keycloak.auth.createAdminUser .Values.keycloak.auth.adminPassword }}
             - name: KC_BOOTSTRAP_ADMIN_USERNAME
               valueFrom:
                 secretKeyRef:

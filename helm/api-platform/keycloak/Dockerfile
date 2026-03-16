@@ -16,7 +16,11 @@ FROM keycloak_upstream AS keycloak_builder
 
 WORKDIR /opt/keycloak
 
-RUN /opt/keycloak/bin/kc.sh build
+RUN /opt/keycloak/bin/kc.sh build \
+    --db=postgres \
+    --http-relative-path=/oidc/ \
+    --health-enabled=true \
+    --metrics-enabled=true
 
 # Keycloak image
 FROM keycloak_upstream AS keycloak
