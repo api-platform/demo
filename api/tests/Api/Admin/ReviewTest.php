@@ -33,7 +33,7 @@ final class ReviewTest extends ApiTestCase
 
     private Client $client;
 
-    protected function setup(): void
+    protected function setUp(): void
     {
         $this->client = self::createClient();
     }
