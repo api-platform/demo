@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "openapi-spec"
+  ],
+  "permissions": {
+    "allow": [
+      "Bash(curl:http://localhost*)",
+      "Bash(curl:https://localhost*)",
+      "Bash(diff:*)",
+      "Bash(find:*)",
+      "Bash(gh:*)",
+      "Bash(git:*)",
+      "Bash(helm:*)",
+      "Bash(kubectl:*)",
+      "Bash(ls:*)",
+      "Bash(pwd)",
+      "Bash(tree:*)",
+      "Bash(wc:*)",
+      "Bash(which:*)",
+      "Bash(make:*)",
+      "Bash(composer:*)",
+      "Bash(shellcheck:*)",
+      "Bash(docker compose:*)",
+      "WebSearch",
+      "WebFetch(domain:localhost)"
+    ],
+    "deny": [
+      "Bash(rm:*)",
+      "Read(./.env)",
+      "Read(./api/config/secrets/*)",
+      "Read(./api/.env.local)",
+      "Read(./api/.env.local.php)",
+      "Read(./api/.env.*.local)",
+      "Read(./pwa/.env*)"
+    ],
+    "defaultMode": "acceptEdits"
+  }
+}
