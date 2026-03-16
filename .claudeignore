@@ -1,0 +1,59 @@
+# --- Version Control & IDEs ---
+.git/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# --- Dependencies ---
+node_modules/
+vendor/
+
+# --- Builds & Cache ---
+build/
+dist/
+.turbo/
+.cache/
+
+# --- Lock Files & Auto-Generated ---
+yarn.lock
+package-lock.json
+composer.lock
+*.tsbuildinfo
+
+# --- Logs & Debug ---
+*.log
+*.log.*
+npm-debug.log*
+
+# --- Environment & Secrets ---
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# --- Binary & Media Assets ---
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ico
+*.webp
+*.pdf
+*.zip
+*.tar
+*.gz
+*.rar
+*.mp4
+*.mp3
+*.mov
+*.wav
+*.woff
+*.woff2
+*.eot
+*.ttf
+*.otf
+*.map
+
+# --- Claude Skills (loaded separately) ---
+.agents/
