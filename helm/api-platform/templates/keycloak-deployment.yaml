@@ -5,9 +5,7 @@ metadata:
   labels:
     {{- include "api-platform.labelsKeycloak" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
-  {{- end }}
+  replicas: 1
   selector:
     matchLabels:
       {{- include "api-platform.selectorLabelsKeycloak" . | nindent 6 }}
@@ -34,23 +32,17 @@ spec:
           image: "{{ .Values.keycloak.image.repository }}:{{ .Values.keycloak.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.keycloak.image.pullPolicy }}
           {{- if .Values.keycloak.importRealm.enabled }}
-          args: ['--import-realm']
+          args: ['start', '--optimized', '--import-realm']
           volumeMounts:
             - name: keycloak-realm
               mountPath: /opt/keycloak/data/import
               readOnly: true
           {{- end }}
           env:
-            - name: KC_PRODUCTION
+            - name: KC_HTTP_ENABLED
               value: "true"
-            - name: KC_HTTP_RELATIVE_PATH
-              value: "/oidc/"
-            - name: KC_HEALTH_ENABLED
-              value: "true"
-            - name: KC_METRICS_ENABLED
-              value: "true"
-            - name: KC_DB
-              value: "postgres"
+            - name: KC_PROXY_HEADERS
+              value: "xforwarded"
             - name: KC_DB_URL
               valueFrom:
                 configMapKeyRef:
@@ -66,12 +58,7 @@ spec:
                 secretKeyRef:
                   name: {{ include "api-platform.fullname" . }}
                   key: keycloak-database-password
-            - name: KC_BOOTSTRAP_ADMIN_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "api-platform.fullname" . }}
-                  key: keycloak-database-password
-            {{- if .Values.keycloak.auth.createAdminUser }}
+            {{- if and .Values.keycloak.auth.createAdminUser .Values.keycloak.auth.adminPassword }}
             - name: KC_BOOTSTRAP_ADMIN_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -83,7 +70,9 @@ spec:
                   name: {{ include "api-platform.fullname" . }}
                   key: keycloak-admin-password
             {{- end }}
-            {{- toYaml .Values.keycloak.extraEnvVars | nindent 12 }}
+            {{- with .Values.keycloak.extraEnvVars }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           ports:
             - name: http
               containerPort: 8080
@@ -94,14 +83,20 @@ spec:
             - name: api
               containerPort: 9000
               protocol: TCP
+          startupProbe:
+            httpGet:
+              path: {{ .Values.keycloak.httpRelativePath }}health/started
+              port: api
+            failureThreshold: 30
+            periodSeconds: 5
           livenessProbe:
             httpGet:
-              path: /
-              port: http
+              path: {{ .Values.keycloak.httpRelativePath }}health/live
+              port: api
           readinessProbe:
             httpGet:
-              path: /
-              port: http
+              path: {{ .Values.keycloak.httpRelativePath }}health/ready
+              port: api
           resources:
             {{- toYaml .Values.keycloak.resources | nindent 12 }}
         {{- if .Values.keycloak.postgresql.enabled }}
@@ -126,19 +121,23 @@ spec:
                 secretKeyRef:
                   name: {{ include "api-platform.fullname" . }}
                   key: keycloak-database-password
-            {{- toYaml .Values.keycloak.postgresql.extraEnvVars | nindent 12 }}
+            {{- with .Values.keycloak.postgresql.extraEnvVars }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           ports:
-            - name: main
+            - name: postgresql
               containerPort: 5432
-              protocol: UDP
+              protocol: TCP
           livenessProbe:
-            httpGet:
-              path: /
-              port: main
+            tcpSocket:
+              port: postgresql
+            initialDelaySeconds: 30
+            periodSeconds: 10
           readinessProbe:
-            httpGet:
-              path: /
-              port: main
+            tcpSocket:
+              port: postgresql
+            initialDelaySeconds: 5
+            periodSeconds: 10
           resources:
             {{- toYaml .Values.keycloak.postgresql.resources | nindent 12 }}
         {{- end }}

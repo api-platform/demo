@@ -1,6 +1,6 @@
 dependencies:
 - name: external-dns
-  repository: https://charts.bitnami.com/bitnami/
-  version: 9.0.3
-digest: sha256:3b0229942127a01c02f151e18b739c39b68e6458c6b865e3a3dd90fcfe198c99
-generated: "2026-02-04T16:01:05.816182082+01:00"
+  repository: https://kubernetes-sigs.github.io/external-dns/
+  version: 1.20.0
+digest: sha256:9e0e4f1c2b8e8dd7a40c036dbe8f55cb7606215ba1d17a35afcdc508494c539d
+generated: "2026-03-16T10:09:31.443043306+01:00"

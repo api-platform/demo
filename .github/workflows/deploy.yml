@@ -88,8 +88,7 @@ jobs:
       -
         name: Build Helm Dependencies
         run: |
-          helm repo add bitnami https://charts.bitnami.com/bitnami/
-          helm repo add stable https://charts.helm.sh/stable/
+          helm repo add external-dns https://kubernetes-sigs.github.io/external-dns/
           helm dependency build ./helm/api-platform
       # Release name MUST start with a letter
       -
@@ -115,7 +114,7 @@ jobs:
             --wait \
             --namespace=$namespace \
             --set=app.version=${{ github.sha }} \
-            --set=keycloak.image.repository=${{ secrets.gke-project }}/${{ secrets.gke-project }}/keycloak \
+            --set=keycloak.image.repository=europe-west1-docker.pkg.dev/${{ secrets.gke-project }}/${{ secrets.gke-project }}/keycloak \
             --set=keycloak.image.tag=${{ inputs.docker-images-version }} \
             --set=keycloak.auth.adminPassword=${{ secrets.keycloak-admin-password }} \
             --set-string=keycloak.extraEnvVars[0].value=https://$url/oidc/ \
@@ -126,9 +125,10 @@ jobs:
             --set=pwa.image.tag=${{ inputs.docker-images-version }} \
             --set=ingress.hosts[0].host=$url \
             --set=ingress.tls[0].hosts[0]=$url \
-            --set=external-dns.cloudflare.apiToken=${{ secrets.cloudflare-api-token }} \
-            --set=external-dns.domainFilters={"$url"} \
-            --set=external-dns.zoneIdFilters={${{ secrets.cloudflare-zone-id }}} \
+            --set=external-dns.env[0].name=CF_API_TOKEN \
+            --set=external-dns.env[0].value=${{ secrets.cloudflare-api-token }} \
+            --set=external-dns.domainFilters[0]=$url \
+            --set=external-dns.txtOwnerId=$release \
             --set=php.corsAllowOrigin="^$(echo "$cors" | sed 's/\./\\\\./g')$" \
             --set=php.trustedHosts="^127\\.0\\.0\\.1|localhost|$(echo "$url" | sed 's/\./\\\\./g')$" \
             --set=mercure.publicUrl=https://$url/.well-known/mercure \

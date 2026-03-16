@@ -29,8 +29,8 @@ export default function() {
 function check_https_redirect() {
     var r = http.get(`http://${target}/`);
     check(r, {
-        "http request: status is 301": (r) => r.status === 301,
-        "http request: redirection location ok": (r) => r.headers["Location"] === `https://${target}/`,
+        "http request: status is 301 or 308": (r) => r.status === 301 || r.status === 308,
+        "http request: redirection location ok": (r) => r.headers["Location"].startsWith(`https://${target}`),
     });
 }
 

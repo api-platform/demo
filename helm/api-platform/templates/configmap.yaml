@@ -15,14 +15,14 @@ data:
   mercure-extra-directives: {{ .Values.mercure.extraDirectives | quote }}
   caddy-global-options: {{ .Values.php.caddyGlobalOptions | quote }}
   oidc-server-url: "https://{{ (first .Values.ingress.hosts).host }}/oidc/realms/demo"
-  oidc-server-url-internal: "http://{{ template "common.names.fullname" .Subcharts.keycloak }}/oidc/realms/demo"
+  oidc-server-url-internal: "http://{{ include "api-platform.fullname" . }}-keycloak/oidc/realms/demo"
   next-auth-url: "https://{{ (first .Values.ingress.hosts).host }}/api/auth"
   pwa-client-id: {{ .Values.pwa.oidcClientId | quote }}
   pwa-authorization-client-id: {{ .Values.php.oidcClientId | quote }}
   {{- if .Values.keycloak.postgresql.enabled }}
-  keycloak-database-url: {{ printf "jdbc:postgresql://%s:%s/%s" .Release.Name .Values.keycloak.postgresql.global.postgresql.auth.database | b64enc | quote }}
+  keycloak-database-url: {{ printf "jdbc:postgresql://localhost:5432/%s" .Values.keycloak.postgresql.global.postgresql.auth.database | quote }}
   {{- else }}
-  keycloak-database-url: {{ .Values.keycloak.postgresql.url | b64enc | quote }}
+  keycloak-database-url: {{ .Values.keycloak.postgresql.url | quote }}
   {{- end }}
 
 ---
@@ -35,6 +35,5 @@ metadata:
   labels:
     {{- include "api-platform.labelsKeycloak" . | nindent 4 }}
 data:
-  realm.json: |
-    {{ (.Files.Glob .Values.keycloak.importRealm.path).AsConfig | indent 2 }}
+{{ (.Files.Glob .Values.keycloak.importRealm.path).AsConfig | indent 2 }}
 {{- end }}
