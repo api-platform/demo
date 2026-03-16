@@ -85,17 +85,17 @@ spec:
               protocol: TCP
           startupProbe:
             httpGet:
-              path: /health/started
+              path: {{ .Values.keycloak.httpRelativePath }}health/started
               port: api
             failureThreshold: 30
             periodSeconds: 5
           livenessProbe:
             httpGet:
-              path: /health/live
+              path: {{ .Values.keycloak.httpRelativePath }}health/live
               port: api
           readinessProbe:
             httpGet:
-              path: /health/ready
+              path: {{ .Values.keycloak.httpRelativePath }}health/ready
               port: api
           resources:
             {{- toYaml .Values.keycloak.resources | nindent 12 }}
