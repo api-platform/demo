@@ -1,0 +1,17 @@
+{{- if .Values.keycloak.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "api-platform.fullname" . }}-keycloak
+  labels:
+    {{- include "api-platform.labelsKeycloak" . | nindent 4 }}
+spec:
+  type: {{ .Values.keycloak.service.type }}
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "api-platform.selectorLabelsKeycloak" . | nindent 4 }}
+{{- end }}

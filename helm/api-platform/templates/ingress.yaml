@@ -70,12 +70,12 @@ spec:
               {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
               {{ $service := default dict $backend.service }}
               service:
-                name: {{ template "common.names.fullname" $.Subcharts.keycloak }}
+                name: {{ $service.name | default (printf "%s-keycloak" $fullName) }}
                 {{ $port := default dict $service.port }}
                 port:
                   number: {{ $port.number | default $svcPort }}
               {{- else }}
-              serviceName: {{ template "common.names.fullname" $.Subcharts.keycloak }}
+              serviceName: {{ $backend.serviceName | default (printf "%s-keycloak" $fullName) }}
               servicePort: {{ $backend.servicePort | default $svcPort }}
               {{- end }}
           {{- end }}

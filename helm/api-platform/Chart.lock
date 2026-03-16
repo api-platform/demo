@@ -1,12 +1,6 @@
 dependencies:
-- name: postgresql
-  repository: https://charts.bitnami.com/bitnami/
-  version: 15.5.6
 - name: external-dns
-  repository: https://charts.bitnami.com/bitnami/
-  version: 7.5.6
-- name: keycloak
-  repository: https://charts.bitnami.com/bitnami/
-  version: 21.4.2
-digest: sha256:fa058d1558ec980b14354478fed4725d46b1f2a9b274af9ee7bee419944e926a
-generated: "2024-06-18T13:57:36.134642207+02:00"
+  repository: https://kubernetes-sigs.github.io/external-dns/
+  version: 1.20.0
+digest: sha256:9e0e4f1c2b8e8dd7a40c036dbe8f55cb7606215ba1d17a35afcdc508494c539d
+generated: "2026-03-16T10:09:31.443043306+01:00"
