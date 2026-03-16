@@ -32,7 +32,7 @@ spec:
           image: "{{ .Values.keycloak.image.repository }}:{{ .Values.keycloak.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.keycloak.image.pullPolicy }}
           {{- if .Values.keycloak.importRealm.enabled }}
-          args: ['--import-realm']
+          args: ['start', '--import-realm']
           volumeMounts:
             - name: keycloak-realm
               mountPath: /opt/keycloak/data/import

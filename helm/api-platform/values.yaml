@@ -139,8 +139,8 @@ keycloak:
           password: "!ChangeMe!"
           database: "api"
     image:
-      repository: "ghcr.io/cloudnative-pg/postgresql"
-      tag: 16
+      repository: "docker.io/postgres"
+      tag: "16-alpine"
     primary:
       # Persistent Volume Storage configuration.
       # ref: https://kubernetes.io/docs/user-guide/persistent-volumes
