@@ -32,10 +32,10 @@ const server = https.createServer(
       filePath = path.join(MOCKS_DIR, host, "search", `${query}.json`);
     }
 
-    // Handle gutendex search: /books?search=Asimov -> search/Asimov.json
+    // Handle gutendex search: /books?search=... -> always return search/Asimov.json
+    // (MUI Autocomplete triggers additional searches with the full selected label)
     if (host === "gutendex.com" && url.pathname === "/books" && url.searchParams.has("search")) {
-      const query = url.searchParams.get("search").replace(/\s+/g, "-");
-      filePath = path.join(MOCKS_DIR, host, "search", `${query}.json`);
+      filePath = path.join(MOCKS_DIR, host, "search", "Asimov.json");
     }
 
     if (fs.existsSync(filePath)) {
