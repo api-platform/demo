@@ -23,12 +23,8 @@ framework:
                 base_uri: '%env(OIDC_SERVER_URL_INTERNAL)%/'
             open_library.client:
                 base_uri: 'https://openlibrary.org/'
-                verify_peer: '%env(bool:HTTP_CLIENT_VERIFY_PEER)%'
-                verify_host: '%env(bool:HTTP_CLIENT_VERIFY_PEER)%'
             gutendex.client:
                 base_uri: 'https://gutendex.com/'
-                verify_peer: '%env(bool:HTTP_CLIENT_VERIFY_PEER)%'
-                verify_host: '%env(bool:HTTP_CLIENT_VERIFY_PEER)%'
 
 when@test:
     framework:
