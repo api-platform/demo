@@ -170,8 +170,17 @@ jobs:
             keycloak.cache-from=type=gha,scope=keycloak-refs/heads/main
             keycloak.cache-to=type=gha,scope=keycloak-${{ github.ref }}-e2e,mode=max
       -
+        name: Generate Mock Server Certificates
+        run: |
+          openssl req -x509 -newkey rsa:2048 -keyout e2e/mock-server/key.pem -out e2e/mock-server/cert.pem \
+            -days 365 -nodes -subj '/CN=mock-server' \
+            -addext 'subjectAltName=DNS:openlibrary.org,DNS:covers.openlibrary.org,DNS:gutendex.com'
+      -
         name: Start Services
         run: docker compose up --wait --no-build
+      -
+        name: Trust Mock Server Certificate
+        run: docker compose exec -T php update-ca-certificates
       -
         name: Update API Platform
         if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.minimum-stability != 'stable') }}
