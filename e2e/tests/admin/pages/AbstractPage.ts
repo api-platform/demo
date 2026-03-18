@@ -34,5 +34,18 @@ export abstract class AbstractPage {
     await this.page.route(/^https:\/\/covers\.openlibrary.org\/b\/id\/(.+)\.jpg$/, (route) => route.fulfill({
       path: "tests/mocks/covers.openlibrary.org/b/id/4066031-M.jpg",
     }));
+    // Gutendex mocks — always return the same search results (MUI Autocomplete
+    // triggers additional searches with the full selected label as query)
+    await this.page.route(/^https:\/\/gutendex\.com\/books\?search=/, (route) => {
+      return route.fulfill({
+        path: "tests/mocks/gutendex.com/search/Asimov.json",
+      });
+    });
+    await this.page.route(/^https:\/\/gutendex\.com\/books\/(\d+)\.json$/, (route) => {
+      const match = route.request().url().match(/\/books\/(\d+)\.json/);
+      return route.fulfill({
+        path: `tests/mocks/gutendex.com/books/${match?.[1]}.json`,
+      });
+    });
   }
 }

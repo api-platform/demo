@@ -10,6 +10,13 @@ services:
         aliases:
           - openlibrary.org
           - covers.openlibrary.org
+          - gutendex.com
+
+  php:
+    volumes:
+      - ./e2e/mock-server/cert.pem:/usr/local/share/ca-certificates/mock-server.crt:ro
+    depends_on:
+      - mock-openlibrary
 
   pwa:
     environment:
