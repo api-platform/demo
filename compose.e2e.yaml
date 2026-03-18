@@ -18,7 +18,7 @@ services:
     environment:
       # Trust mock server's self-signed cert for gutendex.com / openlibrary.org
       SSL_CERT_FILE: /etc/ssl/certs/ca-certificates-with-mock.crt
-    entrypoint: ["/bin/sh", "-c", "cat /etc/ssl/certs/ca-certificates.crt /mock-certs/cert.pem > /etc/ssl/certs/ca-certificates-with-mock.crt && exec docker-entrypoint \"$$@\"", "--"]
+    entrypoint: ["/bin/sh", "-c", "while [ ! -f /mock-certs/cert.pem ]; do sleep 0.1; done && cat /etc/ssl/certs/ca-certificates.crt /mock-certs/cert.pem > /etc/ssl/certs/ca-certificates-with-mock.crt && exec docker-entrypoint \"$$@\"", "--"]
     depends_on:
       - mock-openlibrary
 
