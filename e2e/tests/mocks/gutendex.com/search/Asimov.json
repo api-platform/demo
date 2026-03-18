@@ -1,0 +1,43 @@
+{
+  "count": 2,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "id": 31547,
+      "title": "Let's Get Together",
+      "authors": [
+        {
+          "name": "Asimov, Isaac",
+          "birth_year": 1920,
+          "death_year": 1992
+        }
+      ],
+      "subjects": ["Science fiction"],
+      "bookshelves": [],
+      "languages": ["en"],
+      "copyright": false,
+      "media_type": "Text",
+      "formats": {},
+      "download_count": 1000
+    },
+    {
+      "id": 41547,
+      "title": "The Genetic Effects of Radiation",
+      "authors": [
+        {
+          "name": "Asimov, Isaac",
+          "birth_year": 1920,
+          "death_year": 1992
+        }
+      ],
+      "subjects": ["Science"],
+      "bookshelves": [],
+      "languages": ["en"],
+      "copyright": false,
+      "media_type": "Text",
+      "formats": {},
+      "download_count": 500
+    }
+  ]
+}

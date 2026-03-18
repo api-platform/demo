@@ -34,5 +34,19 @@ export abstract class AbstractPage {
     await this.page.route(/^https:\/\/covers\.openlibrary.org\/b\/id\/(.+)\.jpg$/, (route) => route.fulfill({
       path: "tests/mocks/covers.openlibrary.org/b/id/4066031-M.jpg",
     }));
+    // Gutendex mocks
+    await this.page.route(/^https:\/\/gutendex\.com\/books\?search=/, (route) => {
+      const url = new URL(route.request().url());
+      const query = url.searchParams.get("search")?.replace(/\s+/g, "-") ?? "unknown";
+      return route.fulfill({
+        path: `tests/mocks/gutendex.com/search/${query}.json`,
+      });
+    });
+    await this.page.route(/^https:\/\/gutendex\.com\/books\/(\d+)\.json$/, (route) => {
+      const match = route.request().url().match(/\/books\/(\d+)\.json/);
+      return route.fulfill({
+        path: `tests/mocks/gutendex.com/books/${match?.[1]}.json`,
+      });
+    });
   }
 }

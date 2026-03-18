@@ -12,8 +12,8 @@ if (!fs.existsSync(KEY_PATH) || !fs.existsSync(CERT_PATH)) {
   console.log("Generating self-signed certificates...");
   execSync(
     `openssl req -x509 -newkey rsa:2048 -keyout ${KEY_PATH} -out ${CERT_PATH} ` +
-    `-days 365 -nodes -subj '/CN=openlibrary.org' ` +
-    `-addext 'subjectAltName=DNS:openlibrary.org,DNS:covers.openlibrary.org'`
+    `-days 365 -nodes -subj '/CN=mock-server' ` +
+    `-addext 'subjectAltName=DNS:openlibrary.org,DNS:covers.openlibrary.org,DNS:gutendex.com'`
   );
 }
 
@@ -26,9 +26,15 @@ const server = https.createServer(
     // Try direct file path first (e.g. /books/OL2055137M.json)
     let filePath = path.join(MOCKS_DIR, host, url.pathname);
 
-    // Handle search.json?q=Title Author&limit=10 -> search/Title-Author.json
+    // Handle openlibrary search: /search.json?q=Title Author&limit=10 -> search/Title-Author.json
     if (url.pathname === "/search.json" && url.searchParams.has("q")) {
       const query = url.searchParams.get("q").replace(/\s+/g, "-");
+      filePath = path.join(MOCKS_DIR, host, "search", `${query}.json`);
+    }
+
+    // Handle gutendex search: /books?search=Asimov -> search/Asimov.json
+    if (host === "gutendex.com" && url.pathname === "/books" && url.searchParams.has("search")) {
+      const query = url.searchParams.get("search").replace(/\s+/g, "-");
       filePath = path.join(MOCKS_DIR, host, "search", `${query}.json`);
     }
 
