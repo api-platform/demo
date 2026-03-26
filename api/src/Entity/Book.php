@@ -41,11 +41,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ApiResource(
     uriTemplate: '/admin/books{._format}',
+    shortName: 'AdminBook',
     types: [
         'https://schema.org/Book',
         'https://schema.org/Offer',
     ],
-    shortName: 'AdminBook',
     operations: [
         new GetCollection(
             paginationClientItemsPerPage: true,

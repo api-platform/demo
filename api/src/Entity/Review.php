@@ -88,8 +88,8 @@ use Symfony\Component\Validator\Constraints as Assert;
     security: 'is_granted("OIDC_ADMIN")',
 )]
 #[ApiResource(
-    shortName: 'Review',
     uriTemplate: '/books/{bookId}/reviews{._format}',
+    shortName: 'Review',
     types: ['https://schema.org/Review'],
     operations: [
         new GetCollection(
