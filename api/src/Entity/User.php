@@ -46,7 +46,6 @@ use Symfony\Component\Uid\Uuid;
     ]
 )]
 #[ApiResource(
-    shortName: 'User',
     types: ['https://schema.org/Person'],
     operations: [
         new Get(
