@@ -1,6 +1,6 @@
 import {type Metadata} from "next";
 
-import {auth, type Session} from "../auth";
+import {getServerAccessToken} from "../../lib/auth-helpers";
 import {List, type Props as ListProps} from "../../components/book/List";
 import {type Book} from "../../types/Book";
 import {type PagedCollection} from "../../types/collection";
@@ -20,7 +20,7 @@ interface Props {
   searchParams: Promise<Query>;
 }
 
-async function getServerSideProps(query: Query, session: Session|null): Promise<ListProps> {
+async function getServerSideProps(query: Query, accessToken: string|null): Promise<ListProps> {
   const page = Number(query.page ?? 1);
   const filters: FiltersProps = {};
   if (query.page) {
@@ -47,7 +47,7 @@ async function getServerSideProps(query: Query, session: Session|null): Promise<
     const response: FetchResponse<PagedCollection<Book>> | undefined = await fetchApi(buildUriFromFilters("/books", filters), {
       // next: { revalidate: 3600 },
       cache: "no-cache",
-    }, session);
+    }, accessToken);
     if (!response?.data) {
       throw new Error('Unable to retrieve data from /books.');
     }
@@ -64,9 +64,8 @@ export const metadata: Metadata = {
   title: 'Books Store',
 }
 export default async function Page({ searchParams }: Props) {
-  // @ts-expect-error Ignore Eslint error
-  const session: Session|null = await auth();
-  const props = await getServerSideProps(await searchParams, session);
+  const accessToken = await getServerAccessToken();
+  const props = await getServerSideProps(await searchParams, accessToken);
 
   return <List {...props}/>;
 }

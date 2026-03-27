@@ -47,14 +47,19 @@ services:
 
   pwa:
     image: ${IMAGES_PREFIX:-}app-pwa
+    depends_on:
+      database:
+        condition: service_healthy
     environment:
       NEXT_PUBLIC_ENTRYPOINT: http://php
       NEXT_PUBLIC_OIDC_CLIENT_ID: ${OIDC_CLIENT_ID:-api-platform-pwa}
       NEXT_PUBLIC_OIDC_SERVER_URL: ${OIDC_SERVER_URL:-https://localhost/oidc/realms/demo}
       NEXT_PUBLIC_OIDC_SERVER_URL_INTERNAL: ${OIDC_SERVER_URL_INTERNAL:-http://keycloak:8080/oidc/realms/demo}
       NEXT_PUBLIC_OIDC_AUTHORIZATION_CLIENT_ID: ${OIDC_AUTHORIZATION_CLIENT_ID:-api-platform-api}
-      AUTH_SECRET: ${AUTH_SECRET:-!ChangeThisNextAuthSecret!}
-      AUTH_URL: ${AUTH_URL:-https://localhost/api/auth}
+      OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET:-!ChangeThisPwaClientSecret!}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:-!ChangeThisBetterAuthSecret!}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL:-https://localhost/api/auth}
+      BETTER_AUTH_DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-!ChangeMe!}@database:5432/${POSTGRES_DB:-app}
       NEXT_SHARP_PATH: /srv/app/node_modules/sharp
     healthcheck:
       test: curl -f http://localhost:3000 || exit 1

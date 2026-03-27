@@ -1,16 +1,15 @@
 "use client";
 
-import {signIn, signOut, useSession} from "next-auth/react";
 import {usePathname} from "next/navigation";
 import Link from "next/link";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
-import {NEXT_PUBLIC_OIDC_SERVER_URL} from "../../config/keycloak";
+import {useSession, signInWithKeycloak, signOutWithKeycloak} from "../../hooks/useAuth";
 
 export const Header = () => {
   const pathname = usePathname();
-  const { data: session, status } = useSession();
+  const { data: session, isPending } = useSession();
 
   if (pathname === "/" || pathname.match(/^\/admin/)) return <></>;
 
@@ -27,20 +26,17 @@ export const Header = () => {
             <FavoriteBorderIcon className="w-6 h-6 mr-1"/>
             My Bookmarks
           </Link>
-          {status === "authenticated" && (
+          {!isPending && session && (
             <a href="#" className="font-semibold text-gray-900" role="menuitem" onClick={(e) => {
               e.preventDefault();
-              signOut({
-                // @ts-expect-error Ignore Eslint error
-                callbackUrl: `${NEXT_PUBLIC_OIDC_SERVER_URL}/protocol/openid-connect/logout?id_token_hint=${session.idToken}&post_logout_redirect_uri=${window.location.origin}/books`,
-              });
+              signOutWithKeycloak(`${window.location.origin}/books`);
             }}>
               Sign out
             </a>
           ) || (
             <a href="#" className="font-semibold text-gray-900" role="menuitem" onClick={(e) => {
               e.preventDefault();
-              signIn("keycloak");
+              signInWithKeycloak();
             }}>
               <PersonOutlineIcon className="w-6 h-6 mr-1"/>
               Log in

@@ -58,8 +58,8 @@ jobs:
           username: oauth2accesstoken
           password: ${{ steps.auth.outputs.access_token }}
       -
-        name: Generate AUTH_SECRET
-        run: echo "AUTH_SECRET=$(openssl rand -hex 32)" >> $GITHUB_ENV
+        name: Generate BETTER_AUTH_SECRET
+        run: echo "BETTER_AUTH_SECRET=$(openssl rand -hex 32)" >> $GITHUB_ENV
       # https://nextjs.org/docs/app/building-your-application/configuring/environment-variables#bundling-environment-variables-for-the-browser
       -
         name: Generate NEXT_PUBLIC_OIDC_SERVER_URL

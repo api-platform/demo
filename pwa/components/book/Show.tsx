@@ -3,7 +3,6 @@
 import {type NextPage} from "next";
 import Image from "next/image";
 import Link from "next/link";
-import {signIn, useSession} from "next-auth/react";
 import {useEffect, useState} from "react";
 import {useMutation} from "@tanstack/react-query";
 import Typography from "@mui/material/Typography";
@@ -20,6 +19,7 @@ import {fetchApi, type FetchResponse} from "../../utils/dataAccess";
 import {type Bookmark} from "../../types/Bookmark";
 import {type PagedCollection} from "../../types/collection";
 import {Loading} from "../common/Loading";
+import {useAccessToken, signInWithKeycloak} from "../../hooks/useAuth";
 
 export interface Props {
   data: Book;
@@ -30,39 +30,35 @@ interface BookmarkProps {
   book: string | undefined;
 }
 
-// @ts-expect-error Ignore Eslint error
-const saveBookmark = async (values: BookmarkProps, session) => await fetchApi<Bookmark>("/bookmarks", {
+const saveBookmark = async (values: BookmarkProps, accessToken: string|null) => await fetchApi<Bookmark>("/bookmarks", {
   method: "POST",
   body: JSON.stringify(values),
-}, session);
+}, accessToken);
 
-// @ts-expect-error Ignore Eslint error
-const deleteBookmark = async (id: string, session) => await fetchApi<Bookmark>(id, { method: "DELETE" }, session);
+const deleteBookmark = async (id: string, accessToken: string|null) => await fetchApi<Bookmark>(id, { method: "DELETE" }, accessToken);
 
 export const Show: NextPage<Props> = ({ data, hubURL }) => {
-  const { data: session, status } = useSession();
+  const { accessToken, session, isPending } = useAccessToken();
   const [bookmark, setBookmark] = useState<Bookmark | null | undefined>();
   const { data: book, isLoading } = useOpenLibraryBook(data);
   const item = useMercure(data, hubURL);
 
   const bookmarkMutation = useMutation({
     mutationFn: async (data: BookmarkProps) => {
-      // @ts-expect-error Ignore Eslint error
-      if (!session || session?.error === "RefreshAccessTokenError") {
-        await signIn("keycloak");
+      if (!session || !accessToken) {
+        await signInWithKeycloak();
 
         return;
       }
 
       if (bookmark) {
-        // @ts-expect-error Ignore Eslint error
-        await deleteBookmark(bookmark["@id"], session);
+        await deleteBookmark(bookmark["@id"] as string, accessToken);
         setBookmark(null);
 
         return;
       }
 
-      const response: FetchResponse<Bookmark> | undefined = await saveBookmark(data, session);
+      const response: FetchResponse<Bookmark> | undefined = await saveBookmark(data, accessToken);
       if (response && response?.data) {
         setBookmark(response.data);
       }
@@ -75,12 +71,11 @@ export const Show: NextPage<Props> = ({ data, hubURL }) => {
   // Check in user bookmarks if the current book has been bookmarked
   useEffect(() => {
     // /bookmarks endpoint requires authentication
-    if (status === "loading" || status === "unauthenticated") return;
+    if (isPending || !accessToken) return;
 
     (async () => {
       try {
-        // @ts-expect-error Ignore Eslint error
-        const response: FetchResponse<PagedCollection<Bookmark>> | undefined = await fetchApi(`/bookmarks?book=${data["@id"]}`, {}, session);
+        const response: FetchResponse<PagedCollection<Bookmark>> | undefined = await fetchApi(`/bookmarks?book=${data["@id"]}`, {}, accessToken);
         if (response && response?.data && response.data["hydra:member"]?.length) {
           setBookmark(response.data["hydra:member"][0]);
         }
@@ -89,7 +84,7 @@ export const Show: NextPage<Props> = ({ data, hubURL }) => {
         setBookmark(null);
       }
     })()
-  }, [session, data, status]);
+  }, [accessToken, data, isPending]);
 
   return (
     <div className="container mx-auto max-w-7xl items-center justify-between p-6 lg:px-8">

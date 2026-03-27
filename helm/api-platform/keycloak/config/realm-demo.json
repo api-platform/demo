@@ -803,7 +803,8 @@
       "id": "e2923937-13f1-4ac5-9580-68ea5287f542",
       "clientId": "api-platform-pwa",
       "name": "API Platform PWA",
-      "description": "Public client for the PWA",
+      "description": "Confidential client for the PWA (BFF pattern)",
+      "secret": "!ChangeThisPwaClientSecret!",
       "rootUrl": "",
       "adminUrl": "",
       "baseUrl": "",
@@ -820,7 +821,7 @@
       "implicitFlowEnabled": false,
       "directAccessGrantsEnabled": false,
       "serviceAccountsEnabled": false,
-      "publicClient": true,
+      "publicClient": false,
       "frontchannelLogout": true,
       "protocol": "openid-connect",
       "attributes": {

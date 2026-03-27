@@ -3,12 +3,10 @@
 import Head from "next/head";
 import {useContext, useRef, useState} from "react";
 import {type DataProvider, localStorageStore} from "react-admin";
-import {signIn, useSession} from "next-auth/react";
 import SyncLoader from "react-spinners/SyncLoader";
 import {fetchHydra, HydraAdmin, hydraDataProvider, OpenApiAdmin, ResourceGuesser,} from "@api-platform/admin";
 import {parseHydraDocumentation} from "@api-platform/api-doc-parser";
 
-import {type Session} from "../../app/auth";
 import DocContext from "../../components/admin/DocContext";
 import authProvider from "../../components/admin/authProvider";
 import Layout from "./layout/Layout";
@@ -16,12 +14,13 @@ import {ENTRYPOINT} from "../../config/entrypoint";
 import bookResourceProps from "./book";
 import reviewResourceProps from "./review";
 import i18nProvider from "./i18nProvider";
+import {useAccessToken, signInWithKeycloak} from "../../hooks/useAuth";
 
-const apiDocumentationParser = (session: Session) => async () => {
+const apiDocumentationParser = (accessToken: string) => async () => {
   try {
     return await parseHydraDocumentation(ENTRYPOINT, {
       headers: {
-        Authorization: `Bearer ${session?.accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     });
   } catch (result) {
@@ -40,10 +39,10 @@ const apiDocumentationParser = (session: Session) => async () => {
 };
 
 const AdminAdapter = ({
-  session,
+  accessToken,
   children,
 }: {
-  session: Session;
+  accessToken: string;
   children?: React.ReactNode | undefined;
 }) => {
   // @ts-expect-error Ignore Eslint error
@@ -57,10 +56,10 @@ const AdminAdapter = ({
         ...options,
         headers: {
           ...options.headers,
-          Authorization: `Bearer ${session?.accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       }),
-    apiDocumentationParser: apiDocumentationParser(session),
+    apiDocumentationParser: apiDocumentationParser(accessToken),
   });
 
   return docType === "hydra" ? (
@@ -93,7 +92,7 @@ const AdminAdapter = ({
 
 const store = localStorageStore();
 
-const AdminWithContext = ({ session }: { session: Session }) => {
+const AdminWithContext = ({ accessToken }: { accessToken: string }) => {
   const [docType, setDocType] = useState(
     store.getItem<string>("docType", "hydra")
   );
@@ -101,7 +100,7 @@ const AdminWithContext = ({ session }: { session: Session }) => {
   return (
     // @ts-expect-error Ignore Eslint error
     <DocContext.Provider value={{ docType, setDocType }}>
-      <AdminAdapter session={session}>
+      <AdminAdapter accessToken={accessToken}>
         <ResourceGuesser name="admin/books" {...bookResourceProps} />
         <ResourceGuesser name="admin/reviews" {...reviewResourceProps} />
       </AdminAdapter>
@@ -110,22 +109,19 @@ const AdminWithContext = ({ session }: { session: Session }) => {
 };
 
 const AdminWithOIDC = () => {
-  // Can't use next-auth/middleware because of https://github.com/nextauthjs/next-auth/discussions/7488
-  const { data: session, status } = useSession();
+  const { accessToken, session, isPending } = useAccessToken();
 
-  if (status === "loading") {
+  if (isPending) {
     return <SyncLoader size={8} color="#46B6BF" />;
   }
 
-  // @ts-expect-error Ignore Eslint error
-  if (!session || session?.error === "RefreshAccessTokenError") {
-    (async () => await signIn("keycloak"))();
+  if (!session || !accessToken) {
+    (async () => await signInWithKeycloak())();
 
     return;
   }
 
-  // @ts-expect-error Ignore Eslint error
-  return <AdminWithContext session={session} />;
+  return <AdminWithContext accessToken={accessToken} />;
 };
 
 const Admin = () => (

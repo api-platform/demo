@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "api-platform.labels" . | nindent 4 }}
 spec:
-  schedule: '0 0 * * *'
+  schedule: '10 0 * * *'
   jobTemplate:
     metadata:
       annotations:

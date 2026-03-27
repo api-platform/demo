@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 
-import { type Session } from "../app/auth";
 import { type Review } from "../types/Review";
 import { NEXT_PUBLIC_OIDC_AUTHORIZATION_CLIENT_ID, NEXT_PUBLIC_OIDC_SERVER_URL } from "../config/keycloak";
 
@@ -8,11 +7,11 @@ interface Permission {
   result: boolean;
 }
 
-export const usePermission = (review: Review, session: Session|null): boolean => {
+export const usePermission = (review: Review, accessToken: string|null): boolean => {
   const [isGranted, grant] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!session) {
+    if (!accessToken) {
       return;
     }
 
@@ -21,7 +20,7 @@ export const usePermission = (review: Review, session: Session|null): boolean =>
         const response = await fetch(`${NEXT_PUBLIC_OIDC_SERVER_URL}/protocol/openid-connect/token`, {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: `Bearer ${session?.accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
           },
           body: new URLSearchParams({
             grant_type: "urn:ietf:params:oauth:grant-type:uma-ticket",
@@ -44,7 +43,7 @@ export const usePermission = (review: Review, session: Session|null): boolean =>
         grant(false);
       }
     })();
-  }, [review, session]);
+  }, [review, accessToken]);
 
   return isGranted;
 };
