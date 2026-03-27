@@ -29,7 +29,7 @@ spec:
           imagePullPolicy: {{ .Values.keycloak.configCli.image.pullPolicy }}
           env:
             - name: KEYCLOAK_URL
-              value: "http://{{ include "api-platform.fullname" . }}-keycloak:8080{{ .Values.keycloak.httpRelativePath }}"
+              value: "http://{{ include "api-platform.fullname" . }}-keycloak{{ .Values.keycloak.httpRelativePath }}"
             - name: KEYCLOAK_AVAILABILITYCHECK_ENABLED
               value: "true"
             - name: KEYCLOAK_AVAILABILITYCHECK_TIMEOUT
