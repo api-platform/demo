@@ -129,6 +129,8 @@ jobs:
             --set=external-dns.env[0].value=${{ secrets.cloudflare-api-token }} \
             --set=external-dns.domainFilters[0]=$url \
             --set=external-dns.zoneIdFilters[0]=${{ secrets.cloudflare-zone-id }} \
+            --set=external-dns.triggerLoopOnEvent=true \
+            --set=external-dns.podAnnotations.deploy-timestamp=$(date +%s) \
             --set=external-dns.txtOwnerId=$release \
             --set=php.corsAllowOrigin="^$(echo "$cors" | sed 's/\./\\\\./g')$" \
             --set=php.trustedHosts="^127\\.0\\.0\\.1|localhost|$(echo "$url" | sed 's/\./\\\\./g')$" \
