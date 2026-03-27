@@ -123,9 +123,9 @@ final class HydraDocumentationTest extends ApiTestCase
                     $onPropertyId,
                     \sprintf(
                         'owl:onProperty @id for entrypoint property "%s" is the bare term "member". '
-                        .'jsonld.js cannot expand it to http://www.w3.org/ns/hydra/core#member '
-                        .'(@id values use vocab=false, which skips term definitions). '
-                        .'Use "hydra:member" instead.',
+                        . 'jsonld.js cannot expand it to http://www.w3.org/ns/hydra/core#member '
+                        . '(@id values use vocab=false, which skips term definitions). '
+                        . 'Use "hydra:member" instead.',
                         $property['@id'] ?? '?'
                     )
                 );
