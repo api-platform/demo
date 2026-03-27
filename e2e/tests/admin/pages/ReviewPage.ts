@@ -10,7 +10,7 @@ export class ReviewPage extends AbstractPage {
   public async gotoList() {
     await this.page.goto("/admin");
     await this.login();
-    await this.page.waitForURL(/\/admin#\/admin/);
+    await this.page.locator(".RaSidebar-fixed").getByText("Reviews").waitFor({ state: "visible", timeout: 30000 });
     await this.page.locator(".RaSidebar-fixed").getByText("Reviews").click();
 
     return this.page;

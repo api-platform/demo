@@ -5,9 +5,10 @@ export class BookmarkPage extends AbstractPage {
     await this.registerMock();
 
     await this.page.goto("/books");
-    await this.page.getByText("My Bookmarks").click();
-    await this.page.getByRole("button", { name: "Sign in with Keycloak" }).click();
+    await this.page.getByText("Log in").click();
     await this.login();
+    await this.page.waitForURL(/\/books/);
+    await this.page.getByText("My Bookmarks").click();
     await this.page.waitForURL(/\/bookmarks$/);
     await this.waitForDefaultBookToBeLoaded();
 

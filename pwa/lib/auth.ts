@@ -33,7 +33,6 @@ export const auth = betterAuth({
         scopes: ["openid", "profile", "email", "offline_access"],
         pkce: true,
         accessType: "offline",
-        prompt: "consent",
       }],
     }),
     nextCookies(),

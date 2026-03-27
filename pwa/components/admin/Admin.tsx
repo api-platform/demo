@@ -1,7 +1,7 @@
 "use client";
 
 import Head from "next/head";
-import {useContext, useRef, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import {type DataProvider, localStorageStore} from "react-admin";
 import SyncLoader from "react-spinners/SyncLoader";
 import {fetchHydra, HydraAdmin, hydraDataProvider, OpenApiAdmin, ResourceGuesser,} from "@api-platform/admin";
@@ -110,15 +110,17 @@ const AdminWithContext = ({ accessToken }: { accessToken: string }) => {
 
 const AdminWithOIDC = () => {
   const { accessToken, session, isPending } = useAccessToken();
+  const hasRedirected = useRef(false);
 
-  if (isPending) {
+  useEffect(() => {
+    if (!isPending && !session && !hasRedirected.current) {
+      hasRedirected.current = true;
+      signInWithKeycloak();
+    }
+  }, [isPending, session]);
+
+  if (isPending || !session || !accessToken) {
     return <SyncLoader size={8} color="#46B6BF" />;
-  }
-
-  if (!session || !accessToken) {
-    (async () => await signInWithKeycloak())();
-
-    return;
   }
 
   return <AdminWithContext accessToken={accessToken} />;

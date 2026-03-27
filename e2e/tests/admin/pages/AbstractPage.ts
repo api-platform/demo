@@ -5,9 +5,9 @@ export abstract class AbstractPage {
   }
 
   public async login() {
-    // Wait for Keycloak login page (better-auth redirects client-side via JS)
-    await this.page.waitForURL(/\/oidc\/realms\/demo\/protocol\/openid-connect\/auth/, { timeout: 30000 });
+    await this.page.getByRole("button", { name: "Log in as admin" }).waitFor({ state: "visible", timeout: 30000 });
     await this.page.getByRole("button", { name: "Log in as admin" }).click();
+    await this.page.waitForURL((url) => !url.pathname.startsWith("/oidc/"), { timeout: 30000, waitUntil: "domcontentloaded" });
 
     return this.page;
   }
