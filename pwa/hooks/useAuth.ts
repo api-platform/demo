@@ -3,7 +3,6 @@
 import {useEffect, useState} from "react";
 
 import {authClient} from "../lib/auth-client";
-import {NEXT_PUBLIC_OIDC_SERVER_URL} from "../config/keycloak";
 
 export const useSession = authClient.useSession;
 
@@ -50,8 +49,7 @@ export async function signInWithKeycloak(callbackURL?: string) {
   });
 }
 
-export async function signOutWithKeycloak(redirectUri?: string) {
-  await authClient.signOut();
-  // Redirect to Keycloak RP-initiated logout
-  window.location.href = `${NEXT_PUBLIC_OIDC_SERVER_URL}/protocol/openid-connect/logout?post_logout_redirect_uri=${encodeURIComponent(redirectUri ?? `${window.location.origin}/books`)}`;
+export function signOutWithKeycloak(redirectUri?: string) {
+  // Server-side route retrieves idToken from account, revokes session, and redirects to Keycloak logout
+  window.location.href = `/api/auth/keycloak-logout?post_logout_redirect_uri=${encodeURIComponent(redirectUri ?? `${window.location.origin}/books`)}`;
 }
