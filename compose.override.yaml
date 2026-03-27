@@ -37,10 +37,10 @@ services:
       NODE_TLS_REJECT_UNAUTHORIZED: "0"
     healthcheck:
       test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://127.0.0.1:3000 || exit 1" ]
-      start_period: 15s
+      start_period: 60s
       interval: 5s
-      timeout: 3s
-      retries: 5
+      timeout: 5s
+      retries: 10
 
 ###> doctrine/doctrine-bundle ###
   database:

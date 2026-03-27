@@ -59,7 +59,8 @@ services:
     healthcheck:
       test: curl -f http://localhost:3000 || exit 1
       timeout: 5s
-      retries: 10
+      interval: 5s
+      retries: 5
       start_period: 60s
 
 ###> doctrine/doctrine-bundle ###
