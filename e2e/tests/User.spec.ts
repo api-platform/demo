@@ -14,8 +14,8 @@ test.describe("User authentication", () => {
     // @ts-ignore assert declared on test.ts
     await expect(page).toBeOnLoginPage();
     await expect(page.locator("#kc-header-wrapper")).toContainText("API Platform - Demo");
-    await expect(page.locator("#kc-form-login")).toContainText("Login as user: john.doe@example.com");
-    await expect(page.locator("#kc-form-login")).toContainText("Login as admin: chuck.norris@example.com");
+    await expect(page.getByRole("button", { name: "Log in as user" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Log in as admin" })).toBeVisible();
     await userPage.login();
 
     await expect(page.getByText("Log in")).toHaveCount(0);
@@ -35,7 +35,7 @@ test.describe("User authentication", () => {
     // @ts-ignore assert declared on test.ts
     await expect(page).toBeOnLoginPage();
     await expect(page.locator("#kc-header-wrapper")).toContainText("API Platform - Demo");
-    await expect(page.locator("#kc-form-login")).toContainText("Login as user: john.doe@example.com");
-    await expect(page.locator("#kc-form-login")).toContainText("Login as admin: chuck.norris@example.com");
+    await expect(page.getByRole("button", { name: "Log in as user" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Log in as admin" })).toBeVisible();
   });
 });
