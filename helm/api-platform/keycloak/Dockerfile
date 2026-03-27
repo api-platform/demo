@@ -29,6 +29,6 @@ FROM keycloak_upstream AS keycloak
 
 COPY --from=keycloak_builder /opt/keycloak/ /opt/keycloak/
 
-COPY --link --chown=keycloak:keycloak --chmod=644 themes/api-platform-demo /opt/keycloak/themes/api-platform-demo
+COPY --link --chown=keycloak:keycloak themes/api-platform-demo /opt/keycloak/themes/api-platform-demo
 
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
