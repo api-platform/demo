@@ -22,7 +22,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 
 # Development image
-FROM base as dev
+FROM base AS dev
 
 EXPOSE 3000
 ENV PORT=3000
@@ -38,7 +38,6 @@ RUN pnpm fetch --prod
 
 COPY --link . .
 
-ARG BETTER_AUTH_SECRET
 # https://nextjs.org/docs/app/building-your-application/configuring/environment-variables#bundling-environment-variables-for-the-browser
 ARG NEXT_PUBLIC_OIDC_SERVER_URL
 
