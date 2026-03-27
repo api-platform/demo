@@ -188,6 +188,9 @@ jobs:
           docker compose exec php composer config minimum-stability ${{ inputs.minimum-stability }}
           docker compose exec php composer update "api-platform/*"
       -
+        name: Run Better Auth Migrations
+        run: docker compose exec -T pwa npx @better-auth/cli migrate --yes
+      -
         name: Load Fixtures
         run: docker compose run --rm php bin/console doctrine:fixtures:load --no-interaction
       -

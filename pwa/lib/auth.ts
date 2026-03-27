@@ -1,6 +1,7 @@
 import {betterAuth} from "better-auth";
 import {genericOAuth} from "better-auth/plugins";
 import {nextCookies} from "better-auth/next-js";
+import {Pool} from "pg";
 
 import {
   NEXT_PUBLIC_OIDC_CLIENT_ID,
@@ -9,10 +10,9 @@ import {
 } from "../config/keycloak";
 
 export const auth = betterAuth({
-  database: {
-    type: "postgres",
-    url: process.env.BETTER_AUTH_DATABASE_URL!,
-  },
+  database: new Pool({
+    connectionString: process.env.BETTER_AUTH_DATABASE_URL,
+  }),
   basePath: "/api/auth",
   secret: process.env.BETTER_AUTH_SECRET,
   user: {modelName: "ba_user"},
