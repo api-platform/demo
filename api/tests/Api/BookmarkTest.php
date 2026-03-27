@@ -45,9 +45,9 @@ final class BookmarkTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'hydra:Error',
-            'hydra:title' => 'An error occurred',
-            'hydra:description' => 'Full authentication is required to access this resource.',
+            '@type' => 'Error',
+            'title' => 'An error occurred',
+            'description' => 'Full authentication is required to access this resource.',
         ]);
     }
 
@@ -72,9 +72,9 @@ final class BookmarkTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertEquals('<https://localhost:443/.well-known/mercure>; rel="mercure"', $response->getHeaders(false)['link'][1]);
         self::assertJsonContains([
-            'hydra:totalItems' => 35,
+            'totalItems' => 35,
         ]);
-        self::assertCount(30, $response->toArray()['hydra:member']);
+        self::assertCount(30, $response->toArray()['member']);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Bookmark/collection.json'));
     }
 
@@ -97,9 +97,9 @@ final class BookmarkTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'hydra:Error',
-            'hydra:title' => 'An error occurred',
-            'hydra:description' => 'Full authentication is required to access this resource.',
+            '@type' => 'Error',
+            'title' => 'An error occurred',
+            'description' => 'Full authentication is required to access this resource.',
         ]);
     }
 
@@ -129,8 +129,8 @@ final class BookmarkTest extends ApiTestCase
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
             '@type' => 'ConstraintViolation',
-            'hydra:title' => 'An error occurred',
-            'hydra:description' => 'book: This value should be of type Book.',
+            'title' => 'An error occurred',
+            'description' => 'book: This value should be of type Book.',
             'violations' => [
                 [
                     'propertyPath' => 'book',
@@ -217,8 +217,8 @@ final class BookmarkTest extends ApiTestCase
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
             '@type' => 'ConstraintViolation',
-            'hydra:title' => 'An error occurred',
-            'hydra:description' => 'You have already bookmarked this book.',
+            'title' => 'An error occurred',
+            'description' => 'You have already bookmarked this book.',
         ]);
     }
 
@@ -233,9 +233,9 @@ final class BookmarkTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'hydra:Error',
-            'hydra:title' => 'An error occurred',
-            'hydra:description' => 'Full authentication is required to access this resource.',
+            '@type' => 'Error',
+            'title' => 'An error occurred',
+            'description' => 'Full authentication is required to access this resource.',
         ]);
     }
 
@@ -257,9 +257,9 @@ final class BookmarkTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'hydra:Error',
-            'hydra:title' => 'An error occurred',
-            'hydra:description' => 'Access Denied.',
+            '@type' => 'Error',
+            'title' => 'An error occurred',
+            'description' => 'Access Denied.',
         ]);
     }
 

@@ -76,8 +76,8 @@ export const Show: NextPage<Props> = ({ data, hubURL }) => {
     (async () => {
       try {
         const response: FetchResponse<PagedCollection<Bookmark>> | undefined = await fetchApi(`/bookmarks?book=${data["@id"]}`, {}, accessToken);
-        if (response && response?.data && response.data["hydra:member"]?.length) {
-          setBookmark(response.data["hydra:member"][0]);
+        if (response && response?.data && response.data["member"]?.length) {
+          setBookmark(response.data["member"][0]);
         }
       } catch (error) {
         console.error(error);

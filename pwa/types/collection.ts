@@ -2,18 +2,18 @@ export interface PagedCollection<T> {
   "@context"?: string;
   "@id"?: string;
   "@type"?: string;
-  "hydra:member"?: T[];
-  "hydra:search"?: object;
-  "hydra:totalItems"?: number;
-  "hydra:view"?: {
+  "member"?: T[];
+  "search"?: object;
+  "totalItems"?: number;
+  "view"?: {
     "@id": string;
     "@type": string;
-    "hydra:first"?: string;
-    "hydra:last"?: string;
-    "hydra:previous"?: string;
-    "hydra:next"?: string;
+    "first"?: string;
+    "last"?: string;
+    "previous"?: string;
+    "next"?: string;
   };
 }
 
 export const isPagedCollection = <T>(data: any): data is PagedCollection<T> =>
-  "hydra:member" in data && Array.isArray(data["hydra:member"]);
+  "member" in data && Array.isArray(data["member"]);

@@ -21,13 +21,13 @@ export const List: NextPage<Props> = ({ data, hubURL, page }) => {
 
   return (
     <div className="container mx-auto max-w-7xl items-center justify-between p-6 lg:px-8">
-      {!!collection && !!collection["hydra:member"] && (
+      {!!collection && !!collection["member"] && (
         <>
           <p className="w-full text-center px-8 pb-4 text-lg" data-testid="nb-bookmarks">
-            {collection["hydra:totalItems"]} book(s) bookmarked
+            {collection["totalItems"]} book(s) bookmarked
           </p>
           <div className="grid grid-cols-6 gap-4">
-            {collection["hydra:member"].length !== 0 && collection["hydra:member"].map((bookmark) => (
+            {collection["member"].length !== 0 && collection["member"].map((bookmark) => (
               <Item key={bookmark["@id"]} book={bookmark.book}/>
             ))}
           </div>

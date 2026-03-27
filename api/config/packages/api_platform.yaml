@@ -26,8 +26,6 @@ api_platform:
         extra_properties:
             standard_put: true
             rfc_7807_compliant_errors: true
-    serializer:
-        hydra_prefix: true
     oauth:
         enabled: true
         clientId: '%env(OIDC_SWAGGER_CLIENT_ID)%'

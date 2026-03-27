@@ -56,9 +56,9 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'hydra:Error',
-            'hydra:title' => 'An error occurred',
-            'hydra:description' => $hydraDescription,
+            '@type' => 'Error',
+            'title' => 'An error occurred',
+            'description' => $hydraDescription,
         ]);
     }
 
@@ -82,9 +82,9 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertEquals('<https://localhost:443/.well-known/mercure>; rel="mercure"', $response->getHeaders()['link'][1]);
         self::assertJsonContains([
-            'hydra:totalItems' => $hydraTotalItems,
+            'totalItems' => $hydraTotalItems,
         ]);
-        self::assertCount(min($itemsPerPage ?? $hydraTotalItems, 30), $response->toArray()['hydra:member']);
+        self::assertCount(min($itemsPerPage ?? $hydraTotalItems, 30), $response->toArray()['member']);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Review/collection.json'));
     }
 
@@ -164,9 +164,9 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'hydra:Error',
-            'hydra:title' => 'An error occurred',
-            'hydra:description' => $hydraDescription,
+            '@type' => 'Error',
+            'title' => 'An error occurred',
+            'description' => $hydraDescription,
         ]);
     }
 
@@ -228,9 +228,9 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'hydra:Error',
-            'hydra:title' => 'An error occurred',
-            'hydra:description' => $hydraDescription,
+            '@type' => 'Error',
+            'title' => 'An error occurred',
+            'description' => $hydraDescription,
         ]);
     }
 
@@ -334,9 +334,9 @@ final class ReviewTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'hydra:Error',
-            'hydra:title' => 'An error occurred',
-            'hydra:description' => $hydraDescription,
+            '@type' => 'Error',
+            'title' => 'An error occurred',
+            'description' => $hydraDescription,
         ]);
     }
 

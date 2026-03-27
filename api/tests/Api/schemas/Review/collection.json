@@ -128,24 +128,24 @@
         "@type": {
             "readOnly": true,
             "type": "string",
-            "pattern": "^hydra:Collection$"
+            "pattern": "^Collection$"
         },
         "@id": {
             "readOnly": true,
             "type": "string",
             "pattern": "^/books/.+/reviews$"
         },
-        "hydra:member": {
+        "member": {
             "type": "array",
             "items": {
                 "$ref": "#\/definitions\/Review:jsonld"
             }
         },
-        "hydra:totalItems": {
+        "totalItems": {
             "type": "integer",
             "minimum": 0
         },
-        "hydra:view": {
+        "view": {
             "type": "object",
             "properties": {
                 "@id": {
@@ -155,15 +155,15 @@
                 "@type": {
                     "type": "string"
                 },
-                "hydra:first": {
+                "first": {
                     "type": "string",
                     "format": "iri-reference"
                 },
-                "hydra:last": {
+                "last": {
                     "type": "string",
                     "format": "iri-reference"
                 },
-                "hydra:next": {
+                "next": {
                     "type": "string",
                     "format": "iri-reference"
                 }
@@ -174,8 +174,8 @@
         "@context",
         "@type",
         "@id",
-        "hydra:member",
-        "hydra:totalItems",
-        "hydra:view"
+        "member",
+        "totalItems",
+        "view"
     ]
 }

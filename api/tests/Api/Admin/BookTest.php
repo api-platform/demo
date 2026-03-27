@@ -55,9 +55,9 @@ final class BookTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'hydra:Error',
-            'hydra:title' => 'An error occurred',
-            'hydra:description' => $hydraDescription,
+            '@type' => 'Error',
+            'title' => 'An error occurred',
+            'description' => $hydraDescription,
         ]);
     }
 
@@ -78,9 +78,9 @@ final class BookTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertEquals('<https://localhost:443/.well-known/mercure>; rel="mercure"', $response->getHeaders()['link'][1]);
         self::assertJsonContains([
-            'hydra:totalItems' => $hydraTotalItems,
+            'totalItems' => $hydraTotalItems,
         ]);
-        self::assertCount(min($itemsPerPage ?? $hydraTotalItems, 30), $response->toArray()['hydra:member']);
+        self::assertCount(min($itemsPerPage ?? $hydraTotalItems, 30), $response->toArray()['member']);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Book/collection.json'));
     }
 
@@ -145,9 +145,9 @@ final class BookTest extends ApiTestCase
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         self::assertEquals('<https://localhost:443/.well-known/mercure>; rel="mercure"', $response->getHeaders()['link'][1]);
-        self::assertEquals('Ball Lightning', $response->toArray()['hydra:member'][0]['title']);
-        self::assertEquals('Hyperion', $response->toArray()['hydra:member'][1]['title']);
-        self::assertEquals('The Wandering Earth', $response->toArray()['hydra:member'][2]['title']);
+        self::assertEquals('Ball Lightning', $response->toArray()['member'][0]['title']);
+        self::assertEquals('Hyperion', $response->toArray()['member'][1]['title']);
+        self::assertEquals('The Wandering Earth', $response->toArray()['member'][2]['title']);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Book/collection.json'));
     }
 
@@ -197,9 +197,9 @@ final class BookTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'hydra:Error',
-            'hydra:title' => 'An error occurred',
-            'hydra:description' => $hydraDescription,
+            '@type' => 'Error',
+            'title' => 'An error occurred',
+            'description' => $hydraDescription,
         ]);
     }
 
@@ -254,9 +254,9 @@ final class BookTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'hydra:Error',
-            'hydra:title' => 'An error occurred',
-            'hydra:description' => $hydraDescription,
+            '@type' => 'Error',
+            'title' => 'An error occurred',
+            'description' => $hydraDescription,
         ]);
     }
 
@@ -290,7 +290,7 @@ final class BookTest extends ApiTestCase
             Response::HTTP_UNPROCESSABLE_ENTITY,
             [
                 '@type' => 'ConstraintViolation',
-                'hydra:title' => 'An error occurred',
+                'title' => 'An error occurred',
                 'violations' => [
                     [
                         'propertyPath' => 'book',
@@ -316,8 +316,8 @@ final class BookTest extends ApiTestCase
             Response::HTTP_UNPROCESSABLE_ENTITY,
             [
                 '@type' => 'ConstraintViolation',
-                'hydra:title' => 'An error occurred',
-                'hydra:description' => 'condition: This value should be of type int|string.',
+                'title' => 'An error occurred',
+                'description' => 'condition: This value should be of type int|string.',
                 'violations' => [
                     [
                         'propertyPath' => 'condition',
@@ -334,8 +334,8 @@ final class BookTest extends ApiTestCase
             Response::HTTP_UNPROCESSABLE_ENTITY,
             [
                 '@type' => 'ConstraintViolation',
-                'hydra:title' => 'An error occurred',
-                'hydra:description' => 'condition: This value should be of type int|string.',
+                'title' => 'An error occurred',
+                'description' => 'condition: This value should be of type int|string.',
                 'violations' => [
                     [
                         'propertyPath' => 'condition',
@@ -352,7 +352,7 @@ final class BookTest extends ApiTestCase
             Response::HTTP_UNPROCESSABLE_ENTITY,
             [
                 '@type' => 'ConstraintViolation',
-                'hydra:title' => 'An error occurred',
+                'title' => 'An error occurred',
                 'violations' => [
                     [
                         'propertyPath' => 'book',
@@ -440,9 +440,9 @@ final class BookTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'hydra:Error',
-            'hydra:title' => 'An error occurred',
-            'hydra:description' => $hydraDescription,
+            '@type' => 'Error',
+            'title' => 'An error occurred',
+            'description' => $hydraDescription,
         ]);
     }
 
@@ -564,9 +564,9 @@ final class BookTest extends ApiTestCase
         self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
-            '@type' => 'hydra:Error',
-            'hydra:title' => 'An error occurred',
-            'hydra:description' => $hydraDescription,
+            '@type' => 'Error',
+            'title' => 'An error occurred',
+            'description' => $hydraDescription,
         ]);
     }
 

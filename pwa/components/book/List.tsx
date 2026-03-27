@@ -48,7 +48,7 @@ export const List: NextPage<Props> = ({ data, hubURL, filters, page }: Props) =>
           <Filters mutation={filtersMutation} filters={filters}/>
         </aside>
         <div className="float-right w-[1010px] justify-center">
-          {!!collection && !!collection["hydra:member"] && (
+          {!!collection && !!collection["member"] && (
             <>
               <div className="w-full flex px-8 pb-4 text-lg">
                 <div className="float-left flex w-[400px]">
@@ -68,10 +68,10 @@ export const List: NextPage<Props> = ({ data, hubURL, filters, page }: Props) =>
                     <MenuItem value="desc">Title DESC</MenuItem>
                   </Select>
                 </div>
-                <span data-testid="nb-books" className="float-right mt-1">{collection["hydra:totalItems"]} book(s) found</span>
+                <span data-testid="nb-books" className="float-right mt-1">{collection["totalItems"]} book(s) found</span>
               </div>
               <div className="grid grid-cols-5 gap-4">
-                {collection["hydra:member"].length !== 0 && collection["hydra:member"].map((book) => (
+                {collection["member"].length !== 0 && collection["member"].map((book) => (
                   <Item key={book["@id"]} book={book}/>
                 ))}
               </div>
