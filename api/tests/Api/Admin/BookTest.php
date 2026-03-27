@@ -308,6 +308,7 @@ final class BookTest extends ApiTestCase
 
     public static function getInvalidData(): iterable
     {
+        $validValuesHint = "The data must be one of the following values: 'https://schema.org/NewCondition', 'https://schema.org/RefurbishedCondition', 'https://schema.org/DamagedCondition', 'https://schema.org/UsedCondition'";
         yield 'empty data' => [
             [
                 'book' => '',
@@ -317,11 +318,11 @@ final class BookTest extends ApiTestCase
             [
                 '@type' => 'ConstraintViolation',
                 'title' => 'An error occurred',
-                'description' => 'condition: This value should be of type int|string.',
+                'description' => 'condition: ' . $validValuesHint,
                 'violations' => [
                     [
                         'propertyPath' => 'condition',
-                        'hint' => 'The data must belong to a backed enumeration of type ' . BookCondition::class,
+                        'hint' => $validValuesHint,
                     ],
                 ],
             ],
@@ -335,11 +336,11 @@ final class BookTest extends ApiTestCase
             [
                 '@type' => 'ConstraintViolation',
                 'title' => 'An error occurred',
-                'description' => 'condition: This value should be of type int|string.',
+                'description' => 'condition: ' . $validValuesHint,
                 'violations' => [
                     [
                         'propertyPath' => 'condition',
-                        'hint' => 'The data must belong to a backed enumeration of type ' . BookCondition::class,
+                        'hint' => $validValuesHint,
                     ],
                 ],
             ],
