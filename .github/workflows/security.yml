@@ -41,7 +41,7 @@ jobs:
           credentials_json: ${{ secrets.GKE_SA_KEY }}
       -
         name: Login to GAR
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: europe-west1-docker.pkg.dev
           username: oauth2accesstoken
@@ -70,7 +70,7 @@ jobs:
             ${{ runner.os }}-trivy-
       -
         name: Run Trivy Vulnerability Scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.35.0
         with:
           image-ref: 'europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/${{ matrix.image }}:latest'
           exit-code: '1'

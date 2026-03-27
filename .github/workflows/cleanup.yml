@@ -43,6 +43,14 @@ jobs:
         id: k8s-namespace
         run: echo "namespace=$(kubectl get namespace pr-${{ github.event.number }} | tr -d '\n' 2> /dev/null)" >> $GITHUB_OUTPUT
       -
-        name: Uninstall release
+        name: Delete ingress to trigger DNS cleanup
+        if: steps.k8s-namespace.outputs.namespace != ''
+        run: kubectl delete ingress --all -n pr-${{ github.event.number }}
+      -
+        name: Wait for external-dns to remove DNS records
+        if: steps.k8s-namespace.outputs.namespace != ''
+        run: sleep 30
+      -
+        name: Delete namespace
         if: steps.k8s-namespace.outputs.namespace != ''
         run: kubectl delete namespace pr-${{ github.event.number }}

@@ -1,6 +1,5 @@
 import {type FunctionComponent, useState} from "react";
 import {useMutation} from "@tanstack/react-query";
-import {useSession} from "next-auth/react";
 import Rating from "@mui/material/Rating";
 
 import {Error} from "../common/Error";
@@ -8,6 +7,7 @@ import {type Review} from "../../types/Review";
 import {fetchApi} from "../../utils/dataAccess";
 import {Form} from "./Form";
 import {usePermission} from "../../utils/review";
+import {useAccessToken} from "../../hooks/useAuth";
 
 interface Props {
   review: Review;
@@ -19,19 +19,17 @@ interface DeleteParams {
   id: string;
 }
 
-// @ts-expect-error Ignore Eslint error
-const deleteReview = async (id: string, session) => await fetchApi<Review>(id, { method: "DELETE" }, session);
+const deleteReview = async (id: string, accessToken: string|null) => await fetchApi<Review>(id, { method: "DELETE" }, accessToken);
 
 export const Item: FunctionComponent<Props> = ({ review, onDelete }) => {
-  const { data: session } = useSession();
+  const { accessToken, session } = useAccessToken();
   const [data, setData] = useState<Review>(review);
   const [error, setError] = useState<string | undefined>();
   const [edit, setEdit] = useState<boolean>(false);
-  // @ts-expect-error Ignore Eslint error
-  const isGranted = usePermission(data, session);
+  const isGranted = usePermission(data, accessToken);
 
   const deleteMutation = useMutation({
-    mutationFn: async ({ id }: DeleteParams) => deleteReview(id, session),
+    mutationFn: async ({ id }: DeleteParams) => deleteReview(id, accessToken),
     onSuccess: () => {
       if (onDelete) {
         onDelete(data);

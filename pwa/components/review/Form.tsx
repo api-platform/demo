@@ -8,7 +8,7 @@ import Rating from "@mui/material/Rating";
 import {fetchApi} from "../../utils/dataAccess";
 import {type Book} from "../../types/Book";
 import {type Review} from "../../types/Review";
-import {useSession} from "next-auth/react";
+import {useAccessToken} from "../../hooks/useAuth";
 
 interface Props {
   book: Book;
@@ -23,13 +23,12 @@ const DisplayingErrorMessagesSchema = Yup.object().shape({
 });
 
 export const Form: FunctionComponent<Props> = ({ book, onSuccess, review, username }) => {
-  const { data: session } = useSession();
+  const { accessToken } = useAccessToken();
   const saveReview = async (values: Review) =>
     await fetchApi<Review>(!values["@id"] ? `${book["@id"]}/reviews` : values["@id"], {
       method: !values["@id"] ? "POST" : "PATCH",
       body: JSON.stringify(values),
-      // @ts-expect-error Ignore Eslint error
-    }, session);
+    }, accessToken);
 
   const saveMutation = useMutation({
     mutationFn: async (values: Review) => saveReview(values),

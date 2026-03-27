@@ -46,6 +46,7 @@ pwa:
     tag: ""
   appSecret: ""
   oidcClientId: api-platform-pwa
+  oidcClientSecret: "!ChangeThisPwaClientSecret!"
   resources:
     requests:
       memory: 300Mi
@@ -144,6 +145,12 @@ keycloak:
   importRealm:
     enabled: true
     path: "keycloak/config/*"
+  configCli:
+    enabled: true
+    image:
+      repository: "adorsys/keycloak-config-cli"
+      tag: "6.5.0-26"
+      pullPolicy: IfNotPresent
 
 external-dns:
   enabled: true

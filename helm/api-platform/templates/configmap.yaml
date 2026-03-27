@@ -16,7 +16,7 @@ data:
   caddy-global-options: {{ .Values.php.caddyGlobalOptions | quote }}
   oidc-server-url: "https://{{ (first .Values.ingress.hosts).host }}/oidc/realms/demo"
   oidc-server-url-internal: "http://{{ include "api-platform.fullname" . }}-keycloak/oidc/realms/demo"
-  next-auth-url: "https://{{ (first .Values.ingress.hosts).host }}/api/auth"
+  better-auth-url: "https://{{ (first .Values.ingress.hosts).host }}/api/auth"
   pwa-client-id: {{ .Values.pwa.oidcClientId | quote }}
   pwa-authorization-client-id: {{ .Values.php.oidcClientId | quote }}
   {{- if .Values.keycloak.postgresql.enabled }}

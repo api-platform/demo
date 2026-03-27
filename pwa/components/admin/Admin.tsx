@@ -1,27 +1,28 @@
 "use client";
 
 import Head from "next/head";
-import {useContext, useRef, useState} from "react";
+import {useContext, useEffect, useMemo, useRef, useState} from "react";
 import {type DataProvider, localStorageStore} from "react-admin";
-import {signIn, useSession} from "next-auth/react";
 import SyncLoader from "react-spinners/SyncLoader";
 import {fetchHydra, HydraAdmin, hydraDataProvider, OpenApiAdmin, ResourceGuesser,} from "@api-platform/admin";
 import {parseHydraDocumentation} from "@api-platform/api-doc-parser";
 
-import {type Session} from "../../app/auth";
 import DocContext from "../../components/admin/DocContext";
-import authProvider from "../../components/admin/authProvider";
+import createAuthProvider from "../../components/admin/authProvider";
+import AccessDenied from "../../components/admin/AccessDenied";
 import Layout from "./layout/Layout";
 import {ENTRYPOINT} from "../../config/entrypoint";
 import bookResourceProps from "./book";
 import reviewResourceProps from "./review";
 import i18nProvider from "./i18nProvider";
+import {useAccessToken, signInWithKeycloak} from "../../hooks/useAuth";
+import {getRolesFromAccessToken} from "../../lib/jwt";
 
-const apiDocumentationParser = (session: Session) => async () => {
+const apiDocumentationParser = (accessToken: string) => async () => {
   try {
     return await parseHydraDocumentation(ENTRYPOINT, {
       headers: {
-        Authorization: `Bearer ${session?.accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     });
   } catch (result) {
@@ -40,15 +41,16 @@ const apiDocumentationParser = (session: Session) => async () => {
 };
 
 const AdminAdapter = ({
-  session,
+  accessToken,
   children,
 }: {
-  session: Session;
+  accessToken: string;
   children?: React.ReactNode | undefined;
 }) => {
   // @ts-expect-error Ignore Eslint error
   const dataProvider = useRef<DataProvider>();
   const { docType } = useContext(DocContext);
+  const authProvider = useMemo(() => createAuthProvider(accessToken), [accessToken]);
 
   dataProvider.current = hydraDataProvider({
     entrypoint: ENTRYPOINT,
@@ -57,16 +59,17 @@ const AdminAdapter = ({
         ...options,
         headers: {
           ...options.headers,
-          Authorization: `Bearer ${session?.accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       }),
-    apiDocumentationParser: apiDocumentationParser(session),
+    apiDocumentationParser: apiDocumentationParser(accessToken),
   });
 
   return docType === "hydra" ? (
     <HydraAdmin
       requireAuth
       authProvider={authProvider}
+
       // @ts-expect-error Ignore Eslint error
       dataProvider={dataProvider.current}
       entrypoint={window.origin}
@@ -79,6 +82,7 @@ const AdminAdapter = ({
     <OpenApiAdmin
       requireAuth
       authProvider={authProvider}
+
       // @ts-expect-error Ignore Eslint error
       dataProvider={dataProvider.current}
       entrypoint={window.origin}
@@ -93,7 +97,7 @@ const AdminAdapter = ({
 
 const store = localStorageStore();
 
-const AdminWithContext = ({ session }: { session: Session }) => {
+const AdminWithContext = ({ accessToken }: { accessToken: string }) => {
   const [docType, setDocType] = useState(
     store.getItem<string>("docType", "hydra")
   );
@@ -101,7 +105,7 @@ const AdminWithContext = ({ session }: { session: Session }) => {
   return (
     // @ts-expect-error Ignore Eslint error
     <DocContext.Provider value={{ docType, setDocType }}>
-      <AdminAdapter session={session}>
+      <AdminAdapter accessToken={accessToken}>
         <ResourceGuesser name="admin/books" {...bookResourceProps} />
         <ResourceGuesser name="admin/reviews" {...reviewResourceProps} />
       </AdminAdapter>
@@ -110,22 +114,25 @@ const AdminWithContext = ({ session }: { session: Session }) => {
 };
 
 const AdminWithOIDC = () => {
-  // Can't use next-auth/middleware because of https://github.com/nextauthjs/next-auth/discussions/7488
-  const { data: session, status } = useSession();
+  const { accessToken, session, isPending } = useAccessToken();
+  const hasRedirected = useRef(false);
 
-  if (status === "loading") {
+  useEffect(() => {
+    if (!isPending && !session && !hasRedirected.current) {
+      hasRedirected.current = true;
+      signInWithKeycloak();
+    }
+  }, [isPending, session]);
+
+  if (isPending || !session || !accessToken) {
     return <SyncLoader size={8} color="#46B6BF" />;
   }
 
-  // @ts-expect-error Ignore Eslint error
-  if (!session || session?.error === "RefreshAccessTokenError") {
-    (async () => await signIn("keycloak"))();
-
-    return;
+  if (!getRolesFromAccessToken(accessToken).includes("admin")) {
+    return <AccessDenied />;
   }
 
-  // @ts-expect-error Ignore Eslint error
-  return <AdminWithContext session={session} />;
+  return <AdminWithContext accessToken={accessToken} />;
 };
 
 const Admin = () => (

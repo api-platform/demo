@@ -36,16 +36,26 @@ spec:
           env:
             - name: NEXT_PUBLIC_ENTRYPOINT
               value: http://{{ include "api-platform.fullname" . }}
-            - name: AUTH_URL
+            - name: BETTER_AUTH_URL
               valueFrom:
                 configMapKeyRef:
                   name: {{ include "api-platform.fullname" . }}
-                  key: next-auth-url
-            - name: AUTH_SECRET
+                  key: better-auth-url
+            - name: BETTER_AUTH_SECRET
               valueFrom:
                 secretKeyRef:
                   name: {{ include "api-platform.fullname" . }}
-                  key: next-auth-secret
+                  key: better-auth-secret
+            - name: OIDC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: oidc-client-secret
+            - name: BETTER_AUTH_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: better-auth-database-url
             - name: NEXT_PUBLIC_OIDC_SERVER_URL
               valueFrom:
                 configMapKeyRef:

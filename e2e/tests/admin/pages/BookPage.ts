@@ -12,7 +12,7 @@ export class BookPage extends AbstractPage {
 
     await this.page.goto("/admin");
     await this.login();
-    await this.page.waitForURL(/\/admin#\/admin/);
+    await this.page.locator(".RaSidebar-fixed").getByText("Books").waitFor({ state: "visible", timeout: 30000 });
     await this.page.locator(".RaSidebar-fixed").getByText("Books").click();
 
     return this.page;

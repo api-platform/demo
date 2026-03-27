@@ -5,12 +5,9 @@ export abstract class AbstractPage {
   }
 
   public async login() {
-    await this.page.getByLabel("Email").fill("john.doe@example.com");
-    await this.page.getByRole("textbox", { name: "Password" }).fill("Pa55w0rd");
-    await this.page.getByRole("button", { name: "Sign In" }).click();
-    if (await this.page.getByRole("button", { name: "Sign in with Keycloak" }).count()) {
-      await this.page.getByRole("button", { name: "Sign in with Keycloak" }).click();
-    }
+    await this.page.locator('input[value="Log in as user"]').waitFor({ state: "visible", timeout: 30000 });
+    await this.page.locator('input[value="Log in as user"]').click();
+    await this.page.waitForURL((url) => !url.pathname.startsWith("/oidc/"), { timeout: 30000, waitUntil: "domcontentloaded" });
 
     return this.page;
   }

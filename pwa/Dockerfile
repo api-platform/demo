@@ -18,17 +18,17 @@ RUN npm install -g corepack@latest && \
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Delete the following line in case you want to enable telemetry during dev and build.
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 
 
 # Development image
-FROM base as dev
+FROM base AS dev
 
 EXPOSE 3000
-ENV PORT 3000
-ENV HOSTNAME localhost
+ENV PORT=3000
+ENV HOSTNAME=localhost
 
-CMD ["sh", "-c", "pnpm install; pnpm dev"]
+CMD ["sh", "-c", "pnpm install; node migrate.mjs; pnpm dev"]
 
 
 FROM base AS builder
@@ -38,7 +38,6 @@ RUN pnpm fetch --prod
 
 COPY --link . .
 
-ARG AUTH_SECRET
 # https://nextjs.org/docs/app/building-your-application/configuring/environment-variables#bundling-environment-variables-for-the-browser
 ARG NEXT_PUBLIC_OIDC_SERVER_URL
 
@@ -51,9 +50,9 @@ FROM node_upstream AS prod
 
 WORKDIR /srv/app
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 # Delete the following line in case you want to enable telemetry during runtime.
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN addgroup --system --gid 1001 nodejs; \
 	adduser --system --uid 1001 nextjs
@@ -68,12 +67,13 @@ RUN mkdir .next; \
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --link --chown=1001:1001 /srv/app/.next/standalone ./
 COPY --from=builder --link --chown=1001:1001 /srv/app/.next/static ./.next/static
+COPY --from=builder --link --chown=1001:1001 /srv/app/migrate.mjs ./
 
 USER nextjs
 
 EXPOSE 3000
 
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "server.js"]
+CMD ["sh", "-c", "node migrate.mjs && node server.js"]

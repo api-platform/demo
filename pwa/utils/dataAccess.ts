@@ -1,4 +1,3 @@
-import { type Session } from "../app/auth";
 import { ENTRYPOINT } from "../config/entrypoint";
 
 const MIME_TYPE = "application/ld+json";
@@ -34,7 +33,7 @@ const extractHubURL = (response: Response): null | URL => {
 export const fetchApi = async <TData>(
   id: string,
   init: RequestInit = {},
-  session?: Session|null
+  accessToken?: string|null
 ): Promise<FetchResponse<TData> | undefined> => {
   if (typeof init.headers === "undefined") init.headers = {};
   if (!init.headers.hasOwnProperty("Accept")) {
@@ -47,8 +46,8 @@ export const fetchApi = async <TData>(
   ) {
     init.headers = {...init.headers, "Content-Type": init.method === "PATCH" ? "application/merge-patch+json" : MIME_TYPE};
   }
-  if (session && !init.headers?.hasOwnProperty("Authorization")) {
-    init.headers = { ...init.headers, Authorization: `Bearer ${session?.accessToken}` };
+  if (accessToken && !init.headers?.hasOwnProperty("Authorization")) {
+    init.headers = { ...init.headers, Authorization: `Bearer ${accessToken}` };
   }
 
   const resp = await fetch(ENTRYPOINT + id, init);

@@ -1,8 +1,9 @@
 "use client";
 
 import {type FunctionComponent, useEffect, useState} from "react";
-import {signIn, useSession} from "next-auth/react";
 import {useSearchParams} from "next/navigation";
+
+import {useAccessToken, signInWithKeycloak} from "../../hooks/useAuth";
 
 import {Pagination} from "../common/Pagination";
 import {type Book} from "../../types/Book";
@@ -20,7 +21,7 @@ interface Props {
 }
 
 export const List: FunctionComponent<Props> = ({ book }) => {
-  const { data: session, status } = useSession();
+  const { accessToken, session, isPending } = useAccessToken();
   const searchParams = useSearchParams();
   const [data, setData] = useState<PagedCollection<Review> | null | undefined>();
   const [reload, toggleReload] = useState<boolean>(true);
@@ -32,8 +33,7 @@ export const List: FunctionComponent<Props> = ({ book }) => {
   useEffect(() => {
     (async () => {
       try {
-        // @ts-expect-error Ignore Eslint error
-        const response: FetchResponse<PagedCollection<Review>> | undefined = await fetchApi(`${book["reviews"]}?itemsPerPage=5&page=${page}`, {}, session);
+        const response: FetchResponse<PagedCollection<Review>> | undefined = await fetchApi(`${book["reviews"]}?itemsPerPage=5&page=${page}`, {}, accessToken);
         if (response?.data) {
           setData(response.data);
         }
@@ -48,15 +48,14 @@ export const List: FunctionComponent<Props> = ({ book }) => {
         return;
       }
     })();
-  }, [session, book, page, status, reload]);
+  }, [accessToken, book, page, isPending, reload]);
 
   const getPagePath = (page: number): string =>
     `${getItemPath(book, '/books/[id]/[slug]')}?page=${page}#reviews`;
 
   return (
     <>
-      {/* @ts-expect-error Ignore Eslint error */}
-      {!!session && !session.error && (
+      {!!session && (
         <div className="mb-10 max-w-4xl mx-auto">
           <div className="mb-5 flex">
             <div className="font-semibold text-gray-600 text-xl w-[50px] h-[50px] px-3 py-1 mr-3 rounded-full bg-gray-200 flex items-center justify-center">
@@ -73,8 +72,8 @@ export const List: FunctionComponent<Props> = ({ book }) => {
         </div>
       ) || (
         <div className="flex mb-10">
-          <button className="px-10 py-4 font-semibold text-sm bg-cyan-500 text-white rounded-sm shadow-xs mx-auto"
-                  onClick={() => signIn("keycloak")}>
+          <button className="px-10 py-4 font-semibold text-sm bg-cyan-500 text-white rounded-sm shadow-xs mx-auto cursor-pointer"
+                  onClick={() => signInWithKeycloak()}>
             Log in to add a review!
           </button>
         </div>

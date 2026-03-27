@@ -1,0 +1,59 @@
+{{- if and .Values.keycloak.enabled .Values.keycloak.configCli.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "api-platform.fullname" . }}-keycloak-realm
+  labels:
+    {{- include "api-platform.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": "post-install,post-upgrade"
+    "helm.sh/hook-weight": "5" # before fixtures job (weight 6)
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+spec:
+  template:
+    metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
+      labels:
+        {{- include "api-platform.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "api-platform.serviceAccountName" . }}
+      restartPolicy: Never
+      containers:
+        - name: {{ .Chart.Name }}-keycloak-realm
+          image: "{{ .Values.keycloak.configCli.image.repository }}:{{ .Values.keycloak.configCli.image.tag }}"
+          imagePullPolicy: {{ .Values.keycloak.configCli.image.pullPolicy }}
+          env:
+            - name: KEYCLOAK_URL
+              value: "http://{{ include "api-platform.fullname" . }}-keycloak{{ .Values.keycloak.httpRelativePath }}"
+            - name: KEYCLOAK_AVAILABILITYCHECK_ENABLED
+              value: "true"
+            - name: KEYCLOAK_AVAILABILITYCHECK_TIMEOUT
+              value: "120s"
+            {{- if .Values.keycloak.auth.createAdminUser }}
+            - name: KEYCLOAK_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: keycloak-admin-username
+            - name: KEYCLOAK_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: keycloak-admin-password
+            {{- end }}
+            - name: IMPORT_FILES_LOCATIONS
+              value: "/config/*"
+          volumeMounts:
+            - name: keycloak-realm
+              mountPath: /config
+              readOnly: true
+      volumes:
+        - name: keycloak-realm
+          configMap:
+            name: {{ include "api-platform.fullname" . }}-keycloak-realm
+{{- end }}

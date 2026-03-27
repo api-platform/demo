@@ -4,7 +4,7 @@ import {notFound} from "next/navigation";
 import {type Props as ShowProps, Show} from "../../../../components/book/Show";
 import {Book} from "../../../../types/Book";
 import {fetchApi, type FetchResponse} from "../../../../utils/dataAccess";
-import {auth, type Session} from "../../../auth";
+import {getServerAccessToken} from "../../../../lib/auth-helpers";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata|unde
   return undefined;
 }
 
-async function getServerSideProps(id: string, session: Session|null): Promise<ShowProps|undefined> {
+async function getServerSideProps(id: string, accessToken: string|null): Promise<ShowProps|undefined> {
   try {
     const response: FetchResponse<Book> | undefined = await fetchApi(`/books/${id}`, {
       headers: {
@@ -40,7 +40,7 @@ async function getServerSideProps(id: string, session: Session|null): Promise<Sh
       },
       // next: { revalidate: 3600 },
       cache: "no-cache",
-    }, session);
+    }, accessToken);
     if (!response?.data) {
       throw new Error(`Unable to retrieve data from /books/${id}.`);
     }
@@ -54,9 +54,8 @@ async function getServerSideProps(id: string, session: Session|null): Promise<Sh
 }
 
 export default async function Page({ params }: Props) {
-  // @ts-expect-error Ignore Eslint error
-  const session: Session|null = await auth();
-  const props = await getServerSideProps((await params).id, session);
+  const accessToken = await getServerAccessToken();
+  const props = await getServerSideProps((await params).id, accessToken);
   if (!props) {
     notFound();
   }

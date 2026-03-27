@@ -601,7 +601,8 @@
         "roles",
         "profile",
         "basic",
-        "email"
+        "email",
+        "openid"
       ],
       "optionalClientScopes": [
         "address",
@@ -659,7 +660,8 @@
         "roles",
         "profile",
         "basic",
-        "email"
+        "email",
+        "openid"
       ],
       "optionalClientScopes": [
         "address",
@@ -702,7 +704,8 @@
         "roles",
         "profile",
         "basic",
-        "email"
+        "email",
+        "openid"
       ],
       "optionalClientScopes": [
         "address",
@@ -763,7 +766,8 @@
         "roles",
         "profile",
         "basic",
-        "email"
+        "email",
+        "openid"
       ],
       "optionalClientScopes": [
         "address",
@@ -803,7 +807,8 @@
       "id": "e2923937-13f1-4ac5-9580-68ea5287f542",
       "clientId": "api-platform-pwa",
       "name": "API Platform PWA",
-      "description": "Public client for the PWA",
+      "description": "Confidential client for the PWA (BFF pattern)",
+      "secret": "!ChangeThisPwaClientSecret!",
       "rootUrl": "",
       "adminUrl": "",
       "baseUrl": "",
@@ -811,8 +816,12 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "redirectUris": ["*"],
-      "webOrigins": ["*"],
+      "redirectUris": [
+        "*"
+      ],
+      "webOrigins": [
+        "*"
+      ],
       "notBefore": 0,
       "bearerOnly": false,
       "consentRequired": false,
@@ -820,7 +829,7 @@
       "implicitFlowEnabled": false,
       "directAccessGrantsEnabled": false,
       "serviceAccountsEnabled": false,
-      "publicClient": true,
+      "publicClient": false,
       "frontchannelLogout": true,
       "protocol": "openid-connect",
       "attributes": {
@@ -842,7 +851,8 @@
         "roles",
         "profile",
         "basic",
-        "email"
+        "email",
+        "openid"
       ],
       "optionalClientScopes": [
         "address",
@@ -864,8 +874,12 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "redirectUris": ["*"],
-      "webOrigins": ["*"],
+      "redirectUris": [
+        "*"
+      ],
+      "webOrigins": [
+        "*"
+      ],
       "notBefore": 0,
       "bearerOnly": false,
       "consentRequired": false,
@@ -893,7 +907,8 @@
         "roles",
         "profile",
         "basic",
-        "email"
+        "email",
+        "openid"
       ],
       "optionalClientScopes": [
         "address",
@@ -935,7 +950,8 @@
         "roles",
         "profile",
         "basic",
-        "email"
+        "email",
+        "openid"
       ],
       "optionalClientScopes": [
         "address",
@@ -977,7 +993,8 @@
         "roles",
         "profile",
         "basic",
-        "email"
+        "email",
+        "openid"
       ],
       "optionalClientScopes": [
         "address",
@@ -1046,7 +1063,8 @@
         "roles",
         "profile",
         "basic",
-        "email"
+        "email",
+        "openid"
       ],
       "optionalClientScopes": [
         "address",
@@ -1058,6 +1076,27 @@
     }
   ],
   "clientScopes": [
+    {
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "name": "openid",
+      "description": "OpenID Connect built-in scope: openid",
+      "protocol": "openid-connect",
+      "attributes": {
+        "include.in.token.scope": "true",
+        "display.on.consent.screen": "true",
+        "consent.screen.text": "${openidScopeConsentText}"
+      },
+      "protocolMappers": [
+        {
+          "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+          "name": "sub",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-sub-mapper",
+          "consentRequired": false,
+          "config": {}
+        }
+      ]
+    },
     {
       "id": "28c8d09f-1a0c-4f2e-8add-a4b187095689",
       "name": "offline_access",
@@ -1745,7 +1784,8 @@
     "roles",
     "web-origins",
     "acr",
-    "basic"
+    "basic",
+    "openid"
   ],
   "defaultOptionalClientScopes": [
     "offline_access",
