@@ -6,7 +6,7 @@
         "@context": {
             "readOnly": true,
             "type": "string",
-            "pattern": "^/contexts/User$"
+            "pattern": "^/contexts/AdminUser$"
         },
         "@id": {
             "readOnly": true,

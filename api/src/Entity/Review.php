@@ -38,6 +38,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @see https://schema.org/Review
  */
 #[ApiResource(
+    shortName: 'AdminReview',
     types: ['https://schema.org/Review'],
     operations: [
         new GetCollection(
