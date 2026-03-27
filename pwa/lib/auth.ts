@@ -30,7 +30,7 @@ export const auth = betterAuth({
         // Internal URL for server-to-server token exchange
         tokenUrl: `${NEXT_PUBLIC_OIDC_SERVER_URL_INTERNAL}/protocol/openid-connect/token`,
         userInfoUrl: `${NEXT_PUBLIC_OIDC_SERVER_URL_INTERNAL}/protocol/openid-connect/userinfo`,
-        scopes: ["openid", "profile", "email", "offline_access"],
+        scopes: ["openid", "profile", "email", "offline_access", "roles"],
         pkce: true,
         accessType: "offline",
       }],

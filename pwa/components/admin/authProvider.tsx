@@ -2,43 +2,52 @@ import {AuthProvider} from "react-admin";
 
 import {authClient} from "../../lib/auth-client";
 import {signInWithKeycloak, signOutWithKeycloak} from "../../hooks/useAuth";
+import {getRolesFromAccessToken} from "../../lib/jwt";
 
-const authProvider: AuthProvider = {
-  // Nothing to do here, this function will never be called
-  login: async () => Promise.resolve(),
-  logout: async () => {
-    await signOutWithKeycloak(window.location.origin);
-  },
-  checkError: async (error) => {
-    const status = error.status;
-    if (status === 401) {
-      await signInWithKeycloak();
+const ADMIN_ROLE = "admin";
 
-      return;
-    }
+export default function createAuthProvider(accessToken: string): AuthProvider {
+  return {
+    // Nothing to do here, this function will never be called
+    login: async () => Promise.resolve(),
+    logout: async () => {
+      await signOutWithKeycloak(window.location.origin);
+    },
+    checkError: async (error) => {
+      const status = error.status;
+      if (status === 401) {
+        await signInWithKeycloak();
 
-    if (status === 403) {
-      return Promise.reject({ message: "Unauthorized user!", logoutUser: false });
-    }
-  },
-  checkAuth: async () => {
-    const { data: session } = await authClient.getSession();
-    if (!session) {
-      await signInWithKeycloak();
+        return;
+      }
 
-      return;
-    }
+      if (status === 403) {
+        return Promise.reject({message: "Unauthorized user!", logoutUser: false});
+      }
+    },
+    checkAuth: async () => {
+      const {data: session} = await authClient.getSession();
+      if (!session) {
+        await signInWithKeycloak();
 
-    return Promise.resolve();
-  },
-  getPermissions: () => Promise.resolve(),
-  getIdentity: async () => {
-    const { data: session } = await authClient.getSession();
+        return;
+      }
 
-    return session ? Promise.resolve(session.user) : Promise.reject();
-  },
-  // Nothing to do here, this function will never be called
-  handleCallback: () => Promise.resolve(),
-};
+      return Promise.resolve();
+    },
+    canAccess: async () => {
+      const roles = getRolesFromAccessToken(accessToken);
+      return roles.includes(ADMIN_ROLE);
+    },
+    getPermissions: async () => {
+      return getRolesFromAccessToken(accessToken);
+    },
+    getIdentity: async () => {
+      const {data: session} = await authClient.getSession();
 
-export default authProvider;
+      return session ? Promise.resolve(session.user) : Promise.reject();
+    },
+    // Nothing to do here, this function will never be called
+    handleCallback: () => Promise.resolve(),
+  };
+}

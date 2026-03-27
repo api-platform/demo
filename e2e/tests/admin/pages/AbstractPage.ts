@@ -12,6 +12,14 @@ export abstract class AbstractPage {
     return this.page;
   }
 
+  public async loginAsUser() {
+    await this.page.locator('input[value="Log in as user"]').waitFor({ state: "visible", timeout: 30000 });
+    await this.page.locator('input[value="Log in as user"]').click();
+    await this.page.waitForURL((url) => !url.pathname.startsWith("/oidc/"), { timeout: 30000, waitUntil: "domcontentloaded" });
+
+    return this.page;
+  }
+
   protected async registerMock() {
     await this.page.route(/^https:\/\/openlibrary\.org\/books\/(.+)\.json$/, (route) => route.fulfill({
       path: "tests/mocks/openlibrary.org/books/OL2055137M.json"
