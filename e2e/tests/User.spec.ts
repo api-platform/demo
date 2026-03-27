@@ -11,12 +11,12 @@ test.describe("User authentication", () => {
 
     await page.getByText("Log in").click();
     // Wait for Keycloak login page
-    await page.getByRole("button", { name: "Log in as user" }).waitFor({ state: "visible", timeout: 30000 });
+    await page.locator('input[value="Log in as user"]').waitFor({ state: "visible", timeout: 30000 });
     // @ts-ignore assert declared on test.ts
     await expect(page).toBeOnLoginPage();
     await expect(page.locator("#kc-header-wrapper")).toContainText("API Platform - Demo");
-    await expect(page.getByRole("button", { name: "Log in as user" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Log in as admin" })).toBeVisible();
+    await expect(page.locator('input[value="Log in as user"]')).toBeVisible();
+    await expect(page.locator('input[value="Log in as admin"]')).toBeVisible();
     await userPage.login();
 
     await expect(page.getByText("Sign out")).toBeVisible({ timeout: 30000 });
@@ -34,11 +34,11 @@ test.describe("User authentication", () => {
 
     // I should be logged out from Keycloak also
     await page.getByText("Log in").click();
-    await page.getByRole("button", { name: "Log in as user" }).waitFor({ state: "visible", timeout: 30000 });
+    await page.locator('input[value="Log in as user"]').waitFor({ state: "visible", timeout: 30000 });
     // @ts-ignore assert declared on test.ts
     await expect(page).toBeOnLoginPage();
     await expect(page.locator("#kc-header-wrapper")).toContainText("API Platform - Demo");
-    await expect(page.getByRole("button", { name: "Log in as user" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Log in as admin" })).toBeVisible();
+    await expect(page.locator('input[value="Log in as user"]')).toBeVisible();
+    await expect(page.locator('input[value="Log in as admin"]')).toBeVisible();
   });
 });

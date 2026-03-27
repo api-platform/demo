@@ -5,8 +5,8 @@ export abstract class AbstractPage {
   }
 
   public async login() {
-    await this.page.getByRole("button", { name: "Log in as user" }).waitFor({ state: "visible", timeout: 30000 });
-    await this.page.getByRole("button", { name: "Log in as user" }).click();
+    await this.page.locator('input[value="Log in as user"]').waitFor({ state: "visible", timeout: 30000 });
+    await this.page.locator('input[value="Log in as user"]').click();
     await this.page.waitForURL((url) => !url.pathname.startsWith("/oidc/"), { timeout: 30000, waitUntil: "domcontentloaded" });
 
     return this.page;

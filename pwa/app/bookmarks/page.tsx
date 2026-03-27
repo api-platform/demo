@@ -36,7 +36,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Que
   const session = await getServerSession();
   const accessToken = await getServerAccessToken();
   if (!session || !accessToken) {
-    redirect("/books");
+    redirect("/login?callbackURL=/bookmarks");
   }
 
   const props = await getServerSideProps(await searchParams, accessToken);
