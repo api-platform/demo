@@ -105,6 +105,8 @@ jobs:
             url=$release-demo.api-platform.com
           fi
           echo "url=$url" >> "$GITHUB_OUTPUT"
+          # Extract the zone (last two segments) for external-dns domain filter
+          dns_zone=$(echo "$url" | awk -F. '{print $(NF-1)"."$NF}')
           cors="https://$url|http://localhost|https://localhost|http://localhost:3000|https://api-platform.github.io"
           set -o pipefail
           helm upgrade $release ./helm/api-platform -f ./helm/api-platform/values.yaml \
@@ -127,7 +129,7 @@ jobs:
             --set=ingress.tls[0].hosts[0]=$url \
             --set=external-dns.env[0].name=CF_API_TOKEN \
             --set=external-dns.env[0].value=${{ secrets.cloudflare-api-token }} \
-            --set=external-dns.domainFilters[0]=$url \
+            --set=external-dns.domainFilters[0]=$dns_zone \
             --set=external-dns.txtOwnerId=$release \
             --set=php.corsAllowOrigin="^$(echo "$cors" | sed 's/\./\\\\./g')$" \
             --set=php.trustedHosts="^127\\.0\\.0\\.1|localhost|$(echo "$url" | sed 's/\./\\\\./g')$" \
