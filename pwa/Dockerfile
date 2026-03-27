@@ -28,7 +28,7 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME=localhost
 
-CMD ["sh", "-c", "pnpm install; pnpm dev"]
+CMD ["sh", "-c", "pnpm install; node migrate.mjs; pnpm dev"]
 
 
 FROM base AS builder
@@ -67,6 +67,7 @@ RUN mkdir .next; \
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --link --chown=1001:1001 /srv/app/.next/standalone ./
 COPY --from=builder --link --chown=1001:1001 /srv/app/.next/static ./.next/static
+COPY --from=builder --link --chown=1001:1001 /srv/app/migrate.mjs ./
 
 USER nextjs
 
@@ -75,4 +76,4 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "server.js"]
+CMD ["sh", "-c", "node migrate.mjs && node server.js"]
