@@ -149,7 +149,7 @@ keycloak:
     enabled: true
     image:
       repository: "adorsys/keycloak-config-cli"
-      tag: "6.2.1-26.0.0"
+      tag: "6.5.0-26"
       pullPolicy: IfNotPresent
 
 external-dns:
