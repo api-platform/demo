@@ -120,6 +120,16 @@ spec:
                 secretKeyRef:
                   name: {{ include "api-platform.fullname" . }}
                   key: mercure-jwt-secret
+            - name: CADDY_SERVER_CACHE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: caddy-server-cache
+            - name: CACHE_INVALIDATION_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "api-platform.fullname" . }}
+                  key: cache-invalidation-url
           ports:
             - name: http
               containerPort: 80

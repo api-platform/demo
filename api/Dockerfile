@@ -12,8 +12,24 @@ FROM docker.io/dunglas/frankenphp:1-php8.5 AS frankenphp_upstream
 # https://docs.docker.com/compose/compose-file/#target
 
 
+# Build FrankenPHP with Souin cache module
+FROM docker.io/dunglas/frankenphp:1-builder AS builder
+
+WORKDIR /go/src/app/caddy
+
+# Add Souin cache module + storage backends to FrankenPHP
+RUN go get github.com/darkweak/souin/plugins/caddy@latest \
+	github.com/darkweak/storages/otter/caddy@latest \
+	github.com/darkweak/storages/redis/caddy@latest \
+	&& sed -i '/_ "github.com\/dunglas\/vulcain\/caddy"/a\\t_ "github.com/darkweak/souin/plugins/caddy"\n\t_ "github.com/darkweak/storages/otter/caddy"\n\t_ "github.com/darkweak/storages/redis/caddy"' frankenphp/main.go \
+	&& CGO_CFLAGS="$(php-config --includes) $CGO_CFLAGS" \
+	go build -ldflags "-w -s" -tags nobadger,nomysql,nopgx -o /usr/local/bin/frankenphp ./frankenphp
+
+
 # Base FrankenPHP image
 FROM frankenphp_upstream AS frankenphp_base
+
+COPY --from=builder /usr/local/bin/frankenphp /usr/local/bin/frankenphp
 
 WORKDIR /app
 

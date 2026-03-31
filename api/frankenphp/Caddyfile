@@ -52,6 +52,8 @@
 	header ?Permissions-Policy "browsing-topics=()"
 
 	route {
+		{$CADDY_SERVER_CACHE}
+
 		# Matches requests for OIDC routes
 		@oidc expression path('/oidc/*')
 

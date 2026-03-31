@@ -8,8 +8,11 @@ services:
         condition: service_started
       keycloak:
         condition: service_started
+      redis:
+        condition: service_healthy
     restart: unless-stopped
     environment:
+      CACHE_INVALIDATION_URL: "http://localhost:2019/souin-api/souin"
       PWA_UPSTREAM: pwa:3000
       OIDC_UPSTREAM: keycloak:8080
       SERVER_NAME: ${SERVER_NAME:-localhost}, php:80
@@ -91,6 +94,17 @@ services:
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
 
+  redis:
+    image: docker.io/redis:7-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    volumes:
+      - redis_data:/data
+
   keycloak-database:
     image: docker.io/postgres:${KEYCLOAK_POSTGRES_VERSION:-16}-alpine
     environment:
@@ -144,4 +158,5 @@ volumes:
 ###< doctrine/doctrine-bundle ###
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
+  redis_data:
   keycloak_db_data:

@@ -1,0 +1,7 @@
+api_platform:
+    http_cache:
+        invalidation:
+            enabled: true
+            purger: 'api_platform.http_cache.purger.souin'
+            urls:
+                - '%env(CACHE_INVALIDATION_URL)%'
