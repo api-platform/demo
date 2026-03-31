@@ -27,7 +27,7 @@ RUN CGO_ENABLED=1 \
 	XCADDY_GO_BUILD_FLAGS="-tags=nobadger,nomysql,nopgx" \
 	"$(go env GOPATH)/bin/xcaddy" build \
 		--output /usr/local/bin/frankenphp \
-		--with github.com/caddyserver/brotli \
+		--with github.com/dunglas/caddy-cbrotli \
 		--with github.com/dunglas/frankenphp/caddy \
 		--with github.com/dunglas/mercure/caddy \
 		--with github.com/dunglas/vulcain/caddy \
