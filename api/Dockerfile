@@ -25,7 +25,7 @@ RUN CGO_ENABLED=1 \
 	CGO_CFLAGS="$(php-config --includes)" \
 	CGO_LDFLAGS="$(php-config --ldflags) $(php-config --libs)" \
 	XCADDY_GO_BUILD_FLAGS="-tags=nobadger,nomysql,nopgx" \
-	xcaddy build \
+	"$(go env GOPATH)/bin/xcaddy" build \
 		--output /usr/local/bin/frankenphp \
 		--with github.com/dunglas/frankenphp/caddy \
 		--with github.com/dunglas/mercure/caddy \
