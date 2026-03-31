@@ -71,3 +71,19 @@ services:
             $nameConverter: '@?api_platform.name_converter'
             $properties: { name: 'ipartial' }
         tags: [ 'api_platform.filter' ]
+
+when@prod:
+    api_platform:
+        http_cache:
+            invalidation:
+                enabled: true
+                purger: 'app.http_cache.purger.fault_tolerant_souin'
+                urls:
+                    - '%env(CACHE_INVALIDATION_URL)%'
+
+    services:
+        app.http_cache.purger.fault_tolerant_souin:
+            class: App\HttpCache\FaultTolerantSouinPurger
+            arguments:
+                $inner: '@api_platform.http_cache.purger.souin'
+                $logger: '@logger'

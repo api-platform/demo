@@ -12,8 +12,34 @@ FROM docker.io/dunglas/frankenphp:1-php8.5 AS frankenphp_upstream
 # https://docs.docker.com/compose/compose-file/#target
 
 
+# Build FrankenPHP with Mercure, Vulcain and Souin (HTTP cache) modules
+FROM docker.io/dunglas/frankenphp:1-builder AS builder
+
+# Install xcaddy to build a custom FrankenPHP binary with additional Caddy modules
+# CGO_ENABLED=0: xcaddy is a pure Go tool and must not be compiled with CGO
+# hadolint ignore=DL3062
+RUN CGO_ENABLED=0 go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
+
+# hadolint ignore=DL3062
+RUN CGO_ENABLED=1 \
+	CGO_CFLAGS="$(php-config --includes)" \
+	CGO_LDFLAGS="$(php-config --ldflags) $(php-config --libs)" \
+	XCADDY_GO_BUILD_FLAGS="-tags=nobadger,nomysql,nopgx" \
+	"$(go env GOPATH)/bin/xcaddy" build \
+		--output /usr/local/bin/frankenphp \
+		--with github.com/dunglas/caddy-cbrotli \
+		--with github.com/dunglas/frankenphp/caddy \
+		--with github.com/dunglas/mercure/caddy \
+		--with github.com/dunglas/vulcain/caddy \
+		--with github.com/darkweak/souin/plugins/caddy \
+		--with github.com/darkweak/storages/otter/caddy \
+		--with github.com/darkweak/storages/redis/caddy
+
+
 # Base FrankenPHP image
 FROM frankenphp_upstream AS frankenphp_base
+
+COPY --from=builder /usr/local/bin/frankenphp /usr/local/bin/frankenphp
 
 WORKDIR /app
 

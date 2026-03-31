@@ -10,6 +10,21 @@ services:
       APP_SECRET: ${APP_SECRET}
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
       MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
+      CADDY_GLOBAL_OPTIONS: |
+        order cache before rewrite
+        cache {
+            ttl 3600s
+            stale 86400s
+            default_cache_control "public, s-maxage=3600"
+            redis {
+                url redis:6379
+            }
+            otter
+            api {
+                souin
+            }
+        }
+      CADDY_SERVER_CACHE: "cache"
 
   pwa:
     image: ${PWA_DOCKER_IMAGE}

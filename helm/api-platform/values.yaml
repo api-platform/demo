@@ -19,18 +19,26 @@ php:
     - "10.0.0.0/8"
     - "172.16.0.0/12"
     - "192.168.0.0/16"
+  caddyServerCache: "cache"
   caddyGlobalOptions: |
     debug
     servers {
       metrics
       trusted_proxies static private_ranges
     }
-#    order cache before rewrite
-#    cache {
-#        api {
-#            souin
-#        }
-#    }
+    order cache before rewrite
+    cache {
+        ttl 3600s
+        stale 86400s
+        default_cache_control "public, s-maxage=3600"
+        redis {
+            url {{ include "api-platform.fullname" . }}-redis:6379
+        }
+        otter
+        api {
+            souin
+        }
+    }
   resources:
     requests:
       memory: 100Mi
@@ -88,6 +96,19 @@ postgresql:
       requests:
         memory: 50Mi
         cpu: 1m
+
+redis:
+  enabled: true
+  image:
+    repository: "docker.io/redis"
+    tag: "8-alpine"
+    pullPolicy: IfNotPresent
+  resources:
+    requests:
+      memory: 50Mi
+      cpu: 1m
+    limits:
+      memory: 128Mi
 
 keycloak:
   enabled: true
