@@ -18,6 +18,7 @@ FROM docker.io/dunglas/frankenphp:1-builder AS builder
 WORKDIR /go/src/app/caddy
 
 # Add Souin cache module + storage backends to FrankenPHP
+# hadolint ignore=DL3062
 RUN go get github.com/darkweak/souin/plugins/caddy@latest \
 	github.com/darkweak/storages/otter/caddy@latest \
 	github.com/darkweak/storages/redis/caddy@latest \
