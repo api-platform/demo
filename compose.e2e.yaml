@@ -13,6 +13,10 @@ services:
           - gutendex.com
 
   php:
+    environment:
+      # Disable HTTP cache during E2E tests: Souin would cache empty API responses
+      # during service startup (before fixtures are loaded) and serve them during tests
+      CADDY_SERVER_CACHE: ""
     volumes:
       - ./e2e/mock-server/cert.pem:/usr/local/share/ca-certificates/mock-server.crt:ro
     depends_on:

@@ -13,11 +13,11 @@ use Psr\Log\LoggerInterface;
  * When the Caddy admin API is unreachable (e.g. during CLI commands like doctrine:fixtures:load),
  * exceptions are caught and logged as warnings instead of propagating.
  */
-final class FaultTolerantSouinPurger implements PurgerInterface
+final readonly class FaultTolerantSouinPurger implements PurgerInterface
 {
     public function __construct(
-        private readonly PurgerInterface $inner,
-        private readonly LoggerInterface $logger,
+        private PurgerInterface $inner,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -25,10 +25,10 @@ final class FaultTolerantSouinPurger implements PurgerInterface
     {
         try {
             $this->inner->purge($iris);
-        } catch (\Throwable $e) {
+        } catch (\Throwable $throwable) {
             $this->logger->warning('Failed to purge HTTP cache: {message}', [
-                'message' => $e->getMessage(),
-                'exception' => $e,
+                'message' => $throwable->getMessage(),
+                'exception' => $throwable,
             ]);
         }
     }
