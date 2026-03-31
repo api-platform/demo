@@ -16,8 +16,9 @@ FROM docker.io/dunglas/frankenphp:1-php8.5 AS frankenphp_upstream
 FROM docker.io/dunglas/frankenphp:1-builder AS builder
 
 # Install xcaddy to build a custom FrankenPHP binary with additional Caddy modules
+# CGO_ENABLED=0: xcaddy is a pure Go tool and must not be compiled with CGO
 # hadolint ignore=DL3062
-RUN go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
+RUN CGO_ENABLED=0 go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
 
 # hadolint ignore=DL3062
 RUN CGO_ENABLED=1 \
