@@ -70,7 +70,7 @@ jobs:
             ${{ runner.os }}-trivy-
       -
         name: Run Trivy Vulnerability Scanner
-        uses: aquasecurity/trivy-action@0.35.0
+        uses: aquasecurity/trivy-action@v0.35.0
         with:
           image-ref: 'europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/${{ matrix.image }}:latest'
           exit-code: '1'
