@@ -140,7 +140,7 @@ spec:
           lifecycle:
             preStop:
               exec:
-                command: ["/bin/sh", "-c", "/bin/sleep 1; kill -QUIT 1"]
+                command: ["/bin/sh", "-c", "/bin/sleep 1; kill -TERM 1"]
           readinessProbe:
             tcpSocket:
               port: 80
