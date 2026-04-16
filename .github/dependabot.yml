@@ -1,0 +1,47 @@
+version: 2
+
+updates:
+  - package-ecosystem: composer
+    directory: /api
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: "chore(deps)"
+    cooldown:
+      default-days: 3
+      semver-major-days: 14
+      semver-minor-days: 7
+      semver-patch-days: 1
+    groups:
+      symfony:
+        patterns:
+          - "symfony/*"
+        update-types:
+          - patch
+          - minor
+
+  - package-ecosystem: npm
+    directory: /pwa
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: "chore(deps)"
+    cooldown:
+      default-days: 3
+      semver-major-days: 14
+      semver-minor-days: 7
+      semver-patch-days: 1
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: "ci"
+
+  - package-ecosystem: helm
+    directory: /helm
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: "chore(deps)"
