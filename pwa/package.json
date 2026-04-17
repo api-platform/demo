@@ -59,7 +59,7 @@
       "undici": "^7"
     },
     "supportedArchitectures": {
-      "cpu": ["arm64"],
+      "cpu": ["arm64", "x64"],
       "os": ["linux", "darwin", "current"]
     }
   }
