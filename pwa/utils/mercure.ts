@@ -30,11 +30,12 @@ export const useMercure = <
   deps: TData,
   hubURL: string | null | undefined
 ): TData => {
+  const [prevDeps, setPrevDeps] = useState(deps);
   const [data, setData] = useState(deps);
-
-  useEffect(() => {
+  if (deps !== prevDeps) {
+    setPrevDeps(deps);
     setData(deps);
-  }, [deps]);
+  }
 
   useEffect(() => {
     if (!hubURL || !data) {
