@@ -16,28 +16,28 @@
     "@mui/icons-material": "^7.3.10",
     "@mui/material": "^7.3.10",
     "@tailwindcss/forms": "^0.5.11",
-    "@tailwindcss/postcss": "^4.2.2",
-    "@tanstack/react-query": "^5.99.0",
-    "@tanstack/react-query-devtools": "^5.99.0",
-    "@tanstack/react-query-next-experimental": "^5.99.0",
-    "better-auth": "^1.6.5",
+    "@tailwindcss/postcss": "^4.2.4",
+    "@tanstack/react-query": "^5.100.0",
+    "@tanstack/react-query-devtools": "^5.100.0",
+    "@tanstack/react-query-next-experimental": "^5.100.0",
+    "better-auth": "^1.6.8",
     "formik": "^2.4.9",
     "next": "^16.2.4",
     "pg": "^8.20.0",
     "picocolors": "^1.1.1",
     "postcss": "^8.5.10",
-    "ra-i18n-polyglot": "^5.14.5",
-    "ra-language-english": "^5.14.5",
-    "ra-language-french": "^5.14.5",
-    "ra-ui-materialui": "^5.14.5",
+    "ra-i18n-polyglot": "^5.14.6",
+    "ra-language-english": "^5.14.6",
+    "ra-language-french": "^5.14.6",
+    "ra-ui-materialui": "^5.14.6",
     "react": "^19.2.5",
-    "react-admin": "^5.14.5",
+    "react-admin": "^5.14.6",
     "react-dom": "^19.2.5",
-    "react-hook-form": "^7.72.1",
+    "react-hook-form": "^7.73.1",
     "react-spinners": "^0.17.0",
     "sharp": "^0.34.5",
     "slugify": "^1.6.9",
-    "tailwindcss": "^4.2.2",
+    "tailwindcss": "^4.2.4",
     "yup": "^1.7.1"
   },
   "devDependencies": {
@@ -59,8 +59,15 @@
       "undici": "^7"
     },
     "supportedArchitectures": {
-      "cpu": ["arm64", "x64"],
-      "os": ["linux", "darwin", "current"]
+      "cpu": [
+        "arm64",
+        "x64"
+      ],
+      "os": [
+        "linux",
+        "darwin",
+        "current"
+      ]
     }
   }
 }
