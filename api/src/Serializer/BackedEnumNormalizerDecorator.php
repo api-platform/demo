@@ -57,13 +57,7 @@ final class BackedEnumNormalizerDecorator implements NormalizerInterface, Denorm
 
         // Case 1: Type mismatch — data is not the expected backing type
         if (null === $data || ('int' === $backingType && !\is_int($data)) || ('string' === $backingType && !\is_string($data))) {
-            throw NotNormalizableValueException::createForUnexpectedDataType(
-                \sprintf('The data must be of type %s.', $backingType),
-                $data,
-                [$backingType],
-                $context['deserialization_path'] ?? null,
-                true,
-            );
+            throw NotNormalizableValueException::createForUnexpectedDataType(\sprintf('The data must be of type %s.', $backingType), $data, [$backingType], $context['deserialization_path'] ?? null, true);
         }
 
         // Case 2: Invalid value — right type but not a valid enum case
@@ -77,12 +71,7 @@ final class BackedEnumNormalizerDecorator implements NormalizerInterface, Denorm
                 $type::cases(),
             );
 
-            throw new NotNormalizableValueException(
-                message: \sprintf('The data must be one of the following values: %s', implode(', ', $validValues)),
-                previous: $e,
-                path: $context['deserialization_path'] ?? null,
-                useMessageForUser: true,
-            );
+            throw new NotNormalizableValueException(message: \sprintf('The data must be one of the following values: %s', implode(', ', $validValues)), previous: $e, path: $context['deserialization_path'] ?? null, useMessageForUser: true);
         }
     }
 
