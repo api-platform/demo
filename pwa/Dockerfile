@@ -46,7 +46,7 @@ COPY --link . .
 # https://nextjs.org/docs/app/building-your-application/configuring/environment-variables#bundling-environment-variables-for-the-browser
 ARG NEXT_PUBLIC_OIDC_SERVER_URL
 
-RUN	pnpm install --frozen-lockfile --offline --prod && \
+RUN	pnpm install --frozen-lockfile --offline && \
 	pnpm run build
 
 
