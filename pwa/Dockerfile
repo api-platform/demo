@@ -11,7 +11,7 @@ FROM node_upstream AS base
 WORKDIR /srv/app
 
 ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
+ENV PATH="$PNPM_HOME/bin:$PATH"
 
 RUN npm install -g corepack@latest && \
     corepack enable && \
