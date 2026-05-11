@@ -10,6 +10,9 @@ FROM node_upstream AS base
 
 WORKDIR /srv/app
 
+ENV PNPM_HOME="/root/.local/share/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
 RUN npm install -g corepack@latest && \
     corepack enable && \
 	corepack prepare --activate pnpm@latest && \
