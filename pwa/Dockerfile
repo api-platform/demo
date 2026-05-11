@@ -36,6 +36,8 @@ CMD ["sh", "-c", "pnpm install; node migrate.mjs; pnpm dev"]
 
 FROM base AS builder
 
+ENV CI=true
+
 COPY --link pnpm-lock.yaml ./
 RUN pnpm fetch --prod
 
