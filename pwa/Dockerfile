@@ -39,7 +39,7 @@ FROM base AS builder
 ENV CI=true
 
 COPY --link pnpm-lock.yaml ./
-RUN pnpm fetch --prod
+RUN pnpm fetch
 
 COPY --link . .
 
