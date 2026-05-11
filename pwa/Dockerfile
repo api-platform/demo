@@ -10,6 +10,9 @@ FROM node_upstream AS base
 
 WORKDIR /srv/app
 
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME/bin:$PATH"
+
 RUN npm install -g corepack@latest && \
     corepack enable && \
 	corepack prepare --activate pnpm@latest && \
@@ -33,15 +36,17 @@ CMD ["sh", "-c", "pnpm install; node migrate.mjs; pnpm dev"]
 
 FROM base AS builder
 
-COPY --link pnpm-lock.yaml ./
-RUN pnpm fetch --prod
+ENV CI=true
+
+COPY --link package.json pnpm-lock.yaml ./
+RUN pnpm fetch
 
 COPY --link . .
 
 # https://nextjs.org/docs/app/building-your-application/configuring/environment-variables#bundling-environment-variables-for-the-browser
 ARG NEXT_PUBLIC_OIDC_SERVER_URL
 
-RUN	pnpm install --frozen-lockfile --offline --prod && \
+RUN	pnpm install --frozen-lockfile --offline && \
 	pnpm run build
 
 
