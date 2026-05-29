@@ -14,6 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       -
+        name: Generate a token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: 1484548 # API Platform release manager
+          private-key: ${{ secrets.RELEASE_MANAGER_APP_PRIVATE_KEY }}
+      -
         name: Checkout
         uses: actions/checkout@v6
       -
@@ -57,7 +64,7 @@ jobs:
         uses: peter-evans/create-pull-request@v8
         if: steps.diff.outputs.to-version != ''
         with:
-          token: ${{ secrets.API_PLATFORM_DEMO_PR_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
           branch: release/api-platform-${{ steps.diff.outputs.to-version }}
           base: ${{ github.event.repository.default_branch }}
           commit-message: "chore: upgrade API Platform to ${{ steps.diff.outputs.to-version }}"
