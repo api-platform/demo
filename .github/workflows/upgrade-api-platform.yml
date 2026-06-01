@@ -16,7 +16,7 @@ jobs:
       -
         name: Generate a token
         id: app-token
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         with:
           app-id: 1484548 # API Platform release manager
           private-key: ${{ secrets.RELEASE_MANAGER_APP_PRIVATE_KEY }}
