@@ -4,7 +4,7 @@
 
 
 # Versions
-FROM quay.io/keycloak/keycloak:26.4 AS keycloak_upstream
+FROM quay.io/keycloak/keycloak:26.6 AS keycloak_upstream
 
 # The different stages of this Dockerfile are meant to be built into separate images
 # https://docs.docker.com/develop/develop-images/multistage-build/#stop-at-a-specific-build-stage
