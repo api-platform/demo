@@ -4,12 +4,7 @@
 
 
 # Versions
-FROM quay.io/keycloak/keycloak:26.6 AS keycloak_upstream
-
-# Enable the "scripts" feature so the bundled owner-policy.jar (a script-based
-# authorization policy) is registered. Required since Keycloak 26.5, both at
-# build time (start --optimized) and at runtime (start-dev re-augments).
-ENV KC_FEATURES=scripts
+FROM quay.io/keycloak/keycloak:26.4 AS keycloak_upstream
 
 # The different stages of this Dockerfile are meant to be built into separate images
 # https://docs.docker.com/develop/develop-images/multistage-build/#stop-at-a-specific-build-stage

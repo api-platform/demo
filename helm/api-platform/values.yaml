@@ -170,7 +170,7 @@ keycloak:
     enabled: true
     image:
       repository: "adorsys/keycloak-config-cli"
-      tag: "6.5.1-26"
+      tag: "6.5.0-26"
       pullPolicy: IfNotPresent
 
 external-dns:
