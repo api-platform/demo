@@ -41,7 +41,7 @@
     "yup": "^1.7.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.29.0",
+    "@babel/core": "^7.29.6",
     "@eslint/eslintrc": "^3.3.5",
     "@eslint/js": "^9.39.4",
     "@popperjs/core": "^2.11.8",
