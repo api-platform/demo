@@ -57,7 +57,7 @@
   "pnpm": {
     "overrides": {
       "undici": "^7",
-      "postcss@<8.5.10": "^8.5.10"
+      "postcss@<8.5.10": "^8.5.18"
     },
     "supportedArchitectures": {
       "cpu": [
