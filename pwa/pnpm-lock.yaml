@@ -105,18 +105,12 @@ importers:
         specifier: ^1.7.1
         version: 1.7.1
     devDependencies:
-      '@babel/core':
-        specifier: ^7.29.7
-        version: 7.29.7(supports-color@7.2.0)
       '@eslint/eslintrc':
         specifier: ^3.3.6
         version: 3.3.6(supports-color@7.2.0)
       '@eslint/js':
         specifier: ^9.39.4
         version: 9.39.4
-      '@popperjs/core':
-        specifier: ^2.11.8
-        version: 2.11.8
       '@types/node':
         specifier: ^24.13.3
         version: 24.13.3
