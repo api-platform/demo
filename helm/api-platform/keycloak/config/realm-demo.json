@@ -502,6 +502,9 @@
       "clientRoles": {
         "api-platform-api": [
           "uma_protection"
+        ],
+        "realm-management": [
+          "manage-authorization"
         ]
       },
       "notBefore": 0,

@@ -7,6 +7,10 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    # Internal id of the "api-platform-api" client, as declared in the demo realm
+    # (helm/api-platform/keycloak/config/realm-demo.json). Required to reach the Admin API
+    # endpoints managing its authorization resources.
+    env(OIDC_API_CLIENT_UUID): '707c6a44-2555-4d62-aaf9-34a580024f89'
 
 services:
     # default configuration for services in *this* file
