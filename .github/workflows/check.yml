@@ -20,10 +20,10 @@ jobs:
         name: Checkout
         uses: actions/checkout@v7
       -
+        name: Setup k6
+        uses: grafana/setup-k6-action@v1.2.1
+      -
         name: Run local k6 test
-        uses: grafana/k6-action@v0.3.1
-        with:
-          filename: k6/script.js
-          flags: --out json=results.json
+        run: k6 run k6/script.js --out json=results.json
         env:
           TARGET: ${{ inputs.url }}
