@@ -2,7 +2,7 @@
 
 import {usePathname} from "next/navigation";
 import Link from "next/link";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutlined";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 import {useSession, signInWithKeycloak, signOutWithKeycloak} from "../../hooks/useAuth";

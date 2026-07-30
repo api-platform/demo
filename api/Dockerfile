@@ -4,7 +4,7 @@
 
 
 # Versions
-FROM docker.io/dunglas/frankenphp:1.12.4-php8.5 AS frankenphp_upstream
+FROM docker.io/dunglas/frankenphp:1.12.6-php8.5 AS frankenphp_upstream
 
 
 # The different stages of this Dockerfile are meant to be built into separate images
@@ -13,7 +13,7 @@ FROM docker.io/dunglas/frankenphp:1.12.4-php8.5 AS frankenphp_upstream
 
 
 # Build FrankenPHP with Mercure, Vulcain and Souin (HTTP cache) modules
-FROM docker.io/dunglas/frankenphp:1.12.4-builder AS builder
+FROM docker.io/dunglas/frankenphp:1.12.6-builder AS builder
 
 # Install xcaddy to build a custom FrankenPHP binary with additional Caddy modules
 # CGO_ENABLED=0: xcaddy is a pure Go tool and must not be compiled with CGO

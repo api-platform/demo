@@ -27,7 +27,7 @@ final class KeycloakProtocolOpenIdConnectTokenMock extends MockHttpClient
 
     private function handleRequest(string $method, string $url, array $options): ResponseInterface
     {
-        if (!('POST' === $method && $this->baseUri . 'protocol/openid-connect/token' === $url)) {
+        if ('POST' !== $method || $this->baseUri . 'protocol/openid-connect/token' !== $url) {
             return $this->decorated->request($method, $url, $options);
         }
 
