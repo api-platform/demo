@@ -1,3 +1,37 @@
 allowBuilds:
   sharp: true
   unrs-resolver: true
+
+# Never prompt before purging node_modules: the dev container bind-mounts the project and
+# would otherwise abort `pnpm install` when the host virtual store does not match.
+confirmModulesPurge: false
+
+# Since pnpm 11, these settings live here instead of the "pnpm" field of package.json.
+# Each override pins a transitive dependency above the range of a published advisory;
+# drop the entry once the direct dependency ships the fix on its own.
+overrides:
+  # No fix exists in the 5.x line: every undici advisory is patched in >= 6.27.0.
+  undici: ^7.28.0
+  # GHSA-r28c-9q8g-f849 affects <= 8.5.17.
+  postcss: ^8.5.18
+  # GHSA-52cp-r559-cp3m affects < 4.3.0.
+  js-yaml: ^4.3.0
+  # GHSA-3jxr-9vmj-r5cp affects < 1.1.16 and >= 3.0.0 < 5.0.7, one entry per major in
+  # the tree. GHSA-mh99-v99m-4gvg is only fixed in 5.0.8, so the 1.x line stays exposed:
+  # minimatch@3 does `require('brace-expansion')` and calls the result, while 5.x exports
+  # a named `expand`. That chain is eslint-only, never bundled nor run at runtime.
+  brace-expansion@1: ^1.1.16
+  brace-expansion@5: ^5.0.8
+  # GHSA-c2j3-45gr-mqc4 affects <= 3.4.11, pulled by ra-ui-materialui.
+  dompurify: ^3.4.12
+  # GHSA-f88m-g3jw-g9cj affects < 0.35.0; next pins 0.34.5 as an optional dependency.
+  sharp: ^0.35.3
+
+supportedArchitectures:
+  cpu:
+    - arm64
+    - x64
+  os:
+    - linux
+    - darwin
+    - current

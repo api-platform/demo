@@ -20,9 +20,9 @@
     "@tanstack/react-query": "^5.101.0",
     "@tanstack/react-query-devtools": "^5.101.0",
     "@tanstack/react-query-next-experimental": "^5.101.0",
-    "better-auth": "^1.6.19",
+    "better-auth": "^1.6.22",
     "formik": "^2.4.9",
-    "next": "^16.2.9",
+    "next": "^16.2.11",
     "pg": "^8.21.0",
     "picocolors": "^1.1.1",
     "postcss": "^8.5.15",
@@ -53,22 +53,5 @@
     "eslint-config-next": "^16.2.9",
     "typescript": "^5.9.3"
   },
-  "packageManager": "pnpm@11.8.0",
-  "pnpm": {
-    "overrides": {
-      "undici": "^7",
-      "postcss@<8.5.10": "^8.5.18"
-    },
-    "supportedArchitectures": {
-      "cpu": [
-        "arm64",
-        "x64"
-      ],
-      "os": [
-        "linux",
-        "darwin",
-        "current"
-      ]
-    }
-  }
+  "packageManager": "pnpm@11.8.0"
 }
