@@ -6,7 +6,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import {signOutWithKeycloak} from "../../hooks/useAuth";
 
 const AccessDenied = () => (
-  <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" height="100vh" gap={2}>
+  <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100vh", gap: 2}}>
     <LockIcon sx={{fontSize: 60, color: "text.secondary"}}/>
     <Typography variant="h5" component="h1">
       Access Denied
@@ -14,7 +14,7 @@ const AccessDenied = () => (
     <Typography variant="body1" color="text.secondary">
       You do not have permission to access the administration panel.
     </Typography>
-    <Box display="flex" gap={2}>
+    <Box sx={{display: "flex", gap: 2}}>
       <Button
         variant="contained"
         href="/books"

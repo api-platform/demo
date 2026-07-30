@@ -87,7 +87,6 @@ export const getItemPath = (
     uriVariables = { id: uriVariables.split("/").slice(-1)[0] };
   }
 
-  // @ts-expect-error Ignore Eslint error
   [...pathTemplate.matchAll(/\[([^\]]+)\]/g)].forEach((m) => {
     // @ts-expect-error Ignore Eslint error
     pathTemplate = pathTemplate.replace(m[0], uriVariables[m[1]]);

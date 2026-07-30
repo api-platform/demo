@@ -136,6 +136,9 @@ services:
       KC_HOSTNAME_ADMIN: https://${SERVER_NAME:-localhost}/oidc/
       KC_HEALTH_ENABLED: "true"
       KC_METRICS_ENABLED: "true"
+      # start-dev re-runs the augmentation, so the build-time --features=scripts of the
+      # Dockerfile is lost: the JavaScript "Owner" policy needs it again at runtime.
+      KC_FEATURES: scripts
     healthcheck:
       test: ["CMD-SHELL", "bash -c ':> /dev/tcp/localhost/8080'"]
       start_period: 15s

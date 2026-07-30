@@ -119,10 +119,12 @@ keycloak:
     tag: "0.1.0"
   resources:
     requests:
-      memory: 400Mi
+      memory: 512Mi
       cpu: 50m
     limits:
-      memory: 500Mi
+      # Importing the demo realm leaves the JVM around 550Mi, so the previous 500Mi
+      # limit had no headroom and the pod was OOMKilled during rollout.
+      memory: 768Mi
   service:
     type: ClusterIP
   extraEnvVars:
@@ -170,7 +172,7 @@ keycloak:
     enabled: true
     image:
       repository: "adorsys/keycloak-config-cli"
-      tag: "6.5.0-26"
+      tag: "6.5.1-26"
       pullPolicy: IfNotPresent
 
 external-dns:

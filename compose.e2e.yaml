@@ -1,6 +1,6 @@
 services:
   mock-openlibrary:
-    image: node:22-alpine
+    image: node:lts-alpine
     working_dir: /app
     volumes:
       - ./e2e:/app

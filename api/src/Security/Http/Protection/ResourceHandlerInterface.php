@@ -7,23 +7,19 @@ namespace App\Security\Http\Protection;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @see https://www.keycloak.org/docs/latest/authorization_services/index.html#_service_protection_api
+ * @see https://www.keycloak.org/docs/latest/authorization_services/index.html#_resource_management
  */
 interface ResourceHandlerInterface
 {
     /**
-     * Creates a ResourceSet on the OIDC server.
-     *
-     * @see https://www.keycloak.org/docs/latest/authorization_services/index.html#_service_protection_resources_api
+     * Creates a user-owned Resource on the OIDC server.
      *
      * @param object $resource the related resource object
      */
     public function create(object $resource, UserInterface $owner, array $context = []): void;
 
     /**
-     * Removes a ResourceSet from the OIDC server.
-     *
-     * @see https://www.keycloak.org/docs/latest/authorization_services/index.html#_service_protection_resources_api
+     * Removes a user-owned Resource from the OIDC server.
      *
      * @param object $resource the related resource object
      */

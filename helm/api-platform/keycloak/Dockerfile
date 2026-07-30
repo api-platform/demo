@@ -4,7 +4,7 @@
 
 
 # Versions
-FROM quay.io/keycloak/keycloak:26.4 AS keycloak_upstream
+FROM quay.io/keycloak/keycloak:26.6 AS keycloak_upstream
 
 # The different stages of this Dockerfile are meant to be built into separate images
 # https://docs.docker.com/develop/develop-images/multistage-build/#stop-at-a-specific-build-stage
@@ -18,11 +18,14 @@ WORKDIR /opt/keycloak
 
 COPY --link --chown=keycloak:keycloak --chmod=644 providers/owner-policy.jar /opt/keycloak/providers/owner-policy.jar
 
+# Since Keycloak 26.6, deploying the JavaScript-based "Owner" policy of owner-policy.jar
+# requires the scripts feature to be enabled explicitly.
 RUN /opt/keycloak/bin/kc.sh build \
     --db=postgres \
     --http-relative-path=/oidc/ \
     --health-enabled=true \
-    --metrics-enabled=true
+    --metrics-enabled=true \
+    --features=scripts
 
 # Keycloak image
 FROM keycloak_upstream AS keycloak
