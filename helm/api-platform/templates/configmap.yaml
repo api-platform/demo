@@ -37,5 +37,8 @@ metadata:
   labels:
     {{- include "api-platform.labelsKeycloak" . | nindent 4 }}
 data:
-{{ (.Files.Glob .Values.keycloak.importRealm.path).AsConfig | indent 2 }}
+{{/* Keycloak rejects wildcards in the host part of a redirect URI, and the deployed host is
+     dynamic (pr-<N>-demo.api-platform.com). The realm file therefore ships the unresolvable
+     app-host.invalid placeholder, swapped here for the host this release is served on. */}}
+{{ (.Files.Glob .Values.keycloak.importRealm.path).AsConfig | replace "app-host.invalid" (first .Values.ingress.hosts).host | indent 2 }}
 {{- end }}

@@ -21,6 +21,10 @@ final readonly class ResourceResourceHandler implements ResourceHandlerInterface
         private string $oidcClientId,
         #[Autowire('%env(OIDC_API_CLIENT_SECRET)%')]
         private string $oidcClientSecret,
+        #[Autowire('%env(OIDC_API_CLIENT_UUID)%')]
+        private string $oidcClientUuid,
+        #[Autowire('%env(OIDC_SERVER_URL_INTERNAL)%')]
+        private string $oidcServerUrl,
     ) {
     }
 
@@ -37,9 +41,9 @@ final readonly class ResourceResourceHandler implements ResourceHandlerInterface
             operation: $operation,
         );
 
-        // create resource_set on OIDC server
-        $this->securityAuthorizationClient->request('POST', 'authz/protection/resource_set', [
-            'auth_bearer' => $this->getPAT(),
+        // create resource on OIDC server
+        $this->securityAuthorizationClient->request('POST', $this->getResourceEndpoint(), [
+            'auth_bearer' => $this->getAccessToken(),
             'json' => [
                 'name' => \sprintf('%s_%s', $shortName, $resource->getId()->__toString()),
                 'displayName' => \sprintf('%s #%s', $operation->getShortName(), $resource->getId()->__toString()),
@@ -63,12 +67,12 @@ final readonly class ResourceResourceHandler implements ResourceHandlerInterface
             operation: $operation,
         );
 
-        // retrieve corresponding resource_set from OIDC server
+        // retrieve corresponding resource from OIDC server
         $response = $this->securityAuthorizationClient->request(
             'GET',
-            'authz/protection/resource_set',
+            $this->getResourceEndpoint(),
             [
-                'auth_bearer' => $this->getPAT(),
+                'auth_bearer' => $this->getAccessToken(),
                 'query' => [
                     'deep' => 'true',
                     'first' => 0,
@@ -82,20 +86,33 @@ final readonly class ResourceResourceHandler implements ResourceHandlerInterface
         $content = $response->toArray();
         $resourceSet = $content[0];
 
-        // delete corresponding resource_set on OIDC server
+        // delete corresponding resource on OIDC server
         $this->securityAuthorizationClient->request(
             'DELETE',
-            \sprintf('%s/%s', 'authz/protection/resource_set', $resourceSet['_id']),
+            \sprintf('%s/%s', $this->getResourceEndpoint(), $resourceSet['_id']),
             [
-                'auth_bearer' => $this->getPAT(),
+                'auth_bearer' => $this->getAccessToken(),
             ]
         );
     }
 
     /**
-     * @see https://www.keycloak.org/docs/latest/authorization_services/index.html#_service_protection_whatis_obtain_pat
+     * Since Keycloak 26.6.2 the Protection API forces the owner of a resource to the resource
+     * server the PAT was issued for, so user-owned resources can only be created through the
+     * Admin API.
+     *
+     * @see https://github.com/keycloak/keycloak/issues/49910
      */
-    private function getPAT(): string
+    private function getResourceEndpoint(): string
+    {
+        return \sprintf(
+            '%s/clients/%s/authz/resource-server/resource',
+            str_replace('/realms/', '/admin/realms/', $this->oidcServerUrl),
+            $this->oidcClientUuid,
+        );
+    }
+
+    private function getAccessToken(): string
     {
         $response = $this->securityAuthorizationClient->request('POST', 'protocol/openid-connect/token', [
             'body' => [

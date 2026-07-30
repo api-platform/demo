@@ -502,6 +502,9 @@
       "clientRoles": {
         "api-platform-api": [
           "uma_protection"
+        ],
+        "realm-management": [
+          "manage-authorization"
         ]
       },
       "notBefore": 0,
@@ -728,16 +731,16 @@
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "secret": "sEocbxCy7iFS8NzYzWyQ71QgxTDZ9fnU",
-      "redirectUris": [
-        "/*"
-      ],
+      "redirectUris": [],
       "webOrigins": [
-        "/*"
+        "https://localhost",
+        "http://localhost:3000",
+        "https://app-host.invalid"
       ],
       "notBefore": 0,
       "bearerOnly": false,
       "consentRequired": false,
-      "standardFlowEnabled": true,
+      "standardFlowEnabled": false,
       "implicitFlowEnabled": false,
       "directAccessGrantsEnabled": false,
       "serviceAccountsEnabled": true,
@@ -817,10 +820,14 @@
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "*"
+        "https://localhost/api/auth/oauth2/callback/keycloak",
+        "http://localhost:3000/api/auth/oauth2/callback/keycloak",
+        "https://app-host.invalid/api/auth/oauth2/callback/keycloak"
       ],
       "webOrigins": [
-        "*"
+        "https://localhost",
+        "http://localhost:3000",
+        "https://app-host.invalid"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -840,7 +847,9 @@
         "frontchannel.logout.session.required": "true",
         "oauth2.device.authorization.grant.enabled": "false",
         "display.on.consent.screen": "false",
-        "backchannel.logout.revoke.offline.tokens": "false"
+        "backchannel.logout.revoke.offline.tokens": "false",
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "https://localhost/*##http://localhost:3000/*##https://app-host.invalid/*"
       },
       "authenticationFlowBindingOverrides": {},
       "fullScopeAllowed": true,
@@ -875,10 +884,12 @@
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "*"
+        "https://localhost/bundles/apiplatform/swagger-ui/oauth2-redirect.html",
+        "https://app-host.invalid/bundles/apiplatform/swagger-ui/oauth2-redirect.html"
       ],
       "webOrigins": [
-        "*"
+        "https://localhost",
+        "https://app-host.invalid"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -896,7 +907,8 @@
         "backchannel.logout.session.required": "true",
         "standard.token.exchange.enabled": "false",
         "oauth2.device.authorization.grant.enabled": "false",
-        "backchannel.logout.revoke.offline.tokens": "false"
+        "backchannel.logout.revoke.offline.tokens": "false",
+        "pkce.code.challenge.method": "S256"
       },
       "authenticationFlowBindingOverrides": {},
       "fullScopeAllowed": true,
