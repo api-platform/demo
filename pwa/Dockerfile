@@ -38,7 +38,7 @@ FROM base AS builder
 
 ENV CI=true
 
-COPY --link package.json pnpm-lock.yaml ./
+COPY --link package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm fetch
 
 COPY --link . .
