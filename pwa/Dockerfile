@@ -74,7 +74,7 @@ COPY --from=builder --link --chown=1001:1001 /srv/app/.next/standalone ./
 COPY --from=builder --link --chown=1001:1001 /srv/app/.next/static ./.next/static
 COPY --from=builder --link --chown=1001:1001 /srv/app/migrate.mjs ./
 
-USER nextjs
+USER 1001:1001
 
 EXPOSE 3000
 
