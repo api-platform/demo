@@ -16,6 +16,12 @@ services:
             ttl 3600s
             stale 86400s
             default_cache_control "public, s-maxage=3600"
+            # Content-negotiated URLs (e.g. /) serve the PWA HTML or the Hydra ld+json by
+            # Accept; without Accept in the cache key, the first cached representation (PWA
+            # HTML) is served to the admin's ld+json entrypoint request, breaking API doc discovery.
+            key {
+                headers Accept
+            }
             redis {
                 url redis:6379
             }
