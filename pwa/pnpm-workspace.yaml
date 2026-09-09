@@ -25,7 +25,7 @@ overrides:
   # GHSA-c2j3-45gr-mqc4 affects <= 3.4.11, pulled by ra-ui-materialui.
   dompurify: ^3.4.12
   # GHSA-f88m-g3jw-g9cj affects < 0.35.0; next pins 0.34.5 as an optional dependency.
-  sharp: ^0.35.3
+  sharp: ^0.35.4
 
 supportedArchitectures:
   cpu:
