@@ -27,7 +27,7 @@
         "symfony/http-client": "8.1.*",
         "symfony/http-kernel": "8.1.*",
         "symfony/json-streamer": "^8.1.7",
-        "symfony/mercure-bundle": "^0.4.3",
+        "symfony/mercure-bundle": "^0.5.0",
         "symfony/monolog-bundle": "^4.1.0",
         "symfony/property-access": "8.1.*",
         "symfony/runtime": "8.1.*",
