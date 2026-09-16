@@ -25,8 +25,9 @@ overrides:
   # GHSA-c83g-rgw3-j3cx and GHSA-73wf-gq98-2v4g affect <= 4.28.6, pulled by @babel/core
   # and styled-jsx.
   browserslist: ^4.28.7
-  # GHSA-vcc3-ghjq-m6fr affects <= 0.4.2, pulled by query-string@7 through ra-core.
-  decode-uri-component: ^0.5.0
+  # GHSA-vcc3-ghjq-m6fr (decode-uri-component <= 0.4.2, pulled by query-string@7 through
+  # ra-core) has no usable override: 0.5.0 is ESM-only while query-string@7 requires it,
+  # which breaks every react-admin list page. Waiting on ra-core to move to query-string@9.
 
 supportedArchitectures:
   cpu:
