@@ -16,12 +16,24 @@ use PHPUnit\Framework\TestCase;
 
 final class BookPersistProcessorTest extends TestCase
 {
+    /**
+     * @var MockObject&ProcessorInterface
+     */
     private MockObject $persistProcessorMock;
 
+    /**
+     * @var MockObject&BookRepositoryInterface
+     */
     private MockObject $bookRepositoryMock;
 
+    /**
+     * @var Stub&Book
+     */
     private Stub $objectMock;
 
+    /**
+     * @var Stub&Operation
+     */
     private Stub $operationMock;
 
     private BookPersistProcessor $processor;

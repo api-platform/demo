@@ -15,10 +15,19 @@ use PHPUnit\Framework\TestCase;
 
 final class BookRemoveProcessorTest extends TestCase
 {
+    /**
+     * @var MockObject&ProcessorInterface
+     */
     private MockObject $removeProcessorMock;
 
+    /**
+     * @var Stub&Book
+     */
     private Stub $objectMock;
 
+    /**
+     * @var Stub&Operation
+     */
     private Stub $operationMock;
 
     private BookRemoveProcessor $processor;

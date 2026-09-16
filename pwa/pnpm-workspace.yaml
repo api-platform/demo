@@ -2,10 +2,6 @@ allowBuilds:
   sharp: true
   unrs-resolver: true
 
-# Never prompt before purging node_modules: the dev container bind-mounts the project and
-# would otherwise abort `pnpm install` when the host virtual store does not match.
-confirmModulesPurge: false
-
 # Since pnpm 11, these settings live here instead of the "pnpm" field of package.json.
 # Each override pins a transitive dependency above the range of a published advisory;
 # drop the entry once the direct dependency ships the fix on its own.
@@ -26,6 +22,12 @@ overrides:
   dompurify: ^3.4.12
   # GHSA-f88m-g3jw-g9cj affects < 0.35.0; next pins 0.34.5 as an optional dependency.
   sharp: ^0.35.4
+  # GHSA-c83g-rgw3-j3cx and GHSA-73wf-gq98-2v4g affect <= 4.28.6, pulled by @babel/core
+  # and styled-jsx.
+  browserslist: ^4.28.7
+  # GHSA-vcc3-ghjq-m6fr (decode-uri-component <= 0.4.2, pulled by query-string@7 through
+  # ra-core) has no usable override: 0.5.0 is ESM-only while query-string@7 requires it,
+  # which breaks every react-admin list page. Waiting on ra-core to move to query-string@9.
 
 supportedArchitectures:
   cpu:

@@ -21,12 +21,24 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[AllowMockObjectsWithoutExpectations]
 final class UserProviderTest extends TestCase
 {
+    /**
+     * @var MockObject&ManagerRegistry
+     */
     private MockObject $registryMock;
 
+    /**
+     * @var MockObject&ObjectManager
+     */
     private MockObject $managerMock;
 
+    /**
+     * @var MockObject&UserRepository
+     */
     private MockObject $repositoryMock;
 
+    /**
+     * @var Stub&User
+     */
     private Stub $userMock;
 
     private UserProvider $provider;

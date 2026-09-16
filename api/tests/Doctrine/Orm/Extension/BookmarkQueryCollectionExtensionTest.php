@@ -18,14 +18,29 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 final class BookmarkQueryCollectionExtensionTest extends TestCase
 {
+    /**
+     * @var MockObject&Security
+     */
     private MockObject $securityMock;
 
+    /**
+     * @var Stub&UserInterface
+     */
     private Stub $userMock;
 
+    /**
+     * @var MockObject&QueryBuilder
+     */
     private MockObject $queryBuilderMock;
 
+    /**
+     * @var Stub&QueryNameGeneratorInterface
+     */
     private Stub $queryNameGeneratorMock;
 
+    /**
+     * @var MockObject&Operation
+     */
     private MockObject $operationMock;
 
     private BookmarkQueryCollectionExtension $extension;

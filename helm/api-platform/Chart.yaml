@@ -26,6 +26,6 @@ appVersion: 4.3.19
 
 dependencies:
   - name: external-dns
-    version: 1.21.1
+    version: 1.22.0
     repository: https://kubernetes-sigs.github.io/external-dns/
     condition: external-dns.enabled

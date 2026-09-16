@@ -50,12 +50,12 @@
         "version": "v0.5.3"
     },
     "doctrine/doctrine-bundle": {
-        "version": "3.2",
+        "version": "3.3",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "3.0",
-            "ref": "18ee08e513ba0303fd09a01fc1c934870af06ffa"
+            "ref": "d39a3bd844edfe90c20ae520b804a3bf4f82b4ad"
         },
         "files": [
             "config/packages/doctrine.yaml",
@@ -197,12 +197,12 @@
         ]
     },
     "phpunit/phpunit": {
-        "version": "12.5",
+        "version": "13.3",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "11.1",
-            "ref": "1117deb12541f35793eec9fff7494d7aa12283fc"
+            "ref": "ca0bc067abfb40a8de1b2561b96cbfc2b833c314"
         },
         "files": [
             ".env.test",
@@ -315,15 +315,17 @@
         ]
     },
     "symfony/framework-bundle": {
-        "version": "8.0",
+        "version": "8.1",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
-            "version": "7.4",
-            "ref": "09f6e081c763a206802674ce0cb34a022f0ffc6d"
+            "version": "8.1",
+            "ref": "5295b2b1ef2170b272383b2b0ae0b66702883822"
         },
         "files": [
             ".editorconfig",
+            "AGENTS.md",
+            "CLAUDE.md",
             "config/packages/cache.yaml",
             "config/packages/framework.yaml",
             "config/preload.php",
@@ -359,12 +361,12 @@
         "version": "v0.6.1"
     },
     "symfony/mercure-bundle": {
-        "version": "0.3",
+        "version": "0.5",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
-            "version": "0.3",
-            "ref": "528285147494380298f8f991ee8c47abebaf79db"
+            "version": "0.4",
+            "ref": "b141b8c8f13bc8c31d718a5488039b712c0d3592"
         },
         "files": [
             "config/packages/mercure.yaml"
@@ -374,12 +376,12 @@
         "version": "v6.0.1"
     },
     "symfony/monolog-bundle": {
-        "version": "4.0",
+        "version": "4.1",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "3.7",
-            "ref": "1b9efb10c54cb51c713a9391c9300ff8bceda459"
+            "ref": "feb8fd9520b5694c7d0d2ba17fd4b4d33f9dd9cf"
         },
         "files": [
             "config/packages/monolog.yaml"
@@ -463,12 +465,12 @@
         "version": "v6.0.2"
     },
     "symfony/twig-bundle": {
-        "version": "7.0",
+        "version": "8.1",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "6.4",
-            "ref": "cab5fd2a13a45c266d45a7d9337e28dee6272877"
+            "ref": "06dacf16872358cb1f2494e089070ff2d045233a"
         },
         "files": [
             "config/packages/twig.yaml",
@@ -541,12 +543,12 @@
         "version": "3.2.1"
     },
     "zenstruck/foundry": {
-        "version": "2.9",
+        "version": "2.12",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "2.7",
-            "ref": "7fc98f546dfeaa83cc2110634f8ff078d070b965"
+            "ref": "9bd824886195ebe64a24438db1b6d17eb833ac56"
         },
         "files": [
             "config/packages/zenstruck_foundry.yaml",

@@ -18,11 +18,14 @@ export function useAccessToken() {
     let cancelled = false;
     (async () => {
       try {
-        const result = await authClient.getAccessToken({
-          providerId: "keycloak",
-        });
+        // getAccessToken selects the account by its Better Auth row id, so resolve it from the provider first
+        const accounts = await authClient.listAccounts();
+        const account = accounts.data?.find(({providerId}) => providerId === "keycloak");
+        const result = account
+          ? await authClient.getAccessToken({accountId: account.id})
+          : null;
         if (!cancelled) {
-          setAccessToken(result.data?.accessToken ?? null);
+          setAccessToken(result?.data?.accessToken ?? null);
         }
       } catch {
         if (!cancelled) {
@@ -43,8 +46,8 @@ export function useAccessToken() {
 }
 
 export async function signInWithKeycloak(callbackURL?: string) {
-  await authClient.signIn.oauth2({
-    providerId: "keycloak",
+  await authClient.signIn.social({
+    provider: "keycloak",
     callbackURL: callbackURL ?? window.location.href,
   });
 }
