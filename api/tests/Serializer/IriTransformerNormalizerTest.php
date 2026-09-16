@@ -20,22 +20,22 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 final class IriTransformerNormalizerTest extends TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\Symfony\Component\Serializer\Normalizer\NormalizerInterface
+     * @var MockObject&NormalizerInterface
      */
     private MockObject $normalizerMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\ApiPlatform\Metadata\IriConverterInterface
+     * @var MockObject&IriConverterInterface
      */
     private MockObject $iriConverterMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\ApiPlatform\Metadata\Operation\Factory\OperationMetadataFactoryInterface
+     * @var MockObject&OperationMetadataFactoryInterface
      */
     private MockObject $operationMetadataFactoryMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\ApiPlatform\Metadata\Operation
+     * @var Stub&Operation
      */
     private Stub $operationMock;
 

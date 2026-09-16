@@ -18,22 +18,22 @@ use PHPUnit\Framework\TestCase;
 final class ReviewRemoveProcessorTest extends TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\ApiPlatform\State\ProcessorInterface
+     * @var MockObject&ProcessorInterface
      */
     private MockObject $removeProcessorMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\App\Entity\Review
+     * @var Stub&Review
      */
     private Stub $objectMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\ApiPlatform\Metadata\Operation
+     * @var Stub&Operation
      */
     private Stub $operationMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\App\Security\Http\Protection\ResourceHandlerInterface
+     * @var MockObject&ResourceHandlerInterface
      */
     private MockObject $resourceHandlerMock;
 

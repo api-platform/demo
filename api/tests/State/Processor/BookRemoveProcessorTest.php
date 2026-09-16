@@ -16,17 +16,17 @@ use PHPUnit\Framework\TestCase;
 final class BookRemoveProcessorTest extends TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\ApiPlatform\State\ProcessorInterface
+     * @var MockObject&ProcessorInterface
      */
     private MockObject $removeProcessorMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\App\Entity\Book
+     * @var Stub&Book
      */
     private Stub $objectMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\ApiPlatform\Metadata\Operation
+     * @var Stub&Operation
      */
     private Stub $operationMock;
 

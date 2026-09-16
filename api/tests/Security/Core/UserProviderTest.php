@@ -22,22 +22,22 @@ use Symfony\Component\Security\Core\User\UserInterface;
 final class UserProviderTest extends TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\Doctrine\Persistence\ManagerRegistry
+     * @var MockObject&ManagerRegistry
      */
     private MockObject $registryMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\Doctrine\Persistence\ObjectManager
+     * @var MockObject&ObjectManager
      */
     private MockObject $managerMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\App\Repository\UserRepository
+     * @var MockObject&UserRepository
      */
     private MockObject $repositoryMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\App\Entity\User
+     * @var Stub&User
      */
     private Stub $userMock;
 

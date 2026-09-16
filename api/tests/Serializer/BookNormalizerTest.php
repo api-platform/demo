@@ -19,17 +19,17 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 final class BookNormalizerTest extends TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\Symfony\Component\Serializer\Normalizer\NormalizerInterface
+     * @var MockObject&NormalizerInterface
      */
     private MockObject $normalizerMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\App\Repository\ReviewRepository
+     * @var MockObject&ReviewRepository
      */
     private MockObject $repositoryMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\App\Entity\Book
+     * @var Stub&Book
      */
     private Stub $objectMock;
 
