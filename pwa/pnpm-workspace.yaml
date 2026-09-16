@@ -2,10 +2,6 @@ allowBuilds:
   sharp: true
   unrs-resolver: true
 
-# Never prompt before purging node_modules: the dev container bind-mounts the project and
-# would otherwise abort `pnpm install` when the host virtual store does not match.
-confirmModulesPurge: false
-
 # Since pnpm 11, these settings live here instead of the "pnpm" field of package.json.
 # Each override pins a transitive dependency above the range of a published advisory;
 # drop the entry once the direct dependency ships the fix on its own.
