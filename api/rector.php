@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
+use Rector\CodeQuality\Rector\Concat\DirnameDirConcatStringToDirectStringPathRector;
 use Rector\CodeQuality\Rector\Empty_\SimplifyEmptyCheckOnEmptyArrayRector;
 use Rector\Config\RectorConfig;
 use Rector\Set\ValueObject\SetList;
-use Rector\Strict\Rector\Empty_\DisallowedEmptyRuleFixerRector;
 
 $rector = RectorConfig::configure()
     ->withPaths([
@@ -24,14 +24,15 @@ $rector = RectorConfig::configure()
         SetList::INSTANCEOF,
         SetList::PRIVATIZATION,
         SetList::TYPE_DECLARATION,
-        SetList::STRICT_BOOLEANS,
     ])
     ->withAttributesSets()
     ->withComposerBased(doctrine: true, phpunit: true)
     ->withSkip([
         __DIR__ . '/config/bundles.php',
-        DisallowedEmptyRuleFixerRector::class,
         SimplifyEmptyCheckOnEmptyArrayRector::class,
+        // only hits Symfony recipe files (config/bootstrap.php, config/preload.php, public/index.php,
+        // tests/bootstrap.php): rewriting them would conflict on every `composer recipes:update`
+        DirnameDirConcatStringToDirectStringPathRector::class,
     ])
 ;
 

@@ -18,14 +18,29 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 final class BookmarkQueryCollectionExtensionTest extends TestCase
 {
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Symfony\Bundle\SecurityBundle\Security
+     */
     private MockObject $securityMock;
 
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&\Symfony\Component\Security\Core\User\UserInterface
+     */
     private Stub $userMock;
 
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Doctrine\ORM\QueryBuilder
+     */
     private MockObject $queryBuilderMock;
 
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&\ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface
+     */
     private Stub $queryNameGeneratorMock;
 
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\ApiPlatform\Metadata\Operation
+     */
     private MockObject $operationMock;
 
     private BookmarkQueryCollectionExtension $extension;

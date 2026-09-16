@@ -20,16 +20,31 @@ use Symfony\Component\Clock\MockClock;
 
 final class ReviewPersistProcessorTest extends TestCase
 {
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\ApiPlatform\State\ProcessorInterface
+     */
     private MockObject $persistProcessorMock;
 
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Symfony\Bundle\SecurityBundle\Security
+     */
     private MockObject $securityMock;
 
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&\App\Entity\User
+     */
     private Stub $userMock;
 
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&\App\Entity\Review
+     */
     private Stub $objectMock;
 
     private MockClock $clockMock;
 
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\App\Security\Http\Protection\ResourceHandlerInterface
+     */
     private MockObject $resourceHandlerMock;
 
     private ReviewPersistProcessor $processor;

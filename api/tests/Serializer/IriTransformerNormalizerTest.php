@@ -19,12 +19,24 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 #[AllowMockObjectsWithoutExpectations]
 final class IriTransformerNormalizerTest extends TestCase
 {
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Symfony\Component\Serializer\Normalizer\NormalizerInterface
+     */
     private MockObject $normalizerMock;
 
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\ApiPlatform\Metadata\IriConverterInterface
+     */
     private MockObject $iriConverterMock;
 
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\ApiPlatform\Metadata\Operation\Factory\OperationMetadataFactoryInterface
+     */
     private MockObject $operationMetadataFactoryMock;
 
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&\ApiPlatform\Metadata\Operation
+     */
     private Stub $operationMock;
 
     private MockObject|\stdClass $objectMock;
