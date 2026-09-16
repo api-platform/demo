@@ -26,6 +26,11 @@ overrides:
   dompurify: ^3.4.12
   # GHSA-f88m-g3jw-g9cj affects < 0.35.0; next pins 0.34.5 as an optional dependency.
   sharp: ^0.35.4
+  # GHSA-c83g-rgw3-j3cx and GHSA-73wf-gq98-2v4g affect <= 4.28.6, pulled by @babel/core
+  # and styled-jsx.
+  browserslist: ^4.28.7
+  # GHSA-vcc3-ghjq-m6fr affects <= 0.4.2, pulled by query-string@7 through ra-core.
+  decode-uri-component: ^0.5.0
 
 supportedArchitectures:
   cpu:
