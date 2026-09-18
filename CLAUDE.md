@@ -4,7 +4,7 @@
 
 This is the official [API Platform](https://api-platform.com) demo application, showcasing a full-stack modern web app with:
 
-- **`api/`** — Backend: API Platform 4.3 + Symfony 8.0 + Doctrine ORM 3, PHP ≥ 8.4
+- **`api/`** — Backend: API Platform 5.0 + Symfony 8.1 + Doctrine ORM 3, PHP ≥ 8.5
 - **`pwa/`** — Frontend: Next.js 16 + React 19 + React Admin + `@api-platform/admin`
 - **`e2e/`** — End-to-end tests: Playwright 1.50
 - **`helm/`** — Kubernetes deployment via Helm (GKE)
@@ -142,8 +142,8 @@ New or changed behaviour must have corresponding tests.
 
 This project uses **cutting-edge framework versions** that may differ from training data:
 
-- API Platform **4.3** (not 3.x)
-- Symfony **8.0** (not 6.x or 7.x)
+- API Platform **5.0** (not 3.x or 4.x)
+- Symfony **8.1** (not 6.x or 7.x)
 - Next.js **16** (not 14.x or 15.x)
 - React **19** (not 18.x)
 - React Admin **5** (not 4.x)
