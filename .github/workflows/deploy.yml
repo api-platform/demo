@@ -135,7 +135,7 @@ jobs:
             --set=php.corsAllowOrigin="^$(echo "$cors" | sed 's/\./\\\\./g')$" \
             --set=php.trustedHosts="^127\\.0\\.0\\.1|localhost|$(echo "$url" | sed 's/\./\\\\./g')$" \
             --set=mercure.publicUrl=https://$url/.well-known/mercure \
-            --set=mercure.extraDirectives="demo \
+            --set=mercure.extraDirectives="playground \
             cors_origins $(echo "$cors" | sed 's/|/ /g')" \
             | sed --unbuffered '/USER-SUPPLIED VALUES/,$d'
       -

@@ -32,10 +32,23 @@
 		transport bolt {
 			path /data/mercure.db
 		}
-		# Publisher JWT key
-		publisher_jwt {env.MERCURE_PUBLISHER_JWT_KEY} {env.MERCURE_PUBLISHER_JWT_ALG}
-		# Subscriber JWT key
-		subscriber_jwt {env.MERCURE_SUBSCRIBER_JWT_KEY} {env.MERCURE_SUBSCRIBER_JWT_ALG}
+		# The audience access tokens must carry. Pinned because the API publishes through the
+		# internal MERCURE_URL while tokens are minted for the public URL: left unset, the hub
+		# would derive a different audience from each request and reject them.
+		# Substituted when the Caddyfile is parsed, not at runtime: the hub validates this
+		# value as a URL while provisioning, before runtime placeholders are resolved.
+		resource_identifier {$MERCURE_PUBLIC_URL}
+		# Tokens are self-issued by the API, so the identifier is a fixed name rather than a
+		# deployed URL, which would differ per environment. It must match the "iss" claim in
+		# api/config/packages/mercure.yaml.
+		issuer api-platform-demo {
+			publisher {
+				jwt {env.MERCURE_PUBLISHER_JWT_KEY} {env.MERCURE_PUBLISHER_JWT_ALG}
+			}
+			subscriber {
+				jwt {env.MERCURE_SUBSCRIBER_JWT_KEY} {env.MERCURE_SUBSCRIBER_JWT_ALG}
+			}
+		}
 		# Allow anonymous subscribers (double-check that it's what you want)
 		anonymous
 		# Enable the subscription API (double-check that it's what you want)
