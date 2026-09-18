@@ -12,8 +12,9 @@ const mercureSubscribe = <T extends Item | PagedCollection<Item> | null | undefi
   if (!data || !data["@id"]) throw new Error("@id is missing");
 
   const url = new URL(hubURL, window.origin);
+  // Mercure 1.0 replaced the "topic" subscribe parameter with "match".
   url.searchParams.append(
-    "topic",
+    "match",
     new URL(data["@id"], window.origin).toString()
   );
   const eventSource = new EventSource(url.toString());
