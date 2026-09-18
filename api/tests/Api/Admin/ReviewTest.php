@@ -53,7 +53,7 @@ final class ReviewTest extends ApiTestCase
         $this->client->request('GET', '/admin/reviews', $options);
 
         self::assertResponseStatusCodeSame($expectedCode);
-        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
             '@type' => 'Error',
@@ -79,7 +79,7 @@ final class ReviewTest extends ApiTestCase
         $response = $this->client->request('GET', $url, ['auth_bearer' => $token]);
 
         self::assertResponseIsSuccessful();
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/ld+json');
         self::assertEquals('<https://localhost:443/.well-known/mercure>; rel="mercure"', $response->getHeaders()['link'][1]);
         self::assertJsonContains([
             'totalItems' => $hydraTotalItems,
@@ -161,7 +161,7 @@ final class ReviewTest extends ApiTestCase
         $this->client->request('GET', '/admin/reviews/' . $review->getId(), $options);
 
         self::assertResponseStatusCodeSame($expectedCode);
-        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
             '@type' => 'Error',
@@ -194,7 +194,7 @@ final class ReviewTest extends ApiTestCase
         $response = $this->client->request('GET', '/admin/reviews/' . $review->getId(), ['auth_bearer' => $token]);
 
         self::assertResponseIsSuccessful();
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/ld+json');
         self::assertEquals('<https://localhost:443/.well-known/mercure>; rel="mercure"', $response->getHeaders(false)['link'][1]);
         self::assertMatchesJsonSchema(file_get_contents(__DIR__ . '/schemas/Review/item.json'));
     }
@@ -225,7 +225,7 @@ final class ReviewTest extends ApiTestCase
         ]);
 
         self::assertResponseStatusCodeSame($expectedCode);
-        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
             '@type' => 'Error',
@@ -286,7 +286,7 @@ final class ReviewTest extends ApiTestCase
         ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_OK);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/ld+json');
         self::assertEquals('<https://localhost:443/.well-known/mercure>; rel="mercure"', $response->getHeaders(false)['link'][1]);
         self::assertJsonContains([
             'body' => 'Very good book!',
@@ -331,7 +331,7 @@ final class ReviewTest extends ApiTestCase
         $this->client->request('DELETE', '/admin/reviews/' . $review->getId(), $options);
 
         self::assertResponseStatusCodeSame($expectedCode);
-        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
             '@type' => 'Error',

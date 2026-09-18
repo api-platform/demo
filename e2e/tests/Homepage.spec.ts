@@ -61,6 +61,6 @@ test.describe("Homepage", () => {
 
   test("Go to Mercure Debugger @read", async ({ page }) => {
     await page.getByTestId("cards").getByRole("link", { name: "Mercure debugger" }).click();
-    await expect(page).toHaveURL(/\/\.well-known\/mercure\/ui\/$/);
+    await expect(page).toHaveURL(/\/\.well-known\/mercure\/debug\/$/);
   });
 })

@@ -52,7 +52,7 @@ final class BookTest extends ApiTestCase
         $this->client->request('GET', '/admin/books', $options);
 
         self::assertResponseStatusCodeSame($expectedCode);
-        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
             '@type' => 'Error',
@@ -75,7 +75,7 @@ final class BookTest extends ApiTestCase
         $response = $this->client->request('GET', $url, ['auth_bearer' => $token]);
 
         self::assertResponseIsSuccessful();
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/ld+json');
         self::assertEquals('<https://localhost:443/.well-known/mercure>; rel="mercure"', $response->getHeaders()['link'][1]);
         self::assertJsonContains([
             'totalItems' => $hydraTotalItems,
@@ -143,7 +143,7 @@ final class BookTest extends ApiTestCase
         $response = $this->client->request('GET', '/admin/books?order[title]=asc', ['auth_bearer' => $token]);
 
         self::assertResponseIsSuccessful();
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/ld+json');
         self::assertEquals('<https://localhost:443/.well-known/mercure>; rel="mercure"', $response->getHeaders()['link'][1]);
         self::assertEquals('Ball Lightning', $response->toArray()['member'][0]['title']);
         self::assertEquals('Hyperion', $response->toArray()['member'][1]['title']);
@@ -194,7 +194,7 @@ final class BookTest extends ApiTestCase
         $this->client->request('GET', '/admin/books/' . $book->getId(), $options);
 
         self::assertResponseStatusCodeSame($expectedCode);
-        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
             '@type' => 'Error',
@@ -215,7 +215,7 @@ final class BookTest extends ApiTestCase
         $response = $this->client->request('GET', '/admin/books/' . $book->getId(), ['auth_bearer' => $token]);
 
         self::assertResponseIsSuccessful();
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/ld+json');
         self::assertEquals('<https://localhost:443/.well-known/mercure>; rel="mercure"', $response->getHeaders(false)['link'][1]);
         self::assertJsonContains([
             '@id' => '/admin/books/' . $book->getId(),
@@ -251,7 +251,7 @@ final class BookTest extends ApiTestCase
         ]);
 
         self::assertResponseStatusCodeSame($expectedCode);
-        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
             '@type' => 'Error',
@@ -278,7 +278,7 @@ final class BookTest extends ApiTestCase
         ]);
 
         self::assertResponseStatusCodeSame($statusCode);
-        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains($expected);
     }
@@ -390,7 +390,7 @@ final class BookTest extends ApiTestCase
         ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_CREATED);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/ld+json');
         self::assertEquals('<https://localhost:443/.well-known/mercure>; rel="mercure"', $response->getHeaders(false)['link'][1]);
         self::assertJsonContains([
             'book' => 'https://gutendex.com/books/31547.json',
@@ -442,7 +442,7 @@ final class BookTest extends ApiTestCase
         ]);
 
         self::assertResponseStatusCodeSame($expectedCode);
-        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
             '@type' => 'Error',
@@ -494,7 +494,7 @@ final class BookTest extends ApiTestCase
         ]);
 
         self::assertResponseStatusCodeSame($statusCode);
-        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains($expected);
     }
@@ -526,7 +526,7 @@ final class BookTest extends ApiTestCase
         ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_OK);
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/ld+json');
         self::assertEquals('<https://localhost:443/.well-known/mercure>; rel="mercure"', $response->getHeaders(false)['link'][1]);
         self::assertJsonContains([
             'book' => 'https://gutendex.com/books/31547.json',
@@ -566,7 +566,7 @@ final class BookTest extends ApiTestCase
         $this->client->request('DELETE', '/admin/books/' . $book->getId(), $options);
 
         self::assertResponseStatusCodeSame($expectedCode);
-        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
             '@type' => 'Error',
