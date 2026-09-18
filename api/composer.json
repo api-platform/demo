@@ -47,6 +47,7 @@
         "phpstan/extension-installer": "^1.4.3",
         "phpstan/phpdoc-parser": "^2.3.5",
         "phpstan/phpstan": "^2.2.14",
+        "phpstan/phpstan-deprecation-rules": "^2.0.5",
         "phpstan/phpstan-doctrine": "^2.0.28",
         "phpstan/phpstan-phpunit": "^2.0.18",
         "phpstan/phpstan-symfony": "^2.0.20",
