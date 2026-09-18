@@ -47,7 +47,7 @@ final class BookmarkTest extends ApiTestCase
         self::assertJsonContains([
             '@type' => 'Error',
             'title' => 'An error occurred',
-            'description' => 'Full authentication is required to access this resource.',
+            'description' => 'Access Denied.',
         ]);
     }
 
@@ -99,7 +99,7 @@ final class BookmarkTest extends ApiTestCase
         self::assertJsonContains([
             '@type' => 'Error',
             'title' => 'An error occurred',
-            'description' => 'Full authentication is required to access this resource.',
+            'description' => 'Access Denied.',
         ]);
     }
 
@@ -235,7 +235,7 @@ final class BookmarkTest extends ApiTestCase
         self::assertJsonContains([
             '@type' => 'Error',
             'title' => 'An error occurred',
-            'description' => 'Full authentication is required to access this resource.',
+            'description' => 'Access Denied.',
         ]);
     }
 
