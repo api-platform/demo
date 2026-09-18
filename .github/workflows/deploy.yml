@@ -94,17 +94,17 @@ jobs:
       -
         name: Deploy
         id: deploy
+        env:
+          RELEASE: ${{ inputs.environment }}
+          URL: ${{ inputs.url }}
         run: |
-          if [ "${{ github.event_name }}" == "push" ]; then
-            release=prod
-            namespace=$release
-            url=demo.api-platform.com
-          else
-            release=pr-${{ github.event.pull_request.number }}
-            namespace=$release
-            url=$release-demo.api-platform.com
-          fi
+          # Trust the caller instead of re-deriving from the event: `cd.yml` already computed
+          # both, and re-deriving couples this reusable workflow to its trigger.
+          release=$RELEASE
+          namespace=$release
+          url=$URL
           echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "namespace=$namespace" >> "$GITHUB_ENV"
           cors="https://$url|http://localhost|https://localhost|http://localhost:3000|https://api-platform.github.io"
           set -o pipefail
           helm upgrade $release ./helm/api-platform -f ./helm/api-platform/values.yaml \
@@ -112,6 +112,8 @@ jobs:
             --create-namespace \
             --debug \
             --wait \
+            --atomic \
+            --timeout=10m \
             --namespace=$namespace \
             --set=app.version=${{ github.sha }} \
             --set=keycloak.image.repository=europe-west1-docker.pkg.dev/${{ secrets.gke-project }}/${{ secrets.gke-project }}/keycloak \

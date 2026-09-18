@@ -66,11 +66,57 @@ Fill in the following header from the pull request template:
 
 ## Update Project Version from API Platform Release
 
-When a release occur on [api-platform/core](https://github.com/api-platform/core) repository, you can trigger a workflow to automatically update this project.
+Every tag on [api-platform/core](https://github.com/api-platform/core) automatically dispatches the
+`Upgrade API Platform` workflow on this repository. You can also run it by hand: Actions > Upgrade
+API Platform > Run workflow.
 
-Go to Actions > Upgrade API Platform > Run workflow, then click on the `Run workflow` button. This action will detect the new API Platform release, update the API and HELM dependencies, and open a Pull Request to run the CI and review it.
+The workflow targets the **latest stable release**, including major ones, and does nothing if the
+demo is already up to date. A maintenance tag on an older branch of `api-platform/core` is therefore
+ignored, and the demo is never downgraded. It updates the Composer and Helm dependencies, bumps the
+version in `api/config/packages/api_platform.yaml` and `helm/api-platform/Chart.yaml`, and opens a
+Pull Request.
 
-If the CI is green and the review seems valid, the Pull Request can be merged (by member of the API Platform organization), and a release can be created through GitHub UI.
+There is **no auto-merge**: a member of the API Platform organization must review and merge it.
+There is no release to create either, see "Deployment" below.
+
+### Fixing deprecations in the upgrade Pull Request
+
+Deprecations are not tolerated: `failOnDeprecation` is enabled in `api/phpunit.xml.dist`, so a
+deprecation triggered from `api/src/` fails the test suite. A major upgrade must therefore be fixed
+in its own Pull Request, not merged with deprecations left behind. Three complementary sources, in
+this order:
+
+```bash
+docker compose exec php vendor/bin/rector process    # applies what can be automated
+docker compose exec php vendor/bin/phpstan analyse   # static calls to @deprecated APIs
+docker compose exec php bin/phpunit                  # deprecations actually triggered at runtime
+```
+
+PHPUnit does not stop at the first one, so a single run lists them all. Do not add a deprecation
+baseline.
+
+## Deployment
+
+Every merge on `main` deploys to production (https://demo.api-platform.com). There is no release
+and no tag on this repository: the deployed version is the tip of `main`, and the running commit is
+readable from the `app.kubernetes.io/version` label of the Kubernetes deployments.
+
+This also means a security fix can be shipped without waiting for an API Platform release.
+
+To deploy a Pull Request to its own environment, add the `deploy` label to it. The environment is
+destroyed when the Pull Request is closed.
+
+### Rolling back
+
+Redeploying an arbitrary commit from the GitHub UI is not possible: `workflow_dispatch` only accepts
+a branch or a tag name, never a commit SHA. Roll back with Helm, which keeps the release history:
+
+```bash
+helm history prod --namespace=prod
+helm rollback prod <revision> --namespace=prod
+```
+
+Alternatively, revert the offending commit and merge the revert, which rebuilds and redeploys.
 
 ## Squash your Commits
 

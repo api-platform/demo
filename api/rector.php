@@ -26,7 +26,7 @@ $rector = RectorConfig::configure()
         SetList::TYPE_DECLARATION,
     ])
     ->withAttributesSets()
-    ->withComposerBased(doctrine: true, phpunit: true)
+    ->withComposerBased(doctrine: true, phpunit: true, symfony: true)
     ->withSkip([
         __DIR__ . '/config/bundles.php',
         SimplifyEmptyCheckOnEmptyArrayRector::class,
