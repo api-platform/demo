@@ -3,6 +3,14 @@ mercure:
         default:
             url: '%env(default::MERCURE_URL)%'
             public_url: '%env(default::MERCURE_PUBLIC_URL)%'
+            protocol_version: '1.0'
             jwt:
                 secret: '%env(MERCURE_JWT_SECRET)%'
                 publish: '*'
+                # RFC 9068 access tokens. "iss" must match the issuer identifier declared in
+                # api/frankenphp/Caddyfile; "aud" defaults to public_url, which the hub pins
+                # through its resource_identifier.
+                claims:
+                    iss: 'api-platform-demo'
+                    sub: 'api-platform-demo-api'
+                    client_id: 'api-platform-demo-api'

@@ -81,7 +81,7 @@ jobs:
         run: "curl -vk --fail-with-body -H 'Accept: text/html' https://localhost"
       -
         name: Check Mercure reachability
-        run: curl -vkI --fail-with-body https://localhost/.well-known/mercure?topic=test
+        run: curl -vkI --fail-with-body https://localhost/.well-known/mercure?match=test
       -
         name: Create test database
         run: docker compose exec -T php bin/console -e test doctrine:database:create

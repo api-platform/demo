@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Api;
 
-use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
-use ApiPlatform\Symfony\Bundle\Test\Client;
+use ApiPlatform\Test\ApiTestCase;
+use ApiPlatform\Test\Client;
 use App\DataFixtures\Factory\BookFactory;
 use App\DataFixtures\Factory\ReviewFactory;
 use App\Enum\BookCondition;
@@ -38,7 +38,7 @@ final class BookTest extends ApiTestCase
         $response = $this->client->request('GET', $url);
 
         self::assertResponseIsSuccessful();
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/ld+json');
         self::assertEquals('<https://localhost:443/.well-known/mercure>; rel="mercure"', $response->getHeaders()['link'][1]);
         self::assertJsonContains([
             'totalItems' => $hydraTotalItems,
@@ -96,7 +96,7 @@ final class BookTest extends ApiTestCase
         $response = $this->client->request('GET', '/books?order[title]=asc');
 
         self::assertResponseIsSuccessful();
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/ld+json');
         self::assertEquals('<https://localhost:443/.well-known/mercure>; rel="mercure"', $response->getHeaders()['link'][1]);
         self::assertEquals('Ball Lightning', $response->toArray()['member'][0]['title']);
         self::assertEquals('Hyperion', $response->toArray()['member'][1]['title']);
@@ -127,7 +127,7 @@ final class BookTest extends ApiTestCase
         $response = $this->client->request('GET', '/books/' . $book->getId());
 
         self::assertResponseIsSuccessful();
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/ld+json');
         self::assertEquals('<https://localhost:443/.well-known/mercure>; rel="mercure"', $response->getHeaders(false)['link'][1]);
         self::assertJsonContains([
             '@id' => '/books/' . $book->getId(),
