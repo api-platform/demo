@@ -129,7 +129,7 @@ Follow **Conventional Commits**:
 
 | Layer                  | Tool            | Location     |
 |------------------------|-----------------|--------------|
-| Unit/Integration (PHP) | PHPUnit 12      | `api/tests/` |
+| Unit/Integration (PHP) | PHPUnit 13      | `api/tests/` |
 | Static analysis (PHP)  | PHPStan 2       | `api/`       |
 | E2E                    | Playwright 1.50 | `e2e/tests/` |
 | Frontend lint          | ESLint 9        | `pwa/`       |
@@ -193,5 +193,5 @@ Review body structure:
 
 - **Owner**: `api-platform`
 - **Repo**: `demo`
-- **Main branch**: `4.3`
+- **Main branch**: `main`
 - **Remote**: `git@github.com:api-platform/demo.git`

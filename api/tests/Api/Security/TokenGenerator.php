@@ -19,11 +19,11 @@ final readonly class TokenGenerator
         private JWSBuilder $jwsBuilder,
         #[Autowire('@jose.jws_serializer.oidc')]
         private JWSSerializerManager $jwsSerializerManager,
-        #[Autowire('%env(OIDC_JWK)%')]
+        #[Autowire(env: 'OIDC_JWK')]
         string $jwk,
-        #[Autowire('%env(OIDC_AUD)%')]
+        #[Autowire(env: 'OIDC_AUD')]
         private string $audience,
-        #[Autowire('%env(OIDC_SERVER_URL)%')]
+        #[Autowire(env: 'OIDC_SERVER_URL')]
         private string $issuer,
     ) {
         $this->jwk = JWK::createFromJson(json: $jwk);
