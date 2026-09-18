@@ -41,12 +41,14 @@
 		# Tokens are self-issued by the API, so the identifier is a fixed name rather than a
 		# deployed URL, which would differ per environment. It must match the "iss" claim in
 		# api/config/packages/mercure.yaml.
+		# No algorithm argument: the project sets no MERCURE_*_JWT_ALG anywhere, and the hub
+		# defaults a raw secret to HS256, which is what symfony/mercure-bundle signs with.
 		issuer api-platform-demo {
 			publisher {
-				jwt {env.MERCURE_PUBLISHER_JWT_KEY} {env.MERCURE_PUBLISHER_JWT_ALG}
+				jwt {env.MERCURE_PUBLISHER_JWT_KEY}
 			}
 			subscriber {
-				jwt {env.MERCURE_SUBSCRIBER_JWT_KEY} {env.MERCURE_SUBSCRIBER_JWT_ALG}
+				jwt {env.MERCURE_SUBSCRIBER_JWT_KEY}
 			}
 		}
 		# Allow anonymous subscribers (double-check that it's what you want)
