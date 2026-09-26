@@ -28,6 +28,11 @@
 	encode zstd br gzip
 
 	mercure {
+		# SERVER_NAME holds two addresses (the public one and php:80 for internal calls), so
+		# Caddy builds two servers and instantiates this handler twice. Since Mercure 1.0.2 a
+		# configuration may hold only one *unnamed* hub, so name it. The value is only used by
+		# the health check endpoint and the metrics.
+		name demo
 		# Transport to use (default to Bolt)
 		transport bolt {
 			path /data/mercure.db
