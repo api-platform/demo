@@ -26,9 +26,9 @@ final class OidcTokenIntrospectRoleVoter extends OidcVoter
         RequestStack $requestStack,
         #[Autowire('@security.access_token_extractor.header')]
         AccessTokenExtractorInterface $accessTokenExtractor,
-        #[Autowire('%env(OIDC_API_CLIENT_ID)%')]
+        #[Autowire(env: 'OIDC_API_CLIENT_ID')]
         private readonly string $oidcClientId,
-        #[Autowire('%env(OIDC_API_CLIENT_SECRET)%')]
+        #[Autowire(env: 'OIDC_API_CLIENT_SECRET')]
         private readonly string $oidcClientSecret,
         private readonly HttpClientInterface $securityAuthorizationClient,
         private readonly ?LoggerInterface $logger = null,

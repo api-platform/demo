@@ -4,39 +4,51 @@ declare(strict_types=1);
 
 namespace App\Doctrine\Orm\Filter;
 
-use ApiPlatform\Doctrine\Orm\Filter\AbstractFilter;
-use ApiPlatform\Doctrine\Orm\PropertyHelperTrait;
+use ApiPlatform\Doctrine\Orm\Filter\FilterInterface;
 use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use ApiPlatform\Metadata\OpenApiParameterFilterInterface;
 use ApiPlatform\Metadata\Operation;
+use ApiPlatform\Metadata\Parameter;
+use ApiPlatform\OpenApi\Model\Parameter as OpenApiParameter;
 use Doctrine\ORM\QueryBuilder;
 
-final class NameFilter extends AbstractFilter
+/**
+ * "name" is not a property, it's only a method "getName".
+ * Can't use {@see ExactFilter}, so declare custom filter.
+ */
+final class NameFilter implements FilterInterface, OpenApiParameterFilterInterface
 {
-    use PropertyHelperTrait;
-
-    public function getDescription(string $resourceClass): array
+    #[\Override]
+    public function getOpenApiParameters(Parameter $parameter): OpenApiParameter
     {
-        return [
-            'name' => [
-                'property' => 'name',
+        return new OpenApiParameter(
+            name: 'name',
+            in: 'query',
+            schema: [
                 'type' => 'string',
-                'required' => false,
-                'strategy' => 'ipartial',
-                'is_collection' => false,
             ],
-        ];
+        );
     }
 
-    /**
-     * @param string|null $value
-     */
-    protected function filterProperty(string $property, $value, QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, ?Operation $operation = null, array $context = []): void
+    #[\Override]
+    public function getDescription(string $resourceClass): array
     {
+        return [];
+    }
+
+    #[\Override]
+    public function apply(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, ?Operation $operation = null, array $context = []): void
+    {
+        /** @var Parameter $parameter */
+        $parameter = $context['parameter'];
+        $value = $parameter->getValue();
+        $property = $parameter->getProperty();
+
         if ('name' !== $property) {
             return;
         }
 
-        $values = $this->normalizeValues($value, $property);
+        $values = $this->normalizeValues($value);
         if (null === $values) {
             return;
         }
@@ -58,7 +70,7 @@ final class NameFilter extends AbstractFilter
     /**
      * @param string|null $value
      */
-    private function normalizeValues($value, string $property): ?array
+    private function normalizeValues($value): ?array
     {
         if (!\is_string($value) || empty(trim($value))) {
             return null;
@@ -71,14 +83,6 @@ final class NameFilter extends AbstractFilter
             }
         }
 
-        if (empty($values)) {
-            $this->getLogger()->notice('Invalid filter ignored', [
-                'exception' => new \InvalidArgumentException(\sprintf('At least one value is required, multiple values should be in "%1$s[]=firstvalue&%1$s[]=secondvalue" format', $property)),
-            ]);
-
-            return null;
-        }
-
-        return array_values($values);
+        return empty($values) ? null : array_values($values);
     }
 }

@@ -79,6 +79,24 @@ final class BookmarkTest extends ApiTestCase
     }
 
     #[Test]
+    public function asAUserICanFilterMyBookmarksByBook(): void
+    {
+        $user = UserFactory::createOne();
+        BookmarkFactory::createMany(3, ['user' => $user]);
+        $bookmark = BookmarkFactory::createOne(['user' => $user]);
+
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
+            'email' => $user->email,
+            'authorize' => true,
+        ]);
+
+        $this->client->request('GET', '/bookmarks?book=/books/' . $bookmark->book->getId(), ['auth_bearer' => $token]);
+
+        self::assertResponseIsSuccessful();
+        self::assertJsonContains(['totalItems' => 1]);
+    }
+
+    #[Test]
     public function asAnonymousICannotCreateABookmark(): void
     {
         $book = BookFactory::createOne(['book' => 'https://openlibrary.org/books/OL2055137M.json']);

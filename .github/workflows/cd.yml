@@ -3,17 +3,27 @@ name: CD
 
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - main
   # Deploy PR if "deploy" label exists
   pull_request:
     types: [ reopened, synchronize, labeled ]
+  # Redeploy the tip of main, e.g. after a half-failed helm upgrade
+  workflow_dispatch: ~
 
-# Do not use concurrency to prevent simultaneous helm deployments
+# Serialize helm deployments: two close merges would otherwise run two concurrent
+# `helm upgrade prod` and leave the release stuck in pending-upgrade. Never cancel in
+# flight, an interrupted `helm upgrade --wait` blocks the next deployment.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
 jobs:
   build:
     name: Build
-    if: ${{ github.repository == 'api-platform/demo' && (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'deploy')) }}
+    # A workflow_dispatch can target any ref, so production is explicitly pinned to main:
+    # without this, dispatching on a feature branch would deploy it to prod unreviewed.
+    if: ${{ github.repository == 'api-platform/demo' && ((github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'deploy')) || (github.event_name != 'pull_request' && github.ref == 'refs/heads/main')) }}
     runs-on: ubuntu-latest
     env:
       PHP_DOCKER_IMAGE: europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/php:${{ github.sha }}
@@ -30,7 +40,7 @@ jobs:
         name: Sets GitHub Outputs
         id: set-github-outputs
         run: |
-          if [ "${{ github.event_name }}" == "push" ]; then
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
             echo "environment=prod" >> "$GITHUB_OUTPUT"
             echo "url=demo.api-platform.com" >> "$GITHUB_OUTPUT"
           else
@@ -95,15 +105,9 @@ jobs:
         name: Docker tag and push latest
         if: github.event_name != 'pull_request'
         run: |
-          docker tag $PHP_DOCKER_IMAGE europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/php:${{ github.ref_name }}
-          docker tag $PWA_DOCKER_IMAGE europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/pwa:${{ github.ref_name }}
-          docker tag $KEYCLOAK_DOCKER_IMAGE europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/keycloak:${{ github.ref_name }}
           docker tag $PHP_DOCKER_IMAGE europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/php:latest
           docker tag $PWA_DOCKER_IMAGE europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/pwa:latest
           docker tag $KEYCLOAK_DOCKER_IMAGE europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/keycloak:latest
-          docker push europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/php:${{ github.ref_name }}
-          docker push europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/pwa:${{ github.ref_name }}
-          docker push europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/keycloak:${{ github.ref_name }}
           docker push europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/php:latest
           docker push europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/pwa:latest
           docker push europe-west1-docker.pkg.dev/${{ secrets.GKE_PROJECT }}/${{ secrets.GKE_PROJECT }}/keycloak:latest

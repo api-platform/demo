@@ -17,13 +17,13 @@ final readonly class ResourceResourceHandler implements ResourceHandlerInterface
         private ResourceMetadataCollectionFactoryInterface $resourceMetadataCollectionFactory,
         private IriConverterInterface $iriConverter,
         private HttpClientInterface $securityAuthorizationClient,
-        #[Autowire('%env(OIDC_API_CLIENT_ID)%')]
+        #[Autowire(env: 'OIDC_API_CLIENT_ID')]
         private string $oidcClientId,
-        #[Autowire('%env(OIDC_API_CLIENT_SECRET)%')]
+        #[Autowire(env: 'OIDC_API_CLIENT_SECRET')]
         private string $oidcClientSecret,
-        #[Autowire('%env(OIDC_API_CLIENT_UUID)%')]
+        #[Autowire(env: 'OIDC_API_CLIENT_UUID')]
         private string $oidcClientUuid,
-        #[Autowire('%env(OIDC_SERVER_URL_INTERNAL)%')]
+        #[Autowire(env: 'OIDC_SERVER_URL_INTERNAL')]
         private string $oidcServerUrl,
     ) {
     }

@@ -43,35 +43,6 @@ services:
         autoconfigure: false
         public: false
 
-    app.filter.review.admin.user:
-        parent: 'api_platform.doctrine.orm.search_filter'
-        arguments:
-            $properties: { user: 'exact' }
-        tags: [ 'api_platform.filter' ]
-
-    app.filter.review.admin.book:
-        parent: 'api_platform.doctrine.orm.search_filter'
-        arguments:
-            $properties: { book: 'exact' }
-        tags: [ 'api_platform.filter' ]
-
-    app.filter.review.admin.rating:
-        parent: 'api_platform.doctrine.orm.numeric_filter'
-        arguments:
-            $properties: { rating: ~ }
-        tags: [ 'api_platform.filter' ]
-
-    # "name" is not a property, it's only a method "getName"
-    # Can't apply ApiFilter PHP attribute on method, so declare filter manually
-    app.filter.user.admin.name:
-        class: 'App\Doctrine\Orm\Filter\NameFilter'
-        arguments:
-            $managerRegistry: '@doctrine'
-            $logger: '@logger'
-            $nameConverter: '@?api_platform.name_converter'
-            $properties: { name: 'ipartial' }
-        tags: [ 'api_platform.filter' ]
-
 when@prod:
     api_platform:
         http_cache:

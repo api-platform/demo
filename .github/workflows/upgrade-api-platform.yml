@@ -3,9 +3,16 @@ name: Upgrade API Platform
 permissions:
   contents: write
   pull-requests: write
+  issues: write
 
 on:
   workflow_dispatch: ~
+
+# API Platform tags several majors on the same day: core dispatches one run per tag, and
+# two runs would otherwise resolve the same version and race on the same branch.
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
 
 jobs:
   upgrade:
@@ -42,39 +49,107 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
       -
-        name: Update API Platform Dependencies
-        working-directory: api
-        run: composer update "api-platform/*" --no-install --no-scripts
-      -
-        name: Calculate Diff
-        working-directory: api
-        id: diff
+        name: Resolve versions
+        id: versions
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
-          echo "from-version=$(git diff composer.lock | grep -m 1 "api-platform/*" -A 2 | grep -oP '^-\s*"version": "v(.*)",' | sed -e 's/^-\s*"version": "v\(.*\)",$/\1/')" >> $GITHUB_OUTPUT
-          echo "to-version=$(git diff composer.lock | grep -m 1 "api-platform/*" -A 2 | grep -oP '^\+\s*"version": "v(.*)",' | sed -e 's/^\+\s*"version": "v\(.*\)",$/\1/')" >> $GITHUB_OUTPUT
+          set -euo pipefail
+
+          if ! metadata=$(curl -fsSL --retry 3 --retry-delay 5 --retry-all-errors \
+              https://repo.packagist.org/p2/api-platform/symfony.json); then
+            echo "::error::Unable to fetch api-platform/symfony versions from Packagist."
+            exit 1
+          fi
+
+          latest=$(printf '%s' "$metadata" \
+            | jq -r '.packages["api-platform/symfony"][].version' \
+            | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sed 's/^v//' | sort -V | tail -1) || true
+          if [ -z "${latest:-}" ]; then
+            echo "::error::No stable version found in Packagist metadata for api-platform/symfony."
+            exit 1
+          fi
+
+          current=$(jq -r '.packages[] | select(.name == "api-platform/symfony") | .version | ltrimstr("v")' api/composer.lock)
+          echo "current=$current" >> "$GITHUB_OUTPUT"
+          echo "latest=$latest" >> "$GITHUB_OUTPUT"
+
+          # Maintenance tag on an older branch: latest stable is still what we run.
+          if [ "$latest" = "$(printf '%s\n%s\n' "$current" "$latest" | sort -V | head -1)" ]; then
+            echo "::notice::API Platform $current >= latest stable $latest, nothing to do."
+            echo "upgrade=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # An upgrade is already in flight: never force-push over manual fixes made on its branch.
+          blocking=$(gh pr list --repo "$GITHUB_REPOSITORY" --state open \
+            --json number,headRefName \
+            --jq '[.[] | select(.headRefName | startswith("release/api-platform-"))] | .[0].number')
+          if [ "$blocking" != "null" ] && [ -n "$blocking" ]; then
+            echo "::notice::An upgrade is already in flight (#$blocking), nothing to do."
+            echo "Upgrade to \`$latest\` postponed: pull request #$blocking is still open." >> "$GITHUB_STEP_SUMMARY"
+            echo "upgrade=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "upgrade=true" >> "$GITHUB_OUTPUT"
       -
-        name: Update API version
-        if: steps.diff.outputs.to-version != ''
+        name: Update API Platform dependencies
+        if: steps.versions.outputs.upgrade == 'true'
+        working-directory: api
+        env:
+          VERSION: ${{ steps.versions.outputs.latest }}
         run: |
-          sed -i "s/version: .*/version: ${{ steps.diff.outputs.to-version }}/g" api/config/packages/api_platform.yaml
-          sed -i "s/^version: .*/version: ${{ steps.diff.outputs.to-version }}/g" helm/api-platform/Chart.yaml
-          sed -i "s/^appVersion: .*/appVersion: ${{ steps.diff.outputs.to-version }}/g" helm/api-platform/Chart.yaml
+          composer require --no-update --no-scripts --no-interaction \
+            "api-platform/doctrine-orm:^$VERSION" \
+            "api-platform/graphql:^$VERSION" \
+            "api-platform/symfony:^$VERSION"
+          composer update "api-platform/*" --with-all-dependencies --no-install --no-scripts --no-interaction
+      -
+        name: Update version files
+        if: steps.versions.outputs.upgrade == 'true'
+        env:
+          VERSION: ${{ steps.versions.outputs.latest }}
+        run: |
+          set -euo pipefail
+          sed -i -E "s|^(    version: ).*|\1$VERSION|" api/config/packages/api_platform.yaml
+          sed -i -E "s|^(version: ).*|\1$VERSION|; s|^(appVersion: ).*|\1$VERSION|" helm/api-platform/Chart.yaml
+          # Fail loudly rather than silently skipping a file whose layout changed.
+          grep -q "^    version: $VERSION$" api/config/packages/api_platform.yaml
+          grep -q "^version: $VERSION$" helm/api-platform/Chart.yaml
+          grep -q "^appVersion: $VERSION$" helm/api-platform/Chart.yaml
       -
         name: Create Pull Request
         uses: peter-evans/create-pull-request@v8
-        if: steps.diff.outputs.to-version != ''
+        if: steps.versions.outputs.upgrade == 'true'
         with:
           token: ${{ steps.app-token.outputs.token }}
-          branch: release/api-platform-${{ steps.diff.outputs.to-version }}
+          branch: release/api-platform-${{ steps.versions.outputs.latest }}
           base: ${{ github.event.repository.default_branch }}
-          commit-message: "chore: upgrade API Platform to ${{ steps.diff.outputs.to-version }}"
+          commit-message: "chore: upgrade API Platform to ${{ steps.versions.outputs.latest }}"
           committer: "${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>"
           author: "${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>"
-          title: "chore: upgrade API Platform to ${{ steps.diff.outputs.to-version }}"
-          body: "See https://github.com/api-platform/core/releases/tag/v${{ steps.diff.outputs.to-version }}."
+          title: "chore: upgrade API Platform to ${{ steps.versions.outputs.latest }}"
+          body: |
+            Upgrade API Platform from `${{ steps.versions.outputs.current }}` to `${{ steps.versions.outputs.latest }}`.
+
+            - Release notes: https://github.com/api-platform/core/releases/tag/v${{ steps.versions.outputs.latest }}
+            - Changelog: https://github.com/api-platform/core/compare/v${{ steps.versions.outputs.current }}...v${{ steps.versions.outputs.latest }}
           labels: dependencies
           assignees: vincentchalamon
           add-paths: |
             api/composer.*
             api/config/packages/api_platform.yaml
             helm/api-platform/Chart.yaml
+      -
+        # The run is dispatched by the GitHub App, so a failure notifies nobody.
+        # Unconditional on purpose: a failure in "Resolve versions" leaves `upgrade` unset.
+        name: Report failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create --repo "$GITHUB_REPOSITORY" \
+            --title "Upgrade to API Platform ${{ steps.versions.outputs.latest || 'latest' }} failed" \
+            --body "Automatic upgrade from \`${{ steps.versions.outputs.current || 'unknown' }}\` failed: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            --label dependencies --assignee vincentchalamon
