@@ -15,6 +15,12 @@ FROM docker.io/dunglas/frankenphp:1.12.7-php8.5 AS frankenphp_upstream
 # Build FrankenPHP with Mercure, Vulcain and Souin (HTTP cache) modules
 FROM docker.io/dunglas/frankenphp:1.12.7-builder AS builder
 
+# The builder image ships Go 1.26 and pins GOTOOLCHAIN=local, which forbids fetching a
+# newer toolchain. Caddy modules declare their own minimum: github.com/dunglas/mercure/caddy
+# v1.0.0 requires Go >= 1.27, which fails the build. Restore the Go default so the toolchain
+# required by the modules is downloaded on demand.
+ENV GOTOOLCHAIN=auto
+
 # Install xcaddy to build a custom FrankenPHP binary with additional Caddy modules
 # CGO_ENABLED=0: xcaddy is a pure Go tool and must not be compiled with CGO
 # hadolint ignore=DL3062

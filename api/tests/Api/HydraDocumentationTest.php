@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Api;
 
-use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
-use ApiPlatform\Symfony\Bundle\Test\Client;
+use ApiPlatform\Test\ApiTestCase;
+use ApiPlatform\Test\Client;
 use PHPUnit\Framework\Attributes\Test;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
@@ -28,7 +28,7 @@ final class HydraDocumentationTest extends ApiTestCase
         $response = $this->client->request('GET', '/docs.jsonld');
 
         self::assertResponseIsSuccessful();
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/ld+json');
 
         $docs = $response->toArray();
 
@@ -107,7 +107,13 @@ final class HydraDocumentationTest extends ApiTestCase
                 continue;
             }
 
-            foreach ($property['range'] ?? [] as $rangeEntry) {
+            // "range" is a plain IRI string for most properties, and only a list of entries
+            // for the ones carrying an owl:equivalentClass restriction.
+            foreach ((array) ($property['range'] ?? []) as $rangeEntry) {
+                if (!\is_array($rangeEntry)) {
+                    continue;
+                }
+
                 $onPropertyId = $rangeEntry['owl:equivalentClass']['owl:onProperty']['@id'] ?? null;
                 if (null === $onPropertyId) {
                     continue;

@@ -74,7 +74,7 @@ mercure:
   # Change me!
   jwtSecret: "!ChangeThisMercureHubJWTSecretKey!"
   extraDirectives: |
-    demo
+    debugger
     cors_origins http://chart-example.local https://chart-example.local
 
 postgresql:

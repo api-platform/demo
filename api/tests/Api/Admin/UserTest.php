@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Api\Admin;
 
-use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
-use ApiPlatform\Symfony\Bundle\Test\Client;
+use ApiPlatform\Test\ApiTestCase;
+use ApiPlatform\Test\Client;
 use App\DataFixtures\Factory\UserFactory;
 use App\Repository\UserRepository;
 use App\Tests\Api\Admin\Trait\UsersDataProviderTrait;
@@ -44,7 +44,7 @@ final class UserTest extends ApiTestCase
         $this->client->request('GET', '/admin/users', $options);
 
         self::assertResponseStatusCodeSame($expectedCode);
-        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
             '@type' => 'Error',
@@ -70,7 +70,7 @@ final class UserTest extends ApiTestCase
         $response = $this->client->request('GET', $url, ['auth_bearer' => $token]);
 
         self::assertResponseIsSuccessful();
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/ld+json');
         self::assertJsonContains([
             'totalItems' => $hydraTotalItems,
         ]);
@@ -120,7 +120,7 @@ final class UserTest extends ApiTestCase
         $this->client->request('GET', '/admin/users/' . $user->getId(), $options);
 
         self::assertResponseStatusCodeSame($expectedCode);
-        self::assertResponseHeaderSame('content-type', 'application/problem+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/problem+json');
         self::assertResponseHeaderSame('link', '<http://www.w3.org/ns/hydra/error>; rel="http://www.w3.org/ns/json-ld#error",<http://localhost/docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"');
         self::assertJsonContains([
             '@type' => 'Error',
@@ -141,7 +141,7 @@ final class UserTest extends ApiTestCase
         $this->client->request('GET', '/admin/users/' . $user->getId(), ['auth_bearer' => $token]);
 
         self::assertResponseIsSuccessful();
-        self::assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        self::assertResponseHeaderSame('content-type', 'application/ld+json');
         self::assertJsonContains([
             '@id' => '/admin/users/' . $user->getId(),
         ]);

@@ -13,7 +13,7 @@ trait UsersDataProviderTrait
     {
         yield [
             Response::HTTP_UNAUTHORIZED,
-            'Full authentication is required to access this resource.',
+            'Access Denied.',
             null,
         ];
         yield [
