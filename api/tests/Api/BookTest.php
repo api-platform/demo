@@ -87,7 +87,7 @@ final class BookTest extends ApiTestCase
     }
 
     #[Test]
-    public function asAdminUserICanGetACollectionOfBooksOrderedByTitle(): void
+    public function iCanGetACollectionOfBooksOrderedByTitle(): void
     {
         BookFactory::createOne(['title' => 'Hyperion']);
         BookFactory::createOne(['title' => 'The Wandering Earth']);

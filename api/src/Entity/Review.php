@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
+use ApiPlatform\Doctrine\Orm\Filter\IriFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
@@ -13,6 +15,7 @@ use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\NotExposed;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\QueryParameter;
 use ApiPlatform\Metadata\UrlGeneratorInterface;
 use ApiPlatform\State\CreateProvider;
 use ApiPlatform\State\SerializerContextBuilderInterface;
@@ -44,10 +47,10 @@ use Symfony\Component\Validator\Constraints as Assert;
         new GetCollection(
             uriTemplate: '/admin/reviews{._format}',
             paginationClientItemsPerPage: true,
-            filters: [
-                'app.filter.review.admin.user',
-                'app.filter.review.admin.book',
-                'app.filter.review.admin.rating',
+            parameters: [
+                'user' => new QueryParameter(key: 'user', filter: new IriFilter(), castToArray: false),
+                'book' => new QueryParameter(key: 'book', filter: new IriFilter(), castToArray: false),
+                'rating' => new QueryParameter(key: 'rating', filter: new ExactFilter(), castToArray: false),
             ],
             itemUriTemplate: '/admin/reviews/{id}{._format}'
         ),

@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
-use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
-use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
+use ApiPlatform\Doctrine\Orm\Filter\PartialSearchFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SortFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
@@ -15,6 +14,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\QueryParameter;
 use ApiPlatform\Metadata\UrlGeneratorInterface;
 use App\Enum\BookCondition;
 use App\Repository\BookRepository;
@@ -133,8 +133,8 @@ class Book
     /**
      * @see https://schema.org/name
      */
-    #[ApiFilter(OrderFilter::class)]
-    #[ApiFilter(SearchFilter::class, strategy: 'i' . SearchFilterInterface::STRATEGY_PARTIAL)]
+    #[QueryParameter(key: 'order[:property]', filter: new SortFilter(), castToArray: false)]
+    #[QueryParameter(filter: new PartialSearchFilter(), castToArray: false)]
     #[ApiProperty(example: 'Hyperion', iris: ['https://schema.org/name'])]
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Review:read:admin'])]
     #[ORM\Column(type: Types::TEXT)]
@@ -143,7 +143,7 @@ class Book
     /**
      * @see https://schema.org/author
      */
-    #[ApiFilter(SearchFilter::class, strategy: 'i' . SearchFilterInterface::STRATEGY_PARTIAL)]
+    #[QueryParameter(filter: new PartialSearchFilter(), castToArray: false)]
     #[ApiProperty(example: 'Dan Simmons', types: ['https://schema.org/author'])]
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Review:read:admin'])]
     #[ORM\Column(nullable: true)]
@@ -152,7 +152,7 @@ class Book
     /**
      * @see https://schema.org/OfferItemCondition
      */
-    #[ApiFilter(SearchFilter::class, strategy: SearchFilterInterface::STRATEGY_EXACT)]
+    #[QueryParameter(filter: new ExactFilter(), castToArray: false)]
     #[ApiProperty(example: BookCondition::NewCondition->value, types: ['https://schema.org/OfferItemCondition'])]
     #[Assert\NotNull]
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Book:write'])]

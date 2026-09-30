@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
-use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\QueryParameter;
 use App\Repository\BookmarkRepository;
 use App\Serializer\IriTransformerNormalizer;
 use App\State\Processor\BookmarkPersistProcessor;
@@ -82,7 +81,7 @@ class Bookmark
     /**
      * @see https://schema.org/object
      */
-    #[ApiFilter(SearchFilter::class, strategy: SearchFilterInterface::STRATEGY_EXACT)]
+    #[QueryParameter(filter: new ExactFilter(), castToArray: false)]
     #[ApiProperty(types: ['https://schema.org/object'])]
     #[Assert\NotNull]
     #[Groups(groups: ['Bookmark:read', 'Bookmark:write'])]

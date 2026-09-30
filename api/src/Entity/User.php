@@ -8,6 +8,8 @@ use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\QueryParameter;
+use App\Doctrine\Orm\Filter\NameFilter;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
@@ -32,7 +34,9 @@ use Symfony\Component\Uid\Uuid;
             uriTemplate: '/admin/users{._format}',
             paginationClientItemsPerPage: true,
             security: 'is_granted("OIDC_ADMIN")',
-            filters: ['app.filter.user.admin.name'],
+            parameters: [
+                'name' => new QueryParameter(key: 'name', filter: new NameFilter(), castToArray: false),
+            ],
             itemUriTemplate: '/admin/users/{id}{._format}'
         ),
         new Get(
