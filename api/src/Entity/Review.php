@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\McpTool;
 use ApiPlatform\Metadata\NotExposed;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
@@ -19,9 +20,11 @@ use ApiPlatform\Metadata\QueryParameter;
 use ApiPlatform\Metadata\UrlGeneratorInterface;
 use ApiPlatform\State\CreateProvider;
 use ApiPlatform\State\SerializerContextBuilderInterface;
+use App\Mcp\Input\ReviewInput;
 use App\Repository\ReviewRepository;
 use App\Security\Voter\OidcTokenPermissionVoter;
 use App\Serializer\IriTransformerNormalizer;
+use App\State\Processor\ReviewMcpProcessor;
 use App\State\Processor\ReviewPersistProcessor;
 use App\State\Processor\ReviewRemoveProcessor;
 use App\Validator\UniqueUserBook;
@@ -157,6 +160,16 @@ use Symfony\Component\Validator\Constraints as Assert;
         ],
     ],
     order: ['publishedAt' => 'DESC'],
+    mcp: [
+        'add_review' => new McpTool(
+            description: 'Review a book on behalf of the authenticated user.',
+            // securityPostDenormalize (not security): "security" is evaluated when listing the tools, so
+            // anonymous clients would not see this tool and could not be asked to authenticate
+            securityPostDenormalize: 'is_granted("OIDC_USER")',
+            input: ReviewInput::class,
+            processor: ReviewMcpProcessor::class,
+        ),
+    ],
 )]
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
 #[ORM\UniqueConstraint(fields: ['user', 'book'])]

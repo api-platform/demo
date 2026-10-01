@@ -103,6 +103,7 @@ jobs:
           composer require --no-update --no-scripts --no-interaction \
             "api-platform/doctrine-orm:^$VERSION" \
             "api-platform/graphql:^$VERSION" \
+            "api-platform/mcp:^$VERSION" \
             "api-platform/symfony:^$VERSION"
           composer update "api-platform/*" --with-all-dependencies --no-install --no-scripts --no-interaction
       -

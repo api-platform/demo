@@ -3,8 +3,8 @@ nelmio_cors:
         origin_regex: true
         allow_origin: ['%env(CORS_ALLOW_ORIGIN)%']
         allow_methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE']
-        allow_headers: ['Content-Type', 'Authorization', 'Preload', 'Fields']
-        expose_headers: ['Link']
+        allow_headers: ['Content-Type', 'Authorization', 'Preload', 'Fields', 'Mcp-Session-Id', 'Mcp-Protocol-Version']
+        expose_headers: ['Link', 'Mcp-Session-Id', 'WWW-Authenticate']
         max_age: 3600
     paths:
         '^/': null

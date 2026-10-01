@@ -7,19 +7,26 @@ namespace App\Entity;
 use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
 use ApiPlatform\Doctrine\Orm\Filter\PartialSearchFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SortFilter;
+use ApiPlatform\Doctrine\Orm\State\ItemProvider;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\McpTool;
+use ApiPlatform\Metadata\McpToolCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
 use ApiPlatform\Metadata\UrlGeneratorInterface;
 use App\Enum\BookCondition;
+use App\Mcp\Input\BookIdentifier;
+use App\Mcp\Input\BookSearch;
 use App\Repository\BookRepository;
 use App\State\Processor\BookPersistProcessor;
 use App\State\Processor\BookRemoveProcessor;
+use App\State\Processor\BookSearchProcessor;
 use App\Validator\BookUrl;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -100,7 +107,30 @@ use Symfony\Component\Validator\Constraints as Assert;
             '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/admin/books/{id}{._format}"))',
             '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/books/{id}{._format}"))',
         ],
-    ]
+    ],
+    mcp: [
+        'search_books' => new McpToolCollection(
+            description: 'Search books by title and/or author (30 results max).',
+            annotations: ['readOnlyHint' => true],
+            input: BookSearch::class,
+            processor: BookSearchProcessor::class,
+        ),
+        'get_book' => new McpTool(
+            description: 'Get a book by its identifier.',
+            annotations: ['readOnlyHint' => true],
+            // the tool argument "id" is used as URI variable by the Doctrine ItemProvider
+            // (identifiers are not inferred for MCP operations)
+            uriVariables: ['id' => new Link(fromClass: Book::class, identifiers: ['id'])],
+            // MCP operations have no route: the item URI template is required to generate the book IRI
+            normalizationContext: [
+                AbstractNormalizer::GROUPS => ['Book:read', 'Enum:read'],
+                AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+                'item_uri_template' => '/books/{id}{._format}',
+            ],
+            input: BookIdentifier::class,
+            provider: ItemProvider::class,
+        ),
+    ],
 )]
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 #[UniqueEntity(fields: ['book'])]
