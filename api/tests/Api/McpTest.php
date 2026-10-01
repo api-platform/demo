@@ -11,9 +11,12 @@ use App\DataFixtures\Factory\ReviewFactory;
 use App\DataFixtures\Factory\UserFactory;
 use App\Repository\ReviewRepository;
 use App\Tests\Api\Security\TokenGenerator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
@@ -21,6 +24,9 @@ final class McpTest extends ApiTestCase
 {
     use Factories;
     use ResetDatabase;
+
+    // see the "api-platform-mcp-audience" Keycloak client scope
+    private const string AUDIENCE = 'api-platform-mcp';
 
     private Client $client;
 
@@ -99,14 +105,66 @@ final class McpTest extends ApiTestCase
     {
         $book = BookFactory::createOne();
 
-        $result = $this->call('tools/call', ['name' => 'add_review', 'arguments' => [
+        $response = $this->send('tools/call', ['name' => 'add_review', 'arguments' => [
             'bookId' => (string) $book->getId(),
             'body' => 'Very good book!',
             'rating' => 5,
         ]]);
 
-        self::assertSame('Access Denied.', $result['error']['message']);
+        // MCP clients start the OAuth flow on this challenge
+        self::assertSame(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
+        self::assertSame(
+            'Bearer resource_metadata="http://localhost/.well-known/oauth-protected-resource/mcp"',
+            $response->getHeaders(false)['www-authenticate'][0]
+        );
         self::assertCount(0, self::getContainer()->get(ReviewRepository::class)->findBy(['book' => $book]));
+    }
+
+    #[Test]
+    public function asAnonymousICanCallAPublicToolWithoutChallenge(): void
+    {
+        $response = $this->send('tools/call', ['name' => 'search_books', 'arguments' => []]);
+
+        self::assertSame(Response::HTTP_OK, $response->getStatusCode());
+    }
+
+    #[Test]
+    #[DataProvider(methodName: 'getInvalidTokenClaims')]
+    public function asAUserICannotUseAnInvalidToken(array $claims): void
+    {
+        $token = self::getContainer()->get(TokenGenerator::class)->generateToken($claims + [
+            'email' => UserFactory::createOne()->email,
+        ]);
+
+        $response = $this->send('tools/list', [], $token);
+
+        self::assertSame(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
+        self::assertStringContainsString(
+            'resource_metadata="http://localhost/.well-known/oauth-protected-resource/mcp"',
+            $response->getHeaders(false)['www-authenticate'][0]
+        );
+    }
+
+    public static function getInvalidTokenClaims(): iterable
+    {
+        // e.g. a token issued to the PWA
+        yield 'token not issued for the MCP server' => [[]];
+        yield 'expired token' => [['aud' => self::AUDIENCE, 'exp' => time() - 3600]];
+    }
+
+    #[Test]
+    public function asAUserWithoutTheUserRoleICannotAddAReview(): void
+    {
+        $book = BookFactory::createOne();
+        $token = $this->generateToken(UserFactory::createOne()->email, ['realm_access' => ['roles' => ['offline_access']]]);
+
+        $result = $this->call('tools/call', ['name' => 'add_review', 'arguments' => [
+            'bookId' => (string) $book->getId(),
+            'body' => 'Very good book!',
+            'rating' => 5,
+        ]], $token);
+
+        self::assertSame('Access Denied.', $result['error']['message']);
     }
 
     #[Test]
@@ -117,9 +175,7 @@ final class McpTest extends ApiTestCase
         $user = UserFactory::createOne();
         self::getMercureHub()->reset();
 
-        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
-            'email' => $user->email,
-        ]);
+        $token = $this->generateToken($user->email);
 
         $result = $this->call('tools/call', ['name' => 'add_review', 'arguments' => [
             'bookId' => (string) $book->getId(),
@@ -145,9 +201,7 @@ final class McpTest extends ApiTestCase
         $user = UserFactory::createOne();
         ReviewFactory::createOne(['book' => $book, 'user' => $user]);
 
-        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
-            'email' => $user->email,
-        ]);
+        $token = $this->generateToken($user->email);
 
         $result = $this->call('tools/call', ['name' => 'add_review', 'arguments' => [
             'bookId' => (string) $book->getId(),
@@ -161,9 +215,7 @@ final class McpTest extends ApiTestCase
     #[Test]
     public function asAUserICannotAddAReviewOnAnUnknownBook(): void
     {
-        $token = self::getContainer()->get(TokenGenerator::class)->generateToken([
-            'email' => UserFactory::createOne()->email,
-        ]);
+        $token = $this->generateToken(UserFactory::createOne()->email);
 
         $result = $this->call('tools/call', ['name' => 'add_review', 'arguments' => [
             'bookId' => 'invalid',
@@ -174,10 +226,23 @@ final class McpTest extends ApiTestCase
         self::assertSame('Book not found.', $result['error']['message']);
     }
 
+    private function generateToken(string $email, array $claims = []): string
+    {
+        return self::getContainer()->get(TokenGenerator::class)->generateToken($claims + [
+            'email' => $email,
+            'aud' => self::AUDIENCE,
+        ]);
+    }
+
+    private function call(string $method, array $params = [], ?string $token = null): array
+    {
+        return $this->send($method, $params, $token)->toArray();
+    }
+
     /**
      * Opens an MCP session, then sends a JSON-RPC request in it.
      */
-    private function call(string $method, array $params = [], ?string $token = null): array
+    private function send(string $method, array $params = [], ?string $token = null): ResponseInterface
     {
         $response = $this->client->request('POST', '/mcp', [
             'headers' => ['Accept' => 'application/json, text/event-stream'],
@@ -203,6 +268,6 @@ final class McpTest extends ApiTestCase
         return $this->client->request('POST', '/mcp', [
             'headers' => $headers,
             'json' => ['jsonrpc' => '2.0', 'id' => 2, 'method' => $method, 'params' => $params],
-        ])->toArray();
+        ]);
     }
 }
