@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\State\Processor;
 
 use ApiPlatform\Doctrine\Common\State\PersistProcessor;
+use ApiPlatform\Metadata\McpTool;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\State\ProcessorInterface;
@@ -37,7 +38,8 @@ final readonly class ReviewPersistProcessor implements ProcessorInterface
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Review
     {
         // prevent overriding user, for instance from admin
-        if ($operation instanceof Post) {
+        $isCreation = $operation instanceof Post || $operation instanceof McpTool;
+        if ($isCreation) {
             /** @phpstan-ignore-next-line */
             $data->user = $this->security->getUser();
             $data->publishedAt = $this->clock->now();
@@ -48,7 +50,7 @@ final readonly class ReviewPersistProcessor implements ProcessorInterface
 
         // create resource on OIDC server
         // project specification: only create resource on OIDC server for known users (john.doe and chuck.norris)
-        if ($operation instanceof Post && \in_array($data->user->email, ['john.doe@example.com', 'chuck.norris@example.com'], true)) {
+        if ($isCreation && \in_array($data->user->email, ['john.doe@example.com', 'chuck.norris@example.com'], true)) {
             $this->resourceHandler->create($data, $data->user, [
                 'operation_name' => '/books/{bookId}/reviews/{id}{._format}',
             ]);

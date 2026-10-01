@@ -32,6 +32,33 @@ class BookRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @return Book[]
+     */
+    public function search(?string $title, ?string $author, int $limit): array
+    {
+        $queryBuilder = $this->createQueryBuilder('o')
+            ->orderBy('o.title', 'ASC')
+            ->setMaxResults($limit)
+        ;
+
+        if ($title) {
+            $queryBuilder
+                ->andWhere('LOWER(o.title) LIKE LOWER(:title)')
+                ->setParameter('title', '%' . $title . '%')
+            ;
+        }
+
+        if ($author) {
+            $queryBuilder
+                ->andWhere('LOWER(o.author) LIKE LOWER(:author)')
+                ->setParameter('author', '%' . $author . '%')
+            ;
+        }
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
     public function remove(Book $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);

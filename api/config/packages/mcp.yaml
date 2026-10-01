@@ -1,0 +1,17 @@
+mcp:
+    servers:
+        default:
+            http:
+                path: '/mcp'
+                # Public server: hosts are already routed upstream (Caddy site addresses, Kubernetes Ingress rules)
+                allowed_hosts: false
+            session:
+                # Shared across php pods, stored in PostgreSQL
+                store: 'cache'
+                cache_pool: 'app.mcp_session_cache'
+            registry: '*'
+
+services:
+    app.mcp_session_cache:
+        class: Symfony\Component\Cache\Psr16Cache
+        arguments: ['@cache.mcp_session']

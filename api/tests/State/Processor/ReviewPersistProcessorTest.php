@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\State\Processor;
 
+use ApiPlatform\Metadata\McpTool;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\State\ProcessorInterface;
@@ -11,6 +12,7 @@ use App\Entity\Review;
 use App\Entity\User;
 use App\Security\Http\Protection\ResourceHandlerInterface;
 use App\State\Processor\ReviewPersistProcessor;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
@@ -66,11 +68,16 @@ final class ReviewPersistProcessorTest extends TestCase
         );
     }
 
-    #[Test]
-    public function itUpdatesReviewDataFromOperationBeforeSaveAndSendMercureUpdates(): void
+    public static function getCreationOperations(): iterable
     {
-        $operation = new Post();
+        yield 'REST' => [new Post()];
+        yield 'MCP' => [new McpTool()];
+    }
 
+    #[Test]
+    #[DataProvider(methodName: 'getCreationOperations')]
+    public function itUpdatesReviewDataFromOperationBeforeSaveAndSendMercureUpdates(Operation $operation): void
+    {
         $expectedData = $this->objectMock;
         $expectedData->user = $this->userMock;
         $expectedData->publishedAt = $this->clockMock->now();
