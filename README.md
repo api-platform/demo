@@ -28,6 +28,27 @@ Authentication and usage:
   - endpoints without the `/admin` prefix are public and can be called without further step
   - endpoints with the `/admin` prefix require an authentication: open https://localhost/docs then check the “openid” option under “Scopes” and click on “Authorize”. If you are not yet logged in on the API then log in with the credentials, and finally click on “Close”. You can now perform authenticated requests through the API, like listing books on `GET /admin/books` 
 
+### Using the demo from an AI client (MCP)
+
+The API exposes a [Model Context Protocol](https://modelcontextprotocol.io) server on https://localhost/mcp:
+`search_books` and `get_book` are public, `add_review` publishes a review on behalf of the authenticated user.
+
+With [Claude Code](https://code.claude.com/docs/en/mcp):
+
+    $ claude mcp add --transport http --client-id api-platform-mcp demo https://localhost/mcp
+
+Then ask Claude to list the books written by Dan Simmons, and to post a 5/5 review on Hyperion. As this tool requires an
+authentication, Claude Code asks you to sign in: run `/mcp`, select the `demo` server, then "Authenticate". Log in with
+`john.doe@example.com` (password `Pa55w0rd`) and grant the access: the review is published, and shows up live on the
+book page of the PWA.
+
+With [MCP Inspector](https://modelcontextprotocol.io/docs/tools/inspector): run `npx @modelcontextprotocol/inspector`,
+connect to https://localhost/mcp with the "Streamable HTTP" transport and `api-platform-mcp` as OAuth client ID.
+
+> [!NOTE]
+> The Keycloak realm is only imported on its first start. If you started the project before the MCP client was added,
+> recreate the Keycloak database: `docker compose rm -sf keycloak keycloak-database && docker volume rm demo_keycloak_db_data && docker compose up --wait`.
+
 ## What Can I Find In This Demo?
 
 This demo application contains several things you may be interested:

@@ -9,6 +9,15 @@ security:
             # Ensure dev tools and static assets are always allowed
             pattern: ^/(_profiler|_wdt|assets|build)/
             security: false
+        # RFC 9728 metadata must stay public: a client holding an invalid token still has to discover the authorization server
+        oauth_metadata:
+            pattern: ^/\.well-known/oauth-protected-resource
+            security: false
+        # MCP clients must use access tokens issued for the MCP server (audience), see McpAuthorizationListener
+        mcp:
+            pattern: ^/mcp
+            provider: app_user_provider
+            stateless: true
         main:
             lazy: true
             provider: app_user_provider
@@ -28,6 +37,18 @@ security:
 when@prod: &prod
     security:
         firewalls:
+            mcp:
+                access_token:
+                    token_handler:
+                        oidc:
+                            claim: 'email'
+                            audience: '%env(OIDC_MCP_AUD)%'
+                            issuers: [ '%env(OIDC_SERVER_URL)%' ]
+                            algorithms: [ 'RS256' ]
+                            discovery:
+                                base_uri: '%env(OIDC_SERVER_URL_INTERNAL)%/'
+                                cache:
+                                    id: 'cache.app'
             main:
                 access_token:
                     token_handler: App\Security\Http\AccessToken\Oidc\OidcDiscoveryTokenHandler
@@ -44,6 +65,15 @@ when@dev: *prod
 when@test:
     security:
         firewalls:
+            mcp:
+                access_token:
+                    token_handler:
+                        oidc:
+                            claim: 'email'
+                            audience: '%env(OIDC_MCP_AUD)%'
+                            issuers: [ '%env(OIDC_SERVER_URL)%' ]
+                            algorithm: 'ES256'
+                            keyset: '{"keys":[%env(OIDC_JWK)%]}'
             main:
                 access_token:
                     token_handler:

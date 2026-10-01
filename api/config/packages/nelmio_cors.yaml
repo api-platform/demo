@@ -7,4 +7,9 @@ nelmio_cors:
         expose_headers: ['Link', 'Mcp-Session-Id', 'WWW-Authenticate']
         max_age: 3600
     paths:
+        # Browser-based MCP clients (e.g. MCP Inspector) discover the authorization server from any origin
+        '^/\.well-known/oauth-protected-resource':
+            origin_regex: false
+            allow_origin: ['*']
+            allow_methods: ['GET']
         '^/': null

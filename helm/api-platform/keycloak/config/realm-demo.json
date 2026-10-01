@@ -654,6 +654,64 @@
       ]
     },
     {
+      "id": "25f18c5a-f62c-4450-adec-017cd13f73d5",
+      "clientId": "api-platform-mcp",
+      "name": "API Platform MCP clients",
+      "description": "Public client for AI clients (Claude Code, MCP Inspector, claude.ai...) connecting to the MCP server",
+      "rootUrl": "",
+      "adminUrl": "",
+      "baseUrl": "",
+      "surrogateAuthRequired": false,
+      "enabled": true,
+      "alwaysDisplayInConsole": false,
+      "clientAuthenticatorType": "client-secret",
+      "redirectUris": [
+        "http://localhost/callback",
+        "http://127.0.0.1/callback",
+        "http://localhost/oauth/callback",
+        "http://localhost/oauth/callback/debug",
+        "https://claude.ai/api/mcp/auth_callback"
+      ],
+      "webOrigins": [
+        "http://localhost:6274"
+      ],
+      "notBefore": 0,
+      "bearerOnly": false,
+      "consentRequired": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "publicClient": true,
+      "frontchannelLogout": true,
+      "protocol": "openid-connect",
+      "attributes": {
+        "realm_client": "false",
+        "oidc.ciba.grant.enabled": "false",
+        "backchannel.logout.session.required": "true",
+        "standard.token.exchange.enabled": "false",
+        "oauth2.device.authorization.grant.enabled": "false",
+        "backchannel.logout.revoke.offline.tokens": "false",
+        "pkce.code.challenge.method": "S256"
+      },
+      "authenticationFlowBindingOverrides": {},
+      "fullScopeAllowed": true,
+      "nodeReRegistrationTimeout": -1,
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "roles",
+        "profile",
+        "basic",
+        "email",
+        "openid",
+        "api-platform-mcp-audience"
+      ],
+      "optionalClientScopes": [
+        "offline_access"
+      ]
+    },
+    {
       "id": "12ae5fe8-8108-49a4-97b2-3c5169793f84",
       "clientId": "api-platform-swagger",
       "name": "API Platform Swagger UI",
@@ -831,7 +889,7 @@
       "protocol": "openid-connect",
       "attributes": {
         "include.in.token.scope": "true",
-        "display.on.consent.screen": "true",
+        "display.on.consent.screen": "false",
         "consent.screen.text": "${openidScopeConsentText}"
       },
       "protocolMappers": [
@@ -1519,6 +1577,31 @@
             "claim.name": "organization",
             "jsonType.label": "String",
             "multivalued": "true"
+          }
+        }
+      ]
+    },
+    {
+      "id": "feaad3d0-7cc0-4782-ae46-9ea53146a0ff",
+      "name": "api-platform-mcp-audience",
+      "description": "Adds the MCP server audience to the access token",
+      "protocol": "openid-connect",
+      "attributes": {
+        "include.in.token.scope": "false",
+        "display.on.consent.screen": "false"
+      },
+      "protocolMappers": [
+        {
+          "id": "e4f436f7-107e-425f-88e0-a4897367383c",
+          "name": "MCP server audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.custom.audience": "api-platform-mcp",
+            "id.token.claim": "false",
+            "access.token.claim": "true",
+            "introspection.token.claim": "true"
           }
         }
       ]
