@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v7
       -
         name: Setup k6
-        uses: grafana/setup-k6-action@v1.2.1
+        uses: grafana/setup-k6-action@v1.2.2
       -
         name: Run local k6 test
         run: k6 run k6/script.js --out json=results.json
