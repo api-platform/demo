@@ -51,6 +51,8 @@ jobs:
         uses: google-github-actions/setup-gcloud@v3
         with:
           project_id: ${{ secrets.gke-project }}
+          # gcloud >= 571 crashes with SA key JSON auth, see https://github.com/google-github-actions/auth/issues/535
+          version: '570.0.0'
       -
         name: Configure gcloud
         run: |
