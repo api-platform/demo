@@ -213,12 +213,28 @@ final class McpTest extends ApiTestCase
     }
 
     #[Test]
-    public function asAUserICannotAddAReviewOnAnUnknownBook(): void
+    public function asAUserICannotAddAReviewWithAnInvalidBookId(): void
     {
         $token = $this->generateToken(UserFactory::createOne()->email);
 
         $result = $this->call('tools/call', ['name' => 'add_review', 'arguments' => [
             'bookId' => 'invalid',
+            'body' => 'Very good book!',
+            'rating' => 5,
+        ]], $token);
+
+        // rejected against the tool inputSchema before reaching the processor
+        self::assertSame(-32602, $result['error']['code']);
+        self::assertStringContainsString("Property '/bookId'", $result['error']['message']);
+    }
+
+    #[Test]
+    public function asAUserICannotAddAReviewOnAnUnknownBook(): void
+    {
+        $token = $this->generateToken(UserFactory::createOne()->email);
+
+        $result = $this->call('tools/call', ['name' => 'add_review', 'arguments' => [
+            'bookId' => (string) Uuid::v7(),
             'body' => 'Very good book!',
             'rating' => 5,
         ]], $token);
