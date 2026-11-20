@@ -4,11 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "33bbfef6ff4b8f6cfa032dc4695cce9f",
+    "content-hash": "e1d2ad5bfc8a04028902dd81f83b3483",
     "packages": [
         {
             "name": "api-platform/doctrine-common",
-            "version": "v5.0.8",
+            "version": "v5.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/doctrine-common.git",
@@ -92,14 +92,14 @@
                 "rest"
             ],
             "support": {
-                "source": "https://github.com/api-platform/doctrine-common/tree/v5.0.8"
+                "source": "https://github.com/api-platform/doctrine-common/tree/v5.0.9"
             },
             "time": "2026-11-13T09:44:36+00:00",
-            "published-time": "2026-11-16T10:29:22+00:00"
+            "published-time": "2026-11-20T12:24:26+00:00"
         },
         {
             "name": "api-platform/doctrine-orm",
-            "version": "v5.0.8",
+            "version": "v5.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/doctrine-orm.git",
@@ -184,14 +184,14 @@
                 "rest"
             ],
             "support": {
-                "source": "https://github.com/api-platform/doctrine-orm/tree/v5.0.8"
+                "source": "https://github.com/api-platform/doctrine-orm/tree/v5.0.9"
             },
             "time": "2026-11-16T10:25:14+00:00",
-            "published-time": "2026-11-16T10:29:25+00:00"
+            "published-time": "2026-11-20T12:24:20+00:00"
         },
         {
             "name": "api-platform/documentation",
-            "version": "v5.0.8",
+            "version": "v5.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/documentation.git",
@@ -248,14 +248,14 @@
             ],
             "description": "API Platform documentation controller.",
             "support": {
-                "source": "https://github.com/api-platform/documentation/tree/v5.0.8"
+                "source": "https://github.com/api-platform/documentation/tree/v5.0.9"
             },
             "time": "2026-09-22T14:19:04+00:00",
-            "published-time": "2026-11-16T10:28:57+00:00"
+            "published-time": "2026-11-20T12:23:45+00:00"
         },
         {
             "name": "api-platform/graphql",
-            "version": "v5.0.8",
+            "version": "v5.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/graphql.git",
@@ -341,14 +341,14 @@
                 "graphql"
             ],
             "support": {
-                "source": "https://github.com/api-platform/graphql/tree/v5.0.8"
+                "source": "https://github.com/api-platform/graphql/tree/v5.0.9"
             },
             "time": "2026-11-04T16:14:24+00:00",
-            "published-time": "2026-11-16T10:28:29+00:00"
+            "published-time": "2026-11-20T12:23:31+00:00"
         },
         {
             "name": "api-platform/http-cache",
-            "version": "v5.0.8",
+            "version": "v5.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/http-cache.git",
@@ -422,14 +422,14 @@
                 "rest"
             ],
             "support": {
-                "source": "https://github.com/api-platform/http-cache/tree/v5.0.8"
+                "source": "https://github.com/api-platform/http-cache/tree/v5.0.9"
             },
             "time": "2026-11-13T11:25:19+00:00",
-            "published-time": "2026-11-16T10:29:44+00:00"
+            "published-time": "2026-11-20T12:24:36+00:00"
         },
         {
             "name": "api-platform/hydra",
-            "version": "v5.0.8",
+            "version": "v5.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/hydra.git",
@@ -510,14 +510,14 @@
                 "rest"
             ],
             "support": {
-                "source": "https://github.com/api-platform/hydra/tree/v5.0.8"
+                "source": "https://github.com/api-platform/hydra/tree/v5.0.9"
             },
             "time": "2026-11-06T08:24:20+00:00",
-            "published-time": "2026-11-16T10:28:23+00:00"
+            "published-time": "2026-11-20T12:24:47+00:00"
         },
         {
             "name": "api-platform/json-schema",
-            "version": "v5.0.8",
+            "version": "v5.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/json-schema.git",
@@ -592,14 +592,14 @@
                 "swagger"
             ],
             "support": {
-                "source": "https://github.com/api-platform/json-schema/tree/v5.0.8"
+                "source": "https://github.com/api-platform/json-schema/tree/v5.0.9"
             },
             "time": "2026-11-13T13:22:54+00:00",
-            "published-time": "2026-11-16T10:29:52+00:00"
+            "published-time": "2026-11-20T12:24:02+00:00"
         },
         {
             "name": "api-platform/jsonld",
-            "version": "v5.0.8",
+            "version": "v5.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/jsonld.git",
@@ -673,14 +673,14 @@
                 "rest"
             ],
             "support": {
-                "source": "https://github.com/api-platform/jsonld/tree/v5.0.8"
+                "source": "https://github.com/api-platform/jsonld/tree/v5.0.9"
             },
             "time": "2026-11-06T08:25:21+00:00",
-            "published-time": "2026-11-16T10:30:13+00:00"
+            "published-time": "2026-11-20T12:23:59+00:00"
         },
         {
             "name": "api-platform/mcp",
-            "version": "v5.0.8",
+            "version": "v5.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/mcp.git",
@@ -759,14 +759,14 @@
             ],
             "support": {
                 "issues": "https://github.com/api-platform/mcp/issues",
-                "source": "https://github.com/api-platform/mcp/tree/v5.0.8"
+                "source": "https://github.com/api-platform/mcp/tree/v5.0.9"
             },
             "time": "2026-11-13T12:31:50+00:00",
-            "published-time": "2026-11-16T10:27:54+00:00"
+            "published-time": "2026-11-20T12:24:11+00:00"
         },
         {
             "name": "api-platform/metadata",
-            "version": "v5.0.8",
+            "version": "v5.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/metadata.git",
@@ -858,14 +858,14 @@
                 "swagger"
             ],
             "support": {
-                "source": "https://github.com/api-platform/metadata/tree/v5.0.8"
+                "source": "https://github.com/api-platform/metadata/tree/v5.0.9"
             },
             "time": "2026-11-16T09:48:48+00:00",
-            "published-time": "2026-11-16T10:30:07+00:00"
+            "published-time": "2026-11-20T12:24:09+00:00"
         },
         {
             "name": "api-platform/openapi",
-            "version": "v5.0.8",
+            "version": "v5.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/openapi.git",
@@ -950,14 +950,14 @@
                 "swagger"
             ],
             "support": {
-                "source": "https://github.com/api-platform/openapi/tree/v5.0.8"
+                "source": "https://github.com/api-platform/openapi/tree/v5.0.9"
             },
             "time": "2026-11-06T08:24:38+00:00",
-            "published-time": "2026-11-16T10:30:00+00:00"
+            "published-time": "2026-11-20T12:24:40+00:00"
         },
         {
             "name": "api-platform/serializer",
-            "version": "v5.0.8",
+            "version": "v5.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/serializer.git",
@@ -1045,14 +1045,14 @@
                 "serializer"
             ],
             "support": {
-                "source": "https://github.com/api-platform/serializer/tree/v5.0.8"
+                "source": "https://github.com/api-platform/serializer/tree/v5.0.9"
             },
             "time": "2026-11-16T09:48:48+00:00",
-            "published-time": "2026-11-16T10:29:09+00:00"
+            "published-time": "2026-11-20T12:23:52+00:00"
         },
         {
             "name": "api-platform/state",
-            "version": "v5.0.8",
+            "version": "v5.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/state.git",
@@ -1145,23 +1145,23 @@
                 "swagger"
             ],
             "support": {
-                "source": "https://github.com/api-platform/state/tree/v5.0.8"
+                "source": "https://github.com/api-platform/state/tree/v5.0.9"
             },
             "time": "2026-11-16T09:48:48+00:00",
-            "published-time": "2026-11-16T10:29:56+00:00"
+            "published-time": "2026-11-20T12:23:38+00:00"
         },
         {
             "name": "api-platform/symfony",
-            "version": "v5.0.8",
+            "version": "v5.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/symfony.git",
-                "reference": "d04e6372f80ea053e02ec688c45abc33cd33f92a"
+                "reference": "786e62bdc588078ff85c555e4a16629019255ecf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/symfony/zipball/d04e6372f80ea053e02ec688c45abc33cd33f92a",
-                "reference": "d04e6372f80ea053e02ec688c45abc33cd33f92a",
+                "url": "https://api.github.com/repos/api-platform/symfony/zipball/786e62bdc588078ff85c555e4a16629019255ecf",
+                "reference": "786e62bdc588078ff85c555e4a16629019255ecf",
                 "shasum": ""
             },
             "require": {
@@ -1283,14 +1283,14 @@
                 "symfony"
             ],
             "support": {
-                "source": "https://github.com/api-platform/symfony/tree/v5.0.8"
+                "source": "https://github.com/api-platform/symfony/tree/v5.0.9"
             },
-            "time": "2026-11-16T09:48:48+00:00",
-            "published-time": "2026-11-16T10:29:15+00:00"
+            "time": "2026-11-20T11:45:28+00:00",
+            "published-time": "2026-11-20T12:24:18+00:00"
         },
         {
             "name": "api-platform/validator",
-            "version": "v5.0.8",
+            "version": "v5.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/validator.git",
@@ -1361,10 +1361,10 @@
                 "validator"
             ],
             "support": {
-                "source": "https://github.com/api-platform/validator/tree/v5.0.8"
+                "source": "https://github.com/api-platform/validator/tree/v5.0.9"
             },
             "time": "2026-11-06T08:24:42+00:00",
-            "published-time": "2026-11-16T10:29:01+00:00"
+            "published-time": "2026-11-20T12:23:35+00:00"
         },
         {
             "name": "brick/math",
@@ -10263,7 +10263,7 @@
     "packages-dev": [
         {
             "name": "api-platform/test",
-            "version": "v5.0.8",
+            "version": "v5.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/test.git",
@@ -10334,10 +10334,10 @@
             ],
             "support": {
                 "issues": "https://github.com/api-platform/test/issues",
-                "source": "https://github.com/api-platform/test/tree/v5.0.8"
+                "source": "https://github.com/api-platform/test/tree/v5.0.9"
             },
             "time": "2026-09-22T14:19:04+00:00",
-            "published-time": "2026-11-16T10:28:15+00:00"
+            "published-time": "2026-11-20T12:23:40+00:00"
         },
         {
             "name": "dama/doctrine-test-bundle",
@@ -11546,16 +11546,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "13.4.7",
+            "version": "13.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "e6458d44279e3b4fc492d4c41fe8e677efed7a2c"
+                "reference": "291e66a76eb39f2fb8f880d38edc30dbd7acd9a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/e6458d44279e3b4fc492d4c41fe8e677efed7a2c",
-                "reference": "e6458d44279e3b4fc492d4c41fe8e677efed7a2c",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/291e66a76eb39f2fb8f880d38edc30dbd7acd9a2",
+                "reference": "291e66a76eb39f2fb8f880d38edc30dbd7acd9a2",
                 "shasum": ""
             },
             "require": {
@@ -11626,7 +11626,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/13.4.7"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/13.4.8"
             },
             "funding": [
                 {
@@ -11634,8 +11634,8 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-11-13T11:10:10+00:00",
-            "published-time": "2026-11-13T11:11:23+00:00"
+            "time": "2026-11-19T12:17:15+00:00",
+            "published-time": "2026-11-19T12:18:28+00:00"
         },
         {
             "name": "rector/rector",
