@@ -369,7 +369,6 @@ final class BookTest extends ApiTestCase
     }
 
     #[Test]
-    #[Group('apiCall')]
     #[Group('mercure')]
     public function asAdminUserICanCreateABook(): void
     {
@@ -500,7 +499,6 @@ final class BookTest extends ApiTestCase
     }
 
     #[Test]
-    #[Group('apiCall')]
     #[Group('mercure')]
     public function asAdminUserICanUpdateABook(): void
     {

@@ -35,3 +35,7 @@ when@test:
             autowire: true
             autoconfigure: true
             public: true
+        App\Tests\Api\Mock\:
+            resource: '../tests/Api/Mock/'
+            autowire: true
+            autoconfigure: true
